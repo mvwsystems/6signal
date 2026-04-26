@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://6signal.netlify.app"),
   title: "6 Signal — Be the roofer AI recommends.",
   description:
     "Homeowners now ask AI for a roofer. 6 Signal makes sure your company is the one it names — across six discovery layers, for $1,000/month.",
@@ -10,6 +11,11 @@ export const metadata: Metadata = {
     description:
       "Homeowners now ask AI for a roofer. 6 Signal makes sure your company is the one it names.",
     type: "website",
+    images: [{ url: "/6SIGNAL.png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/6SIGNAL.png"],
   },
 };
 
