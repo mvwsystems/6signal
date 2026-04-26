@@ -56,7 +56,7 @@
   }
 
   .display {
-    font-family: "Fraunces", "Times New Roman", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 300;
     letter-spacing: -0.035em;
     line-height: 0.98;
@@ -81,7 +81,7 @@
     align-items: center;
     gap: 14px;
     padding: 18px 28px;
-    font-family: "Inter", system-ui, sans-serif;
+    font-family: "Chakra Petch", monospace;
     font-size: 13px;
     font-weight: 500;
     letter-spacing: 0.02em;
@@ -150,7 +150,7 @@
     display: flex;
     align-items: baseline;
     gap: 12px;
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 400;
     letter-spacing: -0.01em;
   }
@@ -164,7 +164,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-size: 28px;
     font-weight: 400;
     line-height: 1;
@@ -184,6 +184,15 @@
     font-size: 18px;
     color: #f5f5f3;
     letter-spacing: -0.005em;
+  }
+  .logo-img {
+    height: 28px;
+    width: auto;
+    filter: brightness(0) invert(1);
+    display: block;
+  }
+  .footer-left .logo-img {
+    height: 24px;
   }
   .nav-links {
     display: flex;
@@ -282,14 +291,14 @@
     color: #7a7a78;
   }
   .hero h1 em {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-style: italic;
     font-weight: 200;
     color: #b8b8b5;
   }
 
   .hero-deck {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 300;
     font-size: clamp(18px, 1.55vw, 21px);
     line-height: 1.45;
@@ -375,13 +384,13 @@
     line-height: 1.02;
   }
   .sec-head h2 em {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-style: italic;
     font-weight: 200;
     color: #b8b8b5;
   }
   .sec-head .right {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-size: clamp(17px, 1.5vw, 19px);
     font-weight: 300;
     line-height: 1.5;
@@ -410,7 +419,7 @@
     margin-bottom: 28px;
   }
   .shift-scene p {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 300;
     font-size: clamp(22px, 2.4vw, 30px);
     line-height: 1.32;
@@ -445,7 +454,7 @@
     margin-bottom: 16px;
   }
   .shift-flow .stage h4 {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 300;
     font-size: 22px;
     letter-spacing: -0.02em;
@@ -475,7 +484,7 @@
     border-top: 1px solid rgba(255, 255, 255, 0.07);
   }
   .mid-cta h3 {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 300;
     font-size: clamp(26px, 3vw, 38px);
     letter-spacing: -0.025em;
@@ -486,7 +495,7 @@
     line-height: 1.18;
   }
   .mid-cta h3 em {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-style: italic;
     font-weight: 200;
     color: #7a7a78;
@@ -528,7 +537,7 @@
     color: #555553;
   }
   .why-row h3 {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 300;
     font-size: clamp(26px, 2.6vw, 34px);
     letter-spacing: -0.02em;
@@ -575,7 +584,7 @@
     color: #555553;
   }
   .layer-row .l-acro {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 200;
     font-size: 68px;
     letter-spacing: -0.045em;
@@ -592,7 +601,7 @@
     margin-bottom: 12px;
   }
   .layer-row .l-body p {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 300;
     font-size: 20px;
     line-height: 1.45;
@@ -630,7 +639,7 @@
     color: #555553;
   }
   .engage-row .e-title {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 300;
     font-size: 24px;
     letter-spacing: -0.015em;
@@ -685,7 +694,7 @@
     color: #555553;
   }
   .outcome-line .o-text {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 300;
     font-size: clamp(22px, 2.4vw, 30px);
     line-height: 1.25;
@@ -730,7 +739,7 @@
     margin-bottom: 36px;
   }
   .diff-story p {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 300;
     font-size: clamp(21px, 2.2vw, 26px);
     line-height: 1.45;
@@ -746,7 +755,7 @@
     color: #7a7a78;
   }
   .diff-story p em {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-style: italic;
     font-weight: 200;
     color: #b8b8b5;
@@ -777,7 +786,7 @@
     gap: 12px;
   }
   .fit-col .f-label .sym {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 200;
     font-size: 20px;
     line-height: 1;
@@ -793,7 +802,7 @@
   }
   .fit-col li {
     padding: 20px 0;
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 300;
     font-size: 19px;
     line-height: 1.4;
@@ -829,7 +838,7 @@
     margin-bottom: 40px;
   }
   .pricing-core .p-number {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 200;
     font-size: clamp(120px, 18vw, 240px);
     letter-spacing: -0.06em;
@@ -858,7 +867,7 @@
     text-transform: uppercase;
   }
   .pricing-core .p-sub {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 300;
     font-size: clamp(19px, 2vw, 23px);
     line-height: 1.4;
@@ -868,7 +877,7 @@
     letter-spacing: -0.01em;
   }
   .pricing-core .p-sub em {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-style: italic;
     font-weight: 200;
     color: #f5f5f3;
@@ -925,7 +934,7 @@
     font-size: 12px;
   }
   .pricing-note {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 300;
     font-size: 19px;
     line-height: 1.5;
@@ -976,7 +985,7 @@
     color: #555553;
   }
   .faq-q .q-text {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 300;
     font-size: clamp(19px, 1.8vw, 24px);
     letter-spacing: -0.015em;
@@ -1060,7 +1069,7 @@
     background: rgba(255, 255, 255, 0.14);
   }
   .final h2 {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 200;
     font-size: clamp(42px, 6vw, 88px);
     line-height: 1.02;
@@ -1075,7 +1084,7 @@
     font-style: italic;
   }
   .final .f-deck {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 300;
     font-size: clamp(18px, 1.8vw, 21px);
     line-height: 1.45;
@@ -1118,7 +1127,7 @@
     margin-bottom: 24px;
   }
   .footer-left .f-line {
-    font-family: "Fraunces", serif;
+    font-family: "Chakra Petch", monospace;
     font-weight: 300;
     font-style: italic;
     font-size: 18px;
