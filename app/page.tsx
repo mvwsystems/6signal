@@ -77,7 +77,7 @@ export default function Home() {
       <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
         <div className="nav-inner">
           <a href="#" className="logo" aria-label="6 Signal">
-            <img src="/6SIGNAL.png" alt="6 Signal" className="logo-img" />
+            <img src="/6SIGNAL2.png" alt="6 Signal" className="logo-img" />
           </a>
           <div className="nav-links">
             <a href="#framework">The Six</a>
@@ -626,7 +626,7 @@ export default function Home() {
           <div className="footer-inner">
             <div className="footer-left">
               <a href="#" className="logo" aria-label="6 Signal">
-                <img src="/6SIGNAL.png" alt="6 Signal" className="logo-img" />
+                <img src="/6SIGNAL2.png" alt="6 Signal" className="logo-img" />
               </a>
               <p className="f-line">
                 A specialized visibility practice for roofing operators who intend to own their
