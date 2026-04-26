@@ -1214,6 +1214,161 @@
     opacity: 1;
     transform: translateY(0);
   }
+
+  /* ── CUSTOM CURSOR ──────────────────────────────── */
+  #cursor-dot,
+  #cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    will-change: transform;
+  }
+  #cursor-dot {
+    width: 5px;
+    height: 5px;
+    background: #f5f5f3;
+    margin: -2.5px 0 0 -2.5px;
+    transition: width 0.25s, height 0.25s, margin 0.25s;
+  }
+  #cursor-ring {
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(245, 245, 243, 0.38);
+    margin: -16px 0 0 -16px;
+    transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+                height 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+                margin 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+                border-color 0.4s;
+  }
+  #cursor-dot.hovered {
+    width: 10px;
+    height: 10px;
+    margin: -5px 0 0 -5px;
+  }
+  #cursor-ring.hovered {
+    width: 52px;
+    height: 52px;
+    margin: -26px 0 0 -26px;
+    border-color: rgba(245, 245, 243, 0.18);
+  }
+
+  /* ── NAV UNDERLINE SLIDE ────────────────────────── */
+  .nav-links a {
+    position: relative;
+  }
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: currentColor;
+    transition: width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+
+  /* ── HERO GLOW PARALLAX ─────────────────────────── */
+  .hero-glow {
+    transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  /* ── TRUST STRIP HOVER ──────────────────────────── */
+  .trust-strip .sys {
+    transition: color 0.25s, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .trust-strip .sys:hover {
+    color: #f5f5f3;
+    transform: translateY(-2px);
+  }
+
+  /* ── ROW HOVER DRIFT ────────────────────────────── */
+  .why-row {
+    transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .why-row:hover {
+    transform: translateX(6px);
+  }
+  .outcome-line {
+    transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .outcome-line:hover {
+    transform: translateX(6px);
+  }
+
+  /* ── LAYER ROW LEFT BORDER REVEAL ───────────────── */
+  .layer-row {
+    position: relative;
+  }
+  .layer-row::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 10px;
+    bottom: 10px;
+    width: 1px;
+    background: rgba(245, 245, 243, 0.45);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .layer-row:hover::before {
+    transform: scaleY(1);
+  }
+
+  /* ── ENGAGE ROW HOVER ───────────────────────────── */
+  .engage-row {
+    border-left: 1px solid transparent;
+    transition: background 0.35s, border-color 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .engage-row:hover {
+    background: rgba(255, 255, 255, 0.018);
+    border-color: rgba(245, 245, 243, 0.18);
+  }
+
+  /* ── FAQ LEFT ACCENT ────────────────────────────── */
+  .faq-item {
+    position: relative;
+  }
+  .faq-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(245, 245, 243, 0.28);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .faq-item:hover::before,
+  .faq-item.open::before {
+    transform: scaleY(1);
+  }
+
+  /* ── FOOTER LINK DRIFT ──────────────────────────── */
+  .footer-col a {
+    display: inline-block;
+    transition: color 0.2s, transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .footer-col a:hover {
+    transform: translateX(4px);
+  }
+
+  /* ── BUTTON HOVER GLOW ──────────────────────────── */
+  .btn-primary:hover {
+    box-shadow: 0 0 32px rgba(245, 245, 243, 0.09);
+  }
+}
+
+@media (pointer: fine) {
+  * { cursor: none !important; }
 }
 
 /* RESPONSIVE */
