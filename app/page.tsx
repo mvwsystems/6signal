@@ -99,9 +99,9 @@ export default function Home() {
         const t0 = performance.now();
         const tick = (now: number) => {
           const p = Math.min((now - t0) / 1600, 1);
-          const v = Math.floor((1 - Math.pow(1 - p, 3)) * 1000);
+          const v = Math.floor((1 - Math.pow(1 - p, 3)) * 1500);
           entry.target.childNodes.forEach(n => {
-            if (n.nodeType === Node.TEXT_NODE) n.textContent = v >= 1000 ? "1,000" : String(v);
+            if (n.nodeType === Node.TEXT_NODE) n.textContent = v >= 1500 ? "1,500" : String(v);
           });
           if (p < 1) requestAnimationFrame(tick);
         };
@@ -149,7 +149,7 @@ export default function Home() {
     },
     {
       q: "Is this only for large roofing companies?",
-      a: "No. Any established roofer with real revenue can justify the retainer on a single additional job per year. The question isn't whether you can afford $1,000 a month. It's whether you can afford to let a competitor in your market claim the position while you wait.",
+      a: "No. Any established roofer with real revenue can justify the retainer on a single additional job per year. The question isn't whether you can afford $1,500 a month. It's whether you can afford to let a competitor in your market claim the position while you wait.",
     },
     {
       q: "What happens on the audit call?",
@@ -584,7 +584,7 @@ export default function Home() {
           <div className="pricing-core">
             <div className="p-eyebrow">The 6 Signal Retainer</div>
             <div className="p-number">
-              <span className="dollar">$</span>1,000
+              <span className="dollar">$</span>1,500
               <span className="mo">/ month</span>
             </div>
             <div className="p-sub">
