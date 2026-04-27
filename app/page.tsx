@@ -171,7 +171,7 @@ export default function Home() {
             <a href="#pricing">Retainer</a>
             <a href="#faq">FAQ</a>
           </div>
-          <a href="#book" className="nav-cta">Book the audit →</a>
+          <a href="https://calendly.com/mvw-mattvincentwalker/business-growth-audit" target="_blank" rel="noopener noreferrer" className="nav-cta">Book the audit →</a>
         </div>
       </nav>
 
@@ -200,7 +200,7 @@ export default function Home() {
           </p>
 
           <div className="hero-cta-row reveal">
-            <a href="#book" className="btn btn-primary btn-lg">
+            <a href="https://calendly.com/mvw-mattvincentwalker/business-growth-audit" target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
               Book the visibility audit
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
@@ -297,7 +297,7 @@ export default function Home() {
             <br />
             The audit tells you if one of them is yours.
           </h3>
-          <a href="#book" className="btn btn-primary">
+          <a href="https://calendly.com/mvw-mattvincentwalker/business-growth-audit" target="_blank" rel="noopener noreferrer" className="btn btn-primary">
             Book the audit
             <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
               <path d="M0 5h14M10 1l4 4-4 4" />
@@ -592,7 +592,7 @@ export default function Home() {
               <em>If your territory isn't taken yet, it should be yours.</em>
             </div>
             <div className="p-cta">
-              <a href="#book" className="btn btn-primary btn-lg">
+              <a href="https://calendly.com/mvw-mattvincentwalker/business-growth-audit" target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
                 Claim your market
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
@@ -687,7 +687,7 @@ export default function Home() {
             your market is already taken, we'll tell you on the call.
           </p>
           <div className="f-cta">
-            <a href="#" className="btn btn-primary btn-lg">
+            <a href="https://calendly.com/mvw-mattvincentwalker/business-growth-audit" target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
               Book the audit
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
@@ -729,7 +729,7 @@ export default function Home() {
               </div>
               <div className="footer-col">
                 <div className="head">Contact</div>
-                <a href="#book">Book the audit</a>
+                <a href="https://calendly.com/mvw-mattvincentwalker/business-growth-audit" target="_blank" rel="noopener noreferrer">Book the audit</a>
                 <a href="mailto:hello@6signal.co">hello@6signal.co</a>
               </div>
             </div>
@@ -743,7 +743,7 @@ export default function Home() {
 
       {/* Mobile sticky CTA */}
       <div className="mobile-cta">
-        <a href="#book">
+        <a href="https://calendly.com/mvw-mattvincentwalker/business-growth-audit" target="_blank" rel="noopener noreferrer">
           Book the visibility audit
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
