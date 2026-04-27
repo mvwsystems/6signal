@@ -693,7 +693,7 @@ export default function Home() {
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
             </a>
-            <a href="mailto:hello@6signal.co" className="btn btn-ghost btn-lg">
+            <a href="mailto:mvw@mattvincentwalker.com?subject=%F0%9F%94%A5%206%20Signal%20%F0%9F%94%A5" className="btn btn-ghost btn-lg">
               Email directly
             </a>
           </div>
