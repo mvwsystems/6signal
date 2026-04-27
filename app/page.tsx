@@ -141,7 +141,7 @@ export default function Home() {
     },
     {
       q: "My website is old. Is that a problem?",
-      a: "Usually a limitation, not a blocker. We can do most of the work on what you already have and flag anything structural that will cap your ceiling. If a rebuild is genuinely warranted, we'll tell you directly — and only then. We don't sell rebuilds. We don't make money on them.",
+      a: "Usually a limitation, not a blocker. We can do most of the work on what you already have and flag anything structural that will cap your ceiling. If a rebuild is genuinely warranted, we'll tell you directly — and only then. We do fully SEO- and GEO-optimized rebuilds only if it is absolutely necessary.",
     },
     {
       q: "Can I cancel if it's not working?",
