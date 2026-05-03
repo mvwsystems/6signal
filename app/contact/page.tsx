@@ -5,27 +5,32 @@ import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
 
 const CALENDLY = "https://calendly.com/mvw-mattvincentwalker/business-growth-audit";
+const MAILTO = "mvw@mattvincentwalker.com";
 
 export default function ContactPage() {
   useMicroInteractions();
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
-    const data = new FormData(form);
+    const get = (id: string) => (form.elements.namedItem(id) as HTMLInputElement | null)?.value ?? "";
+    const name = get("name");
+    const company = get("company");
+    const phone = get("phone");
+    const trade = get("trade");
+    const message = get("message");
 
-    try {
-      await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(data as unknown as Record<string, string>).toString(),
-      });
-      setSubmitted(true);
-    } catch {
-      // fallback: still show success so user isn't stuck
-      setSubmitted(true);
-    }
+    const body = [
+      name ? `Name: ${name}` : "",
+      company ? `Company: ${company}` : "",
+      phone ? `Phone: ${phone}` : "",
+      trade ? `Trade: ${trade}` : "",
+      message ? `\nMessage:\n${message}` : "",
+    ].filter(Boolean).join("\n");
+
+    window.location.href = `mailto:${MAILTO}?subject=${encodeURIComponent("🔥 6 Signal 🔥")}&body=${encodeURIComponent(body)}`;
+    setSubmitted(true);
   };
 
   return (
@@ -114,18 +119,7 @@ export default function ContactPage() {
               ) : (
                 <>
                   <h3>Or send a message</h3>
-                  <form
-                    name="contact"
-                    method="POST"
-                    data-netlify="true"
-                    netlify-honeypot="bot-field"
-                    onSubmit={handleSubmit}
-                  >
-                    <input type="hidden" name="form-name" value="contact" />
-                    <div style={{ display: "none" }}>
-                      <input name="bot-field" />
-                    </div>
-
+                  <form onSubmit={handleSubmit}>
                     <div className="form-row">
                       <div className="form-field">
                         <label htmlFor="name">Name</label>
