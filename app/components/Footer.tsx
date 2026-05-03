@@ -10,8 +10,8 @@ export default function Footer() {
               <img src="/6SIGNAL2.png" alt="6 Signal" className="logo-img" />
             </Link>
             <p className="f-line">
-              A specialized visibility practice for roofing operators who intend to own their
-              category — not chase it.
+              A specialized visibility practice for residential contractors who intend to own
+              their local market — not rent leads from it.
             </p>
           </div>
           <div className="footer-right">

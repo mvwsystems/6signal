@@ -3,13 +3,13 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://6signal.co"),
-  title: "6 Signal — Be the roofer AI recommends.",
+  title: "6 Signal — Be the contractor AI recommends.",
   description:
-    "Homeowners now ask AI for a roofer. 6 Signal makes sure your company is the one it names — across six discovery layers, for $1,000/month.",
+    "Homeowners now ask AI who to call. 6 Signal makes sure your company is the one it names — across six visibility layers, for $1,500/month.",
   openGraph: {
-    title: "6 Signal — Be the roofer AI recommends.",
+    title: "6 Signal — Be the contractor AI recommends.",
     description:
-      "Homeowners now ask AI for a roofer. 6 Signal makes sure your company is the one it names.",
+      "Homeowners ask ChatGPT, Maps, and AI Overviews before they call anyone. 6 Signal gets residential contractors onto that shortlist.",
     type: "website",
     images: [{ url: "/6SIGNAL.png" }],
   },
