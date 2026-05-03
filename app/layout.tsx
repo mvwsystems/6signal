@@ -3,13 +3,13 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://6signal.co"),
-  title: "6 Signal — Contractor Websites That Earn Trust",
+  title: "6 Signal — Be the roofer AI recommends.",
   description:
-    "6 Signal builds fast, professional websites for contractors. $1,500 flat. Built to make your company look as good online as it does in the field.",
+    "Homeowners now ask AI for a roofer. 6 Signal makes sure your company is the one it names — across six discovery layers, for $1,000/month.",
   openGraph: {
-    title: "6 Signal — Contractor Websites That Earn Trust",
+    title: "6 Signal — Be the roofer AI recommends.",
     description:
-      "Your website should make you look as good as your work. 6 Signal builds trust-first contractor websites for $1,500.",
+      "Homeowners now ask AI for a roofer. 6 Signal makes sure your company is the one it names.",
     type: "website",
     images: [{ url: "/6SIGNAL.png" }],
   },
