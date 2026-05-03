@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://6signal.netlify.app"),
-  title: "6 Signal — Be the roofer AI recommends.",
+  metadataBase: new URL("https://6signal.co"),
+  title: "6 Signal — Contractor Websites That Earn Trust",
   description:
-    "Homeowners now ask AI for a roofer. 6 Signal makes sure your company is the one it names — across six discovery layers, for $1,000/month.",
+    "6 Signal builds fast, professional websites for contractors. $1,500 flat. Built to make your company look as good online as it does in the field.",
   openGraph: {
-    title: "6 Signal — Be the roofer AI recommends.",
+    title: "6 Signal — Contractor Websites That Earn Trust",
     description:
-      "Homeowners now ask AI for a roofer. 6 Signal makes sure your company is the one it names.",
+      "Your website should make you look as good as your work. 6 Signal builds trust-first contractor websites for $1,500.",
     type: "website",
     images: [{ url: "/6SIGNAL.png" }],
   },
