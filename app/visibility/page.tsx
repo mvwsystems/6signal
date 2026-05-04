@@ -1,32 +1,62 @@
 "use client";
-import Link from "next/link";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
 
 const CALENDLY = "https://calendly.com/mvw-mattvincentwalker/business-growth-audit";
 
-const components = [
+const layers = [
   {
     num: "01",
-    title: "Google Business Profile",
-    body: "Your GBP listing is often the first thing buyers see — before your website. We optimize it fully: categories, services, photos, hours, service areas, and ongoing post activity.",
+    acro: "GEO",
+    title: "Generative Engine Optimization",
+    body: "When a homeowner asks ChatGPT, Gemini, or Perplexity who to call for a contractor in your trade and city,",
+    dim: "is your company one of the three names in the answer? Most contractors aren't. GEO work builds the associations that put you there.",
   },
   {
     num: "02",
-    title: "Local SEO Foundations",
-    body: "Citation consistency across directories, NAP accuracy, service-area page structure, and on-page fundamentals that help Google understand where you work and what you do.",
+    acro: "PEO",
+    title: "Prompt Engine Optimization",
+    body: "Buyers search with specific language — 'emergency HVAC repair open now,' 'roofer for storm damage,' 'licensed plumber near me.'",
+    dim: "PEO makes sure your company surfaces inside the exact queries your customers type — not just a generic 'contractor near me.'",
   },
   {
     num: "03",
-    title: "Service Area Pages",
-    body: "Dedicated pages for every city and zip code you serve. Properly structured, locally relevant, and built to rank — not boilerplate junk that hurts more than it helps.",
+    acro: "AEO",
+    title: "Answer Engine Optimization",
+    body: "Google and AI tools answer questions directly above the results — before anyone clicks a link.",
+    dim: "AEO gets your company cited in those answers so buyers see your name before they scroll to the organic results.",
   },
   {
     num: "04",
-    title: "AI Search Presence",
-    body: "Contractors are increasingly being recommended by AI tools like ChatGPT and Gemini. We structure your content and authority signals to show up where AI is recommending local services.",
+    acro: "IEO",
+    title: "Index Engine Optimization",
+    body: "AI and search systems read your website, schema, business data, and service descriptions to understand what you do and where you work.",
+    dim: "IEO makes that data clean, specific, and machine-readable — so no system misses you or describes you in generic terms.",
   },
+  {
+    num: "05",
+    acro: "LEO",
+    title: "Local Entity Optimization",
+    body: "Google Maps, Apple Maps, Yelp, HomeAdvisor, BBB, Angi — every listing a buyer might check.",
+    dim: "LEO reconciles all of them so every system sees the same company, the same number, the same service area — consistently.",
+  },
+  {
+    num: "06",
+    acro: "VEO",
+    title: "Voice Engine Optimization",
+    body: "A homeowner with a burst pipe asks Siri who to call. Someone with no AC in July asks Alexa for emergency HVAC near them.",
+    dim: "VEO makes sure your company is the answer — hands-free, urgent, and specific to your city.",
+  },
+];
+
+const gaps = [
+  "AI tools name competitors when asked for contractors in your trade and city",
+  "Your GBP service area doesn't match your actual coverage or your website",
+  "Directory listings have an old phone number, address, or company name",
+  "No structured data (schema) for your services, license, or service area",
+  "Voice search returns a competitor — or nothing — when asked for your trade near your address",
+  "Your company appears in Maps but not in AI recommendations or answer boxes",
 ];
 
 export default function VisibilityPage() {
@@ -40,27 +70,27 @@ export default function VisibilityPage() {
       <header className="inner-hero">
         <div className="wrap">
           <div className="inner-hero-inner">
-            <span className="idx reveal">6 Signal Visibility</span>
+            <span className="idx reveal">6 Signal — Visibility</span>
             <h1 className="display reveal">
-              Show up where<br />
-              <em>buyers are looking.</em>
+              Your company is losing calls<br />
+              <em>in systems you&rsquo;ve never looked at.</em>
             </h1>
             <p className="hero-deck reveal">
-              A great website is the foundation. Visibility is what drives buyers to it.
-              Local SEO, Google Business Profile, service area pages, and AI search presence —
-              built for contractors who are ready to be found.
+              Most contractors are invisible in at least three of the six channels
+              homeowners now check before they call anyone. The audit shows you exactly
+              where — live, across all six layers, before anything gets signed.
             </p>
             <div className="hero-cta-row reveal">
               <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
-                Book a Discovery Call
+                Book the visibility audit
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
               </a>
-              <Link href="/websites" className="btn btn-ghost btn-lg">Start with the Website</Link>
+              <a href="/#framework" className="btn btn-ghost btn-lg">See the framework</a>
             </div>
             <div className="hero-sig reveal">
-              Secondary engagement — website rebuild recommended first
+              Six-layer visibility read · Market conflict check · Priority list — yours to keep
             </div>
           </div>
         </div>
@@ -69,33 +99,28 @@ export default function VisibilityPage() {
       {/* PROBLEM */}
       <section className="problem-section rule">
         <div className="wrap">
-          <span className="idx">The visibility problem</span>
+          <span className="idx">The gap most contractors don&rsquo;t see</span>
           <p className="problem-lead">
-            Having a good website doesn&rsquo;t mean buyers can find it.{" "}
-            <em>Visibility is a separate problem.</em>
+            The search behavior that builds your shortlist has changed.{" "}
+            <em>Most contractors are still optimized for 2018.</em>
           </p>
           <div className="problem-cols">
             <div className="problem-text">
-              Search has changed. Buyers don&rsquo;t just Google and click the first blue link.
-              They check Google Maps, ask AI chatbots, read reviews, and compare GBP listings
-              before they ever visit a website.
+              Homeowners don&rsquo;t just Google and click the first blue link. They ask
+              ChatGPT who to call. They check AI Overviews before they scroll. They
+              ask Siri for emergency help with their hands full. They cross-check Maps
+              reviews against whatever AI just told them.
               <br /><br />
-              Most contractors are invisible in at least two or three of these channels — and
-              don&rsquo;t know it.
+              Each one of those is a separate system with separate inputs. A contractor
+              can rank on page one and be completely invisible in all five others.
               <br /><br />
               <span className="dim">
-                Visibility work fixes that. It&rsquo;s not magic — it&rsquo;s structure,
-                consistency, and content built for the way buyers actually search.
+                Most contractors have never looked at what the machines say about them.
+                Most of what they find is wrong, outdated, or missing entirely.
               </span>
             </div>
             <div className="problem-bullets">
-              {[
-                "Your GBP listing is incomplete or inconsistent with your website.",
-                "You serve 10 cities but only rank in one.",
-                "AI tools recommend competitors who have better-structured content.",
-                "Your directory listings have old addresses, phone numbers, or business names.",
-                "You get website traffic but no one can find you on Maps.",
-              ].map((b, i) => (
+              {gaps.map((b, i) => (
                 <div key={i} className="problem-bullet">{b}</div>
               ))}
             </div>
@@ -103,75 +128,74 @@ export default function VisibilityPage() {
         </div>
       </section>
 
-      {/* WHAT WE DO */}
-      <section className="layers-section rule" id="components">
+      {/* MID CTA */}
+      <section className="mid-cta">
+        <div className="wrap">
+          <h3>
+            Your market has a shortlist.
+            <br />
+            <em>The audit tells you whether you&rsquo;re on it.</em>
+          </h3>
+          <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+            Book the audit
+            <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
+              <path d="M0 5h14M10 1l4 4-4 4" />
+            </svg>
+          </a>
+          <div className="sub">One company per market and trade</div>
+        </div>
+      </section>
+
+      {/* SIX LAYERS */}
+      <section className="layers-section rule" id="layers">
         <div className="wrap">
           <div className="sec-head">
             <div className="left">
-              <span className="idx">What we build</span>
+              <span className="idx">The six visibility layers</span>
               <h2 className="display">
-                Four components.<br />
-                <em>Built to work together.</em>
+                Six systems decide<br />
+                <em>who gets the call.</em>
               </h2>
             </div>
             <div className="right">
-              Visibility isn&rsquo;t one thing — it&rsquo;s four overlapping channels that
-              reinforce each other. We build all of them, not just the easy one.
+              Each one is a different channel where your name gets surfaced — or
+              doesn&rsquo;t. Miss one and the shortlist forms without you.
             </div>
           </div>
-          {components.map((c) => (
-            <div className="layer-row reveal" key={c.num}>
-              <div className="l-idx">{c.num}</div>
-              <div className="l-acro" style={{ fontSize: "clamp(24px, 3vw, 36px)", letterSpacing: "-0.02em" }}>{c.title}</div>
+          {layers.map((layer) => (
+            <div className="layer-row reveal" key={layer.num}>
+              <div className="l-idx">{layer.num}</div>
+              <div className="l-acro">{layer.acro}</div>
               <div className="l-body">
-                <p>{c.body}</p>
+                <h3>{layer.title}</h3>
+                <p>
+                  {layer.body} <span className="dim">{layer.dim}</span>
+                </p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* NOTE */}
-      <section className="rule" style={{ padding: "80px 0 100px" }}>
-        <div className="wrap">
-          <div className="pricing-detail reveal">
-            <div className="pricing-note">
-              <p>
-                <span className="highlight">Visibility is a secondary engagement.</span>{" "}
-                We strongly recommend starting with a website rebuild — visibility work
-                compounds when it points to a site that actually converts.
-              </p>
-              <p className="italic" style={{ marginTop: "20px" }}>
-                If you already have a solid website and want to drive more traffic to it,
-                book a call and we&rsquo;ll tell you honestly what your biggest opportunity is.
-              </p>
-            </div>
-            <div className="included">
-              <h4>This engagement is right for you if:</h4>
-              <div>You already have a professional website (or are rebuilding with us)</div>
-              <div>You serve a defined local service area</div>
-              <div>You want to increase inbound leads from organic search</div>
-              <div>You understand visibility is a 3–6 month compounding process</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* FINAL CTA */}
       <section className="final" id="book">
         <div className="wrap">
-          <div className="f-eyebrow">6 Signal Visibility</div>
+          <div className="f-eyebrow">Book the audit</div>
           <h2 className="display">
-            Ready to show up<br />
-            where buyers are looking?
+            Three contractors get named<br />
+            in your market this week.<br />
+            <em>Find out if one of them is yours.</em>
           </h2>
           <p className="f-deck">
-            Book a free 30-minute call. We&rsquo;ll audit your current visibility, identify
-            your biggest gaps, and tell you exactly what we&rsquo;d do — and what it would cost.
+            Thirty-minute call. We run your company through all six layers — live. You see
+            what a homeowner sees when they search for a contractor in your trade and city.
+            We show you where competitors are filling your gap, and what it would take to
+            close it. One contractor per market. If yours is already taken, you&rsquo;ll
+            know in thirty seconds — and you keep the full read either way.
           </p>
           <div className="f-cta">
             <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
-              Book a Discovery Call
+              Book the audit
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
@@ -180,14 +204,14 @@ export default function VisibilityPage() {
               href="mailto:mvw@mattvincentwalker.com?subject=%F0%9F%94%A5%206%20Signal%20%F0%9F%94%A5"
               className="btn btn-ghost btn-lg"
             >
-              Email Directly
+              Email directly
             </a>
           </div>
           <div className="f-notes">
-            <span>Secondary engagement</span>
-            <span>Local SEO</span>
-            <span>GBP optimization</span>
-            <span>AI search</span>
+            <span>Free</span>
+            <span>30 minutes</span>
+            <span>No pitch</span>
+            <span>One client per market</span>
           </div>
         </div>
       </section>
@@ -196,7 +220,7 @@ export default function VisibilityPage() {
 
       <div className="mobile-cta">
         <a href={CALENDLY} target="_blank" rel="noopener noreferrer">
-          Book a Call
+          Book the visibility audit
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>

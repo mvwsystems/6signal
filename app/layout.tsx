@@ -3,18 +3,19 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://6signal.co"),
-  title: "6 Signal — Be the contractor AI recommends.",
+  title: "6 Signal — AI Visibility for Residential Contractors",
   description:
-    "Homeowners now ask AI who to call. 6 Signal makes sure your company is the one it names — across six visibility layers, for $1,500/month.",
+    "Homeowners ask ChatGPT, Maps, and AI Overviews before they call. 6 Signal gets residential contractors named across six visibility layers. Based in Dallas/Fort Worth, serving contractors in DFW and select markets beyond Texas.",
   openGraph: {
     title: "6 Signal — Be the contractor AI recommends.",
     description:
-      "Homeowners ask ChatGPT, Maps, and AI Overviews before they call anyone. 6 Signal gets residential contractors onto that shortlist.",
+      "Homeowners ask ChatGPT, Maps, and AI Overviews before they call anyone. 6 Signal gets residential contractors onto that shortlist. Based in the Dallas/Fort Worth area.",
     type: "website",
     images: [{ url: "/6SIGNAL.png" }],
   },
   twitter: {
     card: "summary_large_image",
+    title: "6 Signal — Be the contractor AI recommends.",
     images: ["/6SIGNAL.png"],
   },
 };

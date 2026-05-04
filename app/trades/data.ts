@@ -59,14 +59,14 @@ export const tradesBySlug: Record<string, TradeData> = {
     slug: "roofers",
     tradePlural: "Roofers",
     metaTitle: "6 Signal for Roofers — Be the Roofing Contractor AI Recommends",
-    metaDescription: "When homeowners ask ChatGPT for a roofer after a storm, three companies get named. 6 Signal makes sure one of them is yours. Free 30-minute visibility audit.",
+    metaDescription: "After a storm, homeowners ask ChatGPT for a roofer and three names appear. 6 Signal makes sure one is yours. Serving roofing contractors in Dallas/Fort Worth, North Texas, and markets beyond. Free 30-minute visibility audit.",
     ogTitle: "Be the roofer AI recommends after the storm.",
     ogDescription: "6 Signal helps roofing contractors own the AI shortlist in their market. Free visibility audit — no pitch, no deck.",
     heroMeta: "AI Visibility · Built for Roofing Contractors",
     headline1: "Be the roofer",
     headline2Em: "AI recommends after the storm.",
     headline3Dim: "Not the one it skips.",
-    heroDeck: "Storm damage creates a surge of homeowners searching urgently, on their phones, trusting whatever AI and Maps tell them first. 6 Signal makes sure that when they search, your company is one of the names they find — before a competitor in your market beats you to it.",
+    heroDeck: "After a storm, homeowners search urgently. They trust whatever AI and Maps surface first. The window is narrow — sometimes 48 hours — and whoever is named when it opens takes the majority of calls. 6 Signal makes sure your company is one of those names before a competitor in your market closes the window.",
     problemCaption: "A real path to a roofing job — 2026",
     problemStrong1: "Tuesday. 10 p.m. A homeowner walks upstairs and finds a wet ceiling after three days of rain. She grabs her phone. \"Best roofer near me for storm damage.\" ChatGPT names three companies.",
     problemDim: "She opens Maps. Two of the three show up with recent reviews and photos. She asks Siri for the closest number. She calls one before she goes to bed.",
@@ -145,7 +145,7 @@ export const tradesBySlug: Record<string, TradeData> = {
       },
       {
         q: "Does this help my Google ranking?",
-        a: "Indirectly — structured data, local entity work, and schema support organic rankings. But the primary goal is appearing in AI recommendations, answer engines, and voice results, which use different inputs than the traditional blue-link algorithm.",
+        a: "Indirectly — structured data, local entity work, and schema support organic rankings as a side effect. The primary goal is appearing in AI recommendations, answer engines, and voice results, each of which runs on different signals than the blue-link algorithm. If your SEO is already strong, this adds the five channels it doesn't cover.",
       },
       {
         q: "Do you work with multiple roofers in my area?",
@@ -158,7 +158,7 @@ export const tradesBySlug: Record<string, TradeData> = {
     slug: "plumbers",
     tradePlural: "Plumbers",
     metaTitle: "6 Signal for Plumbers — Be the Plumber AI Recommends in an Emergency",
-    metaDescription: "When water is on the floor at 11 p.m., homeowners ask ChatGPT and Siri who to call. 6 Signal makes sure your plumbing company is the one named. Free visibility audit.",
+    metaDescription: "When water is on the floor at 11 p.m., homeowners ask ChatGPT and Siri who to call. 6 Signal gets your plumbing company onto that shortlist. Serving plumbers in Dallas/Fort Worth, North Texas, and markets beyond. Free visibility audit.",
     ogTitle: "When the pipe bursts, the buyer asks their phone who to call.",
     ogDescription: "Emergency plumbing creates the purest AI-search moment in home services. 6 Signal gets your company onto that shortlist.",
     heroMeta: "AI Visibility · Built for Plumbing Contractors",
@@ -236,7 +236,7 @@ export const tradesBySlug: Record<string, TradeData> = {
       },
       {
         q: "Do emergency searches really go through AI?",
-        a: "Increasingly, yes — especially among homeowners under 40. But even homeowners who go to Google first now see AI Overviews before the results list. And voice search via Siri and Alexa is a different system entirely from organic search. All of these are separate from your website ranking.",
+        a: "Yes — and urgency accelerates it. Voice search through Siri and Google Assistant is already the primary channel for emergency home service calls made hands-free. AI Overviews appear above organic results for most plumbing queries. Neither cares about your website's ranking — they require different inputs, which is exactly what we structure.",
       },
       {
         q: "What about Google Local Service Ads?",
@@ -253,14 +253,14 @@ export const tradesBySlug: Record<string, TradeData> = {
     slug: "hvac",
     tradePlural: "HVAC Companies",
     metaTitle: "6 Signal for HVAC — Be the HVAC Company AI Recommends When AC Fails",
-    metaDescription: "When the AC dies in July, homeowners ask their phone who to call. Three companies get named. 6 Signal makes sure one is yours. Free 30-minute visibility audit.",
+    metaDescription: "When the AC dies in a DFW summer, homeowners ask their phone who to call in seconds. Three HVAC companies get named. 6 Signal makes sure one is yours. Serving Dallas/Fort Worth HVAC contractors and markets beyond Texas. Free visibility audit.",
     ogTitle: "When the AC dies in July, the shortlist is set before your phone rings.",
     ogDescription: "Seasonal failure drives compressed, urgent search behavior. 6 Signal gets HVAC companies onto the AI shortlist before competitors answer first.",
     heroMeta: "AI Visibility · Built for HVAC Contractors",
     headline1: "When the AC dies in July,",
     headline2Em: "the shortlist is set before you answer.",
     headline3Dim: "Be on it.",
-    heroDeck: "Seasonal HVAC failure creates a compressed search window where homeowners move from problem to call in minutes. 6 Signal makes sure your company is named in that window — across AI tools, Maps, and voice — before a competitor in your market answers first.",
+    heroDeck: "When the AC fails in July, homeowners move from problem to call in minutes — not hours. The companies named in that window built their position before the heat wave arrived, not during it. 6 Signal makes sure your company is one of those names — across AI tools, Maps, and voice — before a competitor in your market answers first.",
     problemCaption: "A real path to an HVAC call — 2026",
     problemStrong1: "Saturday. 2 p.m. July. 96 degrees. The AC stops blowing cold. She checks the thermostat — it's 88 inside. She asks Google Assistant: \"Emergency HVAC repair near me open today.\" Three companies appear.",
     problemDim: "She opens Maps. Two have same-day availability mentions in their recent reviews. One has a 'call now' button and a recent photo of a service van. She calls it.",
@@ -327,7 +327,7 @@ export const tradesBySlug: Record<string, TradeData> = {
     faqs: [
       {
         q: "We already rank well on Google. Is this still useful?",
-        a: "Blue-link rankings are one output of one system. When a homeowner asks their smart speaker for emergency HVAC repair, that's a different system. When they ask ChatGPT for the best HVAC company in their city, that's another. You can rank on page one and still be invisible in both. This fills the gap.",
+        a: "Blue-link rankings are one output of one system. When a homeowner asks their smart speaker for emergency HVAC repair, that's a different system. When they ask ChatGPT for the best HVAC company in their city, that's another. You can rank on page one and still be invisible in both. We work the five channels your Google ranking doesn't reach.",
       },
       {
         q: "Our busy season is only a few months. Is a year-round retainer worth it?",
@@ -335,7 +335,7 @@ export const tradesBySlug: Record<string, TradeData> = {
       },
       {
         q: "We have maintenance plan customers already. Can this help with renewals?",
-        a: "Indirectly — stronger Maps presence, more consistent reviews, and clear 'maintenance plan' signals in your content structure support retention and generate new plan customers from AI recommendations. The visibility work supports the whole funnel, not just emergency calls.",
+        a: "Indirectly. A stronger Maps presence, more specific service-type reviews, and 'maintenance plan' signals in your content structure support both retention and new plan acquisition from AI recommendations. The buyer who calls for an emergency AC repair in July is the same buyer you offer a maintenance plan to after the visit — and the AI recommendation that generated the first call supports the relationship that generates the next.",
       },
       {
         q: "Do you work with multiple HVAC companies in one market?",
@@ -354,7 +354,7 @@ export const tradesBySlug: Record<string, TradeData> = {
     heroMeta: "AI Visibility · Built for Electrical Contractors",
     headline1: "Emergency, remodel, panel upgrade —",
     headline2Em: "if the systems don't name you, the homeowner never calls.",
-    heroDeck: "Electrical work spans a wide range of buyer urgency — from a tripped breaker to a full panel upgrade before a home sale. 6 Signal makes sure your company is visible across that entire spectrum, with the license and credential signals AI tools use to recommend you.",
+    heroDeck: "Electrical buyers range from emergency-driven to fully planned — a tripped breaker that won't reset to a $15,000 panel upgrade before a home sale. For all of them, the same question gates the call: is this company licensed and trustworthy? 6 Signal structures your credentials so AI tools can answer that question correctly — and name your company when buyers search.",
     problemCaption: "A real path to an electrical call — 2026",
     problemStrong1: "Sunday morning. The circuit breaker trips again and won't reset. Third time this month. She searches: \"Licensed electrician near me — panel problem.\" ChatGPT names three companies. She checks if they're licensed.",
     problemDim: "She opens Maps and checks their reviews — specifically for panel work and license mentions. Two look credible. She checks their websites briefly. She calls the one that looks most like a real company.",
@@ -516,7 +516,7 @@ export const tradesBySlug: Record<string, TradeData> = {
     faqs: [
       {
         q: "Most of my business comes from Houzz and HomeAdvisor. Is this different?",
-        a: "Directory platforms put you in front of buyers already using that platform. AI visibility puts you in front of buyers before they open any platform — when they ask ChatGPT who to call. Those are two different discovery moments. This works the one that's growing fastest.",
+        a: "Directory platforms put you in front of buyers already using that platform. AI visibility reaches buyers before they open any platform — when they ask ChatGPT who to call. Those are two different discovery moments. This addresses the one that Houzz, HomeAdvisor, and word-of-mouth all miss: the buyer who hasn't found a referral yet and goes to AI first.",
       },
       {
         q: "Remodeling is high-consideration. Don't buyers research beyond AI?",
@@ -543,7 +543,7 @@ export const tradesBySlug: Record<string, TradeData> = {
     heroMeta: "AI Visibility · Built for Garage Door Companies",
     headline1: "A stuck garage door is an urgent search.",
     headline2Em: "Three companies get named. Everyone else disappears.",
-    heroDeck: "Garage door failure is one of the most urgency-compressed home service searches — time-sensitive, high-intent, and resolved in a single call. 6 Signal makes sure your company is one of the names that appears when a homeowner can't get their car out.",
+    heroDeck: "Garage door failure is one of the most urgency-compressed searches in home services. The problem is immediate. The decision is made in under 90 seconds. Whoever is named first usually gets the call. 6 Signal makes sure your company is one of those names — with same-day availability surfaced clearly enough that a buyer at 7 a.m. doesn't have to guess whether you can help.",
     problemCaption: "A real path to a garage door call — 2026",
     problemStrong1: "Monday. 7:12 a.m. The spring snaps. The door won't open. There's a car inside and she's late for work. She asks her phone: \"Garage door repair near me open now.\" Siri names two companies. ChatGPT names three.",
     problemDim: "She checks the closest one — four-star rating, same-day service reviews, phone number that's easy to tap. She calls. Someone answers.",
@@ -637,7 +637,7 @@ export const tradesBySlug: Record<string, TradeData> = {
     heroMeta: "AI Visibility · Built for Landscaping Companies",
     headline1: "The best work in the neighborhood",
     headline2Em: "doesn't help if they can't find you.",
-    heroDeck: "Landscaping is a consideration purchase driven by visual proof, seasonal timing, and local reputation. Buyers research before they call — and AI, Maps, and search are increasingly where that research starts. 6 Signal makes sure your landscaping company is found, trusted, and named before a competitor gets the call.",
+    heroDeck: "Landscaping buyers don't call the first name they see. They look at project photos, read reviews by neighborhood, and research which company does the kind of work they want done. That research now starts with AI and search — before the referral network has a chance to point anywhere. 6 Signal makes sure your company is found at the start of that process, not discovered after a competitor already has the job.",
     problemCaption: "A real path to a landscaping call — 2026",
     problemStrong1: "Early April. New homeowners in a house with a neglected yard. He asks ChatGPT: \"Best landscaping company near me — lawn care and landscape design.\" Three companies get named.",
     problemDim: "He checks their Google reviews — specifically looking for photos of work in neighborhoods like his. Two companies have recent project photos. He emails one.",
@@ -708,7 +708,7 @@ export const tradesBySlug: Record<string, TradeData> = {
       },
       {
         q: "Our reviews are good. Isn't that enough?",
-        a: "Good reviews are one signal. They need to be recent, specific to service type and location, and consistent across the right platforms to influence AI recommendations. A competitor with fewer reviews but better-structured specialization signals can outperform you in AI results.",
+        a: "Good reviews are one signal. They need to be recent, specific to service type and location, and consistent across the right platforms to influence AI recommendations. A competitor with fewer reviews but better-structured specialization signals can outperform you in AI results. We find this in most landscaping markets we audit.",
       },
       {
         q: "We're seasonal. Is a year-round retainer worth it?",
@@ -731,7 +731,7 @@ export const tradesBySlug: Record<string, TradeData> = {
     heroMeta: "AI Visibility · Built for Tree Service Companies",
     headline1: "After the storm, homeowners don't build a long list.",
     headline2Em: "They ask who can handle it now.",
-    heroDeck: "Tree service is one of the most urgency-compressed trades in home services — emergency calls, weather-driven demand spikes, and high trust requirements for hazardous work. 6 Signal makes sure your company is the one named when a homeowner needs a tree removed before anyone gets hurt.",
+    heroDeck: "Tree service combines urgency and trust in a way almost no other trade does — emergency calls that won't wait, and work near structures where a wrong hire has real consequences. Homeowners searching after a storm want the answer fast and the credentials visible. 6 Signal makes sure your company appears with both — before they move to the next result.",
     problemCaption: "A real path to a tree service call — 2026",
     problemStrong1: "Thursday. 6 a.m. A storm rolled through overnight. A large limb is across the backyard fence. She opens her phone before coffee: \"Emergency tree removal near me.\" ChatGPT names three companies. She checks if any are certified arborists.",
     problemDim: "She checks Maps. Two have recent emergency-removal reviews and photos of storm work. One has an ISA certification mention in their listing. She calls that one.",
@@ -825,7 +825,7 @@ export const tradesBySlug: Record<string, TradeData> = {
     heroMeta: "AI Visibility · Built for Pest Control Companies",
     headline1: "When the problem feels urgent or unsafe,",
     headline2Em: "buyers want a trusted name fast.",
-    heroDeck: "Pest problems drive immediate, trust-gated searches — homeowners look for licensed, insured, and reviewed companies before they let anyone treat their home. 6 Signal makes sure your pest control company is named across the AI tools, Maps, and voice assistants buyers check before they call.",
+    heroDeck: "Pest problems drive immediate, trust-gated searches. Homeowners verify license, check for kid-safe treatment options, and read reviews before they let anyone spray their home. That vetting now starts with AI and Maps — not a phone book and not a referral. 6 Signal makes sure your company is named across every system buyers check before they call.",
     problemCaption: "A real path to a pest control call — 2026",
     problemStrong1: "Sunday morning. She finds signs of a rodent in the kitchen. She's not calling anyone she doesn't trust. She searches: \"Licensed pest control near me — rodent specialist.\" ChatGPT names three companies. She checks if they're licensed.",
     problemDim: "She checks their reviews — specifically for rodent treatments and how they handled families with kids and pets. Two look credible. One has a photo of their technician and mentions kid-safe methods.",
@@ -892,7 +892,7 @@ export const tradesBySlug: Record<string, TradeData> = {
     faqs: [
       {
         q: "We have good reviews. Isn't that enough?",
-        a: "Reviews are one signal. They need to be recent, specific to pest type and treatment method, and on the right platforms to influence AI recommendations. A competitor with fewer reviews but better-structured specialization signals can outperform you in AI results even with a lower overall rating.",
+        a: "Reviews are one signal. They need to be recent, specific to pest type and treatment method, and on the right platforms to influence AI recommendations. A competitor with fewer reviews but better-structured specialization signals can outperform you in AI results even with a lower overall rating. We find this gap — the wrong company appearing first — in most markets we audit.",
       },
       {
         q: "Most of our calls come from HomeAdvisor or Thumbtack. Is this different?",
@@ -913,13 +913,13 @@ export const tradesBySlug: Record<string, TradeData> = {
     slug: "foundation-concrete",
     tradePlural: "Foundation & Concrete Contractors",
     metaTitle: "6 Signal for Foundation Contractors — Be the Structural Expert AI Recommends",
-    metaDescription: "Foundation repair buyers research for weeks before calling anyone. 6 Signal makes sure your company is found and trusted throughout that research phase. Free visibility audit.",
+    metaDescription: "Foundation repair buyers research for weeks before calling anyone — especially in North Texas where expansive soil makes this one of the highest-demand home service markets. 6 Signal makes sure your company is found and trusted throughout that research. Free visibility audit.",
     ogTitle: "High-trust structural work requires confidence before the first call.",
     ogDescription: "Foundation buyers research for weeks using AI, Maps, and search before calling anyone. 6 Signal builds the visibility infrastructure that gets your company found throughout that process.",
     heroMeta: "AI Visibility · Built for Foundation & Concrete Contractors",
     headline1: "High-trust structural work",
     headline2Em: "requires confidence before the first call.",
-    heroDeck: "Foundation repair, waterproofing, and structural concrete work are among the highest-trust purchases in home services — expensive, consequential, and requiring full confidence before a homeowner lets anyone start. 6 Signal makes sure your company is found and trusted during the weeks of research before that first call.",
+    heroDeck: "Foundation repair and structural concrete sit at the highest-trust end of home services — projects where the decision takes weeks, the stakes feel consequential, and the homeowner has to believe in your company before the first conversation. 6 Signal makes sure you appear throughout that research period, not just at the end when the shortlist is already set.",
     problemCaption: "A real path to a foundation call — 2026",
     problemStrong1: "March. She notices a crack in the basement wall that's wider than last year. She doesn't call anyone immediately. She researches for two weeks. She asks ChatGPT: \"Who does foundation repair in [city] and can I trust them?\" Three companies appear in the first answer.",
     problemDim: "Over ten days, she reads their reviews, checks their warranties, looks at photos of their work, and searches for complaints. One company keeps appearing across multiple AI answers and has specific content addressing foundation questions.",

@@ -2,6 +2,7 @@
 
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
+import KineticBand from "./components/KineticBand";
 import { useMicroInteractions } from "./hooks/useMicroInteractions";
 
 const CALENDLY = "https://calendly.com/mvw-mattvincentwalker/business-growth-audit";
@@ -110,11 +111,11 @@ const outcomes = [
 const faqs = [
   {
     q: "Isn't this just SEO?",
-    a: "SEO gets you ranked in the ten blue links Google used to show. That's one layer of one channel. 6 Signal works across six — generative AI, answer engines, Maps, voice assistants, local entity data, and prompt-level visibility. An SEO firm optimizing for 2018's search is solving a different problem than the one costing you calls today.",
+    a: "SEO is one input into one system. It was never designed for ChatGPT, voice search, or answer engines — and it doesn't affect any of them. 6 Signal works across six layers: generative AI recommendations, prompt visibility, answer engines, index structure, local entity data, and voice. If your SEO is strong, this adds the five channels it doesn't touch.",
   },
   {
     q: "How is this different from a website audit?",
-    a: "A website audit looks at your site. The 6 Signal audit looks at everything — what AI tools say when someone asks for a contractor like you, where competitors show up instead, whether your Maps listing agrees with your website, and whether your company is visible in voice and answer-engine results. Your website is one input. We audit all six layers.",
+    a: "A website audit looks at your site. The 6 Signal audit looks at what homeowners actually see — what AI tools say about your company when someone asks for a contractor like you, where competitors appear in your place, whether your Maps listing matches your website, and whether you're visible in voice and answer-engine results. Your website is one input. We audit all six layers.",
   },
   {
     q: "Do you work with every trade?",
@@ -162,11 +163,11 @@ export default function Home() {
           </h1>
 
           <p className="hero-deck reveal">
-            Homeowners don&rsquo;t always search the old way. They ask ChatGPT who to call.
-            They check Maps before they dial. They skim AI Overviews and read reviews on the
-            way to the phone. By the time they call someone,{" "}
-            <strong>the shortlist is already made.</strong>{" "}
-            6 Signal makes sure your company is named across every system that now builds it.
+            Homeowners don&rsquo;t search the old way anymore. They ask ChatGPT who to call.
+            They check Maps before they dial. By the time they pick up the phone,{" "}
+            <strong>the shortlist is already set</strong> — built by AI tools, answer engines,
+            and local data systems most contractors have never looked at. 6 Signal gets your
+            company named across all six before the call you&rsquo;re hoping for gets made.
           </p>
 
           <div className="hero-cta-row reveal">
@@ -178,7 +179,7 @@ export default function Home() {
             </a>
             <a href="#framework" className="btn btn-ghost btn-lg">See how it works</a>
           </div>
-          <div className="hero-sig reveal">Free · 30 minutes · No pitch, no deck, no follow-up chase</div>
+          <div className="hero-sig reveal">Six-layer visibility read · Market conflict check · Priority list — yours to keep · Based in Dallas/Fort Worth</div>
 
           <div className="trust-strip reveal">
             <div className="label">We work inside —</div>
@@ -297,20 +298,7 @@ export default function Home() {
 
           <div className="why-list">
             <div className="why-row">
-              <div className="r-idx">01 / 03</div>
-              <div>
-                <h3>Homeowners verify before they call. AI is now how they verify.</h3>
-                <p>
-                  When the problem is urgent — a leak, a failure, a safety issue — buyers
-                  move fast but they don&rsquo;t call blind. They ask AI, check Maps, and skim
-                  reviews in under two minutes. If your company doesn&rsquo;t appear in that
-                  window, you don&rsquo;t get the call. The verification step has moved, and
-                  most contractors haven&rsquo;t moved with it.
-                </p>
-              </div>
-            </div>
-            <div className="why-row">
-              <div className="r-idx">02 / 03</div>
+              <div className="r-idx">01 / 02</div>
               <div>
                 <h3>AI systems are building your reputation without your input.</h3>
                 <p>
@@ -323,7 +311,7 @@ export default function Home() {
               </div>
             </div>
             <div className="why-row">
-              <div className="r-idx">03 / 03</div>
+              <div className="r-idx">02 / 02</div>
               <div>
                 <h3>The gap is open now. It won&rsquo;t stay open long.</h3>
                 <p>
@@ -383,8 +371,8 @@ export default function Home() {
               </h2>
             </div>
             <div className="right">
-              The audit is free. It runs before anything gets signed. You see the full picture
-              first — and you keep the read whether you hire us or not.
+              Thirty minutes. You see exactly where you appear, where competitors fill the gap,
+              and what AI tools say about your company right now. Yours to keep regardless.
             </div>
           </div>
 
@@ -434,6 +422,24 @@ export default function Home() {
         </div>
       </section>
 
+      {/* MID CTA 2 */}
+      <section className="mid-cta">
+        <div className="wrap">
+          <h3>
+            Your market has a shortlist.
+            <br />
+            <em>The audit tells you whether you&rsquo;re on it.</em>
+          </h3>
+          <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+            Book the audit
+            <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
+              <path d="M0 5h14M10 1l4 4-4 4" />
+            </svg>
+          </a>
+          <div className="sub">One company per market and trade</div>
+        </div>
+      </section>
+
       {/* §07 DIFFERENTIATION */}
       <section className="diff-section rule">
         <div className="wrap">
@@ -471,7 +477,11 @@ export default function Home() {
               <em>6 Signal isn&rsquo;t an SEO agency with a new deck.</em> It&rsquo;s a
               visibility practice designed from day one for how discovery actually works now
               — specialized for residential contractors, limited to one client per market and
-              trade, and built to work all six systems your customers are using tonight.
+              trade, and built to work all six systems your customers are using tonight.{" "}
+              <span className="dim">
+                Based in the Dallas/Fort Worth area. Serving contractors in DFW and select
+                markets beyond Texas.
+              </span>
             </p>
           </div>
         </div>
@@ -627,6 +637,8 @@ export default function Home() {
         </div>
       </section>
 
+      <KineticBand />
+
       {/* §11 FINAL CTA */}
       <section className="final" id="book">
         <div className="wrap">
@@ -637,9 +649,10 @@ export default function Home() {
             <em>Be one of them.</em>
           </h2>
           <p className="f-deck">
-            Thirty-minute call. We walk your visibility across all six layers, show you
-            exactly where the gaps are, and tell you honestly whether 6 Signal is the right
-            fit. If your market is already taken, we&rsquo;ll tell you on the call.
+            Thirty-minute call. We run your company through all six layers — live. You see what
+            a homeowner sees when they search for a contractor like you, where competitors are
+            filling the gap, and exactly what it would take to close it. If your market is
+            already taken, you&rsquo;ll know before we&rsquo;re five minutes in.
           </p>
           <div className="f-cta">
             <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">

@@ -7,6 +7,9 @@ import { TradeData, BASE_LAYERS } from "../trades/data";
 
 const CALENDLY = "https://calendly.com/mvw-mattvincentwalker/business-growth-audit";
 
+const sing = (s: string) =>
+  s.toLowerCase().replace(/ies$/i, "y").replace(/s$/i, "");
+
 interface TradePageProps {
   data: TradeData;
 }
@@ -63,7 +66,7 @@ export default function TradePage({ data }: TradePageProps) {
             </a>
           </div>
           <div className="hero-sig reveal">
-            Free · 30 minutes · No pitch, no deck, no follow-up chase
+            Six-layer visibility read · Market conflict check · Priority list — yours to keep
           </div>
         </div>
       </header>
@@ -110,6 +113,38 @@ export default function TradePage({ data }: TradePageProps) {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* MID CTA */}
+      <section className="mid-cta">
+        <div className="wrap">
+          <h3>
+            Every day this runs,{" "}
+            <em>
+              three {data.tradePlural.toLowerCase()} get the calls you could be getting.
+            </em>
+            <br />
+            The audit shows whether your company is one of them.
+          </h3>
+          <a
+            href={CALENDLY}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary"
+          >
+            Book the audit
+            <svg
+              className="arrow"
+              viewBox="0 0 16 10"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.2"
+            >
+              <path d="M0 5h14M10 1l4 4-4 4" />
+            </svg>
+          </a>
+          <div className="sub">30 minutes · One company per market</div>
         </div>
       </section>
 
@@ -180,8 +215,9 @@ export default function TradePage({ data }: TradePageProps) {
               Book the audit
             </div>
             <div className="e-body">
-              We show you which of these gaps exist in your company, live on the
-              call, before anything gets signed. You keep the read either way.
+              We run these checks live on the call — you see exactly which gaps
+              exist in your company before anything gets signed. Full findings are
+              yours to keep whether or not you continue.
             </div>
           </div>
         </div>
@@ -201,8 +237,8 @@ export default function TradePage({ data }: TradePageProps) {
             </div>
             <div className="right">
               Flat retainer. No tiers. No setup fees. No upsell path. One{" "}
-              {data.tradePlural.toLowerCase()} per market — the position is
-              exclusive once it&rsquo;s taken.
+              {sing(data.tradePlural)} per market — the position is exclusive
+              once it&rsquo;s taken.
             </div>
           </div>
 
@@ -213,7 +249,7 @@ export default function TradePage({ data }: TradePageProps) {
               <span className="mo">/ month</span>
             </div>
             <div className="p-sub">
-              One {data.tradePlural.toLowerCase()} per local market.{" "}
+              One {sing(data.tradePlural)} per local market.{" "}
               <em>If your territory isn&rsquo;t taken yet, it should be yours.</em>
             </div>
             <div className="p-cta">
@@ -238,6 +274,34 @@ export default function TradePage({ data }: TradePageProps) {
             <div className="p-guarantee">
               Month-to-month · Cancel anytime · Audit first — retainer only if
               you want to continue
+            </div>
+          </div>
+
+          <div className="pricing-detail">
+            <div className="pricing-note">
+              <p>
+                <span className="highlight">
+                  One {sing(data.tradePlural)} per local market, per trade.
+                </span>{" "}
+                The retainer never competes against itself — your position is
+                exclusive from the day you sign, and we don&rsquo;t take a
+                second client in your market.
+              </p>
+              <p className="italic" style={{ marginTop: "20px" }}>
+                If your market is open and you want it, book the audit. If
+                it&rsquo;s already taken, you&rsquo;ll know in the first thirty
+                seconds — and you still get the full visibility read regardless.
+              </p>
+            </div>
+
+            <div className="included">
+              <h4>Included every month</h4>
+              <div>Full visibility audit across all six layers</div>
+              <div>Local entity cleanup — Maps, listings, citations, directories</div>
+              <div>Answer-ready content structure and schema</div>
+              <div>Prompt and AI recommendation work</div>
+              <div>Monthly signal report and 90-day roadmap</div>
+              <div>Direct access to the operator running your account</div>
             </div>
           </div>
         </div>
@@ -294,10 +358,12 @@ export default function TradePage({ data }: TradePageProps) {
             )}
           </h2>
           <p className="f-deck">
-            Thirty-minute call. We run your company through all six visibility
-            layers, show you exactly where the gaps are, and tell you honestly
-            whether 6 Signal is the right fit. If your market is already taken,
-            you&rsquo;ll know in thirty seconds — and you still get the full read.
+            Thirty-minute call. We run your company through all six layers —
+            live. You see what a buyer sees when they search for{" "}
+            {data.tradePlural.toLowerCase()} in your market. We tell you exactly
+            where the gaps are and what it would take to close them. If your
+            market is already taken, you&rsquo;ll know before we&rsquo;re five
+            minutes in — and you keep the full read either way.
           </p>
           <div className="f-cta">
             <a

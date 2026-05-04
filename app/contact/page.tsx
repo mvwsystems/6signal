@@ -44,11 +44,12 @@ export default function ContactPage() {
             <span className="idx reveal">Contact</span>
             <h1 className="display reveal">
               Let&rsquo;s talk about<br />
-              <em>your website.</em>
+              <em>your market.</em>
             </h1>
             <p className="hero-deck reveal">
-              Book a free 30-minute call, fill out the form, or email directly. We give
-              straight answers and we don&rsquo;t pitch you on things you don&rsquo;t need.
+              Book the visibility audit, fill out the form, or email directly. Straight
+              answers — no pitch, no pressure, no follow-up chase if it&rsquo;s not the
+              right fit.
             </p>
           </div>
         </div>
@@ -66,11 +67,11 @@ export default function ContactPage() {
               </h2>
               <p className="contact-deck">
                 Thirty minutes on a call does more than a week of email back-and-forth.
-                Book a time that works for you — we look at your current site, hear what
-                you need, and give you a straight answer.
+                We run your company through all six visibility layers — live — and show
+                you exactly where the gaps are. You leave with a full read regardless.
               </p>
               <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg" style={{ marginBottom: "48px" }}>
-                Book a Free 30-Min Call
+                Book the Visibility Audit
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
@@ -99,6 +100,10 @@ export default function ContactPage() {
                 <div className="contact-way">
                   <span className="contact-way-label">Response</span>
                   <span className="contact-way-val">Same day, usually within a few hours</span>
+                </div>
+                <div className="contact-way">
+                  <span className="contact-way-label">Based</span>
+                  <span className="contact-way-val">Dallas/Fort Worth, TX · Serving contractors in DFW and select markets beyond Texas</span>
                 </div>
               </div>
             </div>
@@ -172,18 +177,23 @@ export default function ContactPage() {
                         <option>Plumbing</option>
                         <option>HVAC</option>
                         <option>Electrical</option>
-                        <option>General Contractor</option>
+                        <option>Remodeling / General Contractor</option>
+                        <option>Garage Doors</option>
                         <option>Landscaping</option>
+                        <option>Tree Service</option>
+                        <option>Pest Control</option>
+                        <option>Foundation / Concrete</option>
+                        <option>Commercial Contracting</option>
                         <option>Other</option>
                       </select>
                     </div>
 
                     <div className="form-field">
-                      <label htmlFor="message">What&rsquo;s going on with your website?</label>
+                      <label htmlFor="message">Tell us about your market and what you&rsquo;re trying to fix.</label>
                       <textarea
                         id="message"
                         name="message"
-                        placeholder="Tell us what you have now and what you're trying to fix."
+                        placeholder="Your city, your trade, and what's not working right now."
                         required
                       />
                     </div>
@@ -209,7 +219,7 @@ export default function ContactPage() {
 
       <div className="mobile-cta">
         <a href={CALENDLY} target="_blank" rel="noopener noreferrer">
-          Book a Free Call
+          Book the Audit
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>

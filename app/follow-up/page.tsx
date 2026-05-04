@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
@@ -53,7 +52,7 @@ export default function FollowUpPage() {
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
               </a>
-              <Link href="/websites" className="btn btn-ghost btn-lg">Start with the Website</Link>
+              <a href="#components" className="btn btn-ghost btn-lg">See how it works</a>
             </div>
             <div className="hero-sig reveal">
               Secondary engagement — foundation first
@@ -136,9 +135,8 @@ export default function FollowUpPage() {
             <div className="pricing-note">
               <p>
                 <span className="highlight">The follow-up layer is a secondary engagement.</span>{" "}
-                It&rsquo;s most effective when paired with a professional website and clear
-                visibility — so the leads coming in are already pre-sold on your company before
-                they even reach out.
+                It&rsquo;s most effective when paired with strong visibility — so the leads
+                coming in are already pre-sold on your company before they even reach out.
               </p>
               <p className="italic" style={{ marginTop: "20px" }}>
                 Pricing is based on volume and configuration. Book a call and we&rsquo;ll walk
