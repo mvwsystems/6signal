@@ -2,8 +2,7 @@
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
-
-const CALENDLY = "https://calendly.com/mvw-mattvincentwalker/business-growth-audit";
+import { AUDIT_INTAKE_URL } from "@/app/lib/links";
 
 const layers = [
   {
@@ -81,8 +80,8 @@ export default function VisibilityPage() {
               where — live, across all six layers, before anything gets signed.
             </p>
             <div className="hero-cta-row reveal">
-              <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
-                Book the visibility audit
+              <a href="/audit" className="btn btn-primary btn-lg">
+                Book the Visibility Audit
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
@@ -90,7 +89,7 @@ export default function VisibilityPage() {
               <a href="/#framework" className="btn btn-ghost btn-lg">See the framework</a>
             </div>
             <div className="hero-sig reveal">
-              Six-layer visibility read · Market conflict check · Priority list — yours to keep
+              Six-layer pre-audit · 30-minute readout · Market conflict check · Priority list yours to keep
             </div>
           </div>
         </div>
@@ -136,13 +135,13 @@ export default function VisibilityPage() {
             <br />
             <em>The audit tells you whether you&rsquo;re on it.</em>
           </h3>
-          <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-            Book the audit
+          <a href="/audit" className="btn btn-primary">
+            Find the Gaps
             <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>
           </a>
-          <div className="sub">One company per market and trade</div>
+          <div className="sub">Pre-audit included · 30-minute readout · One company per market</div>
         </div>
       </section>
 
@@ -194,7 +193,7 @@ export default function VisibilityPage() {
             know in thirty seconds — and you keep the full read either way.
           </p>
           <div className="f-cta">
-            <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
+            <a href={AUDIT_INTAKE_URL} className="btn btn-primary btn-lg">
               Book the audit
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
@@ -208,9 +207,9 @@ export default function VisibilityPage() {
             </a>
           </div>
           <div className="f-notes">
-            <span>Free</span>
-            <span>30 minutes</span>
-            <span>No pitch</span>
+            <span>No-charge pre-audit</span>
+            <span>30-minute readout</span>
+            <span>No commitment required</span>
             <span>One client per market</span>
           </div>
         </div>
@@ -219,7 +218,7 @@ export default function VisibilityPage() {
       <Footer />
 
       <div className="mobile-cta">
-        <a href={CALENDLY} target="_blank" rel="noopener noreferrer">
+        <a href={AUDIT_INTAKE_URL}>
           Book the visibility audit
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />

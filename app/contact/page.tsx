@@ -3,8 +3,8 @@ import { useState } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
+import { AUDIT_INTAKE_URL } from "@/app/lib/links";
 
-const CALENDLY = "https://calendly.com/mvw-mattvincentwalker/business-growth-audit";
 const MAILTO = "mvw@mattvincentwalker.com";
 
 export default function ContactPage() {
@@ -67,10 +67,11 @@ export default function ContactPage() {
               </h2>
               <p className="contact-deck">
                 Thirty minutes on a call does more than a week of email back-and-forth.
-                We run your company through all six visibility layers — live — and show
-                you exactly where the gaps are. You leave with a full read regardless.
+                We run the pre-audit before the call, then walk through the findings with
+                you live — layer by layer. You leave with the full read regardless of
+                what you decide.
               </p>
-              <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg" style={{ marginBottom: "48px" }}>
+              <a href={AUDIT_INTAKE_URL} className="btn btn-primary btn-lg" style={{ marginBottom: "48px" }}>
                 Book the Visibility Audit
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
@@ -87,23 +88,36 @@ export default function ContactPage() {
                   </a>
                 </div>
                 <div className="contact-way">
-                  <span className="contact-way-label">Calendly</span>
-                  <a
-                    href={CALENDLY}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="contact-way-val"
-                  >
-                    Book a time directly →
-                  </a>
-                </div>
-                <div className="contact-way">
                   <span className="contact-way-label">Response</span>
                   <span className="contact-way-val">Same day, usually within a few hours</span>
                 </div>
                 <div className="contact-way">
                   <span className="contact-way-label">Based</span>
                   <span className="contact-way-val">Dallas/Fort Worth, TX · Serving contractors in DFW and select markets beyond Texas</span>
+                </div>
+              </div>
+
+              <div className="contact-steps">
+                <div className="contact-step">
+                  <div className="contact-step-num">01</div>
+                  <div className="contact-step-body">
+                    <strong>Complete the intake</strong>
+                    Tell us your trade, service area, and top competitors. Takes a few minutes — the scheduling link appears right after.
+                  </div>
+                </div>
+                <div className="contact-step">
+                  <div className="contact-step-num">02</div>
+                  <div className="contact-step-body">
+                    <strong>Pre-audit</strong>
+                    Before the call, we run your company through all six visibility layers. Your top competitors get the same read.
+                  </div>
+                </div>
+                <div className="contact-step">
+                  <div className="contact-step-num">03</div>
+                  <div className="contact-step-body">
+                    <strong>Readout</strong>
+                    30 minutes on video. We walk through the findings — layer by layer, gap by gap. Full priority list is yours to keep regardless of what you decide.
+                  </div>
                 </div>
               </div>
             </div>
@@ -114,16 +128,19 @@ export default function ContactPage() {
                 <div className="form-success">
                   <h3>Got it. We&rsquo;ll be in touch.</h3>
                   <p>
-                    Expect a response within a few hours. In the meantime, feel free to{" "}
-                    <a href={CALENDLY} target="_blank" rel="noopener noreferrer" style={{ color: "#f5f5f3" }}>
-                      book a call directly
+                    Expect a response within a few hours. In the meantime, you can also{" "}
+                    <a href={AUDIT_INTAKE_URL} style={{ color: "#f5f5f3" }}>
+                      complete the intake
                     </a>
-                    .
+                    {" "}and schedule your readout.
                   </p>
                 </div>
               ) : (
                 <>
                   <h3>Or send a message</h3>
+                  <p className="form-note" style={{ marginTop: "8px", marginBottom: "24px" }}>
+                    Clicking Send opens your email client with these details pre-filled — the message sends from your address.
+                  </p>
                   <form onSubmit={handleSubmit}>
                     <div className="form-row">
                       <div className="form-field">
@@ -205,7 +222,7 @@ export default function ContactPage() {
                       </svg>
                     </button>
                     <p className="form-note">
-                      We respond same day. If it&rsquo;s urgent, book a call directly.
+                      We respond same day — if it&rsquo;s urgent, book a call directly.
                     </p>
                   </form>
                 </>
@@ -218,7 +235,7 @@ export default function ContactPage() {
       <Footer />
 
       <div className="mobile-cta">
-        <a href={CALENDLY} target="_blank" rel="noopener noreferrer">
+        <a href={AUDIT_INTAKE_URL}>
           Book the Audit
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />

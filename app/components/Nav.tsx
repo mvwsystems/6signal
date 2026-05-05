@@ -1,8 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
-const CALENDLY = "https://calendly.com/mvw-mattvincentwalker/business-growth-audit";
+import { AUDIT_INTAKE_URL } from "@/app/lib/links";
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -25,7 +24,7 @@ export default function Nav() {
           <Link href="/#pricing">Retainer</Link>
           <Link href="/#faq">FAQ</Link>
         </div>
-        <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="nav-cta">
+        <a href={AUDIT_INTAKE_URL} className="nav-cta">
           Book the audit →
         </a>
       </div>

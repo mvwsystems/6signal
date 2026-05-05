@@ -2,8 +2,7 @@
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
-
-const CALENDLY = "https://calendly.com/mvw-mattvincentwalker/business-growth-audit";
+import { AUDIT_INTAKE_URL } from "@/app/lib/links";
 
 const components = [
   {
@@ -46,8 +45,8 @@ export default function FollowUpPage() {
               immediately, and in a way that sounds like you.
             </p>
             <div className="hero-cta-row reveal">
-              <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
-                Book a Discovery Call
+              <a href="/audit" className="btn btn-primary btn-lg">
+                Book the Visibility Audit
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
@@ -55,7 +54,7 @@ export default function FollowUpPage() {
               <a href="#components" className="btn btn-ghost btn-lg">See how it works</a>
             </div>
             <div className="hero-sig reveal">
-              Secondary engagement — foundation first
+              Visibility first · Follow-up layer is most effective when leads already know your name
             </div>
           </div>
         </div>
@@ -71,26 +70,26 @@ export default function FollowUpPage() {
           </p>
           <div className="problem-cols">
             <div className="problem-text">
-              Studies consistently show that response time is the single biggest factor in
-              converting inbound leads for service businesses. Not price. Not reviews. Not
-              even brand.
+              The contractor who responds first usually gets the job. Not always —
+              but often enough that response time is the most controllable variable
+              in your conversion rate. Not price. Not reviews. Not brand.
               <br /><br />
-              Most contractors can&rsquo;t respond in 5 minutes. They&rsquo;re on a job.
-              They&rsquo;re driving. They see the call and mean to call back, but by then
-              the buyer has already booked the company that picked up.
+              Most contractors can&rsquo;t respond in minutes. They&rsquo;re on a
+              job. They&rsquo;re driving. They see the call and mean to call back,
+              but by then the buyer has already booked whoever picked up first.
               <br /><br />
               <span className="dim">
-                The follow-up layer doesn&rsquo;t replace you. It bridges the gap so no
-                lead falls through between the moment they reach out and the moment you
-                can actually talk.
+                The follow-up layer doesn&rsquo;t replace you. It bridges the gap
+                between when a lead reaches out and when you can actually talk —
+                so no qualified lead goes cold because you were unavailable.
               </span>
             </div>
             <div className="problem-bullets">
               {[
-                "78% of buyers go with the first company that responds.",
-                "The average contractor calls back 2–3 hours later. That&rsquo;s too slow.",
-                "A missed call with no text back signals an unresponsive company.",
-                "Form submissions at night get answered in the morning — by your competitor.",
+                "Response time is the most common reason a lead goes to a competitor — not price, not reviews.",
+                "The average contractor calls back 2–3 hours later. By then, most buyers have moved on.",
+                "A missed call with no text back reads as an unresponsive company — even if you were just on a job.",
+                "Form submissions at night get answered in the morning — by your competitor with automated follow-up.",
                 "You're running a job and can't check your phone. The lead moves on.",
               ].map((b, i) => (
                 <div key={i} className="problem-bullet">{b}</div>
@@ -138,10 +137,17 @@ export default function FollowUpPage() {
                 It&rsquo;s most effective when paired with strong visibility — so the leads
                 coming in are already pre-sold on your company before they even reach out.
               </p>
+              <p style={{ marginTop: "20px" }}>
+                If you haven&rsquo;t run a visibility audit, that&rsquo;s the recommended
+                first step.{" "}
+                <a href="/audit" style={{ color: "#f5f5f3", textDecoration: "underline", textUnderlineOffset: "3px" }}>
+                  Book the free audit →
+                </a>
+              </p>
               <p className="italic" style={{ marginTop: "20px" }}>
-                Pricing is based on volume and configuration. Book a call and we&rsquo;ll walk
-                you through exactly what the setup would look like for your business and what
-                it costs.
+                Pricing for the follow-up layer is based on volume and configuration. Book a
+                call and we&rsquo;ll walk through exactly what the setup looks like for your
+                business and what it costs.
               </p>
             </div>
             <div className="included">
@@ -164,21 +170,20 @@ export default function FollowUpPage() {
             to slow response times.
           </h2>
           <p className="f-deck">
-            Book a free 30-minute call. We&rsquo;ll look at where your leads are dropping
-            off and show you exactly how the follow-up system would work for your company.
+            Start with the free visibility audit. We run the six-layer pre-audit before
+            the call — if the follow-up layer is a fit alongside the retainer,
+            we&rsquo;ll walk through what that looks like after you&rsquo;ve seen the
+            full read.
           </p>
           <div className="f-cta">
-            <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
-              Book a Discovery Call
+            <a href={AUDIT_INTAKE_URL} className="btn btn-primary btn-lg">
+              Book the Visibility Audit
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
             </a>
-            <a
-              href="mailto:mvw@mattvincentwalker.com?subject=%F0%9F%94%A5%206%20Signal%20%F0%9F%94%A5"
-              className="btn btn-ghost btn-lg"
-            >
-              Email Directly
+            <a href="/audit" className="btn btn-ghost btn-lg">
+              Start with the visibility audit
             </a>
           </div>
           <div className="f-notes">
@@ -193,8 +198,8 @@ export default function FollowUpPage() {
       <Footer />
 
       <div className="mobile-cta">
-        <a href={CALENDLY} target="_blank" rel="noopener noreferrer">
-          Book a Call
+        <a href={AUDIT_INTAKE_URL}>
+          Book the Visibility Audit
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>

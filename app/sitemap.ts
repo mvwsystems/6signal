@@ -17,6 +17,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/pest-control`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/foundation-concrete`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/commercial-contractors`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/method`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
+    { url: `${BASE}/audit`, lastModified: now, changeFrequency: "monthly", priority: 0.95 },
+    { url: `${BASE}/work`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/visibility`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
   ];

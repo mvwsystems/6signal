@@ -2,10 +2,10 @@
 
 import Nav from "./Nav";
 import Footer from "./Footer";
+import AuditExamplesSection from "./proof/AuditExamplesSection";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
 import { TradeData, BASE_LAYERS } from "../trades/data";
-
-const CALENDLY = "https://calendly.com/mvw-mattvincentwalker/business-growth-audit";
+import { AUDIT_INTAKE_URL } from "@/app/lib/links";
 
 const sing = (s: string) =>
   s.toLowerCase().replace(/ies$/i, "y").replace(/s$/i, "");
@@ -44,13 +44,8 @@ export default function TradePage({ data }: TradePageProps) {
           <p className="hero-deck reveal">{data.heroDeck}</p>
 
           <div className="hero-cta-row reveal">
-            <a
-              href={CALENDLY}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary btn-lg"
-            >
-              Book the visibility audit
+            <a href={AUDIT_INTAKE_URL} className="btn btn-primary btn-lg">
+              Book the Visibility Audit
               <svg
                 className="arrow"
                 viewBox="0 0 16 10"
@@ -66,7 +61,7 @@ export default function TradePage({ data }: TradePageProps) {
             </a>
           </div>
           <div className="hero-sig reveal">
-            Six-layer visibility read · Market conflict check · Priority list — yours to keep
+            Six-layer pre-audit · 30-minute readout · Market conflict check · Priority list yours to keep
           </div>
         </div>
       </header>
@@ -128,9 +123,7 @@ export default function TradePage({ data }: TradePageProps) {
             The audit shows whether your company is one of them.
           </h3>
           <a
-            href={CALENDLY}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={AUDIT_INTAKE_URL}
             className="btn btn-primary"
           >
             Book the audit
@@ -144,7 +137,7 @@ export default function TradePage({ data }: TradePageProps) {
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>
           </a>
-          <div className="sub">30 minutes · One company per market</div>
+          <div className="sub">30 minutes · One {sing(data.tradePlural).toLowerCase()} per market · Market conflict check</div>
         </div>
       </section>
 
@@ -220,8 +213,27 @@ export default function TradePage({ data }: TradePageProps) {
               yours to keep whether or not you continue.
             </div>
           </div>
+          <div className="safety-note" style={{ marginTop: "40px" }}>
+            <span className="safety-note-label">How the audit works</span>
+            <p>
+              <strong>We run the six-layer pre-audit before the call.</strong> When
+              we get on the video, we walk through the findings — gap by gap, layer
+              by layer, against your top competitors. No slides. If there&rsquo;s a
+              fit for the retainer, we&rsquo;ll say so once. If it&rsquo;s not a fit,
+              we&rsquo;ll say that first.{" "}
+              <em>The full findings are yours either way.</em>
+            </p>
+          </div>
         </div>
       </section>
+
+      <AuditExamplesSection
+        maxItems={2}
+        idx="What audits find"
+        headlineTop="Illustrative findings."
+        headlineEm="Common gaps across trades."
+        deckRight="Format examples showing the types of visibility gaps that surface in a live audit read — across AI tools, Maps, entity data, and voice search."
+      />
 
       {/* §06 PRICING */}
       <section className="pricing-section rule" id="pricing">
@@ -254,9 +266,7 @@ export default function TradePage({ data }: TradePageProps) {
             </div>
             <div className="p-cta">
               <a
-                href={CALENDLY}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={AUDIT_INTAKE_URL}
                 className="btn btn-primary btn-lg"
               >
                 Claim your market
@@ -358,18 +368,16 @@ export default function TradePage({ data }: TradePageProps) {
             )}
           </h2>
           <p className="f-deck">
-            Thirty-minute call. We run your company through all six layers —
-            live. You see what a buyer sees when they search for{" "}
-            {data.tradePlural.toLowerCase()} in your market. We tell you exactly
-            where the gaps are and what it would take to close them. If your
-            market is already taken, you&rsquo;ll know before we&rsquo;re five
-            minutes in — and you keep the full read either way.
+            We run the six-layer pre-audit before the call. On the readout, we
+            walk through what we found — where{" "}
+            {data.tradePlural.toLowerCase()} in your market appear, where you
+            get skipped, and what your competitors look like in the same read.
+            If your market is already taken, you&rsquo;ll know within the first
+            five minutes. You keep the full findings either way.
           </p>
           <div className="f-cta">
             <a
-              href={CALENDLY}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={AUDIT_INTAKE_URL}
               className="btn btn-primary btn-lg"
             >
               Book the audit
@@ -390,10 +398,15 @@ export default function TradePage({ data }: TradePageProps) {
               Email directly
             </a>
           </div>
+          <p style={{ fontFamily: "'Chakra Petch', sans-serif", fontSize: "14px", color: "#7a7a78", textAlign: "center", marginTop: "28px", marginBottom: "0", maxWidth: "560px", marginInline: "auto", lineHeight: "1.6" }}>
+            We run the same six-layer visibility read your buyers and AI systems
+            run — live, on screen, in thirty minutes. You leave with what gets
+            found, what gets skipped, and what to fix first.
+          </p>
           <div className="f-notes">
-            <span>Free</span>
-            <span>30 minutes</span>
-            <span>No pitch</span>
+            <span>No-charge pre-audit</span>
+            <span>30-minute readout</span>
+            <span>No commitment required</span>
             <span>One client per market</span>
           </div>
         </div>
@@ -402,7 +415,7 @@ export default function TradePage({ data }: TradePageProps) {
       <Footer />
 
       <div className="mobile-cta">
-        <a href={CALENDLY} target="_blank" rel="noopener noreferrer">
+        <a href={AUDIT_INTAKE_URL}>
           Book the visibility audit
           <svg
             width="14"

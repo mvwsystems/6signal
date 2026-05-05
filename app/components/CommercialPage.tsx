@@ -2,9 +2,9 @@
 
 import Nav from "./Nav";
 import Footer from "./Footer";
+import AuditExamplesSection from "./proof/AuditExamplesSection";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
-
-const CALENDLY = "https://calendly.com/mvw-mattvincentwalker/business-growth-audit";
+import { AUDIT_INTAKE_URL } from "@/app/lib/links";
 
 const SIX_SIGNALS = [
   {
@@ -168,13 +168,8 @@ export default function CommercialPage() {
           </p>
 
           <div className="hero-cta-row reveal">
-            <a
-              href={CALENDLY}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary btn-lg"
-            >
-              Book the visibility audit
+            <a href={AUDIT_INTAKE_URL} className="btn btn-primary btn-lg">
+              Book the Visibility Audit
               <svg
                 className="arrow"
                 viewBox="0 0 16 10"
@@ -190,7 +185,7 @@ export default function CommercialPage() {
             </a>
           </div>
           <div className="hero-sig reveal">
-            Six-layer visibility read · Market conflict check · Priority list — yours to keep
+            Six-layer pre-audit · 30-minute readout · Market conflict check · Priority list yours to keep
           </div>
         </div>
       </header>
@@ -280,13 +275,8 @@ export default function CommercialPage() {
             <br />
             <em>The audit shows whether your company is in those conversations.</em>
           </h3>
-          <a
-            href={CALENDLY}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-primary"
-          >
-            Book the audit
+          <a href={AUDIT_INTAKE_URL} className="btn btn-primary">
+            Book the Visibility Audit
             <svg
               className="arrow"
               viewBox="0 0 16 10"
@@ -297,7 +287,7 @@ export default function CommercialPage() {
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>
           </a>
-          <div className="sub">30 minutes · One commercial contractor per market</div>
+          <div className="sub">Pre-audit included · One commercial contractor per market</div>
         </div>
       </section>
 
@@ -380,19 +370,21 @@ export default function CommercialPage() {
           <div className="diff-story">
             <div className="caption">What the audit covers</div>
             <p>
-              We run your company name and primary scope terms through AI tools,
-              search engines, Maps, and commercial databases —{" "}
+              Before the readout call, we run your company name and primary scope
+              terms through AI tools, search engines, Maps, and commercial
+              databases —{" "}
               <span className="dim">
                 the same research path a GC, project owner, or procurement team
-                would take when evaluating you before outreach.
+                takes when evaluating a contractor before outreach. You don&rsquo;t
+                need to be on a call for this part.
               </span>
             </p>
             <p>
-              We show you what competitors look like when searched by the same
-              buyers.{" "}
+              We run the same pre-audit for your top local competitors. On the
+              readout call, you see exactly what buyers find about them —{" "}
               <span className="dim">
-                If another contractor in your market is better structured,
-                you&rsquo;ll see exactly where and why.
+                where they&rsquo;re better structured than you, and where the
+                widest gaps are.
               </span>
             </p>
             <p>
@@ -401,7 +393,7 @@ export default function CommercialPage() {
                 most leverage — the ones most likely to determine whether you
                 make a bid list or get filtered out before the RFP is written.
               </em>{" "}
-              You keep the read whether or not you continue with us.
+              You keep the findings whether or not you continue with us.
             </p>
           </div>
         </div>
@@ -522,6 +514,15 @@ export default function CommercialPage() {
         </div>
       </section>
 
+      <AuditExamplesSection
+        trade="Commercial Contracting"
+        maxItems={2}
+        idx="What commercial audits find"
+        headlineTop="Illustrative findings."
+        headlineEm="Commercial credibility gaps."
+        deckRight="Format examples of the types of issues that surface when we run a commercial contractor through the six-layer audit read."
+      />
+
       {/* §09 PRICING */}
       <section className="pricing-section rule" id="pricing">
         <div className="wrap">
@@ -555,9 +556,7 @@ export default function CommercialPage() {
             </div>
             <div className="p-cta">
               <a
-                href={CALENDLY}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={AUDIT_INTAKE_URL}
                 className="btn btn-primary btn-lg"
               >
                 Book the audit
@@ -626,20 +625,18 @@ export default function CommercialPage() {
             <em>Make sure the systems tell the right story.</em>
           </h2>
           <p className="f-deck">
-            Thirty-minute call. We run your company through the same research a
-            GC, procurement team, or project owner would use — and show you
-            exactly what they find. You see where the credibility gaps are before
-            they cost you an opportunity you never knew was available. Full
-            findings are yours to keep regardless of what you decide.
+            Before the call, we run your company through the same research path
+            a GC, procurement team, or project owner uses when vetting a
+            contractor. On the 30-minute readout, we walk through what they find
+            — credibility gaps, competitor positioning, and what it would take
+            to fix both. Full findings are yours regardless of what you decide.
           </p>
           <div className="f-cta">
             <a
-              href={CALENDLY}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={AUDIT_INTAKE_URL}
               className="btn btn-primary btn-lg"
             >
-              Book the audit
+              Book the Visibility Audit
               <svg
                 className="arrow"
                 viewBox="0 0 16 10"
@@ -658,10 +655,10 @@ export default function CommercialPage() {
             </a>
           </div>
           <div className="f-notes">
-            <span>Free</span>
-            <span>30 minutes</span>
-            <span>No pitch</span>
-            <span>One client per market</span>
+            <span>No-charge pre-audit</span>
+            <span>30-minute readout</span>
+            <span>No commitment required</span>
+            <span>One contractor per market</span>
           </div>
         </div>
       </section>
@@ -669,7 +666,7 @@ export default function CommercialPage() {
       <Footer />
 
       <div className="mobile-cta">
-        <a href={CALENDLY} target="_blank" rel="noopener noreferrer">
+        <a href={AUDIT_INTAKE_URL}>
           Book the visibility audit
           <svg
             width="14"

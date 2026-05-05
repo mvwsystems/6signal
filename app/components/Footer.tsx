@@ -18,6 +18,7 @@ export default function Footer() {
           <div className="footer-right">
             <div className="footer-col">
               <div className="head">Site</div>
+              <Link href="/method">The Method</Link>
               <Link href="/#framework">The Six Layers</Link>
               <Link href="/#engagement">The Audit</Link>
               <Link href="/#pricing">Retainer</Link>

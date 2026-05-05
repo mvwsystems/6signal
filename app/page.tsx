@@ -3,9 +3,9 @@
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import KineticBand from "./components/KineticBand";
+import AuditExamplesSection from "./components/proof/AuditExamplesSection";
 import { useMicroInteractions } from "./hooks/useMicroInteractions";
-
-const CALENDLY = "https://calendly.com/mvw-mattvincentwalker/business-growth-audit";
+import { AUDIT_INTAKE_URL } from "@/app/lib/links";
 
 const layers = [
   {
@@ -55,21 +55,21 @@ const layers = [
 const auditSteps = [
   {
     num: "01",
-    phase: "Appear",
-    title: "Where you show up",
-    body: "We run your company through all six layers live — AI tools, Maps, voice, answer engines, directories. You see exactly where you appear and where you don't, in real time.",
+    phase: "Pre-audit",
+    title: "Where you show up — and where you don't",
+    body: "Before the readout call, we run your company through all six layers — AI tools, Maps, voice, answer engines, directories, and local entity data. You see exactly where you appear and where you're invisible, without needing to be on a call for any of it.",
   },
   {
     num: "02",
     phase: "Compete",
     title: "Where competitors show up instead",
-    body: "We run the same read for your top local competitors. You see who is occupying the shortlist in your market, which layers they've covered, and where the gap is widest.",
+    body: "We run the same six-layer pre-audit for your top local competitors. During the readout, you see who occupies the shortlist in your market, which layers they've covered, and where the gap is widest.",
   },
   {
     num: "03",
     phase: "Listen",
     title: "What AI says about your company",
-    body: "We show you the actual language AI tools use when asked about contractors in your trade and market. Most contractors have never seen this. Most of what they find is wrong or incomplete.",
+    body: "We surface the actual language AI tools use when asked about contractors in your trade and market. Most contractors have never seen this. Most of what the machines say was never their intended positioning.",
   },
   {
     num: "04",
@@ -171,15 +171,15 @@ export default function Home() {
           </p>
 
           <div className="hero-cta-row reveal">
-            <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
-              Book the visibility audit
+            <a href={AUDIT_INTAKE_URL} className="btn btn-primary btn-lg">
+              Book the Visibility Audit
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
             </a>
             <a href="#framework" className="btn btn-ghost btn-lg">See how it works</a>
           </div>
-          <div className="hero-sig reveal">Six-layer visibility read · Market conflict check · Priority list — yours to keep · Based in Dallas/Fort Worth</div>
+          <div className="hero-sig reveal">Complete the intake · Schedule your readout · Priority list yours to keep</div>
 
           <div className="trust-strip reveal">
             <div className="label">We work inside —</div>
@@ -269,13 +269,13 @@ export default function Home() {
             <br />
             The audit tells you if one of them is yours.
           </h3>
-          <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-            Book the audit
+          <a href="/audit" className="btn btn-primary">
+            See Where You Get Skipped
             <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>
           </a>
-          <div className="sub">Takes 30 minutes · Free</div>
+          <div className="sub">Pre-audit included · 30-minute readout · No commitment</div>
         </div>
       </section>
 
@@ -332,15 +332,17 @@ export default function Home() {
         <div className="wrap">
           <div className="sec-head">
             <div className="left">
-              <span className="idx">§ 04 — The framework</span>
+              <span className="idx">§ 04 — The six-layer framework</span>
               <h2 className="display">
                 Six systems decide.<br />
                 <em>We work all six.</em>
               </h2>
             </div>
             <div className="right">
-              Each one is a different channel where your name gets surfaced — or doesn&rsquo;t.
-              Miss one and the shortlist forms without you.
+              Six because there are six distinct systems that independently form a homeowner&rsquo;s
+              shortlist. Signal because visibility isn&rsquo;t about ranking — it&rsquo;s about
+              getting the right signal to the right machine at the right moment. Miss one layer
+              and the shortlist forms without you.
             </div>
           </div>
 
@@ -371,8 +373,10 @@ export default function Home() {
               </h2>
             </div>
             <div className="right">
-              Thirty minutes. You see exactly where you appear, where competitors fill the gap,
-              and what AI tools say about your company right now. Yours to keep regardless.
+              We run the six-layer pre-audit before the call. On the readout, we walk
+              through the findings — your company, your competitors, your market, layer by
+              layer. No slides, no deck. The full findings are yours regardless of what
+              you decide.
             </div>
           </div>
 
@@ -422,21 +426,50 @@ export default function Home() {
         </div>
       </section>
 
+      {/* RESULTS NOTE */}
+      <section className="results-section">
+        <div className="wrap">
+          <div className="results-inner">
+            <div className="results-statement">
+              <strong>6 Signal is a new practice.</strong> Audits are running. Retainers are
+              active. We&rsquo;re documenting outcomes as they develop — call volume changes,
+              citation wins, AI recommendation improvements.{" "}
+              <em>
+                We don&rsquo;t publish outcomes we can&rsquo;t verify, attribute accurately,
+                or share with a client&rsquo;s permission.
+              </em>{" "}
+              That&rsquo;s a deliberate choice, not a gap. If you want to speak with someone
+              who&rsquo;s been through the process, ask on the audit call and we&rsquo;ll
+              facilitate the introduction.
+            </div>
+            <div className="results-right-label">On outcomes</div>
+          </div>
+        </div>
+      </section>
+
+      <AuditExamplesSection
+        maxItems={4}
+        idx="What audits typically find"
+        headlineTop="Gaps that cost calls."
+        headlineEm="Across every trade."
+        deckRight="These are the types of issues that surface in the audit — shown as illustrative format examples across different trades and search layers."
+      />
+
       {/* MID CTA 2 */}
       <section className="mid-cta">
         <div className="wrap">
           <h3>
             Your market has a shortlist.
             <br />
-            <em>The audit tells you whether you&rsquo;re on it.</em>
+            <em>Find out if your name is on it.</em>
           </h3>
-          <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-            Book the audit
+          <a href={AUDIT_INTAKE_URL} className="btn btn-primary">
+            Book the Visibility Audit
             <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>
           </a>
-          <div className="sub">One company per market and trade</div>
+          <div className="sub">Complete the intake · Schedule your readout · One company per market</div>
         </div>
       </section>
 
@@ -482,6 +515,17 @@ export default function Home() {
                 Based in the Dallas/Fort Worth area. Serving contractors in DFW and select
                 markets beyond Texas.
               </span>
+            </p>
+          </div>
+
+          <div className="operator-note">
+            <span className="op-label">The operator</span>
+            <p>
+              <strong>6 Signal is run by Matt Walker</strong> — a visibility practitioner
+              who works exclusively on how AI and search systems form local shortlists for
+              residential service businesses. One operator per account. No account managers,
+              no junior staff on your work. When you&rsquo;re on the audit call, you&rsquo;re
+              talking to the person doing the work.
             </p>
           </div>
         </div>
@@ -560,7 +604,7 @@ export default function Home() {
               <em>If your territory isn&rsquo;t taken yet, it should be yours.</em>
             </div>
             <div className="p-cta">
-              <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
+              <a href={AUDIT_INTAKE_URL} className="btn btn-primary btn-lg">
                 Claim your market
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
@@ -576,15 +620,22 @@ export default function Home() {
             <div className="pricing-note">
               <p>
                 <span className="highlight">
-                  We take one contractor per market, per trade
+                  We do not work with direct competitors in the same trade and market.
                 </span>{" "}
-                — one roofer, one HVAC company, one plumber per city. The retainer never
-                competes against itself in your market.
+                If we are already working with a roofer in your city, we will not take
+                another roofer there. One HVAC company per market. One plumber per market.
+                The retainer never competes against itself.
+              </p>
+              <p style={{ marginTop: "20px" }}>
+                This is structural, not a sales tactic. Visibility work creates competitive
+                advantage — building your company into the three-name shortlist while
+                simultaneously building your direct competitor into the same shortlist would
+                undo the work. The exclusivity makes the retainer meaningful.
               </p>
               <p className="italic" style={{ marginTop: "20px" }}>
-                If your market is open and you want it, book the audit. If it&rsquo;s already
-                taken, the call tells you in thirty seconds — and you still get the full
-                visibility read regardless.
+                The audit includes a market conflict check. If your market is open and you
+                want it, book the call. If it&rsquo;s already taken, you&rsquo;ll know in
+                the first thirty seconds — and you still keep the full visibility read.
               </p>
             </div>
 
@@ -637,26 +688,73 @@ export default function Home() {
         </div>
       </section>
 
+      {/* HOW THE AUDIT WORKS */}
+      <section className="rule" style={{ paddingBottom: "0" }}>
+        <div className="wrap">
+          <div className="sec-head">
+            <div className="left">
+              <span className="idx">How the audit works</span>
+              <h2 className="display">
+                Pre-audit first.<br />
+                <em>Readout on the call.</em>
+              </h2>
+            </div>
+            <div className="right">
+              We do the diagnostic work before the call — so the 30 minutes with you is
+              spent on findings, not discovery. A short intake tells us what to look for.
+              Then the pre-audit runs. Then we walk through what we found.
+            </div>
+          </div>
+          <div className="process-steps">
+            <div className="process-step">
+              <span className="process-step-num">01 — Intake</span>
+              <h3>Complete the short intake</h3>
+              <p>Tell us your trade, service area, website, top services, and top competitors. Takes a few minutes. The scheduling link appears right after — pick a time for your readout while you&rsquo;re there.</p>
+            </div>
+            <div className="process-step">
+              <span className="process-step-num">02 — Pre-audit</span>
+              <h3>We run the six-layer read</h3>
+              <p>Before the call, we run your company through all six visibility layers — AI tools, Maps, voice, answer engines, directories, and local entity data. Your top competitors get the same read.</p>
+            </div>
+            <div className="process-step">
+              <span className="process-step-num">03 — Readout</span>
+              <h3>We walk through the findings</h3>
+              <p>30 minutes on video. We walk through what we found — layer by layer, gap by gap, against your competitors. Full findings and priority list are yours regardless of what you decide.</p>
+            </div>
+          </div>
+          <div className="safety-note">
+            <span className="safety-note-label">On the retainer conversation</span>
+            <p>
+              <strong>We show you the findings first.</strong> If there&rsquo;s a fit for
+              the retainer, we&rsquo;ll say so once — clearly, without pressure. If it&rsquo;s
+              not a fit, we&rsquo;ll say that instead. <em>The full findings are yours either
+              way. No follow-up if the answer is no.</em>
+            </p>
+          </div>
+        </div>
+      </section>
+
       <KineticBand />
 
       {/* §11 FINAL CTA */}
       <section className="final" id="book">
         <div className="wrap">
-          <div className="f-eyebrow">Book the audit</div>
+          <div className="f-eyebrow">Book the Visibility Audit</div>
           <h2 className="display">
-            Three contractors get named<br />
-            in your market this week.<br />
-            <em>Be one of them.</em>
+            See what AI says<br />
+            about your company<br />
+            <em>before your next call does.</em>
           </h2>
           <p className="f-deck">
-            Thirty-minute call. We run your company through all six layers — live. You see what
-            a homeowner sees when they search for a contractor like you, where competitors are
-            filling the gap, and exactly what it would take to close it. If your market is
-            already taken, you&rsquo;ll know before we&rsquo;re five minutes in.
+            Complete the short pre-audit intake, then schedule your 30-minute
+            visibility readout. We run the six-layer pre-audit before the call —
+            so your readout is specific to your company, your competitors, and your
+            market. The findings and priority list are yours regardless of what
+            you decide.
           </p>
           <div className="f-cta">
-            <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
-              Book the audit
+            <a href={AUDIT_INTAKE_URL} className="btn btn-primary btn-lg">
+              Book the Visibility Audit
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
@@ -669,10 +767,10 @@ export default function Home() {
             </a>
           </div>
           <div className="f-notes">
-            <span>Free</span>
-            <span>30 minutes</span>
-            <span>No pitch</span>
-            <span>One client per market</span>
+            <span>Short intake</span>
+            <span>Six-layer pre-audit</span>
+            <span>30-minute readout</span>
+            <span>Priority list yours to keep</span>
           </div>
         </div>
       </section>
@@ -680,7 +778,7 @@ export default function Home() {
       <Footer />
 
       <div className="mobile-cta">
-        <a href={CALENDLY} target="_blank" rel="noopener noreferrer">
+        <a href={AUDIT_INTAKE_URL}>
           Book the visibility audit
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
