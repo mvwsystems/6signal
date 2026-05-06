@@ -30,6 +30,7 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden; /* iOS Safari requires this on html AND body to prevent horizontal scroll */
   }
 
   body {
