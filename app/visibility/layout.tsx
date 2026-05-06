@@ -9,12 +9,12 @@ export const metadata: Metadata = {
     description:
       "6 Signal audits contractor visibility across all six layers — AI recommendations, Maps, answer engines, voice, and directories — live on a 30-minute call. Free. Yours to keep.",
     type: "website",
-    images: [{ url: "/6SIGNAL.png" }],
+    images: [{ url: "/og-social.jpg" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Six systems decide who gets the call.",
-    images: ["/6SIGNAL.png"],
+    images: ["/og-social.jpg"],
   },
 };
 

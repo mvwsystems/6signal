@@ -9,12 +9,12 @@ export const metadata: Metadata = {
     description:
       "Thirty minutes. We show you exactly where your company appears across all six visibility layers — and where competitors are filling the gap. Yours to keep regardless.",
     type: "website",
-    images: [{ url: "/6SIGNAL.png" }],
+    images: [{ url: "/og-social.jpg" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Book the Visibility Audit — 6 Signal",
-    images: ["/6SIGNAL.png"],
+    images: ["/og-social.jpg"],
   },
 };
 

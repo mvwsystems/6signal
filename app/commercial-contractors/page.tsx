@@ -10,11 +10,11 @@ export const metadata: Metadata = {
     description:
       "Commercial contractors are evaluated before outreach. 6 Signal builds the credibility infrastructure that survives buyer due diligence — and puts your company on bid lists you didn't know existed.",
     type: "website",
-    images: [{ url: "/6SIGNAL.png" }],
+    images: [{ url: "/og-social.jpg" }],
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/6SIGNAL.png"],
+    images: ["/og-social.jpg"],
   },
 };
 
