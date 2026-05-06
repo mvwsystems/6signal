@@ -5,7 +5,7 @@ import Footer from "./components/Footer";
 import KineticBand from "./components/KineticBand";
 import AuditExamplesSection from "./components/proof/AuditExamplesSection";
 import { useMicroInteractions } from "./hooks/useMicroInteractions";
-import { AUDIT_INTAKE_URL } from "@/app/lib/links";
+import AuditPopupButton from "./components/AuditPopupButton";
 
 const layers = [
   {
@@ -104,7 +104,7 @@ const outcomes = [
   {
     num: "04",
     text: "Your position in the market hardens every month.",
-    proof: "Every month your name gets cited more, your competitors get cited less. The gap compounds and becomes harder to close.",
+    proof: "Every month, we track where your company is being surfaced, skipped, or outranked — then build the next set of signals to strengthen your position.",
   },
 ];
 
@@ -131,7 +131,7 @@ const faqs = [
   },
   {
     q: "Do you guarantee rankings or leads?",
-    a: "No. Anyone who guarantees AI recommendations or specific rankings is making promises they cannot keep — the systems update constantly and no one controls the output. What we guarantee is that you see the full audit before anything gets signed, and the retainer is month-to-month with no cancellation fee. The risk is low. The upside is structural.",
+    a: "No. Anyone who guarantees AI recommendations or specific rankings is making promises they cannot keep — the systems update constantly and no one controls the output. What we do commit to: you see the full audit before anything gets signed, the first 90 days are the minimum commitment, and the priority list is yours to keep regardless of what you decide. The risk is low. The upside is structural.",
   },
   {
     q: "Why only one contractor per market and trade?",
@@ -171,12 +171,12 @@ export default function Home() {
           </p>
 
           <div className="hero-cta-row reveal">
-            <a href={AUDIT_INTAKE_URL} className="btn btn-primary btn-lg">
+            <AuditPopupButton className="btn btn-primary btn-lg">
               Book the Visibility Audit
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
-            </a>
+            </AuditPopupButton>
             <a href="#framework" className="btn btn-ghost btn-lg">See how it works</a>
           </div>
           <div className="hero-sig reveal">Complete the intake · Schedule your readout · Priority list yours to keep</div>
@@ -368,8 +368,8 @@ export default function Home() {
             <div className="left">
               <span className="idx">§ 05 — The visibility audit</span>
               <h2 className="display">
-                Thirty minutes.<br />
-                <em>We show you everything.</em>
+                Pre-audit first.<br />
+                <em>Priority gaps on the call.</em>
               </h2>
             </div>
             <div className="right">
@@ -463,12 +463,12 @@ export default function Home() {
             <br />
             <em>Find out if your name is on it.</em>
           </h3>
-          <a href={AUDIT_INTAKE_URL} className="btn btn-primary">
+          <AuditPopupButton className="btn btn-primary">
             Book the Visibility Audit
             <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>
-          </a>
+          </AuditPopupButton>
           <div className="sub">Complete the intake · Schedule your readout · One company per market</div>
         </div>
       </section>
@@ -596,7 +596,7 @@ export default function Home() {
           <div className="pricing-core">
             <div className="p-eyebrow">The 6 Signal Visibility Retainer</div>
             <div className="p-number">
-              <span className="dollar">$</span>1,500
+              <span className="dollar">$</span>1,250
               <span className="mo">/ month</span>
             </div>
             <div className="p-sub">
@@ -604,15 +604,15 @@ export default function Home() {
               <em>If your territory isn&rsquo;t taken yet, it should be yours.</em>
             </div>
             <div className="p-cta">
-              <a href={AUDIT_INTAKE_URL} className="btn btn-primary btn-lg">
+              <AuditPopupButton className="btn btn-primary btn-lg">
                 Claim your market
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
-              </a>
+              </AuditPopupButton>
             </div>
             <div className="p-guarantee">
-              Month-to-month · Cancel anytime · Audit first — retainer only if you want to continue
+              90-day minimum · Month-to-month after · Audit first — retainer only if you want to continue
             </div>
           </div>
 
@@ -753,18 +753,12 @@ export default function Home() {
             you decide.
           </p>
           <div className="f-cta">
-            <a href={AUDIT_INTAKE_URL} className="btn btn-primary btn-lg">
+            <AuditPopupButton className="btn btn-primary btn-lg">
               Book the Visibility Audit
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
-            </a>
-            <a
-              href="mailto:mvw@mattvincentwalker.com?subject=%F0%9F%94%A5%206%20Signal%20%F0%9F%94%A5"
-              className="btn btn-ghost btn-lg"
-            >
-              Email directly
-            </a>
+            </AuditPopupButton>
           </div>
           <div className="f-notes">
             <span>Short intake</span>
@@ -778,12 +772,12 @@ export default function Home() {
       <Footer />
 
       <div className="mobile-cta">
-        <a href={AUDIT_INTAKE_URL}>
+        <AuditPopupButton>
           Book the visibility audit
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>
-        </a>
+        </AuditPopupButton>
       </div>
       <div id="cursor-dot" aria-hidden="true" />
       <div id="cursor-ring" aria-hidden="true" />

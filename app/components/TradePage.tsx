@@ -5,7 +5,7 @@ import Footer from "./Footer";
 import AuditExamplesSection from "./proof/AuditExamplesSection";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
 import { TradeData, BASE_LAYERS } from "../trades/data";
-import { AUDIT_INTAKE_URL } from "@/app/lib/links";
+import AuditPopupButton from "./AuditPopupButton";
 
 const sing = (s: string) =>
   s.toLowerCase().replace(/ies$/i, "y").replace(/s$/i, "");
@@ -44,7 +44,7 @@ export default function TradePage({ data }: TradePageProps) {
           <p className="hero-deck reveal">{data.heroDeck}</p>
 
           <div className="hero-cta-row reveal">
-            <a href={AUDIT_INTAKE_URL} className="btn btn-primary btn-lg">
+            <AuditPopupButton className="btn btn-primary btn-lg">
               Book the Visibility Audit
               <svg
                 className="arrow"
@@ -55,7 +55,7 @@ export default function TradePage({ data }: TradePageProps) {
               >
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
-            </a>
+            </AuditPopupButton>
             <a href="#layers" className="btn btn-ghost btn-lg">
               See how it works
             </a>
@@ -122,8 +122,7 @@ export default function TradePage({ data }: TradePageProps) {
             <br />
             The audit shows whether your company is one of them.
           </h3>
-          <a
-            href={AUDIT_INTAKE_URL}
+          <AuditPopupButton
             className="btn btn-primary"
           >
             Book the audit
@@ -136,7 +135,7 @@ export default function TradePage({ data }: TradePageProps) {
             >
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>
-          </a>
+          </AuditPopupButton>
           <div className="sub">30 minutes · One {sing(data.tradePlural).toLowerCase()} per market · Market conflict check</div>
         </div>
       </section>
@@ -208,8 +207,9 @@ export default function TradePage({ data }: TradePageProps) {
               Book the audit
             </div>
             <div className="e-body">
-              We run these checks live on the call — you see exactly which gaps
-              exist in your company before anything gets signed. Full findings are
+              We run the six-layer pre-audit before the call. On the readout, we
+              walk through the findings — gap by gap, layer by layer — so you see
+              exactly what exists before anything gets signed. Full findings are
               yours to keep whether or not you continue.
             </div>
           </div>
@@ -257,7 +257,7 @@ export default function TradePage({ data }: TradePageProps) {
           <div className="pricing-core">
             <div className="p-eyebrow">The 6 Signal Visibility Retainer</div>
             <div className="p-number">
-              <span className="dollar">$</span>1,500
+              <span className="dollar">$</span>1,250
               <span className="mo">/ month</span>
             </div>
             <div className="p-sub">
@@ -265,8 +265,7 @@ export default function TradePage({ data }: TradePageProps) {
               <em>If your territory isn&rsquo;t taken yet, it should be yours.</em>
             </div>
             <div className="p-cta">
-              <a
-                href={AUDIT_INTAKE_URL}
+              <AuditPopupButton
                 className="btn btn-primary btn-lg"
               >
                 Claim your market
@@ -279,10 +278,10 @@ export default function TradePage({ data }: TradePageProps) {
                 >
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
-              </a>
+              </AuditPopupButton>
             </div>
             <div className="p-guarantee">
-              Month-to-month · Cancel anytime · Audit first — retainer only if
+              90-day minimum · Month-to-month after · Audit first — retainer only if
               you want to continue
             </div>
           </div>
@@ -376,8 +375,7 @@ export default function TradePage({ data }: TradePageProps) {
             five minutes. You keep the full findings either way.
           </p>
           <div className="f-cta">
-            <a
-              href={AUDIT_INTAKE_URL}
+            <AuditPopupButton
               className="btn btn-primary btn-lg"
             >
               Book the audit
@@ -390,19 +388,8 @@ export default function TradePage({ data }: TradePageProps) {
               >
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
-            </a>
-            <a
-              href="mailto:mvw@mattvincentwalker.com?subject=%F0%9F%94%A5%206%20Signal%20%F0%9F%94%A5"
-              className="btn btn-ghost btn-lg"
-            >
-              Email directly
-            </a>
+            </AuditPopupButton>
           </div>
-          <p style={{ fontFamily: "'Chakra Petch', sans-serif", fontSize: "14px", color: "#7a7a78", textAlign: "center", marginTop: "28px", marginBottom: "0", maxWidth: "560px", marginInline: "auto", lineHeight: "1.6" }}>
-            We run the same six-layer visibility read your buyers and AI systems
-            run — live, on screen, in thirty minutes. You leave with what gets
-            found, what gets skipped, and what to fix first.
-          </p>
           <div className="f-notes">
             <span>No-charge pre-audit</span>
             <span>30-minute readout</span>
@@ -415,7 +402,7 @@ export default function TradePage({ data }: TradePageProps) {
       <Footer />
 
       <div className="mobile-cta">
-        <a href={AUDIT_INTAKE_URL}>
+        <AuditPopupButton>
           Book the visibility audit
           <svg
             width="14"
@@ -427,7 +414,7 @@ export default function TradePage({ data }: TradePageProps) {
           >
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>
-        </a>
+        </AuditPopupButton>
       </div>
       <div id="cursor-dot" aria-hidden="true" />
       <div id="cursor-ring" aria-hidden="true" />

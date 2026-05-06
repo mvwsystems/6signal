@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { AUDIT_INTAKE_URL } from "@/app/lib/links";
+import AuditPopupButton from "./AuditPopupButton";
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -24,9 +24,9 @@ export default function Nav() {
           <Link href="/#pricing">Retainer</Link>
           <Link href="/#faq">FAQ</Link>
         </div>
-        <a href={AUDIT_INTAKE_URL} className="nav-cta">
+        <AuditPopupButton className="nav-cta">
           Book the audit →
-        </a>
+        </AuditPopupButton>
       </div>
     </nav>
   );

@@ -4,7 +4,7 @@ import Nav from "./Nav";
 import Footer from "./Footer";
 import AuditExamplesSection from "./proof/AuditExamplesSection";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
-import { AUDIT_INTAKE_URL } from "@/app/lib/links";
+import AuditPopupButton from "./AuditPopupButton";
 
 const SIX_SIGNALS = [
   {
@@ -168,7 +168,7 @@ export default function CommercialPage() {
           </p>
 
           <div className="hero-cta-row reveal">
-            <a href={AUDIT_INTAKE_URL} className="btn btn-primary btn-lg">
+            <AuditPopupButton className="btn btn-primary btn-lg">
               Book the Visibility Audit
               <svg
                 className="arrow"
@@ -179,7 +179,7 @@ export default function CommercialPage() {
               >
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
-            </a>
+            </AuditPopupButton>
             <a href="#signals" className="btn btn-ghost btn-lg">
               See how it works
             </a>
@@ -275,7 +275,7 @@ export default function CommercialPage() {
             <br />
             <em>The audit shows whether your company is in those conversations.</em>
           </h3>
-          <a href={AUDIT_INTAKE_URL} className="btn btn-primary">
+          <AuditPopupButton className="btn btn-primary">
             Book the Visibility Audit
             <svg
               className="arrow"
@@ -286,7 +286,7 @@ export default function CommercialPage() {
             >
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>
-          </a>
+          </AuditPopupButton>
           <div className="sub">Pre-audit included · One commercial contractor per market</div>
         </div>
       </section>
@@ -545,7 +545,7 @@ export default function CommercialPage() {
           <div className="pricing-core">
             <div className="p-eyebrow">The 6 Signal Visibility Retainer</div>
             <div className="p-number">
-              <span className="dollar">$</span>1,500
+              <span className="dollar">$</span>1,250
               <span className="mo">/ month</span>
             </div>
             <div className="p-sub">
@@ -555,8 +555,7 @@ export default function CommercialPage() {
               </em>
             </div>
             <div className="p-cta">
-              <a
-                href={AUDIT_INTAKE_URL}
+              <AuditPopupButton
                 className="btn btn-primary btn-lg"
               >
                 Book the audit
@@ -569,10 +568,10 @@ export default function CommercialPage() {
                 >
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
-              </a>
+              </AuditPopupButton>
             </div>
             <div className="p-guarantee">
-              Month-to-month · Cancel anytime · Audit first — retainer only if
+              90-day minimum · Month-to-month after · Audit first — retainer only if
               you want to continue
             </div>
           </div>
@@ -632,8 +631,7 @@ export default function CommercialPage() {
             to fix both. Full findings are yours regardless of what you decide.
           </p>
           <div className="f-cta">
-            <a
-              href={AUDIT_INTAKE_URL}
+            <AuditPopupButton
               className="btn btn-primary btn-lg"
             >
               Book the Visibility Audit
@@ -646,13 +644,7 @@ export default function CommercialPage() {
               >
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
-            </a>
-            <a
-              href="mailto:mvw@mattvincentwalker.com?subject=%F0%9F%94%A5%206%20Signal%20%F0%9F%94%A5"
-              className="btn btn-ghost btn-lg"
-            >
-              Email directly
-            </a>
+            </AuditPopupButton>
           </div>
           <div className="f-notes">
             <span>No-charge pre-audit</span>
@@ -666,7 +658,7 @@ export default function CommercialPage() {
       <Footer />
 
       <div className="mobile-cta">
-        <a href={AUDIT_INTAKE_URL}>
+        <AuditPopupButton>
           Book the visibility audit
           <svg
             width="14"
@@ -678,7 +670,7 @@ export default function CommercialPage() {
           >
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>
-        </a>
+        </AuditPopupButton>
       </div>
       <div id="cursor-dot" aria-hidden="true" />
       <div id="cursor-ring" aria-hidden="true" />

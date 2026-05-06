@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import AuditExampleCard from "../components/proof/AuditExampleCard";
 import { AUDIT_EXAMPLES } from "../proof-data";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
-import { AUDIT_INTAKE_URL } from "@/app/lib/links";
+import AuditPopupButton from "../components/AuditPopupButton";
 
 export default function WorkPage() {
   useMicroInteractions();
@@ -256,12 +256,12 @@ export default function WorkPage() {
             first. No commitment required. No follow-up pressure if it&rsquo;s not a fit.
           </p>
           <div className="f-cta">
-            <a href={AUDIT_INTAKE_URL} className="btn btn-primary btn-lg">
+            <AuditPopupButton className="btn btn-primary btn-lg">
               Book the Visibility Audit
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
-            </a>
+            </AuditPopupButton>
             <a href="/audit" className="btn btn-ghost btn-lg">
               Learn about the audit
             </a>
@@ -278,12 +278,12 @@ export default function WorkPage() {
       <Footer />
 
       <div className="mobile-cta">
-        <a href={AUDIT_INTAKE_URL}>
+        <AuditPopupButton>
           Book the Visibility Audit
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>
-        </a>
+        </AuditPopupButton>
       </div>
       <div id="cursor-dot" aria-hidden="true" />
       <div id="cursor-ring" aria-hidden="true" />

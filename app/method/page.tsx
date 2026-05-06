@@ -2,7 +2,7 @@
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
-import { AUDIT_INTAKE_URL } from "@/app/lib/links";
+import AuditPopupButton from "../components/AuditPopupButton";
 
 const oldSearch = [
   "Buyer types a keyword into Google",
@@ -156,12 +156,12 @@ export default function MethodPage() {
               making sure that company is yours.
             </p>
             <div className="hero-cta-row reveal">
-              <a href={AUDIT_INTAKE_URL} className="btn btn-primary btn-lg">
+              <AuditPopupButton className="btn btn-primary btn-lg">
                 Book the Visibility Audit
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
-              </a>
+              </AuditPopupButton>
               <a href="#signals" className="btn btn-ghost btn-lg">See the six layers</a>
             </div>
             <div className="hero-sig reveal">
@@ -315,12 +315,12 @@ export default function MethodPage() {
             <br />
             <em>The audit tells you whether your name is in it.</em>
           </h3>
-          <a href={AUDIT_INTAKE_URL} className="btn btn-primary">
+          <AuditPopupButton className="btn btn-primary">
             Book the Visibility Audit
             <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>
-          </a>
+          </AuditPopupButton>
           <div className="sub">Free · 30 minutes · One company per market</div>
         </div>
       </section>
@@ -429,7 +429,7 @@ export default function MethodPage() {
               specific lead volumes.</strong> Anyone who does either doesn&rsquo;t
               understand how these systems work or is making promises they can&rsquo;t
               keep. What we do guarantee: you see the full audit before anything gets
-              signed, the retainer is month-to-month with no cancellation fee, and
+              signed, the first 90 days are the minimum commitment (month-to-month after), and
               the priority list is yours to keep regardless of what you decide.{" "}
               <em>The risk is low. The upside is structural.</em>
             </p>
@@ -454,18 +454,12 @@ export default function MethodPage() {
             read — yours regardless of what you decide next.
           </p>
           <div className="f-cta">
-            <a href={AUDIT_INTAKE_URL} className="btn btn-primary btn-lg">
+            <AuditPopupButton className="btn btn-primary btn-lg">
               Book the Visibility Audit
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
-            </a>
-            <a
-              href="mailto:mvw@mattvincentwalker.com?subject=%F0%9F%94%A5%206%20Signal%20%F0%9F%94%A5"
-              className="btn btn-ghost btn-lg"
-            >
-              Email directly
-            </a>
+            </AuditPopupButton>
           </div>
           <div className="f-notes">
             <span>No-charge pre-audit</span>
@@ -479,12 +473,12 @@ export default function MethodPage() {
       <Footer />
 
       <div className="mobile-cta">
-        <a href={AUDIT_INTAKE_URL}>
+        <AuditPopupButton>
           Book the visibility audit
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>
-        </a>
+        </AuditPopupButton>
       </div>
       <div id="cursor-dot" aria-hidden="true" />
       <div id="cursor-ring" aria-hidden="true" />

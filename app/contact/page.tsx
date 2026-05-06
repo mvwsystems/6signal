@@ -3,7 +3,7 @@ import { useState } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
-import { AUDIT_INTAKE_URL } from "@/app/lib/links";
+import AuditPopupButton from "../components/AuditPopupButton";
 
 const MAILTO = "mvw@mattvincentwalker.com";
 
@@ -47,9 +47,8 @@ export default function ContactPage() {
               <em>your market.</em>
             </h1>
             <p className="hero-deck reveal">
-              Book the visibility audit, fill out the form, or email directly. Straight
-              answers — no pitch, no pressure, no follow-up chase if it&rsquo;s not the
-              right fit.
+              Book the visibility audit or send a message. Straight answers — no pitch,
+              no pressure, no follow-up chase if it&rsquo;s not the right fit.
             </p>
           </div>
         </div>
@@ -71,12 +70,12 @@ export default function ContactPage() {
                 you live — layer by layer. You leave with the full read regardless of
                 what you decide.
               </p>
-              <a href={AUDIT_INTAKE_URL} className="btn btn-primary btn-lg" style={{ marginBottom: "48px" }}>
+              <AuditPopupButton className="btn btn-primary btn-lg" style={{ marginBottom: "48px" }}>
                 Book the Visibility Audit
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
-              </a>
+              </AuditPopupButton>
               <div className="contact-ways">
                 <div className="contact-way">
                   <span className="contact-way-label">Email</span>
@@ -129,7 +128,7 @@ export default function ContactPage() {
                   <h3>Got it. We&rsquo;ll be in touch.</h3>
                   <p>
                     Expect a response within a few hours. In the meantime, you can also{" "}
-                    <a href={AUDIT_INTAKE_URL} style={{ color: "#f5f5f3" }}>
+                    <a href="/audit" style={{ color: "#f5f5f3" }}>
                       complete the intake
                     </a>
                     {" "}and schedule your readout.
@@ -235,12 +234,12 @@ export default function ContactPage() {
       <Footer />
 
       <div className="mobile-cta">
-        <a href={AUDIT_INTAKE_URL}>
+        <AuditPopupButton>
           Book the Audit
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>
-        </a>
+        </AuditPopupButton>
       </div>
       <div id="cursor-dot" aria-hidden="true" />
       <div id="cursor-ring" aria-hidden="true" />

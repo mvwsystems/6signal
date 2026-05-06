@@ -1,3 +1,5 @@
+@import "@typeform/embed/build/css/popup.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -94,6 +96,21 @@
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: #555553;
+  }
+
+  /* Reset browser defaults when .btn or .nav-cta are applied to <button> elements */
+  button.btn,
+  button.nav-cta,
+  .mobile-cta button {
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    background: none;
+    font: inherit;
+    color: inherit;
+    padding: 0;
+    margin: 0;
   }
 
   /* BUTTONS */
@@ -1247,7 +1264,8 @@
     -webkit-backdrop-filter: blur(14px);
     border-top: 1px solid rgba(255, 255, 255, 0.07);
   }
-  .mobile-cta a {
+  .mobile-cta a,
+  .mobile-cta button {
     display: flex;
     align-items: center;
     justify-content: center;

@@ -3,7 +3,7 @@ import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import AuditExamplesSection from "../components/proof/AuditExamplesSection";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
-import { AUDIT_INTAKE_URL } from "@/app/lib/links";
+import AuditPopupButton from "../components/AuditPopupButton";
 
 const reveals = [
   {
@@ -143,12 +143,12 @@ export default function AuditPage() {
               instead when a homeowner asks for a contractor like you.
             </p>
             <div className="hero-cta-row reveal">
-              <a href={AUDIT_INTAKE_URL} className="btn btn-primary btn-lg">
+              <AuditPopupButton className="btn btn-primary btn-lg">
                 Book the Visibility Audit
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
-              </a>
+              </AuditPopupButton>
               <a href="#how-it-works" className="btn btn-ghost btn-lg">How it works</a>
             </div>
             <div className="hero-sig reveal">
@@ -474,18 +474,12 @@ export default function AuditPage() {
             regardless of what you decide next.
           </p>
           <div className="f-cta">
-            <a href={AUDIT_INTAKE_URL} className="btn btn-primary btn-lg">
+            <AuditPopupButton className="btn btn-primary btn-lg">
               Book the Visibility Audit
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
-            </a>
-            <a
-              href="mailto:mvw@mattvincentwalker.com?subject=%F0%9F%94%A5%206%20Signal%20%F0%9F%94%A5"
-              className="btn btn-ghost btn-lg"
-            >
-              Email directly
-            </a>
+            </AuditPopupButton>
           </div>
           <div className="f-notes">
             <span>Short intake</span>
@@ -531,12 +525,12 @@ export default function AuditPage() {
       <Footer />
 
       <div className="mobile-cta">
-        <a href={AUDIT_INTAKE_URL}>
+        <AuditPopupButton>
           Book the visibility audit
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>
-        </a>
+        </AuditPopupButton>
       </div>
       <div id="cursor-dot" aria-hidden="true" />
       <div id="cursor-ring" aria-hidden="true" />
