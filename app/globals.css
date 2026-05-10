@@ -2197,8 +2197,8 @@
     text-transform: uppercase;
     padding: 4px 8px;
     border-radius: 2px;
-    white-space: nowrap;
-    flex-shrink: 0;
+    white-space: normal;
+    word-break: break-word;
   }
   .proof-badge--example {
     background: rgba(230, 255, 0, 0.08);
@@ -2246,6 +2246,7 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 16px;
+    flex-wrap: wrap;
   }
   .ae-meta {
     display: flex;
