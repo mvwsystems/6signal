@@ -9,7 +9,9 @@ export default function AuditExampleCard({ a }: { a: AuditExample }) {
           <span className="ae-sep">·</span>
           <span className="ae-market">{a.market}</span>
         </div>
-        <span className={`proof-badge proof-badge--${a.status}`}>{a.statusLabel}</span>
+        {(a.status === "real" || a.status === "anonymized") && (
+          <span className={`proof-badge proof-badge--${a.status}`}>{a.statusLabel}</span>
+        )}
       </div>
       <div className="ae-body">
         <div className="ae-row">
