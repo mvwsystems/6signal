@@ -139,6 +139,48 @@ const outcomes = [
   },
 ];
 
+function CommercialJsonLd() {
+  const BASE = "https://6signal.co";
+
+  const breadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: `${BASE}/` },
+      { "@type": "ListItem", position: 2, name: "Commercial Contractors", item: `${BASE}/commercial-contractors` },
+    ],
+  };
+
+  const service = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "AI Visibility Audit for Commercial Contractors",
+    description:
+      "6Signal audits commercial contractors across six AI and search credibility layers — GEO, PEO, AEO, IEO, LEO, and VEO — delivering a prioritized fix list for your local market.",
+    provider: { "@type": "ProfessionalService", name: "6Signal", url: BASE },
+    areaServed: "Dallas-Fort Worth and North Texas",
+    serviceType: "AI Visibility Audit",
+  };
+
+  const faqPage = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQS.map((faq) => ({
+      "@type": "Question",
+      name: faq.q,
+      acceptedAnswer: { "@type": "Answer", text: faq.a },
+    })),
+  };
+
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(service) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPage) }} />
+    </>
+  );
+}
+
 export default function CommercialPage() {
   useMicroInteractions();
 
@@ -656,6 +698,8 @@ export default function CommercialPage() {
       </section>
 
       <Footer />
+
+      <CommercialJsonLd />
 
       <div className="mobile-cta">
         <AuditPopupButton>

@@ -58,8 +58,8 @@ export const tradesBySlug: Record<string, TradeData> = {
   roofers: {
     slug: "roofers",
     tradePlural: "Roofers",
-    metaTitle: "6 Signal for Roofers — Be the Roofing Contractor AI Recommends",
-    metaDescription: "After a storm, homeowners ask ChatGPT for a roofer and three names appear. 6 Signal makes sure one is yours. Serving roofing contractors in Dallas/Fort Worth, North Texas, and markets beyond. Free 30-minute visibility audit.",
+    metaTitle: "6Signal: AI Visibility Audit for Roofers",
+    metaDescription: "AI visibility audits for roofers in Dallas/Fort Worth and North Texas. See where your roofing company appears across AI, Maps, and search.",
     ogTitle: "Be the roofer AI recommends after the storm.",
     ogDescription: "6 Signal helps roofing contractors own the AI shortlist in their market. Free visibility audit — no pitch, no deck.",
     heroMeta: "AI Visibility · Built for Roofing Contractors",
@@ -157,8 +157,8 @@ export const tradesBySlug: Record<string, TradeData> = {
   plumbers: {
     slug: "plumbers",
     tradePlural: "Plumbers",
-    metaTitle: "6 Signal for Plumbers — Be the Plumber AI Recommends in an Emergency",
-    metaDescription: "When water is on the floor at 11 p.m., homeowners ask ChatGPT and Siri who to call. 6 Signal gets your plumbing company onto that shortlist. Serving plumbers in Dallas/Fort Worth, North Texas, and markets beyond. Free visibility audit.",
+    metaTitle: "6Signal: AI Visibility Audit for Plumbers",
+    metaDescription: "AI visibility audits for plumbers in Dallas/Fort Worth and North Texas. See where your plumbing company appears across AI, Maps, and search.",
     ogTitle: "When the pipe bursts, the buyer asks their phone who to call.",
     ogDescription: "Emergency plumbing creates the purest AI-search moment in home services. 6 Signal gets your company onto that shortlist.",
     heroMeta: "AI Visibility · Built for Plumbing Contractors",
@@ -252,8 +252,8 @@ export const tradesBySlug: Record<string, TradeData> = {
   hvac: {
     slug: "hvac",
     tradePlural: "HVAC Companies",
-    metaTitle: "6 Signal for HVAC — Be the HVAC Company AI Recommends When AC Fails",
-    metaDescription: "When the AC dies in a DFW summer, homeowners ask their phone who to call in seconds. Three HVAC companies get named. 6 Signal makes sure one is yours. Serving Dallas/Fort Worth HVAC contractors and markets beyond Texas. Free visibility audit.",
+    metaTitle: "6Signal: AI Visibility Audit for HVAC Companies",
+    metaDescription: "AI visibility audits for HVAC companies in Dallas/Fort Worth and North Texas. See where your company appears across AI, Maps, and search.",
     ogTitle: "When the AC dies in July, the shortlist is set before your phone rings.",
     ogDescription: "Seasonal failure drives compressed, urgent search behavior. 6 Signal gets HVAC companies onto the AI shortlist before competitors answer first.",
     heroMeta: "AI Visibility · Built for HVAC Contractors",
@@ -347,8 +347,8 @@ export const tradesBySlug: Record<string, TradeData> = {
   electricians: {
     slug: "electricians",
     tradePlural: "Electricians",
-    metaTitle: "6 Signal for Electricians — Be the Licensed Electrician AI Recommends",
-    metaDescription: "Homeowners verify license and credentials before calling an electrician. 6 Signal structures those signals so AI surfaces your company for emergency, remodel, and panel-upgrade queries. Free audit.",
+    metaTitle: "6Signal: AI Visibility Audit for Electricians",
+    metaDescription: "AI visibility audits for electricians in Dallas/Fort Worth and North Texas. See where your company appears across AI, Maps, and search.",
     ogTitle: "Emergency, remodel, panel upgrade — if the systems don't name you, the homeowner never calls.",
     ogDescription: "License signals, credential visibility, and AI search position determine which electrician gets the call. 6 Signal builds that infrastructure.",
     heroMeta: "AI Visibility · Built for Electrical Contractors",
@@ -441,8 +441,8 @@ export const tradesBySlug: Record<string, TradeData> = {
   remodelers: {
     slug: "remodelers",
     tradePlural: "Remodelers",
-    metaTitle: "6 Signal for Remodelers — Be the Contractor AI Recommends for Kitchen and Bath",
-    metaDescription: "High-ticket remodeling projects are researched for weeks before a homeowner calls anyone. 6 Signal makes sure your company is found and trusted throughout that research. Free visibility audit.",
+    metaTitle: "6Signal: AI Visibility Audit for Remodelers",
+    metaDescription: "AI visibility audits for remodelers in Dallas/Fort Worth and North Texas. See where your company appears across AI, Maps, and search.",
     ogTitle: "High-ticket projects are won before the estimate. Buyers verify before they trust.",
     ogDescription: "Homeowners research remodelers for weeks using AI, Maps, and reviews before calling anyone. 6 Signal gets your company into that research process.",
     heroMeta: "AI Visibility · Built for Remodeling Contractors",
@@ -536,8 +536,8 @@ export const tradesBySlug: Record<string, TradeData> = {
   "garage-doors": {
     slug: "garage-doors",
     tradePlural: "Garage Door Companies",
-    metaTitle: "6 Signal for Garage Door Companies — Be the Company AI Names in an Emergency",
-    metaDescription: "A stuck garage door is one of the most urgent home service searches. Three companies get named. 6 Signal makes sure one of them is yours. Free 30-minute visibility audit.",
+    metaTitle: "6Signal: AI Visibility Audit for Garage Door Companies",
+    metaDescription: "AI visibility audits for garage door companies in Dallas/Fort Worth and North Texas. See where your company appears across AI, Maps, and search.",
     ogTitle: "A stuck garage door is an urgent search. Three companies get named. Everyone else disappears.",
     ogDescription: "Voice search, AI tools, and Maps determine which garage door company gets called in an emergency. 6 Signal gets your company onto that shortlist.",
     heroMeta: "AI Visibility · Built for Garage Door Companies",
@@ -630,8 +630,8 @@ export const tradesBySlug: Record<string, TradeData> = {
   landscaping: {
     slug: "landscaping",
     tradePlural: "Landscaping Companies",
-    metaTitle: "6 Signal for Landscaping Companies — Be the Landscaper AI Recommends",
-    metaDescription: "Homeowners research landscaping companies through AI, Maps, and reviews before calling anyone. 6 Signal makes sure your company is found and trusted throughout that process. Free visibility audit.",
+    metaTitle: "6Signal: AI Visibility Audit for Landscaping Companies",
+    metaDescription: "AI visibility audits for landscaping companies in Dallas/Fort Worth and North Texas. See where your company appears across AI, Maps, and search.",
     ogTitle: "The best work in the neighborhood doesn't help if they can't find you.",
     ogDescription: "Landscaping buyers research before they call. AI tools, Maps, and search shape who makes the shortlist. 6 Signal gets your company there.",
     heroMeta: "AI Visibility · Built for Landscaping Companies",
@@ -681,7 +681,7 @@ export const tradesBySlug: Record<string, TradeData> = {
         dim: "— organized so AI tools can match your company to the specific services homeowners search for.",
       },
       {
-        body: "Google Maps, Yelp, Houzz, HomeAdvisor, Angi, local business directories",
+        body: "Google Maps, Yelp, Thumbtack, HomeAdvisor, Angi, local business directories",
         dim: "— reconciled so your service area and services are consistent across every platform a homeowner might check.",
       },
       {
@@ -724,8 +724,8 @@ export const tradesBySlug: Record<string, TradeData> = {
   "tree-service": {
     slug: "tree-service",
     tradePlural: "Tree Service Companies",
-    metaTitle: "6 Signal for Tree Service — Be the Tree Service AI Names After the Storm",
-    metaDescription: "After a storm, homeowners don't build a long list. They ask who can handle it now. 6 Signal makes sure your tree service company is one of the names they find. Free visibility audit.",
+    metaTitle: "6Signal: AI Visibility Audit for Tree Service Companies",
+    metaDescription: "AI visibility audits for tree service companies in Dallas/Fort Worth and North Texas. See where your company appears across AI, Maps, and search.",
     ogTitle: "After the storm, homeowners don't build a long list. They ask who can handle it now.",
     ogDescription: "Storm surge search behavior is compressed and urgent. 6 Signal gets tree service companies onto the AI shortlist before the first call goes to a competitor.",
     heroMeta: "AI Visibility · Built for Tree Service Companies",
@@ -818,8 +818,8 @@ export const tradesBySlug: Record<string, TradeData> = {
   "pest-control": {
     slug: "pest-control",
     tradePlural: "Pest Control Companies",
-    metaTitle: "6 Signal for Pest Control — Be the Licensed Exterminator AI Recommends",
-    metaDescription: "Pest problems drive immediate, trust-gated searches. Homeowners verify license, reviews, and safety before calling anyone. 6 Signal makes sure your pest control company is named and trusted. Free audit.",
+    metaTitle: "6Signal: AI Visibility Audit for Pest Control Companies",
+    metaDescription: "AI visibility audits for pest control companies in Dallas/Fort Worth and North Texas. See where your company appears across AI, Maps, and search.",
     ogTitle: "When the problem feels urgent or unsafe, buyers want a trusted name fast.",
     ogDescription: "Pest control buyers research aggressively before letting anyone spray their home. 6 Signal gets your company onto the AI shortlist buyers check first.",
     heroMeta: "AI Visibility · Built for Pest Control Companies",
@@ -912,8 +912,8 @@ export const tradesBySlug: Record<string, TradeData> = {
   "foundation-concrete": {
     slug: "foundation-concrete",
     tradePlural: "Foundation & Concrete Contractors",
-    metaTitle: "6 Signal for Foundation Contractors — Be the Structural Expert AI Recommends",
-    metaDescription: "Foundation repair buyers research for weeks before calling anyone — especially in North Texas where expansive soil makes this one of the highest-demand home service markets. 6 Signal makes sure your company is found and trusted throughout that research. Free visibility audit.",
+    metaTitle: "6Signal: AI Visibility Audit for Foundation Contractors",
+    metaDescription: "AI visibility audits for foundation and concrete companies in North Texas. See where your company appears across AI, Maps, and search.",
     ogTitle: "High-trust structural work requires confidence before the first call.",
     ogDescription: "Foundation buyers research for weeks using AI, Maps, and search before calling anyone. 6 Signal builds the visibility infrastructure that gets your company found throughout that process.",
     heroMeta: "AI Visibility · Built for Foundation & Concrete Contractors",
@@ -1003,11 +1003,13 @@ export const tradesBySlug: Record<string, TradeData> = {
     ],
   },
 
+  // NOTE: commercial-contractors/page.tsx uses CommercialPage (a custom component) and
+  // defines its own metadata directly in that file. This data.ts entry is kept for reference only.
   "commercial-contractors": {
     slug: "commercial-contractors",
     tradePlural: "Commercial Contractors",
-    metaTitle: "6 Signal for Commercial Contractors — Build the Digital Presence That Wins Bids",
-    metaDescription: "Commercial buyers verify contractors before outreach. Procurement teams, GCs, and facility managers use search and AI to vet companies before sending RFPs. 6 Signal builds the visibility infrastructure that wins that verification. Free audit.",
+    metaTitle: "6Signal: AI Visibility Audit for Commercial Contractors",
+    metaDescription: "AI visibility audits for commercial contractors in Dallas/Fort Worth and North Texas. See where your company appears across AI and search.",
     ogTitle: "Prequalification, vendor selection, and bid decisions now start with what buyers can verify online.",
     ogDescription: "Commercial contractors are evaluated before outreach. 6 Signal builds the digital credibility infrastructure that survives that scrutiny.",
     heroMeta: "AI Visibility · Built for Commercial Contractors",

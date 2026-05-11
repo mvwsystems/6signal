@@ -1,11 +1,53 @@
 "use client";
 
+import Link from "next/link";
 import Nav from "./Nav";
 import Footer from "./Footer";
 import AuditExamplesSection from "./proof/AuditExamplesSection";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
 import { TradeData, BASE_LAYERS } from "../trades/data";
 import AuditPopupButton from "./AuditPopupButton";
+
+const BASE_URL = "https://6signal.co";
+
+function TradeJsonLd({ data }: { data: TradeData }) {
+  const breadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: `${BASE_URL}/` },
+      { "@type": "ListItem", position: 2, name: data.tradePlural, item: `${BASE_URL}/${data.slug}` },
+    ],
+  };
+
+  const service = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: `AI Visibility Audit for ${data.tradePlural}`,
+    description: `6Signal audits ${data.tradePlural.toLowerCase()} across six AI and search visibility layers — GEO, PEO, AEO, IEO, LEO, and VEO — delivering a prioritized fix list for your local market.`,
+    provider: { "@type": "ProfessionalService", name: "6Signal", url: BASE_URL },
+    areaServed: "Dallas-Fort Worth and North Texas",
+    serviceType: "AI Visibility Audit",
+  };
+
+  const faqPage = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: data.faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.q,
+      acceptedAnswer: { "@type": "Answer", text: faq.a },
+    })),
+  };
+
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(service) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPage) }} />
+    </>
+  );
+}
 
 const sing = (s: string) =>
   s.toLowerCase().replace(/ies$/i, "y").replace(/s$/i, "");
@@ -155,7 +197,10 @@ export default function TradePage({ data }: TradePageProps) {
             <div className="right">
               Each one is a different channel where your name gets surfaced —
               or doesn&rsquo;t. Here&rsquo;s what each layer looks like
-              specifically for {data.tradePlural}.
+              specifically for {data.tradePlural}.{" "}
+              <Link href="/method" className="dim" style={{ textDecoration: "underline" }}>
+                Full methodology →
+              </Link>
             </div>
           </div>
 
@@ -216,7 +261,7 @@ export default function TradePage({ data }: TradePageProps) {
           <div className="safety-note" style={{ marginTop: "40px" }}>
             <span className="safety-note-label">How the audit works</span>
             <p>
-              <strong>We run the six-layer pre-audit before the call.</strong> When
+              <strong>We run the <Link href="/audit" className="dim" style={{ textDecoration: "underline" }}>six-layer pre-audit</Link> before the call.</strong> When
               we get on the video, we walk through the findings — gap by gap, layer
               by layer, against your top competitors. No slides. If there&rsquo;s a
               fit for the retainer, we&rsquo;ll say so once. If it&rsquo;s not a fit,
@@ -400,6 +445,8 @@ export default function TradePage({ data }: TradePageProps) {
       </section>
 
       <Footer />
+
+      <TradeJsonLd data={data} />
 
       <div className="mobile-cta">
         <AuditPopupButton>
