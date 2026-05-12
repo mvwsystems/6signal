@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { getAllPosts } from "./lib/blog";
 
 const BASE = "https://6signal.co";
-const UPDATED = "2026-05-11";
+const UPDATED = "2026-05-12";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts();
