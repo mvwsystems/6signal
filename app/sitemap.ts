@@ -26,9 +26,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/visibility`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/contact`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/services`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${BASE}/blog`, lastModified: UPDATED, changeFrequency: "weekly", priority: 0.85 },
+    { url: `${BASE}/research`, lastModified: UPDATED, changeFrequency: "weekly", priority: 0.85 },
     ...posts.map((post) => ({
-      url: `${BASE}/blog/${post.slug}`,
+      url: `${BASE}/research/${post.slug}`,
       lastModified: post.date,
       changeFrequency: "monthly" as const,
       priority: 0.75,

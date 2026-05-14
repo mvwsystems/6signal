@@ -44,7 +44,7 @@ export default function Footer() {
               <div className="head">Audit</div>
               <Link href="/#book">Book the audit</Link>
               <Link href="/contact">Get in touch</Link>
-              <Link href="/blog">Research</Link>
+              <Link href="/research">Research</Link>
               <Link href="/services">Services</Link>
             </div>
           </div>

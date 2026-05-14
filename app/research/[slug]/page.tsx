@@ -40,7 +40,7 @@ export async function generateMetadata({
       description: post.description,
       images: ["/og-social.jpg"],
     },
-    alternates: { canonical: `${BASE}/blog/${post.slug}` },
+    alternates: { canonical: `${BASE}/research/${post.slug}` },
   };
 }
 
@@ -70,7 +70,7 @@ export default async function BlogPostPage({
           url: BASE,
           logo: { "@type": "ImageObject", url: `${BASE}/6SIGNAL2.png` },
         },
-        url: `${BASE}/blog/${post.slug}`,
+        url: `${BASE}/research/${post.slug}`,
         keywords: post.tags.join(", "),
         articleSection: post.category,
       },
@@ -78,12 +78,12 @@ export default async function BlogPostPage({
         "@type": "BreadcrumbList",
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "Home", item: BASE },
-          { "@type": "ListItem", position: 2, name: "Blog", item: `${BASE}/blog` },
+          { "@type": "ListItem", position: 2, name: "Research", item: `${BASE}/research` },
           {
             "@type": "ListItem",
             position: 3,
             name: post.title,
-            item: `${BASE}/blog/${post.slug}`,
+            item: `${BASE}/research/${post.slug}`,
           },
         ],
       },
@@ -103,7 +103,7 @@ export default async function BlogPostPage({
       <header className="inner-hero post-hero">
         <div className="wrap">
           <nav className="post-breadcrumb reveal" aria-label="Breadcrumb">
-            <Link href="/blog" className="idx post-breadcrumb-link">Blog</Link>
+            <Link href="/research" className="idx post-breadcrumb-link">Research</Link>
             <span className="post-breadcrumb-sep">/</span>
             <span className="idx">{post.category}</span>
           </nav>
@@ -171,7 +171,7 @@ export default async function BlogPostPage({
             <span className="idx post-related-label">Related posts</span>
             <div className="post-related-grid">
               {related.map((p) => (
-                <Link href={`/blog/${p.slug}`} className="post-related-card reveal" key={p.slug}>
+                <Link href={`/research/${p.slug}`} className="post-related-card reveal" key={p.slug}>
                   <span className="idx">{p.category}</span>
                   <h4 className="post-related-title">{p.title}</h4>
                   <span className="idx">{formatDate(p.date)}</span>

@@ -7,11 +7,11 @@ import AuditPopupButton from "../components/AuditPopupButton";
 import { getAllPosts, formatDate, type PostMeta } from "../lib/blog";
 
 export const metadata: Metadata = {
-  title: "Blog — Growth Systems for Contractors | 6 Signal",
+  title: "Research — Growth Systems for Contractors | 6 Signal",
   description:
     "Field notes on AI visibility, local SEO, lead generation, and automation for contractors who want more booked jobs — not more marketing fluff.",
   openGraph: {
-    title: "Growth Systems for Contractors — 6 Signal Blog",
+    title: "Growth Systems for Contractors — 6 Signal Research",
     description:
       "Field notes on AI visibility, local SEO, lead generation, and automation for contractors who want more booked jobs.",
     type: "website",
@@ -19,10 +19,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Growth Systems for Contractors — 6 Signal Blog",
+    title: "Growth Systems for Contractors — 6 Signal Research",
     images: ["/og-social.jpg"],
   },
-  alternates: { canonical: "https://6signal.co/blog" },
+  alternates: { canonical: "https://6signal.co/research" },
 };
 
 export default function BlogIndexPage() {
@@ -58,7 +58,7 @@ export default function BlogIndexPage() {
             <div className="blog-featured-eyebrow">
               <span className="idx">Featured</span>
             </div>
-            <Link href={`/blog/${featured.slug}`} className="blog-featured-card reveal">
+            <Link href={`/research/${featured.slug}`} className="blog-featured-card reveal">
               <div className="blog-featured-left">
                 <div className="blog-featured-meta">
                   <span className="idx blog-category-label">{featured.category}</span>
@@ -140,7 +140,7 @@ export default function BlogIndexPage() {
 
 function BlogCard({ post }: { post: PostMeta }) {
   return (
-    <Link href={`/blog/${post.slug}`} className="blog-card reveal">
+    <Link href={`/research/${post.slug}`} className="blog-card reveal">
       <div className="blog-card-meta">
         <span className="idx blog-category-label">{post.category}</span>
         <span className="blog-meta-sep">·</span>

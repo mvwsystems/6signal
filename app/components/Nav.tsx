@@ -23,7 +23,7 @@ export default function Nav() {
           <Link href="/#engagement">The Work</Link>
           <Link href="/#pricing">Retainer</Link>
           <Link href="/#faq">FAQ</Link>
-          <Link href="/blog">Research</Link>
+          <Link href="/research">Research</Link>
         </div>
         <AuditPopupButton className="nav-cta">
           Book the audit →
