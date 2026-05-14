@@ -3,4 +3,4 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-  version = "5.15.11"
+  pinned_version = "5.15.11"
