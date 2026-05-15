@@ -14,6 +14,7 @@ export interface PostMeta {
   readTime: string;
   featured: boolean;
   tags: string[];
+  contentType?: string;
 }
 
 export interface Post extends PostMeta {
@@ -38,6 +39,7 @@ function parsePost(file: string): Post {
     readTime: data.readTime ?? "5 min read",
     featured: Boolean(data.featured),
     tags: Array.isArray(data.tags) ? data.tags : [],
+    contentType: data.contentType ?? undefined,
     content,
   };
 }

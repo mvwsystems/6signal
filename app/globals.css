@@ -3636,3 +3636,338 @@
     font-size: 15px;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   RESEARCH HUB
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Page hero */
+.research-hub-hero {
+  padding: 100px 0 72px;
+}
+.research-hub-hero-inner {
+  max-width: 760px;
+}
+.research-hub-kicker {
+  margin-bottom: 28px;
+}
+.research-hub-deck {
+  font-family: "Chakra Petch", monospace;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  color: #b8b8b5;
+  max-width: 580px;
+  margin-top: 20px;
+}
+
+/* Featured White Paper hero */
+.wp-hero-section {
+  padding-bottom: 0;
+}
+.wp-hero-eyebrow {
+  padding: 64px 0 24px;
+}
+.wp-hero-card {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 80px;
+  padding: 48px 0 80px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  align-items: center;
+}
+.wp-hero-content {
+  display: flex;
+  flex-direction: column;
+}
+.wp-hero-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 28px;
+}
+.wp-hero-type-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+.wp-hero-main-title {
+  font-family: "Chakra Petch", monospace;
+  font-weight: 300;
+  font-size: clamp(28px, 3.5vw, 52px);
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  color: #f5f5f3;
+  margin-bottom: 12px;
+}
+.wp-hero-subtitle {
+  font-family: "Chakra Petch", monospace;
+  font-weight: 300;
+  font-size: clamp(16px, 1.8vw, 22px);
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  color: #7a7a78;
+  margin-bottom: 24px;
+}
+.wp-hero-desc {
+  font-family: "Chakra Petch", monospace;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.65;
+  letter-spacing: -0.005em;
+  color: #b8b8b5;
+  margin-bottom: 28px;
+  max-width: 560px;
+}
+.wp-hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 36px;
+}
+.wp-hero-tag {
+  color: #555553 !important;
+}
+.wp-hero-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.wp-hero-graphic-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+}
+.wp-signal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  box-shadow:
+    0 0 0 20px  rgba(230, 255, 0, 0.09),
+    0 0 0 46px  rgba(230, 255, 0, 0.06),
+    0 0 0 80px  rgba(230, 255, 0, 0.038),
+    0 0 0 122px rgba(230, 255, 0, 0.02),
+    0 0 0 170px rgba(230, 255, 0, 0.008);
+}
+
+/* Category navigation */
+.cat-nav-section {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.cat-nav {
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.cat-nav::-webkit-scrollbar {
+  display: none;
+}
+.cat-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #555553;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 18px 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.25s, border-color 0.25s;
+  flex-shrink: 0;
+}
+.cat-nav-btn:hover {
+  color: #b8b8b5;
+}
+.cat-nav-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.cat-nav-count {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: inherit;
+  opacity: 0.55;
+}
+
+/* White Papers section */
+.wp-section {
+  padding-bottom: 0;
+}
+.research-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 0 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.research-count {
+  color: #3a3a38 !important;
+}
+.wp-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-left: 1px solid rgba(255, 255, 255, 0.07);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+.wp-card {
+  padding: 40px 32px;
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.4s;
+}
+.wp-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.wp-card:hover::before {
+  transform: scaleX(1);
+}
+.wp-card:hover {
+  background: rgba(230, 255, 0, 0.018);
+}
+.wp-card-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+.wp-card-type-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+.wp-card-title {
+  font-family: "Chakra Petch", monospace;
+  font-weight: 300;
+  font-size: clamp(18px, 1.8vw, 24px);
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: #f5f5f3;
+  margin-bottom: 14px;
+  transition: color 0.3s;
+}
+.wp-card:hover .wp-card-title {
+  color: var(--accent);
+}
+.wp-card-desc {
+  font-size: 13px;
+  line-height: 1.62;
+  color: #7a7a78;
+  margin-bottom: 24px;
+  flex: 1;
+}
+.wp-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: auto;
+}
+.wp-card-read {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #555553;
+  transition: color 0.3s;
+}
+.wp-card-read svg {
+  width: 12px;
+  height: 8px;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.wp-card:hover .wp-card-read {
+  color: var(--accent);
+}
+.wp-card:hover .wp-card-read svg {
+  transform: translateX(4px);
+}
+
+/* Research grid section */
+.research-grid-section {
+  padding-bottom: 120px;
+}
+.research-empty {
+  padding: 80px 0;
+  text-align: center;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .wp-hero-card {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .wp-hero-graphic-col {
+    display: none;
+  }
+  .wp-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .research-hub-hero {
+    padding: 72px 0 48px;
+  }
+  .wp-hero-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .wp-hero-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .cat-nav-btn {
+    font-size: 9px;
+    padding: 14px 12px;
+    letter-spacing: 0.12em;
+  }
+  .wp-cards {
+    grid-template-columns: 1fr;
+  }
+}
