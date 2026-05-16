@@ -462,7 +462,7 @@ Their service pages are becoming answer surfaces.
 
 This is bigger than SEO.
 
-It is visibility infrastructure.
+It is [visibility infrastructure](/research/aeo-field-manual-answer-engine-optimization).
 
 ## Final answer
 

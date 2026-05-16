@@ -349,7 +349,7 @@ It is the next layer of visibility.
 
 SEO helps pages get found in search results.
 
-AEO helps companies become usable inside answers.
+AEO helps companies become usable inside answers. The [AEO Field Manual](/research/aeo-field-manual-answer-engine-optimization) covers the complete visibility framework.
 
 The distinction matters because buyers are no longer only searching. They are asking. And when they ask, answer engines do not return every option.
 

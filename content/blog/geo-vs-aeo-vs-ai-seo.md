@@ -243,7 +243,7 @@ AI visibility is the business outcome.
 
 The goal is not to win an acronym argument.
 
-The goal is to build a company's visibility infrastructure so it can be found, understood, verified, cited, and recommended across modern search surfaces.
+The goal is to build a company's [visibility infrastructure](/research/aeo-field-manual-answer-engine-optimization) so it can be found, understood, verified, cited, and recommended across modern search surfaces.
 
 That means the practical work includes:
 
