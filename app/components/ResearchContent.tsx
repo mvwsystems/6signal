@@ -14,7 +14,7 @@ const TABS = [
   "Trainings",
 ];
 
-const INSIGHT_CATS = new Set(["AI Visibility", "Local SEO", "Content Strategy"]);
+const INSIGHT_CATS = new Set(["AI Visibility", "Local SEO", "Content Strategy", "Insight"]);
 
 function getDisplayType(post: PostMeta): string {
   if (post.contentType) return post.contentType;
