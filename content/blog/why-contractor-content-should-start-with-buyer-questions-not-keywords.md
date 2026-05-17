@@ -300,7 +300,7 @@ AI systems can understand relationships.
 
 Buyers can move from education to action.
 
-That is content architecture.
+That is [content architecture](/research/question-clusters-content-architecture-of-aeo).
 
 ## Buyer questions create better videos
 
@@ -463,7 +463,7 @@ Contractors need both.
 
 But if you start with keywords alone, you will build pages that rank without fully answering the buyer.
 
-If you start with buyer questions, you build content that can rank, answer, convert, and support AI visibility.
+If you start with buyer questions, you build content that can rank, answer, convert, and support [AI visibility](/research/how-contractors-can-show-up-in-chatgpt-perplexity-google-ai).
 
 That is the better foundation.
 

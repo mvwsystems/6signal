@@ -167,7 +167,7 @@ Example:
 - Will insurance cover water damage?
 - How do I prevent another pipe from bursting?
 
-A question cluster maps the decision path.
+A question cluster maps the [decision path](/research/question-cluster-advantage).
 
 That is why it matters.
 
@@ -407,7 +407,7 @@ That path helps users and crawlers understand the relationship between pages.
 
 ## How question clusters support AEO
 
-AEO depends on answer-ready content.
+[AEO](/research/aeo-field-manual-answer-engine-optimization) depends on answer-ready content.
 
 Answer engines need direct, useful responses to natural-language questions.
 

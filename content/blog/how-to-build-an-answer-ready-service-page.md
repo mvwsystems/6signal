@@ -352,7 +352,7 @@ That is why service pages matter for AEO.
 
 They are not just conversion pages.
 
-They are source documents.
+They are [source documents](/research/the-recommendation-layer).
 
 ## Structured data for service pages
 
@@ -502,7 +502,7 @@ Each question page links back to the service page.
 
 The service page links to the question pages.
 
-That is how you build a cluster.
+That is how you [build a cluster](/research/question-clusters-content-architecture-of-aeo).
 
 ## How service pages support local SEO
 

@@ -208,7 +208,7 @@ Its value is completeness. Most company websites answer the questions that compa
 
 ## Why Question Clusters Support Traditional SEO
 
-Question clusters are not a replacement for traditional SEO. They are a content architecture that strengthens every traditional SEO objective.
+Question clusters are not a replacement for traditional SEO. They are a [content architecture](/research/question-clusters-content-architecture-of-aeo) that strengthens every traditional SEO objective.
 
 **Topical authority:** Search systems evaluate expertise at the site and entity level, not only the page level. A site that answers a dozen interconnected questions around a single buyer decision signals deeper domain knowledge than a site with one service page and a thin FAQ. Topical authority is built through organized depth of coverage — a well-linked cluster of specific, useful pages outperforms a single long page attempting to cover the same ground in sequence.
 
