@@ -401,7 +401,7 @@ Use it to clarify truth.
 
 You cannot manage what you never test.
 
-Run real buyer prompts across:
+[Run real buyer prompts](/research/how-to-test-whether-ai-recommends-your-business) across:
 
 - ChatGPT
 - Perplexity

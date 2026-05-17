@@ -183,7 +183,7 @@ Or does it answer with generic language because no proof is visible?
 
 A brand without proof becomes a claim.
 
-A brand with proof becomes easier to recommend.
+A brand with proof becomes [easier to recommend](/research/the-recommendation-layer).
 
 ## The comparison test
 
@@ -322,7 +322,7 @@ That is not enough.
 
 ## Why this matters for AEO and GEO
 
-AEO is about answer readiness.
+[AEO](/research/aeo-field-manual-answer-engine-optimization) is about answer readiness.
 
 GEO is about being usable in generative responses.
 

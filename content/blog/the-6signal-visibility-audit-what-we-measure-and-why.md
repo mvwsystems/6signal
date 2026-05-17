@@ -116,7 +116,7 @@ If the site is not crawlable, useful, and technically sound, everything else get
 
 This is the answer layer.
 
-We test buyer-style prompts across relevant surfaces.
+We test [buyer-style prompts](/research/how-to-test-whether-ai-recommends-your-business) across relevant surfaces.
 
 Depending on the business, that may include:
 
@@ -164,7 +164,7 @@ We ask:
 
 If the web does not agree on who the business is, answer engines have less confidence.
 
-That is the Local Entity Gap.
+That is the [Local Entity Gap](/research/local-entity-gap-ai-search).
 
 ### 4. Service and question clarity
 

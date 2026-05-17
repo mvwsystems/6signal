@@ -77,7 +77,7 @@ That includes:
 - Question coverage
 - Conversion path clarity
 
-AI visibility is not a single ranking.
+[AI visibility](/research/aeo-field-manual-answer-engine-optimization) is not a single ranking.
 
 It is a pattern across search surfaces.
 
@@ -237,7 +237,7 @@ The money is in non-branded prompts.
 
 ## Step 3: Choose the surfaces to test
 
-Test across multiple surfaces.
+Test across [multiple answer surfaces](/research/how-contractors-can-show-up-in-chatgpt-perplexity-google-ai).
 
 At minimum:
 
