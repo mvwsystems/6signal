@@ -33,12 +33,18 @@ function filterByTab(posts: PostMeta[], tab: string): PostMeta[] {
     return posts.filter(
       (p) => INSIGHT_CATS.has(p.category) && p.category !== "White Paper"
     );
+  if (tab === "Trainings")
+    return posts.filter(
+      (p) => p.category === "Training" || p.contentType === "Training"
+    );
   if (tab === "Field Notes")
     return posts.filter(
       (p) =>
         !INSIGHT_CATS.has(p.category) &&
         p.category !== "White Paper" &&
-        p.contentType !== "White Paper"
+        p.contentType !== "White Paper" &&
+        p.category !== "Training" &&
+        p.contentType !== "Training"
     );
   return [];
 }
