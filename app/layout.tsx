@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://6signal.co"),
-  title: "6 Signal — AI Visibility for Residential Contractors",
+  title: "SIXSIGNAL | AI Visibility & Infrastructure",
   description:
     "Homeowners ask ChatGPT, Maps, and AI Overviews before they call. 6 Signal gets residential contractors named across six visibility layers. Based in Dallas/Fort Worth, serving contractors in DFW and select markets beyond Texas.",
   openGraph: {
