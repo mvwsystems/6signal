@@ -16,27 +16,29 @@ export default function Nav() {
     <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
       <div className="nav-inner">
         <Link href="/" className="logo" aria-label="6 Signal">
+          {/*
+            Three chevrons: polyline strokes, back-to-front so yellow sits on top.
+            Each ">" is: (tip_x−15, 3) → (tip_x, 16) → (tip_x−15, 29)
+            Tips at x=16, 30, 44 — 14px spacing, 1px overlap keeps them distinct.
+          */}
           <svg
             viewBox="0 0 220 32"
             style={{ height: "28px", width: "auto", display: "block" }}
             aria-hidden="true"
           >
-            {/* Chevron 1 — yellow */}
-            <rect x="0" y="13.5" width="20" height="5" fill="#E6FF00" transform="rotate(-40, 20, 16)" />
-            <rect x="0" y="13.5" width="20" height="5" fill="#E6FF00" transform="rotate(40, 20, 16)" />
+            {/* Chevron 3 — dark (drawn first = behind) */}
+            <polyline points="29,3 44,16 29,29" fill="none" stroke="#484848" strokeWidth="5" strokeLinejoin="miter" strokeLinecap="butt" />
             {/* Chevron 2 — mid gray */}
-            <rect x="8" y="13.5" width="20" height="5" fill="#888888" transform="rotate(-40, 28, 16)" />
-            <rect x="8" y="13.5" width="20" height="5" fill="#888888" transform="rotate(40, 28, 16)" />
-            {/* Chevron 3 — dark */}
-            <rect x="16" y="13.5" width="20" height="5" fill="#484848" transform="rotate(-40, 36, 16)" />
-            <rect x="16" y="13.5" width="20" height="5" fill="#484848" transform="rotate(40, 36, 16)" />
+            <polyline points="15,3 30,16 15,29" fill="none" stroke="#888888" strokeWidth="5" strokeLinejoin="miter" strokeLinecap="butt" />
+            {/* Chevron 1 — yellow (drawn last = on top) */}
+            <polyline points="1,3 16,16 1,29" fill="none" stroke="#E6FF00" strokeWidth="5" strokeLinejoin="miter" strokeLinecap="butt" />
             {/* Wordmark */}
             <text
-              x="48"
+              x="52"
               y="16"
               fontFamily='"Chakra Petch", monospace'
               fontWeight="700"
-              fontSize="19"
+              fontSize="18"
               dominantBaseline="middle"
               style={{ letterSpacing: "-0.01em" }}
             >
