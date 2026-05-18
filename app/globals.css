@@ -3508,6 +3508,69 @@
   .nav-links {
     display: none;
   }
+  .logo-img {
+    height: 21px;
+  }
+  .nav-menu-wrap {
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* Hamburger button — hidden on desktop */
+.nav-hamburger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 3px;
+  padding: 9px 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.2s;
+}
+.nav-hamburger:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Dropdown wrapper — hidden on desktop */
+.nav-menu-wrap {
+  position: relative;
+  display: none;
+}
+
+/* Dropdown panel */
+.nav-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: #0e0e0c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  z-index: 200;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+.nav-dropdown-link {
+  display: block;
+  font-family: "Chakra Petch", monospace;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #b8b8b5;
+  padding: 14px 20px;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: color 0.15s;
+}
+.nav-dropdown-link:last-child {
+  border-bottom: none;
+}
+.nav-dropdown-link:hover {
+  color: #f5f5f3;
 }
 
 @media (max-width: 900px) {
