@@ -2,7 +2,6 @@
 
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
-import KineticBand from "./components/KineticBand";
 import AuditExamplesSection from "./components/proof/AuditExamplesSection";
 import { useMicroInteractions } from "./hooks/useMicroInteractions";
 import AuditPopupButton from "./components/AuditPopupButton";
@@ -733,8 +732,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <KineticBand />
 
       {/* §11 FINAL CTA */}
       <section className="final" id="book">
