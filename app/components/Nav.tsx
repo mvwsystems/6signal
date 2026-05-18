@@ -16,36 +16,7 @@ export default function Nav() {
     <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
       <div className="nav-inner">
         <Link href="/" className="logo" aria-label="6 Signal">
-          {/*
-            Three chevrons: polyline strokes, back-to-front so yellow sits on top.
-            Each ">" is: (tip_x−15, 3) → (tip_x, 16) → (tip_x−15, 29)
-            Tips at x=16, 30, 44 — 14px spacing, 1px overlap keeps them distinct.
-          */}
-          <svg
-            viewBox="0 0 220 32"
-            style={{ height: "28px", width: "auto", display: "block" }}
-            aria-hidden="true"
-          >
-            {/* Chevron 3 — dark (drawn first = behind) */}
-            <polyline points="29,3 44,16 29,29" fill="none" stroke="#484848" strokeWidth="5" strokeLinejoin="miter" strokeLinecap="butt" />
-            {/* Chevron 2 — mid gray */}
-            <polyline points="15,3 30,16 15,29" fill="none" stroke="#888888" strokeWidth="5" strokeLinejoin="miter" strokeLinecap="butt" />
-            {/* Chevron 1 — yellow (drawn last = on top) */}
-            <polyline points="1,3 16,16 1,29" fill="none" stroke="#E6FF00" strokeWidth="5" strokeLinejoin="miter" strokeLinecap="butt" />
-            {/* Wordmark */}
-            <text
-              x="52"
-              y="16"
-              fontFamily='"Chakra Petch", monospace'
-              fontWeight="700"
-              fontSize="18"
-              dominantBaseline="middle"
-              style={{ letterSpacing: "-0.01em" }}
-            >
-              <tspan fill="#888888">SIX</tspan>
-              <tspan fill="#f5f5f3">SIGNAL</tspan>
-            </text>
-          </svg>
+          <img src="/6SIG_LOGO_FINAL_2.webp" alt="6 Signal" className="logo-img" />
         </Link>
         <div className="nav-links">
           <Link href="/#framework">The Six</Link>
