@@ -79,7 +79,7 @@ They are not magic ranking dust.
 
 An FAQ section does not make a page useful by itself.
 
-It supports an already useful page.
+It supports an [already-useful service page](/research/how-to-build-an-answer-ready-service-page).
 
 ## What a good service FAQ does
 

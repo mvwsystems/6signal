@@ -413,7 +413,7 @@ Build corroboration through:
 - Industry publications
 - Project features
 
-When multiple sources confirm the company, the entity gets clearer.
+When [multiple sources confirm the company](/research/the-source-ecosystem-third-party-mentions-ai-recommendations), the entity gets clearer.
 
 ### 7. Build comparison-ready content
 

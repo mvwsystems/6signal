@@ -35,7 +35,7 @@ Why?
 
 Because a specific review does more than persuade a homeowner. It helps the web understand what the contractor actually does, where they do it, what problems they solve, and why customers trust them.
 
-That makes reviews part of AI visibility.
+That makes reviews [part of AI visibility](/research/reviews-are-ai-visibility-data).
 
 Not in a gimmicky way.
 
@@ -83,7 +83,7 @@ Now they live across the web:
 
 They are read by buyers.
 
-They are also part of the [local visibility ecosystem](/research/local-entity-gap-ai-search).
+They are also part of the [local visibility ecosystem](/research/the-local-entity-gap-in-contractor-marketing).
 
 Search engines and answer engines can use review language to understand what customers associate with a company.
 

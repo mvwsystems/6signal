@@ -555,7 +555,7 @@ Use this before publishing.
 - Does it explain what to do first?
 - Does it explain process?
 - Does it explain cost variables?
-- Does it answer real FAQs?
+- Does it answer [real FAQs](/research/how-to-write-service-page-faqs-for-aeo)?
 
 ### Local clarity
 

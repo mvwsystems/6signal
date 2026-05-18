@@ -137,7 +137,7 @@ The claim is no longer isolated.
 
 ## Why directories keep appearing
 
-Directories and aggregators often win AI answers because they are part of the source ecosystem.
+Directories and aggregators [often win AI answers](/research/why-directories-and-aggregators-keep-winning-ai-answers) because they are part of the source ecosystem.
 
 They provide:
 
@@ -448,7 +448,7 @@ That confirmation is what turns a claim into a signal.
 
 ## Final answer
 
-AI recommendations are not built from your homepage alone.
+[AI recommendations](/research/the-recommendation-layer) are not built from your homepage alone.
 
 They are shaped by the source ecosystem around your brand.
 

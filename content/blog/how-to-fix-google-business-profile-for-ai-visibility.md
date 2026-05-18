@@ -35,7 +35,7 @@ It is local entity infrastructure.
 
 If the profile is vague, incomplete, inconsistent, or stale, your company becomes harder to understand.
 
-And in the AI-search era, hard-to-understand companies get skipped.
+And in the AI-search era, hard-to-understand companies [get skipped](/research/why-ai-search-skips-better-contractors).
 
 ## Short answer
 
@@ -276,7 +276,7 @@ Then make sure that service area matches:
 - Reviews
 - Schema where appropriate
 
-If the site says North Texas, the profile says Dallas only, and directories say another city, you have a [Location Gap](/research/local-entity-gap-ai-search).
+If the site says North Texas, the profile says Dallas only, and directories say another city, you have a [Location Gap](/research/the-local-entity-gap-in-contractor-marketing).
 
 ## Step 7: Update hours and emergency availability
 
