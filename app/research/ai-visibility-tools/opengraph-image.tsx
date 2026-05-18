@@ -215,7 +215,7 @@ export default async function Image() {
                 letterSpacing: "0.04em",
               }}
             >
-              11 tools · AEO · GEO · AI Visibility
+              82 tools · AEO · GEO · AI Visibility
             </span>
           </div>
         </div>

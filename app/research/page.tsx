@@ -235,7 +235,7 @@ export default function ResearchIndexPage() {
             </div>
             <div className="tindex-research-card-right">
               <p className="tindex-research-card-tools">
-                11 tools reviewed
+                82 tools reviewed
               </p>
               <p className="tindex-research-card-tools" style={{ color: "#222220" }}>
                 AEO · GEO · Local · Enterprise
