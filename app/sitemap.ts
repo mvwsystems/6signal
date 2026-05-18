@@ -27,6 +27,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/contact`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/services`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/research`, lastModified: UPDATED, changeFrequency: "weekly", priority: 0.85 },
+    { url: `${BASE}/research/ai-visibility-tools`, lastModified: UPDATED, changeFrequency: "weekly", priority: 0.82 },
     ...posts.map((post) => ({
       url: `${BASE}/research/${post.slug}`,
       lastModified: post.date,

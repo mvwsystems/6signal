@@ -203,6 +203,48 @@ export default function ResearchIndexPage() {
         </section>
       )}
 
+      {/* ── AI VISIBILITY TOOLS INDEX CARD ────────────────────── */}
+      <section className="tindex-research-section rule">
+        <div className="wrap">
+          <div className="tindex-research-eyebrow">
+            <span className="idx">Market Map</span>
+          </div>
+          <Link href="/research/ai-visibility-tools" className="tindex-research-card">
+            <div>
+              <div className="tindex-research-card-meta">
+                <span className="tindex-map-badge">Market Map</span>
+                <span className="blog-meta-sep">·</span>
+                <span className="idx">Tool Index</span>
+                <span className="blog-meta-sep">·</span>
+                <span className="idx">May 2026</span>
+              </div>
+              <h2 className="tindex-research-card-title">
+                The AI Visibility Tools Index
+              </h2>
+              <p className="tindex-research-card-desc">
+                A practical field guide to AEO, GEO, AI visibility, prompt tracking,
+                citation tracking, brand monitoring, and answer-engine visibility tools.
+                Includes funding data, tool profiles, and a buyer framework.
+              </p>
+              <span className="blog-read-more">
+                View the Index
+                <svg viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
+                  <path d="M0 5h14M10 1l4 4-4 4" />
+                </svg>
+              </span>
+            </div>
+            <div className="tindex-research-card-right">
+              <p className="tindex-research-card-tools">
+                11 tools reviewed
+              </p>
+              <p className="tindex-research-card-tools" style={{ color: "#222220" }}>
+                AEO · GEO · Local · Enterprise
+              </p>
+            </div>
+          </Link>
+        </div>
+      </section>
+
       {/* ── CATEGORY TABS + CATALOG ────────────────────────────── */}
       <ResearchContent posts={posts} />
 
