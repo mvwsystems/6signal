@@ -3651,15 +3651,24 @@
 .research-hub-kicker {
   margin-bottom: 28px;
 }
+.research-hub-hero h1 {
+  font-size: clamp(40px, 5.5vw, 82px);
+  margin-bottom: 0;
+}
+.research-hub-hero h1 em {
+  font-style: italic;
+  font-weight: 200;
+  color: #b8b8b5;
+}
 .research-hub-deck {
   font-family: "Chakra Petch", monospace;
   font-weight: 300;
-  font-size: 18px;
+  font-size: clamp(17px, 1.55vw, 21px);
   line-height: 1.6;
   letter-spacing: -0.01em;
   color: #b8b8b5;
   max-width: 580px;
-  margin-top: 20px;
+  margin-top: 28px;
 }
 
 /* Featured White Paper hero */
