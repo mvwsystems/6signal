@@ -2,7 +2,7 @@
 title: "How to Build an Answer-Ready Service Page"
 slug: "how-to-build-an-answer-ready-service-page"
 description: "An answer-ready service page helps buyers, Google, and AI systems understand what you do, who you serve, where you work, and why you can be trusted."
-date: "2026-05-17"
+date: "2026-03-16"
 category: "Training"
 contentType: "Training"
 author: "Matt Walker / 6Signal"

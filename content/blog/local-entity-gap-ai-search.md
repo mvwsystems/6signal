@@ -2,7 +2,7 @@
 title: "The Local Entity Gap: Why Better Companies Get Skipped by AI Search"
 slug: "local-entity-gap-ai-search"
 description: "A research-backed white paper on local entity SEO, AI visibility, citations, reviews, structured data, and why unclear businesses get skipped by answer engines."
-date: "2026-05-15"
+date: "2026-04-01"
 category: "White Paper"
 contentType: "White Paper"
 author: "Matt Walker / 6Signal"

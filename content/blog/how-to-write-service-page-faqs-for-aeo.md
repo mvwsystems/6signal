@@ -2,7 +2,7 @@
 title: "How to Write Service Page FAQs for AEO"
 slug: "how-to-write-service-page-faqs-for-aeo"
 description: "Learn how to write service page FAQs that answer real buyer questions, support SEO, and create better source material for AEO and GEO."
-date: "2026-05-19"
+date: "2026-05-11"
 category: "Training"
 contentType: "Training"
 author: "Matt Walker / 6Signal"

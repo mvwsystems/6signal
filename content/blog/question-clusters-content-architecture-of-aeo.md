@@ -2,7 +2,7 @@
 title: "Question Clusters: The Content Architecture of AEO"
 slug: "question-clusters-content-architecture-of-aeo"
 description: "Question clusters are the content architecture behind AEO, GEO, and AI visibility. Learn how to organize buyer questions into answer-ready systems."
-date: "2026-05-17"
+date: "2026-03-23"
 category: "Insight"
 contentType: "Insight"
 author: "Matt Walker / 6Signal"

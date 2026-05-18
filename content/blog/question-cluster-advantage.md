@@ -2,7 +2,7 @@
 title: "The Question Cluster Advantage: How to Structure Content for the Shift from Search Rankings to AI Answers"
 slug: "question-cluster-advantage"
 description: "A research-backed white paper on question clusters, AEO, GEO, topical authority, and how companies should structure content for AI search and answer engines."
-date: "2026-05-15"
+date: "2026-05-01"
 category: "White Paper"
 contentType: "White Paper"
 author: "Matt Walker / 6Signal"

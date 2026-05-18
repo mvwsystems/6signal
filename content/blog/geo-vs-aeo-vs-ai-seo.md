@@ -2,7 +2,7 @@
 title: "GEO vs AEO vs AI SEO: What Actually Matters for Businesses"
 slug: "geo-vs-aeo-vs-ai-seo"
 description: "GEO, AEO, and AI SEO are often used interchangeably. Here is what the terms mean, where they overlap, and what businesses should focus on."
-date: "2026-05-15"
+date: "2026-02-16"
 category: "Insight"
 contentType: "Insight"
 author: "Matt Walker / 6Signal"

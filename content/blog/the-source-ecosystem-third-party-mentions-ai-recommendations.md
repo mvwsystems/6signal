@@ -2,7 +2,7 @@
 title: "The Source Ecosystem: How Third-Party Mentions Feed AI Recommendations"
 slug: "the-source-ecosystem-third-party-mentions-ai-recommendations"
 description: "AI search does not rely only on your website. Learn how directories, reviews, associations, videos, partners, and third-party mentions shape recommendation visibility."
-date: "2026-05-19"
+date: "2026-04-27"
 category: "Insight"
 contentType: "Insight"
 author: "Matt Walker / 6Signal"

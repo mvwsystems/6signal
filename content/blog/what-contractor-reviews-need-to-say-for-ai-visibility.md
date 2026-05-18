@@ -2,7 +2,7 @@
 title: "What Contractor Reviews Need to Say for AI Visibility"
 slug: "what-contractor-reviews-need-to-say-for-ai-visibility"
 description: "A practical guide to earning contractor reviews that clarify services, locations, urgency, outcomes, and trust signals for local SEO and AI visibility."
-date: "2026-05-19"
+date: "2026-05-18"
 category: "Training"
 contentType: "Training"
 author: "Matt Walker / 6Signal"

@@ -2,7 +2,7 @@
 title: "The 6Signal Visibility Audit: What We Measure and Why"
 slug: "the-6signal-visibility-audit-what-we-measure-and-why"
 description: "A real AI visibility audit measures more than rankings. Learn how 6Signal evaluates search, AI answers, Maps, reviews, directories, schema, and conversion."
-date: "2026-05-18"
+date: "2026-04-13"
 category: "Field Note"
 contentType: "Field Note"
 author: "Matt Walker / 6Signal"

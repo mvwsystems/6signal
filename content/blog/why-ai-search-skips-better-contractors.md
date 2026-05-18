@@ -2,7 +2,7 @@
 title: "Why AI Search Skips Better Contractors"
 slug: "why-ai-search-skips-better-contractors"
 description: "Strong contractors often get skipped by AI search because their entity, services, reviews, and local proof are unclear across the web."
-date: "2026-05-16"
+date: "2026-02-23"
 category: "Insight"
 contentType: "Insight"
 author: "Matt Walker / 6Signal"

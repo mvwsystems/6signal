@@ -2,7 +2,7 @@
 title: "How to Test Whether AI Recommends Your Business"
 slug: "how-to-test-whether-ai-recommends-your-business"
 description: "A practical method for testing whether AI search tools name, cite, skip, or replace your business when buyers ask high-intent questions."
-date: "2026-05-18"
+date: "2026-04-06"
 category: "Training"
 contentType: "Training"
 author: "Matt Walker / 6Signal"

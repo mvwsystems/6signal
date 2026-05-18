@@ -2,7 +2,7 @@
 title: "AEO Is Not SEO With AI Sprinkled On Top"
 slug: "aeo-is-not-seo-with-ai-sprinkled-on-top"
 description: "AEO is not just SEO with AI language added. It is the discipline of becoming clear, credible, and answer-ready across AI search surfaces."
-date: "2026-05-15"
+date: "2026-02-09"
 category: "Insight"
 contentType: "Insight"
 author: "Matt Walker / 6Signal"

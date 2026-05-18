@@ -2,7 +2,7 @@
 title: "Reviews Are No Longer Just Social Proof. They Are AI Visibility Data."
 slug: "reviews-are-ai-visibility-data"
 description: "Reviews help buyers trust a business, but they also help AI systems understand services, locations, urgency, outcomes, and credibility."
-date: "2026-05-16"
+date: "2026-03-02"
 category: "Insight"
 contentType: "Insight"
 author: "Matt Walker / 6Signal"

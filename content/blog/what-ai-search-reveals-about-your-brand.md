@@ -2,7 +2,7 @@
 title: "What AI Search Reveals About Your Brand"
 slug: "what-ai-search-reveals-about-your-brand"
 description: "AI search exposes how clearly the web understands your brand. Learn what answer engines reveal about entity clarity, trust, content, and positioning."
-date: "2026-05-18"
+date: "2026-04-20"
 category: "Insight"
 contentType: "Insight"
 author: "Matt Walker / 6Signal"

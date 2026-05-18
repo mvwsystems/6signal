@@ -2,7 +2,7 @@
 title: "The Recommendation Layer: Why Being Named Matters More Than Ranking"
 slug: "the-recommendation-layer"
 description: "Search is shifting from ranked lists to AI-generated shortlists. Learn why being named by answer engines may matter more than traditional rankings."
-date: "2026-05-15"
+date: "2026-02-02"
 category: "Insight"
 contentType: "Insight"
 author: "Matt Walker / 6Signal"

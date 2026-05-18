@@ -2,7 +2,7 @@
 title: "Why Directories and Aggregators Keep Winning AI Answers"
 slug: "why-directories-and-aggregators-keep-winning-ai-answers"
 description: "Directories and lead aggregators often appear in AI answers because they are structured, crawlable, category-specific, and easier to parse."
-date: "2026-05-16"
+date: "2026-03-09"
 category: "Insight"
 contentType: "Insight"
 author: "Matt Walker / 6Signal"

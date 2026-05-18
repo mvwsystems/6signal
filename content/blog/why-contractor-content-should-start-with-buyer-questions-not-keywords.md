@@ -2,7 +2,7 @@
 title: "Why Contractor Content Should Start With Buyer Questions, Not Keywords"
 slug: "why-contractor-content-should-start-with-buyer-questions-not-keywords"
 description: "Contractor content should start with buyer questions, not isolated keywords. Learn how questions reveal intent and improve SEO, AEO, and GEO."
-date: "2026-05-17"
+date: "2026-03-30"
 category: "Insight"
 contentType: "Insight"
 author: "Matt Walker / 6Signal"

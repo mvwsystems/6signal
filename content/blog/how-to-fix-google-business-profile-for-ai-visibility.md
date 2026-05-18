@@ -2,7 +2,7 @@
 title: "How to Fix Your Google Business Profile for AI Visibility"
 slug: "how-to-fix-google-business-profile-for-ai-visibility"
 description: "A practical training guide for making your Google Business Profile clearer for local SEO, AI search, Maps, and answer-engine visibility."
-date: "2026-05-19"
+date: "2026-05-04"
 category: "Training"
 contentType: "Training"
 author: "Matt Walker / 6Signal"
