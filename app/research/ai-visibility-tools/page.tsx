@@ -17,14 +17,14 @@ export const metadata: Metadata = {
       "A field guide to AEO, GEO, and AI visibility tools for tracking brand mentions, citations, prompts, competitors, and answer-engine visibility.",
     type: "website",
     url: `${BASE}/research/ai-visibility-tools`,
-    images: [{ url: "/og-social.jpg", width: 1200, height: 630, alt: "AI Visibility Tools Index" }],
+    images: [{ url: "/6SIG_SOCIAL_SHARE.png", width: 1200, height: 630, alt: "AI Visibility Tools Index" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "The AI Visibility Tools Index | 6Signal",
     description:
       "A field guide to AEO, GEO, and AI visibility tools for tracking brand mentions, citations, prompts, and answer-engine visibility.",
-    images: ["/og-social.jpg"],
+    images: ["/6SIG_SOCIAL_SHARE.png"],
   },
   alternates: { canonical: `${BASE}/research/ai-visibility-tools` },
 };

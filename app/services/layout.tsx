@@ -9,12 +9,12 @@ export const metadata: Metadata = {
     description:
       "Explore 6 Signal's broader contractor services: visibility-ready websites, AI/search visibility, review systems, lead capture, automation, advisory, and experimental tools from 6 Signal Labs.",
     type: "website",
-    images: [{ url: "/og-social.jpg", width: 1200, height: 630, alt: "Get More HVAC, Plumbing, Roofing Leads — 6 Signal" }],
+    images: [{ url: "/6SIG_SOCIAL_SHARE.png", width: 1200, height: 630, alt: "Get More HVAC, Plumbing, Roofing Leads — 6 Signal" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Services — 6 Signal",
-    images: ["/og-social.jpg"],
+    images: ["/6SIG_SOCIAL_SHARE.png"],
   },
 };
 

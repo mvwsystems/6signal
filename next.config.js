@@ -13,6 +13,11 @@ const nextConfig = {
         destination: "/research/:slug",
         permanent: true,
       },
+      {
+        source: "/services",
+        destination: "/capabilities",
+        permanent: true,
+      },
     ];
   },
 };

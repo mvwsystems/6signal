@@ -11,10 +11,15 @@ const NAV_LINKS = [
   { href: "/research", label: "Research" },
 ];
 
+const OVERLAY_LINKS = [
+  ...NAV_LINKS,
+  { href: "/research/ai-visibility-tools", label: "AI Visibility Tools" },
+  { href: "/capabilities", label: "Capabilities" },
+];
+
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -23,67 +28,78 @@ export default function Nav() {
   }, []);
 
   useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
+  useEffect(() => {
     if (!menuOpen) return;
-    const handler = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-      }
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
   }, [menuOpen]);
 
   return (
-    <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
-      <div className="nav-inner">
-        <Link href="/" className="logo" aria-label="6 Signal">
-          <img src="/6SIG_LOGO_FINAL_2.webp" alt="6 Signal" className="logo-img" />
-        </Link>
-        <div className="nav-links">
-          {NAV_LINKS.map(({ href, label }) => (
-            <Link key={href} href={href}>{label}</Link>
-          ))}
+    <>
+      <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
+        <div className="nav-inner">
+          <Link href="/" className="logo" aria-label="6 Signal">
+            <img src="/6SIG_LOGO_FINAL_2.webp" alt="6 Signal" className="logo-img" />
+          </Link>
+          <div className="nav-links">
+            {NAV_LINKS.map(({ href, label }) => (
+              <Link key={href} href={href}>{label}</Link>
+            ))}
+          </div>
+          <AuditPopupButton className="nav-cta">
+            Book the audit →
+          </AuditPopupButton>
+          <div className="nav-menu-wrap">
+            <button
+              className="nav-hamburger"
+              onClick={() => setMenuOpen((o) => !o)}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+            >
+              <svg width="4" height="18" viewBox="0 0 4 18" fill="none">
+                <circle cx="2" cy="2" r="2" fill="#E6FF00" />
+                <circle cx="2" cy="9" r="2" fill="#E6FF00" />
+                <circle cx="2" cy="16" r="2" fill="#E6FF00" />
+              </svg>
+            </button>
+          </div>
         </div>
-        <AuditPopupButton className="nav-cta">
-          Book the audit →
-        </AuditPopupButton>
-        {/* Mobile hamburger + dropdown */}
-        <div className="nav-menu-wrap" ref={menuRef}>
-          <button
-            className="nav-hamburger"
-            onClick={() => setMenuOpen((o) => !o)}
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={menuOpen}
-          >
-            {menuOpen ? (
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <line x1="1" y1="1" x2="13" y2="13" stroke="#f5f5f3" strokeWidth="2" strokeLinecap="round" />
-                <line x1="13" y1="1" x2="1" y2="13" stroke="#f5f5f3" strokeWidth="2" strokeLinecap="round" />
-              </svg>
-            ) : (
-              <svg width="18" height="12" viewBox="0 0 18 12" fill="none">
-                <rect y="0" width="18" height="2" rx="1" fill="#f5f5f3" />
-                <rect y="5" width="18" height="2" rx="1" fill="#f5f5f3" />
-                <rect y="10" width="18" height="2" rx="1" fill="#f5f5f3" />
-              </svg>
-            )}
-          </button>
-          {menuOpen && (
-            <div className="nav-dropdown">
-              {NAV_LINKS.map(({ href, label }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className="nav-dropdown-link"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {label}
-                </Link>
-              ))}
-            </div>
-          )}
+      </nav>
+
+      <div
+        className={`nav-overlay${menuOpen ? " nav-overlay--open" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-hidden={!menuOpen}
+        onClick={() => setMenuOpen(false)}
+      >
+        <div className="nav-overlay-inner" onClick={(e) => e.stopPropagation()}>
+          <nav className="nav-overlay-links">
+            {OVERLAY_LINKS.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className="nav-overlay-link"
+                onClick={() => setMenuOpen(false)}
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+          <div className="nav-overlay-cta" onClick={() => setMenuOpen(false)}>
+            <AuditPopupButton className="btn btn-primary">
+              Book the audit →
+            </AuditPopupButton>
+          </div>
         </div>
       </div>
-    </nav>
+    </>
   );
 }

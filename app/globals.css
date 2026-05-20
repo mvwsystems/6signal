@@ -910,7 +910,7 @@
   .pricing-core .p-number {
     font-family: "Chakra Petch", monospace;
     font-weight: 200;
-    font-size: clamp(120px, 18vw, 240px);
+    font-size: clamp(72px, 18vw, 240px);
     letter-spacing: -0.06em;
     line-height: 0.9;
     color: #f5f5f3;
@@ -1567,7 +1567,7 @@
   .care-price {
     font-family: "Chakra Petch", monospace;
     font-weight: 200;
-    font-size: clamp(72px, 12vw, 140px);
+    font-size: clamp(52px, 12vw, 140px);
     letter-spacing: -0.05em;
     line-height: 0.88;
     color: #f5f5f3;
@@ -3504,6 +3504,22 @@
   }
 }
 
+/* Mobile kebab trigger — hidden on desktop */
+.nav-menu-wrap {
+  display: none;
+}
+
+.nav-hamburger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 6px 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
 @media (max-width: 860px) {
   .nav-links {
     display: none;
@@ -3517,60 +3533,74 @@
   }
 }
 
-/* Hamburger button — hidden on desktop */
-.nav-hamburger {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 3px;
-  padding: 9px 10px;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: border-color 0.2s;
-}
-.nav-hamburger:hover {
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-/* Dropdown wrapper — hidden on desktop */
-.nav-menu-wrap {
-  position: relative;
+/* Full-screen mobile overlay */
+.nav-overlay {
   display: none;
+  position: fixed;
+  inset: 0;
+  background: #060606;
+  z-index: 49;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-10px);
+  transition: opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Dropdown panel */
-.nav-dropdown {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  background: #0e0e0c;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  min-width: 180px;
+@media (max-width: 860px) {
+  .nav-overlay {
+    display: flex;
+  }
+}
+
+.nav-overlay--open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.nav-overlay-inner {
   display: flex;
   flex-direction: column;
-  z-index: 200;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  align-items: center;
+  width: 100%;
+  max-width: 480px;
+  padding: 0 32px;
 }
-.nav-dropdown-link {
-  display: block;
+
+.nav-overlay-links {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.nav-overlay-link {
   font-family: "Chakra Petch", monospace;
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.2em;
+  font-size: clamp(18px, 5.5vw, 26px);
+  font-weight: 500;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #b8b8b5;
-  padding: 14px 20px;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  transition: color 0.15s;
-}
-.nav-dropdown-link:last-child {
-  border-bottom: none;
-}
-.nav-dropdown-link:hover {
   color: #f5f5f3;
+  text-decoration: none;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  text-align: center;
+  transition: color 0.15s ease;
+}
+
+.nav-overlay-link:hover,
+.nav-overlay-link:focus {
+  color: #E6FF00;
+  outline: none;
+}
+
+.nav-overlay-cta {
+  margin-top: 36px;
 }
 
 @media (max-width: 900px) {
@@ -4660,4 +4690,20 @@
   .tindex-research-card-right {
     justify-content: flex-start;
   }
+}
+
+/* ── Mobile overflow hardening ──────────────────────────────────────────────
+   Unlayered rules beat @layer base, so these reliably prevent iOS Safari
+   horizontal scroll regardless of Tailwind's layer cascade.
+   ─────────────────────────────────────────────────────────────────────── */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+img,
+video,
+svg {
+  max-width: 100%;
 }

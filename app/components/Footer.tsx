@@ -46,7 +46,7 @@ export default function Footer() {
               <Link href="/contact">Get in touch</Link>
               <Link href="/research">Research</Link>
               <Link href="/research/ai-visibility-tools">AI Visibility Tools</Link>
-              <Link href="/services">Services</Link>
+              <Link href="/capabilities">Capabilities</Link>
             </div>
           </div>
         </div>

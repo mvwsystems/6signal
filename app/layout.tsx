@@ -7,16 +7,16 @@ export const metadata: Metadata = {
   description:
     "Homeowners ask ChatGPT, Maps, and AI Overviews before they call. 6 Signal gets residential contractors named across six visibility layers. Based in Dallas/Fort Worth, serving contractors in DFW and select markets beyond Texas.",
   openGraph: {
-    title: "6 Signal — Be the contractor AI recommends.",
+    title: "SIXSIGNAL | AI Visibility + AI Infrastructure",
     description:
       "Homeowners ask ChatGPT, Maps, and AI Overviews before they call anyone. 6 Signal gets residential contractors onto that shortlist. Based in the Dallas/Fort Worth area.",
     type: "website",
-    images: [{ url: "/og-social.jpg", width: 1200, height: 630, alt: "Get More HVAC, Plumbing, Roofing Leads — 6 Signal" }],
+    images: [{ url: "/6SIG_SOCIAL_SHARE.png", width: 1200, height: 630, alt: "Get More HVAC, Plumbing, Roofing Leads — 6 Signal" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "6 Signal — Be the contractor AI recommends.",
-    images: ["/og-social.jpg"],
+    title: "SIXSIGNAL | AI Visibility + AI Infrastructure",
+    images: ["/6SIG_SOCIAL_SHARE.png"],
   },
 };
 

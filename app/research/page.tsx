@@ -19,11 +19,11 @@ export const metadata: Metadata = {
       "Research, white papers, field notes, and insights on AI visibility, AEO, GEO, local SEO, and how contractors get found across search and AI answers.",
     type: "website",
     url: `${BASE}/research`,
-    images: [{ url: "/og-social.jpg", width: 1200, height: 630, alt: "6Signal Research" }],
+    images: [{ url: "/6SIG_SOCIAL_SHARE.png", width: 1200, height: 630, alt: "6Signal Research" }],
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/og-social.jpg"],
+    images: ["/6SIG_SOCIAL_SHARE.png"],
   },
   alternates: { canonical: `${BASE}/research` },
 };
