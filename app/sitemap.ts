@@ -21,6 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/foundation-concrete`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/commercial-contractors`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/method`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.85 },
+    { url: `${BASE}/apple-maps-readiness`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/audit`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.95 },
     { url: `${BASE}/work`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/visibility`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.7 },
