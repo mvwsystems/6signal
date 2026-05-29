@@ -26,6 +26,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/visibility`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/contact`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/capabilities`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE}/ai-visibility-check`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/visibility-check`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.85 },
+    { url: `${BASE}/strategy-brief`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/research`, lastModified: UPDATED, changeFrequency: "weekly", priority: 0.85 },
     { url: `${BASE}/research/ai-visibility-tools`, lastModified: UPDATED, changeFrequency: "weekly", priority: 0.82 },
     ...posts.map((post) => ({
