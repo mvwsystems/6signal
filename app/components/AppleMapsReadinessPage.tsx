@@ -168,7 +168,7 @@ function AppleMapsJsonLd() {
         "@type": "ListItem",
         position: 2,
         name: "Apple Maps Readiness Setup",
-        item: `${BASE_URL}/apple-maps-readiness`,
+        item: `${BASE_URL}/apple`,
       },
     ],
   };

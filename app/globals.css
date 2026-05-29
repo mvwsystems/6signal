@@ -4591,7 +4591,7 @@
 }
 
 /* ── APPLE MAPS READINESS — pricing cards ──────────────────────────────────
-   Scoped styles for the two-card pricing block on /apple-maps-readiness.
+   Scoped styles for the two-card pricing block on /apple.
    Reuses existing accent tokens (--accent) and the .feat-list / .btn system. */
 @layer components {
   .amr-price-grid {

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import AppleMapsReadinessPage from "../components/AppleMapsReadinessPage";
 
-const canonical = "https://6signal.co/apple-maps-readiness";
+const canonical = "https://6signal.co/apple";
 
 export const metadata: Metadata = {
   title: "Apple Maps Readiness Setup for Contractors | 6Signal",
