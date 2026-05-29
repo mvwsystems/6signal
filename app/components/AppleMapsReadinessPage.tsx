@@ -10,7 +10,7 @@ import AuditPopupButton from "./AuditPopupButton";
   ────────────────────────────────────────────────────────────────────────────
   BOOKING / CTA WIRING
   ────────────────────────────────────────────────────────────────────────────
-  The primary CTA ("Book the Apple Maps Readiness Audit") uses the site's
+  The primary CTA ("Buy Apple Business Setup") uses the site's
   existing booking flow — the Typeform popup rendered by <AuditPopupButton/>.
 
   To point this page at a DIFFERENT booking link (e.g. a dedicated Apple Maps
@@ -225,7 +225,7 @@ export default function AppleMapsReadinessPage() {
             <div className="hero-cta-row reveal">
               {/* PRIMARY CTA — replace booking link via app/lib/links.ts (TYPEFORM_ID) */}
               <AuditPopupButton className="btn btn-primary btn-lg">
-                Book the Apple Maps Readiness Audit
+                Buy Apple Business Setup
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
@@ -409,7 +409,7 @@ export default function AppleMapsReadinessPage() {
           <div className="hero-cta-row reveal" style={{ justifyContent: "center" }}>
             {/* MID-PAGE CTA — same booking flow as hero */}
             <AuditPopupButton className="btn btn-primary btn-lg">
-              Book the Apple Maps Readiness Audit
+              Buy Apple Business Setup
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
@@ -494,7 +494,7 @@ export default function AppleMapsReadinessPage() {
             <div className="p-cta">
               {/* PRIMARY CTA — replace booking link via app/lib/links.ts (TYPEFORM_ID) */}
               <AuditPopupButton className="btn btn-primary btn-lg">
-                Book the Apple Maps Readiness Audit
+                Buy Apple Business Setup
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
@@ -593,7 +593,7 @@ export default function AppleMapsReadinessPage() {
           <div className="f-cta">
             {/* FINAL CTA — replace booking link via app/lib/links.ts (TYPEFORM_ID) */}
             <AuditPopupButton className="btn btn-primary btn-lg">
-              Book the Apple Maps Readiness Audit
+              Buy Apple Business Setup
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
@@ -613,7 +613,7 @@ export default function AppleMapsReadinessPage() {
       <div className="mobile-cta">
         {/* MOBILE STICKY CTA — same booking flow */}
         <AuditPopupButton>
-          Book the Apple Maps Readiness Audit
+          Buy Apple Business Setup
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>
