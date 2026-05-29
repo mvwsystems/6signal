@@ -109,21 +109,10 @@ const notForItems = [
 ];
 
 // §07 — Pricing
-const readinessIncludes = [
-  "Apple Business Connect claim / verification",
-  "Full profile optimization",
-  "Category and service alignment",
-  "Photo, logo, and brand asset setup",
-  "NAP consistency review vs. Google & website",
-  "Google Business Profile comparison",
-  "Apple Maps Ads readiness checklist",
-  "Tracking and landing page recommendations",
-];
-
 const systemIncludes = [
   "Everything in the Apple Maps Readiness Setup",
   "Google Business Profile optimization",
-  "AI search visibility (ChatGPT, Gemini, Perplexity)",
+  "AI search visibility — ChatGPT, Gemini, Perplexity",
   "Citation and directory alignment",
   "Review strategy",
   "Service-page alignment",
@@ -490,62 +479,50 @@ export default function AppleMapsReadinessPage() {
             </div>
           </div>
 
-          <div className="amr-price-grid">
-            {/* Card 1 — fast start */}
-            <div className="amr-price-card featured">
-              <div className="amr-price-tag">Fast start</div>
-              <div className="amr-price-name">Apple Maps Readiness Setup</div>
-              <div className="amr-price-number">
-                <span className="dollar">$</span>750 <span className="unit">one-time</span>
-              </div>
-              <div className="amr-price-sub">
-                Everything needed to claim, clean up, optimize, and prepare your Apple Maps
-                presence — and a readiness checklist you keep.
-              </div>
-              <div className="feat-list">
-                {readinessIncludes.map((item, i) => (
-                  <div className="feat-item" key={i}>
-                    {item}
-                  </div>
-                ))}
-              </div>
-              <div className="amr-price-cta">
-                {/* PRIMARY CTA — replace booking link via app/lib/links.ts (TYPEFORM_ID) */}
-                <AuditPopupButton className="btn btn-primary btn-lg">
-                  Book the Apple Maps Readiness Audit
-                  <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
-                    <path d="M0 5h14M10 1l4 4-4 4" />
-                  </svg>
-                </AuditPopupButton>
-                <div className="amr-price-note">
-                  Can also be bundled into a full AI + Local Visibility package.
-                </div>
-              </div>
+          {/* Primary offer — fast start ($750). Same pattern as the home retainer block. */}
+          <div className="pricing-core">
+            <div className="p-eyebrow">Apple Maps Readiness Setup — fast start</div>
+            <div className="p-number">
+              <span className="dollar">$</span>750
+              <span className="mo">/ one-time</span>
             </div>
+            <div className="p-sub">
+              Everything needed to claim, clean up, optimize, and prepare your Apple Maps
+              presence.{" "}
+              <em>Can also be bundled into a full AI + Local Visibility package.</em>
+            </div>
+            <div className="p-cta">
+              {/* PRIMARY CTA — replace booking link via app/lib/links.ts (TYPEFORM_ID) */}
+              <AuditPopupButton className="btn btn-primary btn-lg">
+                Book the Apple Maps Readiness Audit
+                <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
+                  <path d="M0 5h14M10 1l4 4-4 4" />
+                </svg>
+              </AuditPopupButton>
+            </div>
+            <div className="p-guarantee">
+              Apple Business Connect claim · Profile optimized · NAP review · Ads-ready checklist
+            </div>
+          </div>
 
-            {/* Card 2 — full system */}
-            <div className="amr-price-card alt">
-              <div className="amr-price-tag">Comprehensive</div>
-              <div className="amr-price-name">AI + Local Visibility System</div>
-              <div className="amr-price-number">
-                <span className="unit" style={{ display: "block", marginBottom: "8px" }}>
-                  Starting at
-                </span>
-                <span className="dollar">$</span>2,500{" "}
-                <span className="unit">setup + monthly</span>
-              </div>
-              <div className="amr-price-sub">
-                The complete visibility system — Apple Maps plus Google, AI search, citations,
-                reviews, and ongoing optimization.
-              </div>
-              <div className="feat-list">
-                {systemIncludes.map((item, i) => (
-                  <div className="feat-item" key={i}>
-                    {item}
-                  </div>
-                ))}
-              </div>
-              <div className="amr-price-cta">
+          {/* Comprehensive offer — the full system ($2,500+). Uses the home pricing-detail grid. */}
+          <div className="pricing-detail">
+            <div className="pricing-note">
+              <p>
+                <span className="highlight">
+                  AI + Local Visibility System — starting at $2,500 setup + monthly
+                  optimization.
+                </span>{" "}
+                The comprehensive option: Apple Maps plus Google Business Profile, AI search
+                visibility, citation alignment, review strategy, service-page alignment, and
+                ongoing reporting.
+              </p>
+              <p className="italic" style={{ marginTop: "20px" }}>
+                The Apple Maps Readiness Setup is the fast start. The full system is the
+                ongoing visibility engine — custom-scoped to your market and current
+                footprint.
+              </p>
+              <div style={{ marginTop: "28px" }}>
                 {/* SECONDARY CTA — links to existing /contact route; replace href if needed */}
                 <Link href="/contact" className="btn btn-ghost btn-lg">
                   Ask About Full Visibility System
@@ -553,10 +530,14 @@ export default function AppleMapsReadinessPage() {
                     <path d="M0 5h14M10 1l4 4-4 4" />
                   </svg>
                 </Link>
-                <div className="amr-price-note">
-                  Custom-scoped to your market and current footprint.
-                </div>
               </div>
+            </div>
+
+            <div className="included">
+              <h4>The full system includes</h4>
+              {systemIncludes.map((item, i) => (
+                <div key={i}>{item}</div>
+              ))}
             </div>
           </div>
         </div>
