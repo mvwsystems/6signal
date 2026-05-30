@@ -4,6 +4,11 @@ import matter from "gray-matter";
 
 const BLOG_DIR = path.join(process.cwd(), "content/blog");
 
+export interface FaqItem {
+  q: string;
+  a: string;
+}
+
 export interface PostMeta {
   title: string;
   slug: string;
@@ -15,6 +20,7 @@ export interface PostMeta {
   featured: boolean;
   tags: string[];
   contentType?: string;
+  faq?: FaqItem[];
 }
 
 export interface Post extends PostMeta {
@@ -40,6 +46,7 @@ function parsePost(file: string): Post {
     featured: Boolean(data.featured),
     tags: Array.isArray(data.tags) ? data.tags : [],
     contentType: data.contentType ?? undefined,
+    faq: Array.isArray(data.faq) ? data.faq : undefined,
     content,
   };
 }

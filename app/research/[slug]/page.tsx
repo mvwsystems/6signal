@@ -7,6 +7,7 @@ import Footer from "../../components/Footer";
 import BlogPageClient from "../../components/BlogPageClient";
 import AuditPopupButton from "../../components/AuditPopupButton";
 import { getAllPosts, getPostBySlug, getRelatedPosts, formatDate } from "../../lib/blog";
+import BlogCTA from "../../components/BlogCTA";
 
 const BASE = "https://6signal.co";
 
@@ -53,40 +54,50 @@ export default async function BlogPostPage({
 
   const related = getRelatedPosts(post.slug, post.category);
 
-  const articleSchema = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Article",
-        headline: post.title,
-        description: post.description,
-        author: { "@type": "Person", name: post.author },
-        datePublished: post.date,
-        publisher: {
-          "@type": "Organization",
-          name: "6 Signal",
-          url: BASE,
-          logo: { "@type": "ImageObject", url: `${BASE}/6SIGNAL2.png` },
+  const schemaGraph: object[] = [
+    {
+      "@type": "Article",
+      headline: post.title,
+      description: post.description,
+      author: { "@type": "Person", name: post.author },
+      datePublished: post.date,
+      publisher: {
+        "@type": "Organization",
+        name: "6 Signal",
+        url: BASE,
+        logo: { "@type": "ImageObject", url: `${BASE}/6SIGNAL2.png` },
+      },
+      url: `${BASE}/research/${post.slug}`,
+      keywords: post.tags.join(", "),
+      articleSection: post.category,
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: BASE },
+        { "@type": "ListItem", position: 2, name: "Research", item: `${BASE}/research` },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: post.title,
+          item: `${BASE}/research/${post.slug}`,
         },
-        url: `${BASE}/research/${post.slug}`,
-        keywords: post.tags.join(", "),
-        articleSection: post.category,
-      },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: BASE },
-          { "@type": "ListItem", position: 2, name: "Research", item: `${BASE}/research` },
-          {
-            "@type": "ListItem",
-            position: 3,
-            name: post.title,
-            item: `${BASE}/research/${post.slug}`,
-          },
-        ],
-      },
-    ],
-  };
+      ],
+    },
+  ];
+
+  if (post.faq && post.faq.length > 0) {
+    schemaGraph.push({
+      "@type": "FAQPage",
+      mainEntity: post.faq.map((item) => ({
+        "@type": "Question",
+        name: item.q,
+        acceptedAnswer: { "@type": "Answer", text: item.a },
+      })),
+    });
+  }
+
+  const articleSchema = { "@context": "https://schema.org", "@graph": schemaGraph };
 
   return (
     <>
@@ -126,7 +137,7 @@ export default async function BlogPostPage({
       <article className="post-body-section rule">
         <div className="wrap">
           <div className="post-body">
-            <MDXRemote source={post.content} />
+            <MDXRemote source={post.content} components={{ BlogCTA }} />
           </div>
 
           {/* MID-ARTICLE CTA */}
