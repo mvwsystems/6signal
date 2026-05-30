@@ -3370,6 +3370,13 @@
     color: #b8b8b5;
     margin-bottom: 24px;
   }
+  /* Override post-body link color inside the CTA block */
+  .post-body .blog-cta-block a.btn-primary {
+    color: #060606;
+  }
+  .post-body .blog-cta-block a.btn-primary:hover {
+    color: var(--accent);
+  }
 
   /* Tags */
   .post-tags-section {
