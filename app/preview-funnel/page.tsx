@@ -37,6 +37,9 @@ export default function PreviewFunnelPage() {
     if (Object.keys(errs).length > 0) { setErrors(errs); return; }
 
     setStep("loading-audit");
+    // Clear stale results from any previous business
+    localStorage.removeItem("6sig_audit_result");
+    localStorage.removeItem("6sig_strategy_result");
     localStorage.setItem("6sig_audit_data", JSON.stringify(form));
 
     let msgIdx = 0;
@@ -114,7 +117,8 @@ export default function PreviewFunnelPage() {
       const clean = text.replace(/```json\n?|```\n?/g, "").trim();
       const parsed = JSON.parse(clean);
       if (parsed.error) throw new Error(parsed.error);
-      localStorage.setItem("6sig_audit_result", JSON.stringify(audit));
+      const strategyData = parsed.strategy ?? parsed;
+      localStorage.setItem("6sig_strategy_result", JSON.stringify(strategyData));
       setStep("strategy-ready");
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : "Strategy generation failed.");

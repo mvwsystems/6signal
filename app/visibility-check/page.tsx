@@ -54,7 +54,9 @@ export default function VisibilityCheckPage() {
 
     setSubmitting(true);
 
-    // Persist form data in localStorage so it survives the Stripe redirect
+    // Clear any stale results from a previous business before redirecting
+    localStorage.removeItem("6sig_audit_result");
+    localStorage.removeItem("6sig_strategy_result");
     localStorage.setItem("6sig_audit_data", JSON.stringify(form));
 
     window.location.href = "https://buy.stripe.com/28EeVebRQ3J1ghz6bf3ks0p";

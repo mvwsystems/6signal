@@ -332,6 +332,19 @@ function AuditResultsInner() {
   };
 
   useEffect(() => {
+    // Use pre-generated result if available (from preview funnel or a reload)
+    try {
+      const cached = localStorage.getItem("6sig_audit_result");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed?.business?.name) {
+          setAudit(parsed);
+          return;
+        }
+      }
+    } catch { /* ignore */ }
+
+    // Otherwise generate from form data (production Stripe flow)
     const data = getFormData();
     if (!data || !data.name) return;
 
@@ -553,7 +566,7 @@ function AuditResultsInner() {
 
               <div className="ar-upsell-card">
                 <div className="ar-upsell-tag">Fastest Path</div>
-                <h3 className="ar-upsell-title">30-Minute Strategy Call</h3>
+                <h3 className="ar-upsell-title">1-Hour Strategy Call</h3>
                 <p className="ar-upsell-desc">Live call with Matt Walker. Walk through your brief together and leave with a clear action plan and the option to engage 6Signal directly.</p>
                 <div className="ar-upsell-price">$197</div>
                 <a href="https://calendly.com/mvw-mattvincentwalker/ai-audit" className="btn btn-ghost ar-upsell-cta" target="_blank" rel="noopener noreferrer">

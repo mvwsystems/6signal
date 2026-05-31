@@ -88,6 +88,19 @@ function StrategyBriefInner() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Use pre-generated result if available (from preview funnel or a reload)
+    try {
+      const cached = localStorage.getItem("6sig_strategy_result");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed?.business_name) {
+          setStrategy(parsed);
+          return;
+        }
+      }
+    } catch { /* ignore */ }
+
+    // Otherwise generate from audit data (production Stripe flow)
     let audit: unknown = null;
     try {
       const stored = localStorage.getItem("6sig_audit_result");
@@ -126,7 +139,9 @@ function StrategyBriefInner() {
         const clean = text.replace(/```json\n?|```\n?/g, "").trim();
         const parsed = JSON.parse(clean);
         if (parsed.error) throw new Error(parsed.error);
-        setStrategy(parsed.strategy ?? parsed);
+        const strategyData = parsed.strategy ?? parsed;
+        setStrategy(strategyData);
+        localStorage.setItem("6sig_strategy_result", JSON.stringify(strategyData));
       } catch {
         setError("Something went wrong generating your strategy brief. Please contact hello@6signal.co.");
       } finally {
@@ -401,7 +416,7 @@ function StrategyBriefInner() {
               <p className="sb-close-note">{strategy.closing_note}</p>
               <div className="sb-close-ctas">
                 <a href="https://calendly.com/mvw-mattvincentwalker/ai-audit" className="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                  Book the Strategy Call — $197 →
+                  Book the 1-Hour Strategy Call — $197 →
                 </a>
                 <a href="https://6signal.co/audit" className="btn btn-ghost">
                   Book the Free Audit →
