@@ -197,7 +197,7 @@ export default function CapabilitiesPage() {
             <div className="lab-card">
               <div className="lab-card-head">
                 <span className="idx lab-tag">In development</span>
-                <h3 className="lab-name">BidForge</h3>
+                <h3 className="lab-name">BidCore</h3>
               </div>
               <p className="lab-body">
                 The larger bid intelligence model being built around takeoff, plan
