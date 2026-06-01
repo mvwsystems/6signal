@@ -59,7 +59,7 @@ export default async function BlogPostPage({
       "@type": "Article",
       headline: post.title,
       description: post.description,
-      author: { "@type": "Person", name: post.author },
+      author: { "@type": "Person", name: post.author, url: "https://mattvincentwalker.com" },
       datePublished: post.date,
       publisher: {
         "@type": "Organization",

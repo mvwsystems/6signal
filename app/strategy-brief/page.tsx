@@ -153,57 +153,41 @@ function StrategyBriefInner() {
     return () => clearInterval(interval);
   }, []);
 
-  // ── No audit data ──
-  if (error === "no_audit") {
+  // ── Non-strategy states (cursor elements always rendered so the hook finds them) ──
+  if (error === "no_audit" || (typeof error === "string" && error !== "no_audit") || loading || !strategy) {
     return (
       <div className="sb-page">
+        <div id="cursor-dot" aria-hidden="true" />
+        <div id="cursor-ring" aria-hidden="true" />
         <Nav />
         <div className="ar-state-wrap">
-          <div className="ar-error-block">
-            <span className="idx">Missing Data</span>
-            <h1 className="display ar-error-h1">We couldn't find your audit brief.</h1>
-            <p className="ar-error-body">Your audit brief is required to generate the strategy document. Start with the AI Visibility Brief first.</p>
-            <Link href="/visibility-check" className="btn btn-primary">Get the Audit Brief — $27 →</Link>
-          </div>
+          {error === "no_audit" && (
+            <div className="ar-error-block">
+              <span className="idx">Missing Data</span>
+              <h1 className="display ar-error-h1">We couldn't find your audit brief.</h1>
+              <p className="ar-error-body">Your audit brief is required to generate the strategy document. Start with the AI Visibility Brief first.</p>
+              <Link href="/visibility-check" className="btn btn-primary">Get the Audit Brief — $27 →</Link>
+            </div>
+          )}
+          {typeof error === "string" && error !== "no_audit" && (
+            <div className="ar-error-block">
+              <span className="idx">Generation Failed</span>
+              <h1 className="display ar-error-h1">Something went wrong.</h1>
+              <p className="ar-error-body">{error}</p>
+              <a href="mailto:hello@6signal.co" className="btn btn-primary">Contact hello@6signal.co</a>
+            </div>
+          )}
+          {loading && (
+            <div className="ar-loading-block">
+              <div className="ar-loading-dot" />
+              <p className="ar-loading-msg">{loadingMsg}</p>
+              <p className="ar-loading-sub">Building your full strategy document...</p>
+            </div>
+          )}
         </div>
       </div>
     );
   }
-
-  // ── Error ──
-  if (typeof error === "string" && error !== "no_audit") {
-    return (
-      <div className="sb-page">
-        <Nav />
-        <div className="ar-state-wrap">
-          <div className="ar-error-block">
-            <span className="idx">Generation Failed</span>
-            <h1 className="display ar-error-h1">Something went wrong.</h1>
-            <p className="ar-error-body">{error}</p>
-            <a href="mailto:hello@6signal.co" className="btn btn-primary">Contact hello@6signal.co</a>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // ── Loading ──
-  if (loading) {
-    return (
-      <div className="sb-page">
-        <Nav />
-        <div className="ar-state-wrap">
-          <div className="ar-loading-block">
-            <div className="ar-loading-dot" />
-            <p className="ar-loading-msg">{loadingMsg}</p>
-            <p className="ar-loading-sub">Building your full strategy document...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!strategy) return null;
 
   return (
     <div className="sb-page">

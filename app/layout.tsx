@@ -20,6 +20,32 @@ export const metadata: Metadata = {
   },
 };
 
+const PERSON_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Matt Vincent Walker",
+  "url": "https://mattvincentwalker.com",
+  "sameAs": [
+    "https://6signal.co",
+    "https://www.linkedin.com/in/mattvincentwalker",
+    "https://www.youtube.com/@mattvincentwalker",
+  ],
+};
+
+const ORG_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "6 Signal",
+  "url": "https://6signal.co",
+  "founder": {
+    "@type": "Person",
+    "name": "Matt Vincent Walker",
+    "url": "https://mattvincentwalker.com",
+  },
+  "description": "AI visibility practice for residential contractors. Six-layer framework: GEO, PEO, AEO, IEO, LEO, VEO.",
+  "areaServed": "Dallas-Fort Worth",
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -33,6 +59,14 @@ export default function RootLayout({
         <link
           href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
           rel="stylesheet"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON_SCHEMA) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_SCHEMA) }}
         />
       </head>
       <body>{children}</body>

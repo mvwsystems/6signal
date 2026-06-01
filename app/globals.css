@@ -3118,6 +3118,9 @@
     gap: 8px;
     margin-bottom: 36px;
   }
+  .post-breadcrumb .idx {
+    margin-bottom: 0;
+  }
   .post-breadcrumb-link {
     color: #555553 !important;
     text-decoration: none;
