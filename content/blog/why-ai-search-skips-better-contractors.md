@@ -5,7 +5,7 @@ description: "Strong contractors often get skipped by AI search because their en
 date: "2026-02-23"
 category: "Insight"
 contentType: "Insight"
-author: "Matt Walker / 6Signal"
+author: "Matt Vincent Walker"
 readTime: "10 min read"
 featured: false
 tags:

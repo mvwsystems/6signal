@@ -5,7 +5,7 @@ description: "A real AI visibility audit measures more than rankings. Learn how 
 date: "2026-04-13"
 category: "Field Note"
 contentType: "Field Note"
-author: "Matt Walker / 6Signal"
+author: "Matt Vincent Walker"
 readTime: "11 min read"
 featured: false
 tags:

@@ -5,7 +5,7 @@ description: "Learn how to write service page FAQs that answer real buyer questi
 date: "2026-05-11"
 category: "Training"
 contentType: "Training"
-author: "Matt Walker / 6Signal"
+author: "Matt Vincent Walker"
 readTime: "12 min read"
 featured: false
 tags:

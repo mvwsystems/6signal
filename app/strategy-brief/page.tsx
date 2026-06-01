@@ -418,9 +418,6 @@ function StrategyBriefInner() {
                 <a href="https://calendly.com/mvw-mattvincentwalker/ai-audit" className="btn btn-primary" target="_blank" rel="noopener noreferrer">
                   Book the 1-Hour Strategy Call — $197 →
                 </a>
-                <a href="https://6signal.co/audit" className="btn btn-ghost">
-                  Book the Free Audit →
-                </a>
               </div>
             </div>
           </section>

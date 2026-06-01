@@ -5,7 +5,7 @@ description: "A research-backed white paper on question clusters, AEO, GEO, topi
 date: "2026-05-01"
 category: "White Paper"
 contentType: "White Paper"
-author: "Matt Walker / 6Signal"
+author: "Matt Vincent Walker"
 readTime: "34 min read"
 featured: false
 tags:

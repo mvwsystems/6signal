@@ -5,7 +5,7 @@ description: "A research-backed white paper on local entity SEO, AI visibility, 
 date: "2026-04-01"
 category: "White Paper"
 contentType: "White Paper"
-author: "Matt Walker / 6Signal"
+author: "Matt Vincent Walker"
 readTime: "32 min read"
 featured: false
 tags:

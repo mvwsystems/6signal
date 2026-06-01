@@ -80,8 +80,8 @@ export default function VisibilityPage() {
               where — live, across all six layers, before anything gets signed.
             </p>
             <div className="hero-cta-row reveal">
-              <a href="/audit" className="btn btn-primary btn-lg">
-                Book the Visibility Audit
+              <a href="/visibility-check" className="btn btn-primary btn-lg">
+                Get the AI Visibility Brief
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
@@ -179,7 +179,7 @@ export default function VisibilityPage() {
       {/* FINAL CTA */}
       <section className="final" id="book">
         <div className="wrap">
-          <div className="f-eyebrow">Book the audit</div>
+          <div className="f-eyebrow">Get the audit</div>
           <h2 className="display">
             Three contractors get named<br />
             in your market this week.<br />
@@ -194,15 +194,15 @@ export default function VisibilityPage() {
           </p>
           <div className="f-cta">
             <AuditPopupButton className="btn btn-primary btn-lg">
-              Book the audit
+              Get the audit
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
             </AuditPopupButton>
           </div>
           <div className="f-notes">
-            <span>No-charge pre-audit</span>
-            <span>30-minute readout</span>
+            <span>AI Visibility Brief — $27</span>
+            <span>Instant results</span>
             <span>No commitment required</span>
             <span>One client per market</span>
           </div>
@@ -213,7 +213,7 @@ export default function VisibilityPage() {
 
       <div className="mobile-cta">
         <AuditPopupButton>
-          Book the visibility audit
+          Get the audit
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>

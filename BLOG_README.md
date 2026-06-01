@@ -29,7 +29,7 @@ slug: "your-post-url-slug-here"
 description: "One or two sentences that appear in search results and on the blog index card. Make it specific and useful."
 date: "2026-05-15"
 category: "AI Visibility"
-author: "Matt Walker"
+author: "Matt Vincent Walker"
 readTime: "6 min read"
 featured: false
 tags: ["tag one", "tag two", "tag three"]
@@ -49,7 +49,7 @@ tags: ["tag one", "tag two", "tag three"]
 | `description` | Yes | 1–2 sentence summary. Appears in search results and index cards. |
 | `date` | Yes | Publication date in `YYYY-MM-DD` format. |
 | `category` | Yes | One of: `AI Visibility`, `Local SEO`, `Lead Generation`, `Automation`, `Strategy`, `Case Study` |
-| `author` | Yes | Usually `Matt Walker` |
+| `author` | Yes | Usually `Matt Vincent Walker` |
 | `readTime` | Yes | Estimate like `5 min read` or `8 min read`. |
 | `featured` | Yes | `true` or `false`. Only one post should be featured at a time — it appears large at the top of the blog index. |
 | `tags` | Yes | Array of lowercase strings. Used for display and future filtering. |
@@ -186,7 +186,7 @@ slug: "how-roofers-dominate-ai-search"
 description: "Most roofing companies are invisible in ChatGPT and Google AI Overviews. Here's the exact signal structure that gets you named."
 date: "2026-05-20"
 category: "AI Visibility"
-author: "Matt Walker"
+author: "Matt Vincent Walker"
 readTime: "7 min read"
 featured: false
 tags: ["roofers", "AI visibility", "GEO", "local SEO"]

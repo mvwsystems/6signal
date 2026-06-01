@@ -157,7 +157,7 @@ export default function MethodPage() {
             </p>
             <div className="hero-cta-row reveal">
               <AuditPopupButton className="btn btn-primary btn-lg">
-                Book the Visibility Audit
+                Get the AI Visibility Brief
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
@@ -316,7 +316,7 @@ export default function MethodPage() {
             <em>The audit tells you whether your name is in it.</em>
           </h3>
           <AuditPopupButton className="btn btn-primary">
-            Book the Visibility Audit
+            Get the AI Visibility Brief
             <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>
@@ -381,7 +381,7 @@ export default function MethodPage() {
           <div className="operator-note">
             <span className="op-label">The operator</span>
             <p>
-              <strong>6 Signal is run by Matt Walker</strong> — a visibility
+              <strong>6 Signal is run by Matt Vincent Walker</strong> — a visibility
               practitioner focused exclusively on how AI and search systems form
               local shortlists for residential service businesses. One operator per
               account. No account managers, no junior staff on your work. The person
@@ -440,7 +440,7 @@ export default function MethodPage() {
       {/* FINAL CTA */}
       <section className="final" id="book">
         <div className="wrap">
-          <div className="f-eyebrow">Book the Visibility Audit</div>
+          <div className="f-eyebrow">Get the AI Visibility Brief</div>
           <h2 className="display">
             See what the machines<br />
             say about your company<br />
@@ -455,15 +455,15 @@ export default function MethodPage() {
           </p>
           <div className="f-cta">
             <AuditPopupButton className="btn btn-primary btn-lg">
-              Book the Visibility Audit
+              Get the AI Visibility Brief
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
             </AuditPopupButton>
           </div>
           <div className="f-notes">
-            <span>No-charge pre-audit</span>
-            <span>30-minute readout</span>
+            <span>AI Visibility Brief — $27</span>
+            <span>Instant results</span>
             <span>No commitment required</span>
             <span>One company per market</span>
           </div>
@@ -474,7 +474,7 @@ export default function MethodPage() {
 
       <div className="mobile-cta">
         <AuditPopupButton>
-          Book the visibility audit
+          Get the audit
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>

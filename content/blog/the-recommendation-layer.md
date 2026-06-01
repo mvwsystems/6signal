@@ -5,7 +5,7 @@ description: "Search is shifting from ranked lists to AI-generated shortlists. L
 date: "2026-02-02"
 category: "Insight"
 contentType: "Insight"
-author: "Matt Walker / 6Signal"
+author: "Matt Vincent Walker"
 readTime: "10 min read"
 featured: false
 tags:

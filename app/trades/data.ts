@@ -61,7 +61,7 @@ export const tradesBySlug: Record<string, TradeData> = {
     metaTitle: "6Signal: AI Visibility Audit for Roofers",
     metaDescription: "AI visibility audits for roofers in Dallas/Fort Worth and North Texas. See where your roofing company appears across AI, Maps, and search.",
     ogTitle: "Be the roofer AI recommends after the storm.",
-    ogDescription: "6 Signal helps roofing contractors own the AI shortlist in their market. Free visibility audit — no pitch, no deck.",
+    ogDescription: "6 Signal helps roofing contractors own the AI shortlist in their market. AI Visibility Brief — $27.",
     heroMeta: "AI Visibility · Built for Roofing Contractors",
     headline1: "Be the roofer",
     headline2Em: "AI recommends after the storm.",

@@ -95,8 +95,8 @@ const faqs = [
     a: "Complete the short intake — trade, service area, website, top services, and top competitors. Takes a few minutes. After submitting, you'll see the scheduling link. Pick a time and you're done.",
   },
   {
-    q: "Is it free?",
-    a: "The pre-audit and readout are no charge. If there's a fit for the retainer, we'll have that conversation after you've seen the full findings — not before. If it's not a fit, you keep the findings either way.",
+    q: "How much does it cost?",
+    a: "The AI Visibility Intelligence Brief is $27. It covers all six visibility layers and delivers instant results specific to your business, trade, and market. If there's a fit for the retainer, we'll have that conversation after you've seen the full findings — not before.",
   },
   {
     q: "Is this the same as an SEO audit?",
@@ -144,7 +144,7 @@ export default function AuditPage() {
             </p>
             <div className="hero-cta-row reveal">
               <AuditPopupButton className="btn btn-primary btn-lg">
-                Book the Visibility Audit
+                Get the AI Visibility Brief
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
@@ -460,7 +460,7 @@ export default function AuditPage() {
       {/* §07 — FINAL CTA / BOOKING */}
       <section className="final" id="book">
         <div className="wrap">
-          <div className="f-eyebrow">Book the Visibility Audit</div>
+          <div className="f-eyebrow">Get the AI Visibility Brief</div>
           <h2 className="display">
             Pre-audit before the call.<br />
             Findings on the call.<br />
@@ -475,16 +475,16 @@ export default function AuditPage() {
           </p>
           <div className="f-cta">
             <AuditPopupButton className="btn btn-primary btn-lg">
-              Book the Visibility Audit
+              Get the AI Visibility Brief
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
             </AuditPopupButton>
           </div>
           <div className="f-notes">
-            <span>Short intake</span>
-            <span>Six-layer pre-audit</span>
-            <span>30-minute readout</span>
+            <span>AI Visibility Brief — $27</span>
+            <span>Six-layer analysis</span>
+            <span>Instant results</span>
             <span>Priority list yours to keep</span>
           </div>
         </div>
@@ -526,7 +526,7 @@ export default function AuditPage() {
 
       <div className="mobile-cta">
         <AuditPopupButton>
-          Book the visibility audit
+          Get the audit
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>

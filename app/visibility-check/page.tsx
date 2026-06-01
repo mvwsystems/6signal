@@ -14,8 +14,8 @@ const SIGNALS = [
 
 const FAQS = [
   {
-    q: "Is this the same as the free audit?",
-    a: "No. The $27 brief is a full 8-slide AI Visibility Intelligence Brief specific to your business, built by the same system 6Signal uses for retainer clients. The free audit is a 30-minute call. This is a written brief you keep.",
+    q: "Is this the same as the 30-minute strategy call?",
+    a: "No. The $27 brief is a full 8-slide AI Visibility Intelligence Brief specific to your business, built by the same system 6Signal uses for retainer clients. The strategy call is a separate engagement. This is a written brief you keep.",
   },
   {
     q: "How long does it take?",

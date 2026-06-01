@@ -5,7 +5,7 @@ description: "A practical guide to earning contractor reviews that clarify servi
 date: "2026-05-18"
 category: "Training"
 contentType: "Training"
-author: "Matt Walker / 6Signal"
+author: "Matt Vincent Walker"
 readTime: "12 min read"
 featured: false
 tags:

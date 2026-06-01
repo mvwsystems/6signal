@@ -5,7 +5,7 @@ description: "Reviews help buyers trust a business, but they also help AI system
 date: "2026-03-02"
 category: "Insight"
 contentType: "Insight"
-author: "Matt Walker / 6Signal"
+author: "Matt Vincent Walker"
 readTime: "10 min read"
 featured: false
 tags:

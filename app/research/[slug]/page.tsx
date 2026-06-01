@@ -146,11 +146,11 @@ export default async function BlogPostPage({
               <span className="idx post-cta-mid-label">6 Signal Visibility Audit</span>
               <p className="post-cta-mid-text">
                 Want to see exactly where your company stands across all six visibility
-                layers? The audit is free, takes 30 minutes, and you keep the findings
-                regardless of what you decide.
+                layers? Get the AI Visibility Intelligence Brief for $27 — instant results,
+                specific to your business, your trade, and your market.
               </p>
               <AuditPopupButton className="btn btn-primary">
-                Book the Audit
+                Get the AI Visibility Brief
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
@@ -200,12 +200,12 @@ export default async function BlogPostPage({
               See where you<br /><em>actually stand.</em>
             </h2>
             <p className="post-cta-deck">
-              The Visibility Audit runs your company through all six layers in 30 minutes.
-              Free. No pitch. Yours to keep.
+              The AI Visibility Intelligence Brief runs your company through all six layers
+              and delivers instant results. $27. Specific to your business, trade, and market.
             </p>
             <div className="post-cta-btns">
               <AuditPopupButton className="btn btn-primary btn-lg">
-                Book the Visibility Audit
+                Get the AI Visibility Brief
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>

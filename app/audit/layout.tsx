@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "The Visibility Audit — 6 Signal",
   description:
-    "See exactly where you appear across AI tools, Maps, voice search, answer engines, and directories — and where competitors are filling the gap. Free 30-minute audit.",
+    "See exactly where you appear across AI tools, Maps, voice search, answer engines, and directories — and where competitors are filling the gap. AI Visibility Brief — $27.",
   openGraph: {
     title: "The Visibility Audit — 6 Signal",
     description:

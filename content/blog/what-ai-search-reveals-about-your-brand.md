@@ -5,7 +5,7 @@ description: "AI search exposes how clearly the web understands your brand. Lear
 date: "2026-04-20"
 category: "Insight"
 contentType: "Insight"
-author: "Matt Walker / 6Signal"
+author: "Matt Vincent Walker"
 readTime: "11 min read"
 featured: false
 tags:

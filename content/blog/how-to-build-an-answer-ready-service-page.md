@@ -5,7 +5,7 @@ description: "An answer-ready service page helps buyers, Google, and AI systems 
 date: "2026-03-16"
 category: "Training"
 contentType: "Training"
-author: "Matt Walker / 6Signal"
+author: "Matt Vincent Walker"
 readTime: "13 min read"
 featured: false
 tags:

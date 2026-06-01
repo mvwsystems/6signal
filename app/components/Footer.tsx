@@ -42,7 +42,7 @@ export default function Footer() {
             </div>
             <div className="footer-col">
               <div className="head">Audit</div>
-              <Link href="/#book">Book the audit</Link>
+              <Link href="/visibility-check">Get the audit</Link>
               <Link href="/contact">Get in touch</Link>
               <Link href="/research">Research</Link>
               <Link href="/research/ai-visibility-tools">AI Visibility Tools</Link>

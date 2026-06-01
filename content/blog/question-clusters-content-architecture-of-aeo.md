@@ -5,7 +5,7 @@ description: "Question clusters are the content architecture behind AEO, GEO, an
 date: "2026-03-23"
 category: "Insight"
 contentType: "Insight"
-author: "Matt Walker / 6Signal"
+author: "Matt Vincent Walker"
 readTime: "12 min read"
 featured: false
 tags:

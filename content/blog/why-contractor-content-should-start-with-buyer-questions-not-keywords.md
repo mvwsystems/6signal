@@ -5,7 +5,7 @@ description: "Contractor content should start with buyer questions, not isolated
 date: "2026-03-30"
 category: "Insight"
 contentType: "Insight"
-author: "Matt Walker / 6Signal"
+author: "Matt Vincent Walker"
 readTime: "10 min read"
 featured: false
 tags:

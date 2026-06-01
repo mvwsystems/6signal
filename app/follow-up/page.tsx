@@ -45,8 +45,8 @@ export default function FollowUpPage() {
               immediately, and in a way that sounds like you.
             </p>
             <div className="hero-cta-row reveal">
-              <a href="/audit" className="btn btn-primary btn-lg">
-                Book the Visibility Audit
+              <a href="/visibility-check" className="btn btn-primary btn-lg">
+                Get the AI Visibility Brief
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
@@ -140,8 +140,8 @@ export default function FollowUpPage() {
               <p style={{ marginTop: "20px" }}>
                 If you haven&rsquo;t run a visibility audit, that&rsquo;s the recommended
                 first step.{" "}
-                <a href="/audit" style={{ color: "#f5f5f3", textDecoration: "underline", textUnderlineOffset: "3px" }}>
-                  Book the free audit →
+                <a href="/visibility-check" style={{ color: "#f5f5f3", textDecoration: "underline", textUnderlineOffset: "3px" }}>
+                  Get the audit →
                 </a>
               </p>
               <p className="italic" style={{ marginTop: "20px" }}>
@@ -170,21 +170,18 @@ export default function FollowUpPage() {
             to slow response times.
           </h2>
           <p className="f-deck">
-            Start with the free visibility audit. We run the six-layer pre-audit before
-            the call — if the follow-up layer is a fit alongside the retainer,
+            Start with the AI Visibility Brief. We run the six-layer analysis before
+            the retainer conversation — if the follow-up layer is a fit alongside the retainer,
             we&rsquo;ll walk through what that looks like after you&rsquo;ve seen the
             full read.
           </p>
           <div className="f-cta">
             <AuditPopupButton className="btn btn-primary btn-lg">
-              Book the Visibility Audit
+              Get the AI Visibility Brief
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
             </AuditPopupButton>
-            <a href="/audit" className="btn btn-ghost btn-lg">
-              Start with the visibility audit
-            </a>
           </div>
           <div className="f-notes">
             <span>Secondary engagement</span>
@@ -199,7 +196,7 @@ export default function FollowUpPage() {
 
       <div className="mobile-cta">
         <AuditPopupButton>
-          Book the Visibility Audit
+          Get the audit
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>

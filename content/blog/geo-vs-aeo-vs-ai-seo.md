@@ -5,7 +5,7 @@ description: "GEO, AEO, and AI SEO are often used interchangeably. Here is what 
 date: "2026-02-16"
 category: "Insight"
 contentType: "Insight"
-author: "Matt Walker / 6Signal"
+author: "Matt Vincent Walker"
 readTime: "10 min read"
 featured: false
 tags:

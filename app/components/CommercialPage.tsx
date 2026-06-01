@@ -211,7 +211,7 @@ export default function CommercialPage() {
 
           <div className="hero-cta-row reveal">
             <AuditPopupButton className="btn btn-primary btn-lg">
-              Book the Visibility Audit
+              Get the AI Visibility Brief
               <svg
                 className="arrow"
                 viewBox="0 0 16 10"
@@ -318,7 +318,7 @@ export default function CommercialPage() {
             <em>The audit shows whether your company is in those conversations.</em>
           </h3>
           <AuditPopupButton className="btn btn-primary">
-            Book the Visibility Audit
+            Get the AI Visibility Brief
             <svg
               className="arrow"
               viewBox="0 0 16 10"
@@ -329,7 +329,7 @@ export default function CommercialPage() {
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>
           </AuditPopupButton>
-          <div className="sub">Pre-audit included · One commercial contractor per market</div>
+          <div className="sub">One commercial contractor per market</div>
         </div>
       </section>
 
@@ -600,7 +600,7 @@ export default function CommercialPage() {
               <AuditPopupButton
                 className="btn btn-primary btn-lg"
               >
-                Book the audit
+                Get the audit
                 <svg
                   className="arrow"
                   viewBox="0 0 16 10"
@@ -657,7 +657,7 @@ export default function CommercialPage() {
       {/* §11 FINAL CTA */}
       <section className="final" id="book">
         <div className="wrap">
-          <div className="f-eyebrow">Book the audit</div>
+          <div className="f-eyebrow">Get the audit</div>
           <h2 className="display">
             Commercial buyers research
             <br />
@@ -676,7 +676,7 @@ export default function CommercialPage() {
             <AuditPopupButton
               className="btn btn-primary btn-lg"
             >
-              Book the Visibility Audit
+              Get the AI Visibility Brief
               <svg
                 className="arrow"
                 viewBox="0 0 16 10"
@@ -689,8 +689,8 @@ export default function CommercialPage() {
             </AuditPopupButton>
           </div>
           <div className="f-notes">
-            <span>No-charge pre-audit</span>
-            <span>30-minute readout</span>
+            <span>AI Visibility Brief — $27</span>
+            <span>Instant results</span>
             <span>No commitment required</span>
             <span>One contractor per market</span>
           </div>
@@ -703,7 +703,7 @@ export default function CommercialPage() {
 
       <div className="mobile-cta">
         <AuditPopupButton>
-          Book the visibility audit
+          Get the audit
           <svg
             width="14"
             height="10"

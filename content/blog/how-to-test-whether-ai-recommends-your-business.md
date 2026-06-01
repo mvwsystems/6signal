@@ -5,7 +5,7 @@ description: "A practical method for testing whether AI search tools name, cite,
 date: "2026-04-06"
 category: "Training"
 contentType: "Training"
-author: "Matt Walker / 6Signal"
+author: "Matt Vincent Walker"
 readTime: "12 min read"
 featured: false
 tags:

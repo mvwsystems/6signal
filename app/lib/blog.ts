@@ -41,7 +41,7 @@ function parsePost(file: string): Post {
     description: data.description ?? "",
     date: data.date ? String(data.date) : "",
     category: data.category ?? "General",
-    author: data.author ?? "Matt Walker",
+    author: data.author ?? "Matt Vincent Walker",
     readTime: data.readTime ?? "5 min read",
     featured: Boolean(data.featured),
     tags: Array.isArray(data.tags) ? data.tags : [],

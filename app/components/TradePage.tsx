@@ -87,7 +87,7 @@ export default function TradePage({ data }: TradePageProps) {
 
           <div className="hero-cta-row reveal">
             <AuditPopupButton className="btn btn-primary btn-lg">
-              Book the Visibility Audit
+              Get the AI Visibility Brief
               <svg
                 className="arrow"
                 viewBox="0 0 16 10"
@@ -167,7 +167,7 @@ export default function TradePage({ data }: TradePageProps) {
           <AuditPopupButton
             className="btn btn-primary"
           >
-            Book the audit
+            Get the audit
             <svg
               className="arrow"
               viewBox="0 0 16 10"
@@ -178,7 +178,7 @@ export default function TradePage({ data }: TradePageProps) {
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>
           </AuditPopupButton>
-          <div className="sub">30 minutes · One {sing(data.tradePlural).toLowerCase()} per market · Market conflict check</div>
+          <div className="sub">One {sing(data.tradePlural).toLowerCase()} per market · Market conflict check</div>
         </div>
       </section>
 
@@ -249,7 +249,7 @@ export default function TradePage({ data }: TradePageProps) {
             <div className="e-idx">→</div>
             <div className="e-title">
               <span className="phase">Next</span>
-              Book the audit
+              Get the audit
             </div>
             <div className="e-body">
               We run the six-layer pre-audit before the call. On the readout, we
@@ -399,7 +399,7 @@ export default function TradePage({ data }: TradePageProps) {
       {/* §08 FINAL CTA */}
       <section className="final" id="book">
         <div className="wrap">
-          <div className="f-eyebrow">Book the audit</div>
+          <div className="f-eyebrow">Get the audit</div>
           <h2 className="display">
             {data.finalLine1}
             <br />
@@ -423,7 +423,7 @@ export default function TradePage({ data }: TradePageProps) {
             <AuditPopupButton
               className="btn btn-primary btn-lg"
             >
-              Book the audit
+              Get the audit
               <svg
                 className="arrow"
                 viewBox="0 0 16 10"
@@ -436,8 +436,8 @@ export default function TradePage({ data }: TradePageProps) {
             </AuditPopupButton>
           </div>
           <div className="f-notes">
-            <span>No-charge pre-audit</span>
-            <span>30-minute readout</span>
+            <span>AI Visibility Brief — $27</span>
+            <span>Instant results</span>
             <span>No commitment required</span>
             <span>One client per market</span>
           </div>
@@ -450,7 +450,7 @@ export default function TradePage({ data }: TradePageProps) {
 
       <div className="mobile-cta">
         <AuditPopupButton>
-          Book the visibility audit
+          Get the audit
           <svg
             width="14"
             height="10"

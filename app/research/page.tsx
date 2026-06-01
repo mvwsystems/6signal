@@ -136,7 +136,7 @@ export default function ResearchIndexPage() {
                     </svg>
                   </Link>
                   <AuditPopupButton className="btn btn-ghost">
-                    Book the Visibility Audit
+                    Get the AI Visibility Brief
                   </AuditPopupButton>
                 </div>
               </div>
@@ -264,7 +264,7 @@ export default function ResearchIndexPage() {
               directories. Thirty minutes. Yours to keep.
             </p>
             <AuditPopupButton className="btn btn-primary btn-lg">
-              Book the Visibility Audit
+              Get the AI Visibility Brief
               <svg
                 className="arrow"
                 viewBox="0 0 16 10"

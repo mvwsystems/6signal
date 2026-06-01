@@ -5,7 +5,7 @@ description: "AI search does not rely only on your website. Learn how directorie
 date: "2026-04-27"
 category: "Insight"
 contentType: "Insight"
-author: "Matt Walker / 6Signal"
+author: "Matt Vincent Walker"
 readTime: "12 min read"
 featured: false
 tags:

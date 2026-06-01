@@ -269,7 +269,7 @@ export default function CapabilitiesPage() {
             </p>
             <div className="svc-cta-btns">
               <AuditPopupButton className="btn btn-primary btn-lg">
-                Book the Visibility Audit
+                Get the AI Visibility Brief
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
@@ -289,7 +289,7 @@ export default function CapabilitiesPage() {
 
       <div className="mobile-cta">
         <AuditPopupButton>
-          Book the Audit
+          Get the audit
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>

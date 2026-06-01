@@ -5,7 +5,7 @@ description: "Directories and lead aggregators often appear in AI answers becaus
 date: "2026-03-09"
 category: "Insight"
 contentType: "Insight"
-author: "Matt Walker / 6Signal"
+author: "Matt Vincent Walker"
 readTime: "12 min read"
 featured: false
 tags:

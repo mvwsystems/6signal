@@ -54,7 +54,7 @@ export default function Nav() {
             ))}
           </div>
           <AuditPopupButton className="nav-cta">
-            Book the audit →
+            Get the audit →
           </AuditPopupButton>
           <div className="nav-menu-wrap">
             <button
@@ -95,7 +95,7 @@ export default function Nav() {
           </nav>
           <div className="nav-overlay-cta" onClick={() => setMenuOpen(false)}>
             <AuditPopupButton className="btn btn-primary">
-              Book the audit →
+              Get the audit →
             </AuditPopupButton>
           </div>
         </div>

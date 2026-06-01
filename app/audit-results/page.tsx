@@ -567,7 +567,7 @@ function AuditResultsInner() {
               <div className="ar-upsell-card">
                 <div className="ar-upsell-tag">Fastest Path</div>
                 <h3 className="ar-upsell-title">1-Hour Strategy Call</h3>
-                <p className="ar-upsell-desc">Live call with Matt Walker. Walk through your brief together and leave with a clear action plan and the option to engage 6Signal directly.</p>
+                <p className="ar-upsell-desc">Live call with Matt Vincent Walker. Walk through your brief together and leave with a clear action plan and the option to engage 6Signal directly.</p>
                 <div className="ar-upsell-price">$197</div>
                 <a href="https://calendly.com/mvw-mattvincentwalker/ai-audit" className="btn btn-ghost ar-upsell-cta" target="_blank" rel="noopener noreferrer">
                   Book the Call →

@@ -5,7 +5,7 @@ description: "AEO is not just SEO with AI language added. It is the discipline o
 date: "2026-02-09"
 category: "Insight"
 contentType: "Insight"
-author: "Matt Walker / 6Signal"
+author: "Matt Vincent Walker"
 readTime: "9 min read"
 featured: false
 tags:

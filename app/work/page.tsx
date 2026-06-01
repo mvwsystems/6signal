@@ -243,33 +243,29 @@ export default function WorkPage() {
       {/* FINAL CTA */}
       <section className="final" id="book">
         <div className="wrap">
-          <div className="f-eyebrow">Book the visibility audit</div>
+          <div className="f-eyebrow">Get the AI Visibility Brief</div>
           <h2 className="display">
-            The audit is free.<br />
-            The read is real.<br />
+            See the read.<br />
             <em>Yours to keep either way.</em>
           </h2>
           <p className="f-deck">
-            We run the six-layer pre-audit before the call. On the 30-minute readout, we
-            walk through what we found — what buyers and AI tools see when they look for
+            The AI Visibility Intelligence Brief runs your company through all six layers
+            and delivers instant results — what buyers and AI tools see when they look for
             a contractor like you, where competitors are filling your gap, and what to fix
-            first. No commitment required. No follow-up pressure if it&rsquo;s not a fit.
+            first. $27. No commitment required.
           </p>
           <div className="f-cta">
             <AuditPopupButton className="btn btn-primary btn-lg">
-              Book the Visibility Audit
+              Get the AI Visibility Brief
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
             </AuditPopupButton>
-            <a href="/audit" className="btn btn-ghost btn-lg">
-              Learn about the audit
-            </a>
           </div>
           <div className="f-notes">
-            <span>Free</span>
-            <span>30 minutes</span>
-            <span>No pitch</span>
+            <span>AI Visibility Brief — $27</span>
+            <span>Instant results</span>
+            <span>No commitment required</span>
             <span>Yours to keep</span>
           </div>
         </div>
@@ -279,7 +275,7 @@ export default function WorkPage() {
 
       <div className="mobile-cta">
         <AuditPopupButton>
-          Book the Visibility Audit
+          Get the audit
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>
