@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState, useCallback, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Nav from "../components/Nav";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
@@ -27,8 +26,20 @@ interface BuyerStage {
 }
 
 interface AuditData {
-  business: { name: string; url: string; trade: string; city: string; market_context: string };
-  executive_summary: { headline: string; situation: string; bottom_line: string };
+  business: {
+    name: string;
+    url: string;
+    trade: string;
+    city: string;
+    market_context: string;
+    critical_finding?: string;
+  };
+  executive_summary: {
+    headline: string;
+    situation: string;
+    bottom_line: string;
+    cost_of_invisibility?: string;
+  };
   overall: { score: number; grade: string; risk_level: string; visibility_status: string };
   buyer_journey: { persona: string; stages: BuyerStage[] };
   signals: Record<string, Signal>;
@@ -70,8 +81,9 @@ const gradeColor = (g: string) =>
 const riskColor = (r: string) =>
   ({ CRITICAL: "#ef4444", HIGH: "#f97316", MODERATE: "#eab308", STRONG: "#22c55e" }[r] ?? "#E6FF00");
 
+// 0–100 scale thresholds
 const scoreColor = (s: number) =>
-  s <= 3 ? "#ef4444" : s <= 5 ? "#f97316" : s <= 7 ? "#eab308" : "#22c55e";
+  s < 45 ? "#ef4444" : s < 60 ? "#f97316" : s < 75 ? "#eab308" : "#22c55e";
 
 const effortColor = (e: string) =>
   e === "LOW" ? "#22c55e" : e === "MEDIUM" ? "#eab308" : "#f97316";
@@ -88,6 +100,11 @@ function SlideCover({ a }: { a: AuditData }) {
       <h2 className="ar-cover-name">{a.business.name}</h2>
       <div className="ar-cover-rule" />
       <p className="ar-cover-context">{a.business.market_context}</p>
+      {a.business.critical_finding && (
+        <div className="ar-cover-critical">
+          {a.business.critical_finding}
+        </div>
+      )}
       <div className="ar-cover-meta">
         {[
           { label: "TRADE", value: a.business.trade, color: "#f0f0f2" },
@@ -128,6 +145,12 @@ function SlideExecutive({ a }: { a: AuditData }) {
           </div>
         </div>
       </div>
+      {a.executive_summary.cost_of_invisibility && (
+        <div className="ar-cost-block">
+          <div className="ar-cost-label">Cost of Invisibility</div>
+          <p className="ar-cost-body">{a.executive_summary.cost_of_invisibility}</p>
+        </div>
+      )}
       <div className="ar-card ar-card--red">
         <div className="ar-card-label ar-card-label--red">If nothing changes</div>
         <p className="ar-card-body ar-card-body--red">{a.executive_summary.bottom_line}</p>
@@ -157,7 +180,7 @@ function SlideJourney({ a }: { a: AuditData }) {
                   {s.is_business_present ? "PRESENT" : "ABSENT"}
                 </span>
               </div>
-              <p className="ar-stage-question">"{s.buyer_question}"</p>
+              <p className="ar-stage-question">&ldquo;{s.buyer_question}&rdquo;</p>
               <p className="ar-stage-source">Answered by: <span className="ar-stage-source-name">{s.who_answers_now}</span></p>
               <p className="ar-stage-gap">↳ {s.gap}</p>
             </div>
@@ -168,18 +191,27 @@ function SlideJourney({ a }: { a: AuditData }) {
   );
 }
 
+const SIGNAL_ORDER = ["geo", "aeo", "leo", "veo", "peo", "ieo"];
+
 function SlideSignals({ a }: { a: AuditData }) {
+  // Ensure all 6 signals render in canonical order
+  const signalEntries = SIGNAL_ORDER
+    .map(key => [key, a.signals[key]] as [string, Signal])
+    .filter(([, s]) => !!s);
+
   return (
     <div className="ar-slide-inner">
       <span className="ar-slide-label">6-Signal Intelligence Breakdown</span>
       <div className="ar-signal-grid">
-        {Object.entries(a.signals).map(([key, s]) => {
+        {signalEntries.map(([key, s]) => {
           const col = scoreColor(s.score);
           return (
             <div className="ar-signal-card" key={key} style={{ "--signal-color": col } as React.CSSProperties}>
               <div className="ar-signal-head">
                 <span className="ar-signal-acro">{key.toUpperCase()}</span>
-                <span className="ar-signal-score" style={{ color: col }}>{s.score}<span className="ar-signal-denom">/10</span></span>
+                <span className="ar-signal-score" style={{ color: col }}>
+                  {s.score}<span className="ar-signal-denom"> / 100</span>
+                </span>
               </div>
               <p className="ar-signal-finding">{s.finding}</p>
               <div className="ar-gap-block">
@@ -256,24 +288,31 @@ function SlideRoadmap({ a }: { a: AuditData }) {
     <div className="ar-slide-inner">
       <span className="ar-slide-label">90-Day Priority Roadmap</span>
       <div className="ar-roadmap">
-        {a.priority_roadmap.map(r => (
-          <div className="ar-roadmap-item" key={r.rank}>
-            <div className={`ar-roadmap-num${r.rank === 1 ? " ar-roadmap-num--first" : ""}`}>
-              {r.rank}
-            </div>
-            <div className="ar-roadmap-body">
-              <div className="ar-roadmap-meta">
-                <span className="ar-roadmap-time">{r.timeframe}</span>
-                <span className="ar-roadmap-cat">{r.category.toUpperCase()}</span>
-                <span className="ar-effort-tag" style={{ color: effortColor(r.effort) }}>
-                  {r.effort}
-                </span>
+        {a.priority_roadmap.map(r => {
+          const isUrgent = r.timeframe.startsWith("Week");
+          const isLater = r.timeframe === "Month 3";
+          const numClass = [
+            "ar-roadmap-num",
+            r.rank === 1 ? "ar-roadmap-num--first" : "",
+            isUrgent && r.rank !== 1 ? "ar-roadmap-num--urgent" : "",
+            isLater ? "ar-roadmap-num--later" : "",
+          ].filter(Boolean).join(" ");
+
+          return (
+            <div className={`ar-roadmap-item${isUrgent ? " ar-roadmap-item--urgent" : ""}`} key={r.rank}>
+              <div className={numClass}>{r.rank}</div>
+              <div className="ar-roadmap-body">
+                <div className="ar-roadmap-meta">
+                  <span className="ar-roadmap-time">{r.timeframe}</span>
+                  <span className="ar-roadmap-cat">{r.category.toUpperCase()}</span>
+                  <span className="ar-effort-tag" style={{ color: effortColor(r.effort) }}>{r.effort}</span>
+                </div>
+                <p className="ar-roadmap-action">{r.action}</p>
+                <p className="ar-roadmap-impact">→ {r.expected_impact}</p>
               </div>
-              <p className="ar-roadmap-action">{r.action}</p>
-              <p className="ar-roadmap-impact">→ {r.expected_impact}</p>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -292,12 +331,82 @@ function SlideClose({ a }: { a: AuditData }) {
         <div className="ar-card-label ar-card-label--red">Cost of Inaction</div>
         <p className="ar-card-body ar-card-body--red">{a.retainer_case.cost_of_inaction}</p>
       </div>
-      <div className="ar-close-cta-bar">
-        <div>
-          <div className="ar-close-cta-label">Next Step</div>
-          <div className="ar-close-cta-text">Book a 6Signal Visibility Audit — 6signal.co</div>
+
+      {/* ── Three-option upgrade block ── */}
+      <div className="ar-upgrade-section">
+        <div className="ar-upgrade-eyebrow">Your Next Step</div>
+        <div className="ar-upgrade-grid">
+
+          {/* Card 1 — What you have */}
+          <div className="ar-upgrade-card ar-upgrade-card--subdued">
+            <div className="ar-upgrade-tag">What You Have</div>
+            <div className="ar-upgrade-title">AI Visibility Brief</div>
+            <p className="ar-upgrade-body ar-upgrade-body--muted">
+              The complete intelligence brief you&rsquo;re reading now — all 6 signals diagnosed,
+              buyer journey mapped, citation landscape and content gaps identified.
+            </p>
+            <div className="ar-upgrade-price ar-upgrade-price--muted">$27 — complete</div>
+            <div className="ar-upgrade-you-are-here">You&rsquo;re here.</div>
+          </div>
+
+          {/* Card 2 — Strategy Brief (featured) */}
+          <div className="ar-upgrade-card ar-upgrade-card--featured">
+            <div className="ar-upgrade-tag ar-upgrade-tag--accent">Recommended Next Step</div>
+            <div className="ar-upgrade-title ar-upgrade-title--lg">Full Strategy Brief</div>
+            <p className="ar-upgrade-body">
+              Every gap in your brief becomes an exact implementation plan. Signal-by-signal
+              action plans with weekly tasks, content architecture with specific page specs and
+              H1s, schema code ready to deploy, review velocity strategy, and a week-by-week
+              90-day calendar.
+            </p>
+            <div className="ar-upgrade-price ar-upgrade-price--lg">$97</div>
+            <div className="ar-upgrade-price-sub">Delivered immediately. PDF included.</div>
+            <div className="ar-upgrade-btn-wrap">
+              <button
+                className="btn btn-primary ar-upgrade-btn"
+                onClick={() => {
+                  localStorage.setItem("6sig_audit_result", JSON.stringify(a));
+                  window.location.href = "https://buy.stripe.com/cNi3cw4pogvN6GZfLP3ks0q";
+                }}
+              >
+                Get the Strategy Brief →
+              </button>
+            </div>
+            {/* PDF-only text link */}
+            <div className="ar-upgrade-pdf-link">
+              Get the Strategy Brief: 6signal.co/strategy-brief
+            </div>
+          </div>
+
+          {/* Card 3 — Strategy Call */}
+          <div className="ar-upgrade-card ar-upgrade-card--outlined">
+            <div className="ar-upgrade-tag">Fastest Path to Results</div>
+            <div className="ar-upgrade-title">1-Hour Strategy Call</div>
+            <p className="ar-upgrade-body ar-upgrade-body--muted">
+              Walk through your brief live with Matt Vincent Walker. Pressure-test the roadmap.
+              Leave with a clear execution decision — and the option to engage 6Signal&rsquo;s
+              retainer directly.
+            </p>
+            <div className="ar-upgrade-price ar-upgrade-price--lg">$197</div>
+            <div className="ar-upgrade-price-sub ar-upgrade-price-sub--muted">Includes the Strategy Brief at no extra charge.</div>
+            <div className="ar-upgrade-btn-wrap">
+              <a
+                href="https://calendly.com/mvw-mattvincentwalker/ai-audit"
+                className="btn btn-ghost ar-upgrade-btn"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Book the Call →
+              </a>
+            </div>
+            {/* PDF-only text link */}
+            <div className="ar-upgrade-pdf-link">
+              Book the 1-Hour Call: calendly.com/mvw-mattvincentwalker/ai-audit
+            </div>
+          </div>
+
         </div>
-        <span className="ar-close-cta-sub">AI Visibility Starts Here</span>
+        <div className="ar-upgrade-contact">Questions? hello@6signal.co</div>
       </div>
     </div>
   );
@@ -312,7 +421,6 @@ const SLIDE_COMPONENTS = [
 
 function AuditResultsInner() {
   useMicroInteractions();
-  const searchParams = useSearchParams();
 
   const [audit, setAudit] = useState<AuditData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -322,7 +430,6 @@ function AuditResultsInner() {
 
   const handlePrint = useCallback(() => { window.print(); }, []);
 
-  // Read business data from localStorage (survives Stripe redirect)
   const getFormData = () => {
     try {
       const stored = localStorage.getItem("6sig_audit_data");
@@ -332,7 +439,7 @@ function AuditResultsInner() {
   };
 
   useEffect(() => {
-    // Use pre-generated result if available (from preview funnel or a reload)
+    // Cache-first: use pre-generated result if available
     try {
       const cached = localStorage.getItem("6sig_audit_result");
       if (cached) {
@@ -391,22 +498,21 @@ function AuditResultsInner() {
   }, []);
 
   const total = SLIDE_LABELS.length;
-
   const hasData = !!getFormData()?.name;
 
   // ─── No data ───
   if (!hasData && !loading && !audit) {
     return (
       <div className="ar-page">
+        <div id="cursor-dot" aria-hidden="true" />
+        <div id="cursor-ring" aria-hidden="true" />
         <Nav />
         <div className="ar-state-wrap">
           <div className="ar-error-block">
             <span className="idx">Error</span>
-            <h1 className="display ar-error-h1">We couldn't find your audit data.</h1>
+            <h1 className="display ar-error-h1">We couldn&rsquo;t find your audit data.</h1>
             <p className="ar-error-body">This usually happens when a session expired or you navigated directly to this page.</p>
-            <Link href="/visibility-check" className="btn btn-primary">
-              Start the audit →
-            </Link>
+            <Link href="/visibility-check" className="btn btn-primary">Start the audit →</Link>
           </div>
         </div>
       </div>
@@ -417,6 +523,8 @@ function AuditResultsInner() {
   if (loading) {
     return (
       <div className="ar-page">
+        <div id="cursor-dot" aria-hidden="true" />
+        <div id="cursor-ring" aria-hidden="true" />
         <Nav />
         <div className="ar-state-wrap">
           <div className="ar-loading-block">
@@ -433,15 +541,15 @@ function AuditResultsInner() {
   if (error) {
     return (
       <div className="ar-page">
+        <div id="cursor-dot" aria-hidden="true" />
+        <div id="cursor-ring" aria-hidden="true" />
         <Nav />
         <div className="ar-state-wrap">
           <div className="ar-error-block">
             <span className="idx">Generation Failed</span>
             <h1 className="display ar-error-h1">Something went wrong.</h1>
             <p className="ar-error-body">{error}</p>
-            <a href="mailto:hello@6signal.co" className="btn btn-primary">
-              Contact hello@6signal.co
-            </a>
+            <a href="mailto:hello@6signal.co" className="btn btn-primary">Contact hello@6signal.co</a>
           </div>
         </div>
       </div>
@@ -452,6 +560,8 @@ function AuditResultsInner() {
 
   return (
     <div className="ar-page">
+      <div id="cursor-dot" aria-hidden="true" />
+      <div id="cursor-ring" aria-hidden="true" />
       <Nav />
       <main className="ar-main">
         <div className="wrap">
@@ -486,7 +596,7 @@ function AuditResultsInner() {
             ))}
           </div>
 
-          {/* ── Slides — all rendered; inactive hidden via CSS, all visible when printing ── */}
+          {/* ── Slides ── */}
           {SLIDE_COMPONENTS.map((Comp, i) => (
             <div className={`ar-slide-wrap${i !== slide ? " ar-slide-inactive" : ""}`} key={i}>
               <div className="ar-slide-shell">
@@ -507,6 +617,16 @@ function AuditResultsInner() {
             </div>
           ))}
 
+          {/* ── PDF back cover — hidden on screen, visible in print ── */}
+          <div className="ar-slide-wrap ar-slide-inactive ar-pdf-back-cover-wrap">
+            <div className="ar-pdf-back-cover">
+              <img src="/6SIG_LOGO_FINAL_2.webp" alt="6Signal" className="ar-pdf-back-logo" />
+              <div className="ar-pdf-back-tagline">AI Visibility Starts Here</div>
+              <div className="ar-pdf-back-url">6signal.co</div>
+              <div className="ar-pdf-back-email">hello@6signal.co</div>
+            </div>
+          </div>
+
           {/* ── Prev / Next ── */}
           <div className="ar-nav">
             <button
@@ -526,7 +646,7 @@ function AuditResultsInner() {
             </button>
           </div>
 
-          {/* ── Upsell ── */}
+          {/* ── Upsell (below slides, screen only) ── */}
           <div className="ar-upsell-section rule">
             <div className="sec-head">
               <div className="left">
@@ -586,26 +706,24 @@ function AuditResultsInner() {
   );
 }
 
-// ─── Export with Suspense boundary (required for useSearchParams) ─────────────
+// ─── Export with Suspense boundary ───────────────────────────────────────────
 
 export default function AuditResultsPage() {
   return (
-    <>
-      <div id="cursor-dot" aria-hidden="true" />
-      <div id="cursor-ring" aria-hidden="true" />
-      <Suspense fallback={
-        <div className="ar-page">
-          <Nav />
-          <div className="ar-state-wrap">
-            <div className="ar-loading-block">
-              <div className="ar-loading-dot" />
-              <p className="ar-loading-msg">Loading...</p>
-            </div>
+    <Suspense fallback={
+      <div className="ar-page">
+        <div id="cursor-dot" aria-hidden="true" />
+        <div id="cursor-ring" aria-hidden="true" />
+        <Nav />
+        <div className="ar-state-wrap">
+          <div className="ar-loading-block">
+            <div className="ar-loading-dot" />
+            <p className="ar-loading-msg">Loading...</p>
           </div>
         </div>
-      }>
-        <AuditResultsInner />
-      </Suspense>
-    </>
+      </div>
+    }>
+      <AuditResultsInner />
+    </Suspense>
   );
 }

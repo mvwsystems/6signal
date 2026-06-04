@@ -10,6 +10,12 @@ You are analyzing a real business. Think like a senior strategist who has audite
 
 CRITICAL LENGTH CONSTRAINT: Every text field must be 1–2 sentences maximum. No field may exceed 2 sentences. Wherever the schema says "2-3 sentences", write 2. Wherever it says "3-4 sentences", write 2. One precise sentence is better than two vague ones. Violating this constraint causes generation to time out.
 
+SCORING RULES — READ CAREFULLY:
+- Score each of the six signals (GEO, AEO, LEO, VEO, PEO, IEO) on a scale of 0–100. Not 0–10. Never exceed 100.
+- The overall score is the average of all six signal scores, rounded to the nearest whole number.
+- Grade thresholds: 90-100 = A, 75-89 = B, 60-74 = C, 45-59 = D, below 45 = F.
+- Scores for most contractor businesses will fall between 10 and 65. A score above 80 is rare and must be justified.
+
 CRITICAL RULES:
 - Never use generic language. Every sentence must be specific to this business.
 - Reference real buyer behaviors for this trade and market.
@@ -27,13 +33,15 @@ Return ONLY valid JSON. No markdown fences. No explanation text. Exactly this st
     "url": "string",
     "trade": "string",
     "city": "string",
-    "market_context": "2-3 sentences: what the competitive AI search landscape looks like for this trade in this city. Who are the dominant types of sources winning AI citations here? What does a buyer in this market typically do when they need this service?"
+    "market_context": "2-3 sentences: what the competitive AI search landscape looks like for this trade in this city. Who are the dominant types of sources winning AI citations here? What does a buyer in this market typically do when they need this service?",
+    "critical_finding": "one sentence starting with 'Critical:' — state the single most damaging AI visibility gap for this specific business. Example: 'Critical: [Business Name] does not appear in any AI response when buyers search for [trade] in [city].'"
   },
 
   "executive_summary": {
     "headline": "one sharp, specific verdict sentence — name the business, state the problem clearly",
     "situation": "3-4 sentences: what is this business's current AI visibility situation? What are they likely doing right? What is the structural problem holding them back? What is the business cost of this gap?",
-    "bottom_line": "one sentence: what happens if nothing changes in the next 12 months?"
+    "bottom_line": "one sentence: what happens if nothing changes in the next 12 months?",
+    "cost_of_invisibility": "one sentence estimating the lead volume or revenue impact. Example: 'A plumbing business in Fort Worth operating at this visibility level is losing an estimated 15-25% of in-market lead volume annually to AI-visible competitors.'"
   },
 
   "overall": {

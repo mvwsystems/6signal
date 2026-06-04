@@ -7968,3 +7968,229 @@ svg {
   .vc2-signal-item,
   .vc2-proof-item { padding: 28px 24px; }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   AUDIT RESULTS — additions for rebuild
+   Scoring 0-100, cover critical finding, cost-of-invisibility,
+   roadmap priority coding, close upgrade block, PDF back cover
+───────────────────────────────────────────────────────────────────────────── */
+
+/* Cover slide — critical finding */
+.ar-cover-critical {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 10px 14px;
+  border-left: 2px solid var(--accent);
+  background: rgba(230, 255, 0, 0.04);
+  margin-top: -4px;
+}
+
+/* Executive summary — cost of invisibility */
+.ar-cost-block {
+  background: rgba(239, 68, 68, 0.04);
+  border: 1px solid rgba(239, 68, 68, 0.14);
+  border-radius: 4px;
+  padding: 16px 20px;
+}
+.ar-cost-label {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.ar-cost-body {
+  font-family: "Chakra Petch", monospace;
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #b8b8b5;
+  margin: 0;
+}
+
+/* Roadmap — priority coding */
+.ar-roadmap-item--urgent {
+  border-left: 2px solid rgba(230, 255, 0, 0.3);
+  padding-left: 10px;
+  margin-left: -12px;
+}
+.ar-roadmap-num--urgent {
+  border-color: rgba(230, 255, 0, 0.5);
+  color: var(--accent);
+}
+.ar-roadmap-num--later {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: #3a3a38;
+}
+
+/* Close slide — three-option upgrade block */
+.ar-upgrade-section {
+  margin-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 16px;
+}
+.ar-upgrade-eyebrow {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #555553;
+  text-align: center;
+  margin-bottom: 12px;
+}
+.ar-upgrade-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr 1fr;
+  gap: 8px;
+}
+.ar-upgrade-card {
+  padding: 16px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ar-upgrade-card--subdued {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.ar-upgrade-card--featured {
+  background: #0e0e0c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 2px solid var(--accent);
+}
+.ar-upgrade-card--outlined {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.ar-upgrade-tag {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #555553;
+}
+.ar-upgrade-tag--accent { color: var(--accent); }
+.ar-upgrade-title {
+  font-family: "Chakra Petch", monospace;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+  color: #f5f5f3;
+}
+.ar-upgrade-title--lg { font-size: 16px; }
+.ar-upgrade-body {
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #f5f5f3;
+  margin: 0;
+  flex: 1;
+}
+.ar-upgrade-body--muted { color: #555553; }
+.ar-upgrade-price {
+  font-family: "Chakra Petch", monospace;
+  font-weight: 400;
+  font-size: 13px;
+  color: #f5f5f3;
+}
+.ar-upgrade-price--muted { color: #555553; font-size: 11px; }
+.ar-upgrade-price--lg { font-size: 20px; font-weight: 600; }
+.ar-upgrade-price-sub {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #555553;
+}
+.ar-upgrade-price-sub--muted { color: #3a3a38; }
+.ar-upgrade-btn { width: 100%; justify-content: center; padding: 12px 16px; font-size: 11px; }
+.ar-upgrade-you-are-here {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #3a3a38;
+  margin-top: auto;
+}
+.ar-upgrade-contact {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #3a3a38;
+  text-align: center;
+  margin-top: 12px;
+}
+/* PDF-only links — hidden on screen */
+.ar-upgrade-pdf-link { display: none; }
+
+/* PDF back cover — hidden on screen */
+.ar-pdf-back-cover-wrap { display: none; }
+.ar-pdf-back-cover {
+  background: #060606;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 60px;
+}
+.ar-pdf-back-logo { height: 36px; width: auto; }
+.ar-pdf-back-tagline {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-top: 8px;
+}
+.ar-pdf-back-url {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  color: #555553;
+}
+.ar-pdf-back-email {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #3a3a38;
+}
+
+/* Responsive — upgrade grid stacks on mobile */
+@media (max-width: 700px) {
+  .ar-upgrade-grid { grid-template-columns: 1fr; }
+}
+
+/* ── PRINT UPDATES ── */
+@media print {
+  /* Show back cover as final page */
+  .ar-pdf-back-cover-wrap { display: block !important; }
+
+  /* Signal grid: 3 columns in print, no overflow clipping */
+  .ar-signal-grid { grid-template-columns: repeat(3, 1fr) !important; }
+  .ar-slide-shell { overflow: visible !important; }
+
+  /* Upgrade block in print: hide interactive buttons, show text links */
+  .ar-upgrade-btn-wrap { display: none !important; }
+  .ar-upgrade-pdf-link {
+    display: block !important;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    color: #555553;
+    margin-top: 4px;
+  }
+
+  /* Back cover: full page, no page-break after */
+  .ar-pdf-back-cover-wrap { page-break-after: avoid !important; break-after: avoid !important; }
+  .ar-pdf-back-cover { background: #060606 !important; }
+}
