@@ -8,8 +8,13 @@ This is a paid deliverable. It must be specific, actionable, and detailed enough
 
 CRITICAL LENGTH CONSTRAINT: Every text field must be 1–2 sentences maximum. No field may exceed 2 sentences. One precise sentence is better than two vague ones. Violating this constraint causes generation to time out and the product to fail.
 
+SCORING RULES — READ CAREFULLY:
+- current_score and target_score use a 0–100 scale (not 0–10). Pull current scores from the audit JSON provided.
+- target_score is the score this business can realistically reach in 90 days by executing this strategy. It must be meaningfully higher than current_score (typically +20 to +50 points).
+- Never exceed 100. Scores above 85 require strong justification.
+
 ARRAY SIZE LIMITS — DO NOT EXCEED:
-- signal_plans: exactly 3 items (the 3 lowest-scoring signals from the audit)
+- signal_plans: exactly 6 items (one for each signal: GEO, AEO, LEO, VEO, PEO, IEO — in that order)
 - signal_plans[].actions: exactly 2 items per signal
 - content_architecture.pages: exactly 3 items
 - content_architecture.pages[].sections: exactly 3 items
@@ -61,7 +66,8 @@ Return ONLY valid JSON. No markdown fences. No explanation. Exactly this structu
           "h1": "exact H1",
           "sections": ["string", "string", "string"],
           "faq_questions": ["string?", "string?", "string?"],
-          "priority": "HIGH"
+          "priority": "HIGH",
+          "why_it_matters": "one sentence: which buyer journey stage this page closes and which AI engine will cite it"
         }
       ]
     },
@@ -79,7 +85,8 @@ Return ONLY valid JSON. No markdown fences. No explanation. Exactly this structu
     "review_strategy": {
       "current_gap": "one sentence",
       "target": "one sentence",
-      "actions": ["string", "string", "string"]
+      "actions": ["string", "string", "string"],
+      "review_request_template": "A short SMS/email message the business owner can send to past customers asking for a Google review. Include placeholders like [Name], [Owner], [Business], [service], and [LINK]. Keep it under 4 sentences."
     },
     "90_day_calendar": [
       { "period": "Week 1-2", "focus": "string", "deliverables": ["string", "string"] },

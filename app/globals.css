@@ -7462,6 +7462,380 @@ svg {
   flex-wrap: wrap;
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   STRATEGY BRIEF ADDITIONS — rebuild
+   Prefix: sb- (new classes only; overrides for existing sb- below)
+───────────────────────────────────────────────────────────────────────────── */
+
+/* Override: solid signal chip */
+.sb-sp-acro--solid {
+  background: var(--accent);
+  color: #060606;
+  border-color: var(--accent);
+}
+
+/* Positioning statement */
+.sb-positioning-block {
+  margin: 48px 0 0;
+  background: #0e0e0c;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 4px;
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.sb-positioning-label {
+  color: var(--accent) !important;
+}
+.sb-positioning-body {
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #b8b8b5;
+  margin: 0;
+}
+
+/* Score comparison block */
+.sb-scores-block {
+  padding: 48px 0 0;
+}
+.sb-scores-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+.sb-scores-col {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.sb-scores-col:first-child {
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+}
+.sb-scores-col-head {
+  margin-bottom: 16px;
+  display: block;
+}
+.sb-scores-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.sb-scores-row:last-child { border-bottom: none; }
+.sb-scores-sig {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  min-width: 36px;
+}
+.sb-scores-val {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: #f5f5f3;
+}
+.sb-scores-arrow {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10px;
+  color: #3a3a38;
+}
+.sb-scores-target {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: #22c55e;
+}
+
+/* Quick wins callout */
+.sb-qw-callout {
+  border-left: 2px solid var(--accent);
+  background: #0e0e0c;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  border-radius: 0 4px 4px 0;
+}
+.sb-qw-callout-text {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #f5f5f3;
+  margin: 0;
+}
+
+/* Schema — header row with copy label + copy button */
+.sb-schema-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.sb-schema-copy-label { color: var(--accent) !important; }
+.sb-schema-code-block {
+  background: #060606;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sb-schema-code-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.sb-schema-ex-val {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: #b8b8b5;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Copy button (shared: schema + review) */
+.sb-copy-btn {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #555553;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 3px 0;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+.sb-copy-btn:hover { color: var(--accent); }
+
+/* Review template */
+.sb-review-template {
+  margin-top: 24px;
+  background: #0a0a0e;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.sb-review-template-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+.sb-review-template-label {
+  color: var(--accent) !important;
+  display: block;
+  margin-bottom: 4px;
+}
+.sb-review-template-sub { display: block; }
+.sb-review-template-text {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  line-height: 1.7;
+  color: #b8b8b5;
+  background: #060606;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
+  padding: 14px 16px;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Calendar — priority coding */
+.sb-cal-period--urgent {
+  border-left: 2px solid var(--accent);
+}
+.sb-cal-period-label--muted { color: #555553 !important; }
+.sb-cal-focus--muted { color: #555553 !important; }
+
+/* Content page — why_it_matters */
+.sb-pc-why { display: flex; flex-direction: column; gap: 6px; }
+.sb-pc-why-text {
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #555553;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Closing section — decision block */
+.sb-decision-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.sb-decision-eyebrow { display: block; }
+.sb-decision-headline {
+  font-size: clamp(28px, 3.5vw, 48px);
+  margin: 0;
+}
+.sb-decision-headline em {
+  font-style: italic;
+  font-weight: 200;
+  color: #b8b8b5;
+}
+.sb-decision-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.sb-decision-card {
+  padding: 28px 28px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.sb-decision-card--self {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: transparent;
+}
+.sb-decision-card--featured {
+  background: #0e0e0c;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-top: 2px solid var(--accent);
+}
+.sb-decision-tag {
+  color: #555553 !important;
+  display: block;
+}
+.sb-decision-tag--accent { color: var(--accent) !important; }
+.sb-decision-title {
+  font-family: "Chakra Petch", monospace;
+  font-weight: 400;
+  font-size: clamp(16px, 1.8vw, 22px);
+  letter-spacing: -0.01em;
+  color: #f5f5f3;
+  margin: 0;
+}
+.sb-decision-body {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #f5f5f3;
+  margin: 0;
+  flex: 1;
+}
+.sb-decision-body--muted { color: #555553; }
+.sb-decision-price {
+  font-family: "Chakra Petch", monospace;
+  font-weight: 600;
+  font-size: 32px;
+  color: #f5f5f3;
+  letter-spacing: -0.02em;
+}
+.sb-decision-price-sub { display: block; }
+.sb-decision-btn {
+  width: 100%;
+  justify-content: center;
+}
+.sb-decision-bottom-line { color: #3a3a38 !important; margin-top: auto; }
+
+/* PDF-only decision URL — hidden on screen */
+.sb-decision-pdf-url { display: none; }
+
+/* Close footer */
+.sb-close-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.sb-close-retainer {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  color: #555553;
+  margin: 0;
+}
+.sb-close-retainer-link {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.sb-close-contact { display: block; }
+
+/* PDF back cover — hidden on screen, visible in print */
+.sb-pdf-back-cover { display: none; }
+.sb-pdf-back-logo { height: 32px; width: auto; }
+.sb-pdf-back-tagline { color: var(--accent) !important; display: block; margin-top: 16px; }
+.sb-pdf-back-url {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  color: #555553;
+}
+.sb-pdf-back-email, .sb-pdf-back-retainer { display: block; }
+
+/* Responsive */
+@media (max-width: 760px) {
+  .sb-scores-grid { grid-template-columns: 1fr; }
+  .sb-scores-col:first-child { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .sb-decision-cards { grid-template-columns: 1fr; }
+}
+
+/* ── PRINT — strategy brief additions ── */
+@media print {
+  /* Back cover */
+  .sb-pdf-back-cover {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #060606 !important;
+    page-break-before: always;
+    break-before: page;
+    gap: 14px;
+    padding: 60px;
+  }
+
+  /* Hide interactive elements */
+  .sb-copy-btn { display: none !important; }
+
+  /* Show PDF-only decision URL */
+  .sb-decision-pdf-url {
+    display: block !important;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: #555553;
+    margin-top: 4px;
+  }
+
+  /* Hide interactive button, show text URL */
+  .sb-decision-btn { display: none !important; }
+
+  /* Calendar: allow overflow */
+  .sb-calendar { overflow: visible !important; }
+
+  /* Scores block visible in print */
+  .sb-scores-block { page-break-after: always; break-after: page; }
+}
+
 /* Inactive slide — hidden in normal view, visible when printing */
 .ar-slide-inactive {
   display: none;

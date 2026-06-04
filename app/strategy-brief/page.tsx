@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, useCallback, Suspense } from "react";
 import Link from "next/link";
 import Nav from "../components/Nav";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
@@ -23,6 +23,7 @@ interface ContentPage {
   sections: string[];
   faq_questions: string[];
   priority: string;
+  why_it_matters?: string;
 }
 
 interface SchemaType {
@@ -35,7 +36,7 @@ interface SchemaType {
 interface CalendarPeriod {
   period: string;
   focus: string;
-  deliverables: string[];
+  deliverables: string[] | string;
 }
 
 interface QuickWin {
@@ -49,25 +50,20 @@ interface Strategy {
   trade: string;
   city: string;
   signal_plans: SignalPlan[];
-  content_architecture: {
-    overview: string;
-    pages: ContentPage[];
-  };
-  schema_plan: {
-    overview: string;
-    schemas: SchemaType[];
-  };
+  content_architecture: { overview: string; pages: ContentPage[] };
+  schema_plan: { overview: string; schemas: SchemaType[] };
   review_strategy: {
     current_gap: string;
     target: string;
     actions: string[];
+    review_request_template?: string;
   };
   "90_day_calendar": CalendarPeriod[];
   quick_wins: QuickWin[];
   closing_note: string;
 }
 
-// ─── Loading messages ─────────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const LOADING_MSGS = [
   "Reading your audit brief...",
@@ -78,39 +74,88 @@ const LOADING_MSGS = [
   "Finalizing your strategy document...",
 ];
 
-// ─── Main component ───────────────────────────────────────────────────────────
+const SIGNAL_ORDER = ["GEO", "AEO", "LEO", "VEO", "PEO", "IEO"];
+
+function parseDeliverables(d: string[] | string): string[] {
+  if (Array.isArray(d)) return d;
+  return d.split("\n").map(s => s.trim()).filter(Boolean);
+}
+
+// ─── Copy hook ────────────────────────────────────────────────────────────────
+
+function useCopyButton(resetMs = 2000) {
+  const [copied, setCopied] = useState(false);
+  const copy = useCallback(async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), resetMs);
+    } catch { /* ignore */ }
+  }, [resetMs]);
+  return { copied, copy };
+}
+
+// ─── Inner component ──────────────────────────────────────────────────────────
 
 function StrategyBriefInner() {
   useMicroInteractions();
   const [strategy, setStrategy] = useState<Strategy | null>(null);
+  const [auditScores, setAuditScores] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState(LOADING_MSGS[0]);
   const [error, setError] = useState<string | null>(null);
+  const [copiedSchemas, setCopiedSchemas] = useState<Record<number, boolean>>({});
+  const [copiedReview, setCopiedReview] = useState(false);
+
+  const copySchema = useCallback(async (text: string, idx: number) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedSchemas(prev => ({ ...prev, [idx]: true }));
+      setTimeout(() => setCopiedSchemas(prev => ({ ...prev, [idx]: false })), 2000);
+    } catch { /* ignore */ }
+  }, []);
+
+  const copyReview = useCallback(async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedReview(true);
+      setTimeout(() => setCopiedReview(false), 2000);
+    } catch { /* ignore */ }
+  }, []);
 
   useEffect(() => {
-    // Use pre-generated result if available (from preview funnel or a reload)
+    // Read current signal scores from audit result
     try {
-      const cached = localStorage.getItem("6sig_strategy_result");
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        if (parsed?.business_name) {
-          setStrategy(parsed);
-          return;
+      const auditRaw = localStorage.getItem("6sig_audit_result");
+      if (auditRaw) {
+        const parsed = JSON.parse(auditRaw);
+        if (parsed?.signals) {
+          const scores: Record<string, number> = {};
+          Object.entries(parsed.signals).forEach(([key, val]) => {
+            scores[key.toUpperCase()] = (val as { score: number }).score;
+          });
+          setAuditScores(scores);
         }
       }
     } catch { /* ignore */ }
 
-    // Otherwise generate from audit data (production Stripe flow)
+    // Cache-first: use pre-generated strategy if available
+    try {
+      const cached = localStorage.getItem("6sig_strategy_result");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed?.business_name) { setStrategy(parsed); return; }
+      }
+    } catch { /* ignore */ }
+
+    // Otherwise generate from audit data
     let audit: unknown = null;
     try {
       const stored = localStorage.getItem("6sig_audit_result");
       if (stored) audit = JSON.parse(stored);
     } catch { /* ignore */ }
 
-    if (!audit) {
-      setError("no_audit");
-      return;
-    }
+    if (!audit) { setError("no_audit"); return; }
 
     let msgIdx = 0;
     const interval = setInterval(() => {
@@ -153,7 +198,7 @@ function StrategyBriefInner() {
     return () => clearInterval(interval);
   }, []);
 
-  // ── Non-strategy states (cursor elements always rendered so the hook finds them) ──
+  // ── Non-strategy states ──
   if (error === "no_audit" || (typeof error === "string" && error !== "no_audit") || loading || !strategy) {
     return (
       <div className="sb-page">
@@ -164,7 +209,7 @@ function StrategyBriefInner() {
           {error === "no_audit" && (
             <div className="ar-error-block">
               <span className="idx">Missing Data</span>
-              <h1 className="display ar-error-h1">We couldn't find your audit brief.</h1>
+              <h1 className="display ar-error-h1">We couldn&rsquo;t find your audit brief.</h1>
               <p className="ar-error-body">Your audit brief is required to generate the strategy document. Start with the AI Visibility Brief first.</p>
               <Link href="/visibility-check" className="btn btn-primary">Get the Audit Brief — $27 →</Link>
             </div>
@@ -189,6 +234,12 @@ function StrategyBriefInner() {
     );
   }
 
+  // Build signal score map from strategy plans
+  const targetScores: Record<string, number> = {};
+  strategy.signal_plans?.forEach(sp => {
+    targetScores[sp.signal.toUpperCase()] = sp.target_score;
+  });
+
   return (
     <div className="sb-page">
       <div id="cursor-dot" aria-hidden="true" />
@@ -197,7 +248,7 @@ function StrategyBriefInner() {
       <main className="sb-main">
         <div className="wrap">
 
-          {/* ── Cover ── */}
+          {/* ─── SECTION 1: HEADER ─────────────────────────────────── */}
           <header className="sb-cover rule">
             <div className="sb-cover-inner">
               <span className="idx sb-cover-eyebrow">Full Strategy Brief</span>
@@ -210,20 +261,65 @@ function StrategyBriefInner() {
                 <span>6Signal — AI Visibility Strategy</span>
               </div>
             </div>
-            <button
-              className="btn btn-ghost sb-print-btn"
-              onClick={() => window.print()}
-            >
+            <button className="btn btn-ghost sb-print-btn" onClick={() => window.print()}>
               Save / Print →
             </button>
           </header>
 
-          {/* ── Quick Wins ── */}
+          {/* ─── SECTION 2: POSITIONING STATEMENT ─────────────────── */}
+          <div className="sb-positioning-block">
+            <div className="sb-positioning-label idx">What This Is</div>
+            <p className="sb-positioning-body">
+              Your Intelligence Brief showed you where the gaps are. This Strategy Brief shows you
+              exactly how to close them — signal by signal, week by week, with specific content specs,
+              schema code, and review mechanics you can hand to a developer or execute yourself.
+              This is the implementation manual.
+            </p>
+          </div>
+
+          {/* ─── SECTION 3: SCORE COMPARISON BLOCK ────────────────── */}
+          {(Object.keys(auditScores).length > 0 || strategy.signal_plans?.length > 0) && (
+            <div className="sb-scores-block rule">
+              <div className="sb-scores-grid">
+                <div className="sb-scores-col">
+                  <div className="idx sb-scores-col-head">Your Current Scores</div>
+                  {SIGNAL_ORDER.map(sig => (
+                    <div className="sb-scores-row" key={sig}>
+                      <span className="sb-scores-sig">{sig}</span>
+                      <span className="sb-scores-val">
+                        {auditScores[sig] !== undefined ? `${auditScores[sig]} / 100` : "—"}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div className="sb-scores-col">
+                  <div className="idx sb-scores-col-head">90-Day Targets</div>
+                  {SIGNAL_ORDER.map(sig => (
+                    <div className="sb-scores-row" key={sig}>
+                      <span className="sb-scores-arrow">→</span>
+                      <span className="sb-scores-target">
+                        {targetScores[sig] !== undefined ? `${targetScores[sig]} / 100` : "—"}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ─── SECTION 4: QUICK WINS ─────────────────────────────── */}
           {strategy.quick_wins?.length > 0 && (
             <section className="sb-section rule">
               <div className="sb-section-head">
                 <span className="idx">Start here</span>
                 <h2 className="display sb-section-h2">Quick wins.</h2>
+              </div>
+              <div className="sb-qw-callout">
+                <p className="sb-qw-callout-text">
+                  These three actions require no budget and less than 4 hours total. They produce
+                  measurable AI visibility improvement within 2–3 weeks. Do them before anything
+                  else in this brief.
+                </p>
               </div>
               <div className="sb-quick-wins">
                 {strategy.quick_wins.map((w, i) => (
@@ -242,42 +338,44 @@ function StrategyBriefInner() {
             </section>
           )}
 
-          {/* ── Signal Action Plans ── */}
+          {/* ─── SECTION 5: SIGNAL ACTION PLANS ───────────────────── */}
           <section className="sb-section rule">
             <div className="sb-section-head">
               <span className="idx">Signal-by-signal</span>
               <h2 className="display sb-section-h2">Action plans.</h2>
             </div>
             <div className="sb-signal-plans">
-              {strategy.signal_plans?.map((s, i) => (
-                <div className="sb-signal-plan" key={i}>
-                  <div className="sb-sp-head">
-                    <div className="sb-sp-acro">{s.signal}</div>
-                    <div className="sb-sp-scores">
-                      <span className="sb-sp-score sb-sp-score--current">{s.current_score}/10 now</span>
-                      <span className="sb-sp-arrow">→</span>
-                      <span className="sb-sp-score sb-sp-score--target">{s.target_score}/10 target</span>
+              {(strategy.signal_plans ?? [])
+                .sort((a, b) => SIGNAL_ORDER.indexOf(a.signal.toUpperCase()) - SIGNAL_ORDER.indexOf(b.signal.toUpperCase()))
+                .map((s, i) => (
+                  <div className="sb-signal-plan" key={i}>
+                    <div className="sb-sp-head">
+                      <div className="sb-sp-acro sb-sp-acro--solid">{s.signal}</div>
+                      <div className="sb-sp-scores">
+                        <span className="sb-sp-score sb-sp-score--current">{s.current_score} / 100 now</span>
+                        <span className="sb-sp-arrow">→</span>
+                        <span className="sb-sp-score sb-sp-score--target">{s.target_score} / 100 target</span>
+                      </div>
+                    </div>
+                    <div className="sb-sp-problem">{s.the_problem}</div>
+                    <div className="sb-sp-fix">{s.the_fix}</div>
+                    <div className="sb-sp-actions">
+                      {s.actions?.map((a, j) => (
+                        <div className="sb-sp-action" key={j}>
+                          <div className="sb-spa-header">
+                            <span className="sb-spa-name">{a.action}</span>
+                            <span className="sb-spa-time">{a.timeline}</span>
+                          </div>
+                          <p className="sb-spa-detail">{a.detail}</p>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                  <div className="sb-sp-problem">{s.the_problem}</div>
-                  <div className="sb-sp-fix">{s.the_fix}</div>
-                  <div className="sb-sp-actions">
-                    {s.actions?.map((a, j) => (
-                      <div className="sb-sp-action" key={j}>
-                        <div className="sb-spa-header">
-                          <span className="sb-spa-name">{a.action}</span>
-                          <span className="sb-spa-time">{a.timeline}</span>
-                        </div>
-                        <p className="sb-spa-detail">{a.detail}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
           </section>
 
-          {/* ── Content Architecture ── */}
+          {/* ─── SECTION 6: CONTENT ARCHITECTURE ──────────────────── */}
           <section className="sb-section rule">
             <div className="sb-section-head">
               <span className="idx">Pages to build</span>
@@ -315,12 +413,18 @@ function StrategyBriefInner() {
                       </ul>
                     </div>
                   )}
+                  {p.why_it_matters && (
+                    <div className="sb-pc-why">
+                      <div className="sb-pc-sub-label">Why this page matters</div>
+                      <p className="sb-pc-why-text">{p.why_it_matters}</p>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           </section>
 
-          {/* ── Schema Plan ── */}
+          {/* ─── SECTION 7: SCHEMA PLAN ────────────────────────────── */}
           <section className="sb-section rule">
             <div className="sb-section-head">
               <span className="idx">Structured data</span>
@@ -330,7 +434,10 @@ function StrategyBriefInner() {
             <div className="sb-schemas">
               {strategy.schema_plan?.schemas?.map((s, i) => (
                 <div className="sb-schema" key={i}>
-                  <div className="sb-schema-type">{s.type}</div>
+                  <div className="sb-schema-header">
+                    <div className="sb-schema-type">{s.type}</div>
+                    <span className="idx sb-schema-copy-label">Copy-Paste Ready</span>
+                  </div>
                   <p className="sb-schema-why">{s.why}</p>
                   <div className="sb-schema-fields">
                     <div className="sb-pc-sub-label">Required fields</div>
@@ -338,16 +445,24 @@ function StrategyBriefInner() {
                       {s.required_fields?.map((f, j) => <span className="sb-pc-item" key={j}>{f}</span>)}
                     </div>
                   </div>
-                  <div className="sb-schema-example">
-                    <span className="sb-pc-sub-label">Example: </span>
-                    <span className="sb-schema-ex-val">{s.example_value}</span>
+                  <div className="sb-schema-code-block">
+                    <div className="sb-schema-code-top">
+                      <span className="sb-pc-sub-label">Example value</span>
+                      <button
+                        className="sb-copy-btn"
+                        onClick={() => copySchema(s.example_value, i)}
+                      >
+                        {copiedSchemas[i] ? "Copied ✓" : "Copy"}
+                      </button>
+                    </div>
+                    <div className="sb-schema-ex-val">{s.example_value}</div>
                   </div>
                 </div>
               ))}
             </div>
           </section>
 
-          {/* ── Review Strategy ── */}
+          {/* ─── SECTION 8: REVIEW STRATEGY ────────────────────────── */}
           <section className="sb-section rule">
             <div className="sb-section-head">
               <span className="idx">Review velocity</span>
@@ -371,40 +486,139 @@ function StrategyBriefInner() {
                 </div>
               ))}
             </div>
+            {strategy.review_strategy?.review_request_template && (
+              <div className="sb-review-template">
+                <div className="sb-review-template-header">
+                  <div>
+                    <div className="idx sb-review-template-label">Use This Exact Message</div>
+                    <div className="idx sb-review-template-sub">Copy and send to past customers via SMS or email</div>
+                  </div>
+                  <button
+                    className="sb-copy-btn"
+                    onClick={() => copyReview(strategy.review_strategy!.review_request_template!)}
+                  >
+                    {copiedReview ? "Copied ✓" : "Copy message"}
+                  </button>
+                </div>
+                <pre className="sb-review-template-text">
+                  {strategy.review_strategy.review_request_template}
+                </pre>
+              </div>
+            )}
           </section>
 
-          {/* ── 90-Day Calendar ── */}
+          {/* ─── SECTION 9: 90-DAY CALENDAR ────────────────────────── */}
           <section className="sb-section rule">
             <div className="sb-section-head">
               <span className="idx">Execution timeline</span>
               <h2 className="display sb-section-h2">90-day calendar.</h2>
             </div>
             <div className="sb-calendar">
-              {strategy["90_day_calendar"]?.map((p, i) => (
-                <div className="sb-cal-period" key={i}>
-                  <div className="sb-cal-period-head">
-                    <span className="sb-cal-period-label">{p.period}</span>
-                    <span className="sb-cal-focus">{p.focus}</span>
+              {strategy["90_day_calendar"]?.map((p, i) => {
+                const isWeek1 = p.period === "Week 1-2";
+                const isMonth3 = p.period === "Month 3";
+                return (
+                  <div
+                    className={[
+                      "sb-cal-period",
+                      isWeek1 ? "sb-cal-period--urgent" : "",
+                      isMonth3 ? "sb-cal-period--later" : "",
+                    ].filter(Boolean).join(" ")}
+                    key={i}
+                  >
+                    <div className="sb-cal-period-head">
+                      <span className={`sb-cal-period-label${isMonth3 ? " sb-cal-period-label--muted" : ""}`}>
+                        {p.period}
+                      </span>
+                      <span className={`sb-cal-focus${isMonth3 ? " sb-cal-focus--muted" : ""}`}>
+                        {p.focus}
+                      </span>
+                    </div>
+                    <ul className="sb-cal-deliverables">
+                      {parseDeliverables(p.deliverables).map((d, j) => (
+                        <li key={j}>{d}</li>
+                      ))}
+                    </ul>
                   </div>
-                  <ul className="sb-cal-deliverables">
-                    {p.deliverables?.map((d, j) => <li key={j}>{d}</li>)}
-                  </ul>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
 
-          {/* ── Closing Note ── */}
+          {/* ─── SECTION 10: CLOSING CTA ───────────────────────────── */}
           <section className="sb-close rule">
             <div className="sb-close-inner">
               <p className="sb-close-note">{strategy.closing_note}</p>
-              <div className="sb-close-ctas">
-                <a href="https://calendly.com/mvw-mattvincentwalker/ai-audit" className="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                  Book the 1-Hour Strategy Call — $197 →
-                </a>
+
+              <div className="sb-decision-block">
+                <div className="idx sb-decision-eyebrow">Your Decision</div>
+                <h2 className="display sb-decision-headline">
+                  You have the map.<br />
+                  <em>Now decide how you build.</em>
+                </h2>
               </div>
+
+              <div className="sb-decision-cards">
+                {/* Card 1 — Execute Yourself */}
+                <div className="sb-decision-card sb-decision-card--self">
+                  <div className="idx sb-decision-tag">Execute It Yourself</div>
+                  <h3 className="sb-decision-title">Everything you need is in this brief.</h3>
+                  <p className="sb-decision-body sb-decision-body--muted">
+                    Your Strategy Brief is a complete implementation manual. If you have a web
+                    person, developer, or can implement it yourself — every task is spec&rsquo;d
+                    with exact content requirements, schema code, and a week-by-week calendar. You
+                    don&rsquo;t need us to execute this.
+                  </p>
+                  <p className="idx sb-decision-bottom-line">Good luck. We mean it.</p>
+                </div>
+
+                {/* Card 2 — Work With Us */}
+                <div className="sb-decision-card sb-decision-card--featured">
+                  <div className="idx sb-decision-tag sb-decision-tag--accent">Have Us Build It With You</div>
+                  <h3 className="sb-decision-title">1-Hour Strategy Call</h3>
+                  <p className="sb-decision-body">
+                    Walk through this brief live with Matt Vincent Walker. Pressure-test every
+                    recommendation against your actual business. Leave with a clear execution
+                    decision — and the option to engage 6Signal&rsquo;s retainer directly.
+                  </p>
+                  <div className="sb-decision-price">$197</div>
+                  <div className="idx sb-decision-price-sub">Includes this Strategy Brief at no extra charge.</div>
+                  <a
+                    href="https://calendly.com/mvw-mattvincentwalker/ai-audit"
+                    className="btn btn-primary sb-decision-btn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Book the Strategy Call — $197 →
+                  </a>
+                  {/* PDF-only URL */}
+                  <div className="sb-decision-pdf-url">
+                    Book the 1-Hour Strategy Call: calendly.com/mvw-mattvincentwalker/ai-audit
+                  </div>
+                </div>
+              </div>
+
+              <div className="sb-close-footer">
+                <p className="sb-close-retainer">
+                  Want us to implement everything?{" "}
+                  <Link href="/#pricing" className="sb-close-retainer-link">
+                    See the 6Signal retainer →
+                  </Link>
+                </p>
+                <p className="idx sb-close-contact">Questions? hello@6signal.co</p>
+              </div>
+
             </div>
           </section>
+
+          {/* ─── PDF BACK COVER ────────────────────────────────────── */}
+          <div className="sb-pdf-back-cover">
+            <img src="/6SIG_LOGO_FINAL_2.webp" alt="6Signal" className="sb-pdf-back-logo" />
+            <div className="idx sb-pdf-back-tagline">AI Visibility Starts Here</div>
+            <div className="sb-pdf-back-url">6signal.co</div>
+            <div className="idx sb-pdf-back-email">hello@6signal.co</div>
+            <div className="idx sb-pdf-back-retainer">To engage 6Signal directly: 6signal.co/retainer</div>
+          </div>
 
         </div>
       </main>
@@ -416,6 +630,8 @@ export default function StrategyBriefPage() {
   return (
     <Suspense fallback={
       <div className="sb-page">
+        <div id="cursor-dot" aria-hidden="true" />
+        <div id="cursor-ring" aria-hidden="true" />
         <Nav />
         <div className="ar-state-wrap">
           <div className="ar-loading-block">
