@@ -1,8 +1,23 @@
 "use client";
+import { useState, useCallback } from "react";
 import Link from "next/link";
 import Nav from "../components/Nav";
-import AuditPopupButton from "../components/AuditPopupButton";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+interface SignalSummaryItem {
+  signal: string;
+  finding: string;
+}
+
+interface FreeCheckResult {
+  ai_response: string;
+  found: boolean;
+  signal_summary: SignalSummaryItem[];
+}
+
+// ─── Zone 2 data (preserved exactly) ─────────────────────────────────────────
 
 const SIGNALS = [
   {
@@ -137,77 +152,360 @@ const FIRST_MOVES = [
   },
 ];
 
+const TRADES = [
+  "Plumbing", "HVAC", "Roofing", "Electrical", "General Contracting",
+  "Custom Home Builder", "Landscaping", "Pest Control",
+  "Foundation / Concrete", "Tree Service", "Garage Doors", "Other",
+];
+
 const ARROW = (
   <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
     <path d="M0 5h14M10 1l4 4-4 4" />
   </svg>
 );
 
+// ─── Main component ───────────────────────────────────────────────────────────
+
 export default function AIVisibilityCheckPage() {
   useMicroInteractions();
 
+  const [form, setForm] = useState({ name: "", trade: "", city: "", email: "" });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<FreeCheckResult | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
+
+  const handleChange = (field: string, value: string) => {
+    setForm(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) setErrors(prev => ({ ...prev, [field]: "" }));
+  };
+
+  const validate = () => {
+    const e: Record<string, string> = {};
+    if (!form.name.trim()) e.name = "Business name is required";
+    if (!form.trade) e.trade = "Please select your trade";
+    if (!form.city.trim()) e.city = "City / market is required";
+    if (!form.email.trim()) e.email = "Email address is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = "Enter a valid email address";
+    return e;
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const errs = validate();
+    if (Object.keys(errs).length > 0) { setErrors(errs); return; }
+
+    setLoading(true);
+    setApiError(null);
+
+    // Save form data to localStorage
+    try {
+      localStorage.setItem("6sig_free_check_data", JSON.stringify({
+        name: form.name,
+        trade: form.trade,
+        city: form.city,
+        email: form.email,
+      }));
+    } catch { /* ignore */ }
+
+    try {
+      const res = await fetch("/api/free-check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        setApiError(data.error ?? "Something went wrong. Please try again.");
+        return;
+      }
+      setResult(data as FreeCheckResult);
+
+      // TODO: POST to /api/send-free-check-email
+      // Sends the check result to the user's email via Kit/Resend
+      // Input: { email, name, trade, city, ai_response, signal_summary, found }
+      // Build this route separately
+      fetch("/api/send-free-check-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: form.email,
+          name: form.name,
+          trade: form.trade,
+          city: form.city,
+          ai_response: data.ai_response,
+          signal_summary: data.signal_summary,
+          found: data.found,
+        }),
+      }).catch(() => {});
+
+    } catch {
+      setApiError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const scrollToForm = (e: React.MouseEvent) => {
+    e.preventDefault();
+    document.getElementById("free-check-form")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Pre-populate audit data when user clicks $27 CTA
+  const handleGoToPaid = useCallback(() => {
+    try {
+      const raw = localStorage.getItem("6sig_free_check_data");
+      if (raw) {
+        const { name, trade, city } = JSON.parse(raw);
+        localStorage.setItem("6sig_audit_data", JSON.stringify({
+          name: name ?? "",
+          url: "",
+          trade: trade ?? "",
+          city: city ?? "",
+          competitors: "",
+        }));
+      }
+    } catch { /* ignore */ }
+  }, []);
+
+  // Two-option CTA block (used in Zone 2)
+  const Zone2CTA = () => (
+    <div className="lp-cta-pair">
+      <Link href="/visibility-check" className="btn btn-primary btn-lg" onClick={handleGoToPaid}>
+        Get My AI Visibility Brief — $27 {ARROW}
+      </Link>
+      <a href="#free-check-form" className="btn btn-ghost" onClick={scrollToForm}>
+        Check My Business Free →
+      </a>
+    </div>
+  );
+
   return (
     <>
+      <div id="cursor-dot" aria-hidden="true" />
+      <div id="cursor-ring" aria-hidden="true" />
       <Nav />
 
-      {/* ── HERO ──────────────────────────────────────────────── */}
-      <section className="lp-hero">
-        <div className="wrap">
-          <div className="lp-hero-inner">
-            <div className="lp-hero-text">
-              <div className="lp-eyebrow">
-                <span className="lp-eyebrow-dot" />
-                The AI Visibility Shift
-              </div>
-              <h1 className="lp-h1 reveal">
-                Local businesses are losing leads<br />
-                <em>before customers ever reach Google.</em>
-              </h1>
-              <p className="lp-hero-deck reveal">
-                Customers are no longer just searching. They are asking ChatGPT, Google AI, Siri,
-                Gemini, Perplexity, and voice assistants who to call. 6Signal shows whether your
-                business gets found, skipped, or replaced by competitors.
-              </p>
-              <div className="lp-hero-ctas reveal">
-                <AuditPopupButton className="btn btn-primary btn-lg">
-                  Get the AI Visibility Brief {ARROW}
-                </AuditPopupButton>
-                <a href="#what-we-check" className="btn btn-ghost btn-lg">
-                  See What We Check {ARROW}
-                </a>
-              </div>
-              <p className="lp-micro reveal">
-                Free visibility review · AI search · Maps · voice · reviews · directories
-              </p>
-            </div>
+      {/* ════════════════════════════════════════════════════════
+          ZONE 1 — THE FREEBIE
+      ════════════════════════════════════════════════════════ */}
 
-            <div className="lp-hero-visual" aria-hidden="true">
-              <div className="lp-radar">
-                <div className="lp-radar-ring lp-radar-ring--4" />
-                <div className="lp-radar-ring lp-radar-ring--3" />
-                <div className="lp-radar-ring lp-radar-ring--2" />
-                <div className="lp-radar-ring lp-radar-ring--1" />
-                <div className="lp-radar-scan" />
-                <div className="lp-radar-center">
-                  <svg width="30" height="20" viewBox="0 0 30 20" fill="none">
-                    <polyline points="0,10 10,1 20,10" stroke="#E6FF00" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                    <polyline points="10,10 20,1 30,10" stroke="#f5f5f3" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
-                <span className="lp-radar-label lp-radar-label--tl">AI SEARCH</span>
-                <span className="lp-radar-label lp-radar-label--tr">MAPS</span>
-                <span className="lp-radar-label lp-radar-label--bl">VOICE</span>
-                <span className="lp-radar-label lp-radar-label--br">REVIEWS</span>
-              </div>
-              <div className="lp-radar-tagline">
-                GET FOUND · GET TRUSTED · GET CHOSEN
-              </div>
-            </div>
+      {/* ── STEP A: HERO ──────────────────────────────────────── */}
+      <section className="avc-hero">
+        <div className="hero-glow" />
+        <div className="wrap avc-hero-inner">
+          <span className="idx avc-hero-eyebrow">Free AI Visibility Check</span>
+          <h1 className="display avc-hero-headline reveal">
+            Find out if AI recommends your business —<br />
+            <em>in 60 seconds, for free.</em>
+          </h1>
+          <p className="avc-hero-sub reveal">
+            Enter your business below. We&rsquo;ll show you exactly what ChatGPT returns when a
+            customer asks for your trade in your city — and whether your name appears.
+          </p>
+          <div className="avc-hero-cta reveal">
+            <button className="btn btn-primary btn-lg" onClick={scrollToForm}>
+              Check My Business — Free {ARROW}
+            </button>
           </div>
+          <p className="idx avc-hero-trust reveal">
+            No payment. No credit card. Instant result.
+          </p>
         </div>
       </section>
 
-      {/* ── PROBLEM ───────────────────────────────────────────── */}
+      {/* ── STEP B: FREE CHECK FORM ───────────────────────────── */}
+      <section className="avc-form-section rule" id="free-check-form">
+        <div className="wrap">
+          {!result ? (
+            <>
+              <div className="avc-form-head reveal">
+                <span className="idx avc-form-step">Step 1 of 2 — Enter Your Business</span>
+                <h2 className="display avc-form-headline">Who are you? Where do you work?</h2>
+              </div>
+
+              <form className="avc-form reveal" onSubmit={handleSubmit} noValidate>
+                <div className="vc2-form-grid">
+                  {/* Business Name */}
+                  <div className={`vc2-field${errors.name ? " vc2-field--error" : ""}`}>
+                    <label className="vc2-label">
+                      Business Name <span className="vc2-req">*</span>
+                    </label>
+                    <input
+                      className="vc2-input"
+                      type="text"
+                      placeholder="X-Act Plumbing"
+                      value={form.name}
+                      onChange={e => handleChange("name", e.target.value)}
+                      autoComplete="organization"
+                    />
+                    {errors.name && <span className="vc2-error">{errors.name}</span>}
+                  </div>
+
+                  {/* Trade */}
+                  <div className={`vc2-field${errors.trade ? " vc2-field--error" : ""}`}>
+                    <label className="vc2-label">
+                      Trade <span className="vc2-req">*</span>
+                    </label>
+                    <div className="vc2-select-wrap">
+                      <select
+                        className="vc2-select"
+                        value={form.trade}
+                        onChange={e => handleChange("trade", e.target.value)}
+                      >
+                        <option value="">Select your trade...</option>
+                        {TRADES.map(t => <option key={t} value={t}>{t}</option>)}
+                      </select>
+                      <svg className="vc2-select-arrow" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.4">
+                        <path d="M1 1l4 4 4-4" />
+                      </svg>
+                    </div>
+                    {errors.trade && <span className="vc2-error">{errors.trade}</span>}
+                  </div>
+
+                  {/* City */}
+                  <div className={`vc2-field${errors.city ? " vc2-field--error" : ""}`}>
+                    <label className="vc2-label">
+                      City / Market <span className="vc2-req">*</span>
+                    </label>
+                    <input
+                      className="vc2-input"
+                      type="text"
+                      placeholder="Fort Worth, TX"
+                      value={form.city}
+                      onChange={e => handleChange("city", e.target.value)}
+                    />
+                    {errors.city && <span className="vc2-error">{errors.city}</span>}
+                  </div>
+
+                  {/* Email */}
+                  <div className={`vc2-field${errors.email ? " vc2-field--error" : ""}`}>
+                    <label className="vc2-label">
+                      Email Address <span className="vc2-req">*</span>
+                    </label>
+                    <input
+                      className="vc2-input"
+                      type="email"
+                      placeholder="you@yourbusiness.com"
+                      value={form.email}
+                      onChange={e => handleChange("email", e.target.value)}
+                      autoComplete="email"
+                    />
+                    {errors.email && <span className="vc2-error">{errors.email}</span>}
+                    <span className="idx avc-email-note">
+                      Your check gets emailed to you. No spam. Unsubscribe anytime.
+                    </span>
+                  </div>
+                </div>
+
+                <div className="avc-form-footer">
+                  <button
+                    className={`btn btn-primary btn-lg avc-submit${loading ? " avc-submit--loading" : ""}`}
+                    type="submit"
+                    disabled={loading}
+                  >
+                    {loading ? "Running your check..." : "Show Me My AI Check → Free"}
+                  </button>
+                  {apiError && (
+                    <p className="avc-api-error">{apiError}</p>
+                  )}
+                </div>
+              </form>
+            </>
+          ) : null}
+
+          {/* ── STEP C: RESULT DISPLAY ──────────────────────────── */}
+          {result && (
+            <div className="avc-result">
+              {/* Top bar */}
+              <div className="avc-result-topbar">
+                <span className="idx">AI Visibility Check</span>
+                <span className="idx avc-result-meta">
+                  {form.name} · {form.trade} · {form.city}
+                </span>
+              </div>
+
+              {/* Mock AI interface */}
+              <div className="avc-mock-ai">
+                <div className="idx avc-mock-label">What AI Returns When a Customer Asks:</div>
+                <div className="avc-mock-query">
+                  &ldquo;Who is the best {form.trade.toLowerCase()} in {form.city}?&rdquo;
+                </div>
+                <div className="avc-ai-response-block">
+                  <div className="idx avc-ai-label">AI Response</div>
+                  <p className="avc-ai-text">{result.ai_response}</p>
+                  <p className={`avc-found-line${result.found ? " avc-found-line--present" : " avc-found-line--absent"}`}>
+                    {result.found
+                      ? `${form.name} appears in these results.`
+                      : `${form.name} does not appear in these results.`}
+                  </p>
+                </div>
+              </div>
+
+              {/* Signal summary */}
+              {result.signal_summary?.length > 0 && (
+                <div className="avc-signal-summary">
+                  {result.signal_summary.map((item, i) => (
+                    <div className="avc-signal-item" key={i}>
+                      <span className="idx avc-signal-name">{item.signal}</span>
+                      <span className="avc-signal-finding">{item.finding}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Upsell block */}
+              <div className="avc-upsell">
+                <div className="idx avc-upsell-label">What This Means</div>
+                <h3 className="avc-upsell-headline">
+                  {result.found
+                    ? "You're visible. Here's how to dominate."
+                    : "You're invisible. Here's how to fix it."}
+                </h3>
+                <p className="avc-upsell-body">
+                  This check shows the surface. Your AI Visibility Intelligence Brief goes six
+                  layers deep — buyer journey mapping, citation landscape, content gap analysis,
+                  and a prioritized 90-day roadmap specific to {form.trade} businesses in {form.city}.
+                </p>
+
+                <div className="avc-upsell-opts">
+                  <div className="avc-upsell-opt-wrap">
+                    <Link
+                      href="/visibility-check"
+                      className="btn btn-primary btn-lg avc-upsell-btn"
+                      onClick={handleGoToPaid}
+                    >
+                      Get My Full AI Visibility Brief — $27 {ARROW}
+                    </Link>
+                    <p className="idx avc-upsell-opt-note">
+                      Your business details carry forward — no re-entry needed.
+                    </p>
+                  </div>
+                  <div className="avc-upsell-opt-wrap">
+                    <a
+                      href="https://calendly.com/mvw-mattvincentwalker/ai-audit"
+                      className="btn btn-ghost btn-lg avc-upsell-btn"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Book a Free 15-Min Call →
+                    </a>
+                  </div>
+                </div>
+                <p className="idx avc-upsell-footer">
+                  $27 · Full 6-signal analysis · PDF included · Results in 60 seconds
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════
+          ZONE 2 — EDUCATION CONTENT (preserved exactly)
+      ════════════════════════════════════════════════════════ */}
+
+      {/* ── PROBLEM / THE SHIFT ───────────────────────────────── */}
       <section className="lp-section rule" id="what-we-check">
         <div className="wrap">
           <div className="lp-section-head reveal">
@@ -252,7 +550,7 @@ export default function AIVisibilityCheckPage() {
         </div>
       </section>
 
-      {/* ── STAKES ────────────────────────────────────────────── */}
+      {/* ── STAKES / THE RISK ─────────────────────────────────── */}
       <section className="lp-section rule">
         <div className="wrap">
           <div className="lp-section-head reveal">
@@ -275,9 +573,7 @@ export default function AIVisibilityCheckPage() {
             <li>Your competitors may be easier for AI to understand.</li>
           </ul>
           <div className="lp-cta-row reveal">
-            <AuditPopupButton className="btn btn-primary btn-lg">
-              Get the AI Visibility Brief {ARROW}
-            </AuditPopupButton>
+            <Zone2CTA />
           </div>
         </div>
       </section>
@@ -326,9 +622,7 @@ export default function AIVisibilityCheckPage() {
             ))}
           </div>
           <div className="lp-cta-row reveal">
-            <AuditPopupButton className="btn btn-primary btn-lg">
-              Get the AI Visibility Brief {ARROW}
-            </AuditPopupButton>
+            <Zone2CTA />
           </div>
         </div>
       </section>
@@ -356,7 +650,7 @@ export default function AIVisibilityCheckPage() {
             ))}
           </div>
           <p className="lp-checklist-conclusion reveal">
-            If you answered "no" to several of these, you probably do not have a traffic problem.
+            If you answered &ldquo;no&rdquo; to several of these, you probably do not have a traffic problem.
             You have a signal problem.
           </p>
         </div>
@@ -425,9 +719,7 @@ export default function AIVisibilityCheckPage() {
             But the smart ones will fix the signal now.
           </p>
           <div className="lp-cta-row reveal">
-            <AuditPopupButton className="btn btn-primary btn-lg">
-              Get the AI Visibility Brief {ARROW}
-            </AuditPopupButton>
+            <Zone2CTA />
           </div>
         </div>
       </section>
@@ -450,12 +742,10 @@ export default function AIVisibilityCheckPage() {
               is strong, where it is weak, and what to fix first.
             </p>
             <div className="lp-final-cta-wrap reveal">
-              <AuditPopupButton className="btn btn-primary btn-xl">
-                Get the AI Visibility Brief {ARROW}
-              </AuditPopupButton>
+              <Zone2CTA />
             </div>
             <p className="lp-final-micro reveal">
-              Thirty-minute readout · Priority list yours to keep · Built for local service businesses and contractors
+              $27 · Full 6-signal analysis · PDF included · Results in 60 seconds
             </p>
           </div>
         </div>
@@ -477,16 +767,15 @@ export default function AIVisibilityCheckPage() {
         </div>
       </footer>
 
+      {/* ── MOBILE STICKY ─────────────────────────────────────── */}
       <div className="mobile-cta">
-        <AuditPopupButton>
-          Get the audit
+        <Link href="/visibility-check" className="btn" onClick={handleGoToPaid}>
+          Get My Brief — $27
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>
-        </AuditPopupButton>
+        </Link>
       </div>
-      <div id="cursor-dot" aria-hidden="true" />
-      <div id="cursor-ring" aria-hidden="true" />
     </>
   );
 }

@@ -4,22 +4,22 @@ const BASE = "https://6signal.co";
 const ROUTE = "/ai-visibility-check";
 
 export const metadata: Metadata = {
-  title: "The AI Visibility Shift | Get Found in AI Search | 6Signal",
+  title: "Free AI Visibility Check — Is Your Business Getting Found? | 6Signal",
   description:
-    "Customers are asking AI who to call. 6Signal helps local businesses see whether they get found, skipped, or replaced across Google, AI search, Maps, voice, reviews, and directories.",
+    "Find out in 60 seconds if AI recommends your business or your competitor. Free instant check for contractors and local service businesses.",
   openGraph: {
-    title: "The AI Visibility Shift | Get Found in AI Search | 6Signal",
+    title: "Free AI Visibility Check — Is Your Business Getting Found? | 6Signal",
     description:
-      "Customers are asking AI who to call. 6Signal helps local businesses see whether they get found, skipped, or replaced across Google, AI search, Maps, voice, reviews, and directories.",
+      "Find out in 60 seconds if AI recommends your business or your competitor. Free instant check for contractors and local service businesses.",
     type: "website",
     url: `${BASE}${ROUTE}`,
-    images: [{ url: "/6SIG_SOCIAL_SHARE.png", width: 1200, height: 630, alt: "The AI Visibility Shift — 6Signal" }],
+    images: [{ url: "/6SIG_SOCIAL_SHARE.png", width: 1200, height: 630, alt: "Free AI Visibility Check — 6Signal" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "The AI Visibility Shift | Get Found in AI Search | 6Signal",
+    title: "Free AI Visibility Check — Is Your Business Getting Found? | 6Signal",
     description:
-      "Customers are asking AI who to call. 6Signal helps local businesses see whether they get found, skipped, or replaced.",
+      "Find out in 60 seconds if AI recommends your business or your competitor. Free instant check.",
     images: ["/6SIG_SOCIAL_SHARE.png"],
   },
   alternates: { canonical: `${BASE}${ROUTE}` },
