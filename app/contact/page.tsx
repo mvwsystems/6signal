@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
 import AuditPopupButton from "../components/AuditPopupButton";
 
-const MAILTO = "mvw@mattvincentwalker.com";
+const MAILTO = "hello@6signal.co";
 
 export default function ContactPage() {
   useMicroInteractions();
