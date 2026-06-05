@@ -4,7 +4,6 @@ import Link from "next/link";
 import Nav from "./Nav";
 import Footer from "./Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
-import AuditPopupButton from "./AuditPopupButton";
 
 /*
   ────────────────────────────────────────────────────────────────────────────
@@ -63,8 +62,8 @@ const offerCards = [
   },
   {
     num: "07",
-    title: "Apple Maps Ads readiness checklist",
-    body: "A clear checklist of what's in place and what's missing — so the moment Maps ads are available in your market, the account is ready to run, not scrambling to qualify.",
+    title: "Apple Maps Checklist",
+    body: "A clear checklist of what's in place and what's missing — so the moment Maps ads are available in your market, the account is ready to run, not scrambling to qualify. Download the Apple Maps Checklist at 6signal.co/apple-checklist.",
   },
   {
     num: "08",
@@ -223,13 +222,12 @@ export default function AppleMapsReadinessPage() {
               of local search before competitors notice it&rsquo;s happening.
             </p>
             <div className="hero-cta-row reveal">
-              {/* PRIMARY CTA — replace booking link via app/lib/links.ts (TYPEFORM_ID) */}
-              <AuditPopupButton className="btn btn-primary btn-lg">
+              <Link href="/contact" className="btn btn-primary btn-lg">
                 Buy Apple Business Setup
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
-              </AuditPopupButton>
+              </Link>
               <a href="#what-we-set-up" className="btn btn-ghost btn-lg">
                 See what we set up
               </a>
@@ -407,13 +405,12 @@ export default function AppleMapsReadinessPage() {
       <section className="rule" style={{ paddingTop: "0", paddingBottom: "100px" }}>
         <div className="wrap" style={{ textAlign: "center" }}>
           <div className="hero-cta-row reveal" style={{ justifyContent: "center" }}>
-            {/* MID-PAGE CTA — same booking flow as hero */}
-            <AuditPopupButton className="btn btn-primary btn-lg">
+            <Link href="/contact" className="btn btn-primary btn-lg">
               Buy Apple Business Setup
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
-            </AuditPopupButton>
+            </Link>
           </div>
           <div className="hero-sig reveal" style={{ marginTop: "20px" }}>
             One profile per business · Claimed, cleaned, and ready before the auction heats up
@@ -492,13 +489,12 @@ export default function AppleMapsReadinessPage() {
               <em>Can also be bundled into a full AI + Local Visibility package.</em>
             </div>
             <div className="p-cta">
-              {/* PRIMARY CTA — replace booking link via app/lib/links.ts (TYPEFORM_ID) */}
-              <AuditPopupButton className="btn btn-primary btn-lg">
+              <Link href="/contact" className="btn btn-primary btn-lg">
                 Buy Apple Business Setup
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
-              </AuditPopupButton>
+              </Link>
             </div>
             <div className="p-guarantee">
               Apple Business Connect claim · Profile optimized · NAP review · Ads-ready checklist
@@ -591,13 +587,12 @@ export default function AppleMapsReadinessPage() {
             catch-up. No hype. No lead guarantees. Just a clean Apple Maps foundation.
           </p>
           <div className="f-cta">
-            {/* FINAL CTA — replace booking link via app/lib/links.ts (TYPEFORM_ID) */}
-            <AuditPopupButton className="btn btn-primary btn-lg">
+            <Link href="/contact" className="btn btn-primary btn-lg">
               Buy Apple Business Setup
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
-            </AuditPopupButton>
+            </Link>
           </div>
           <div className="f-notes">
             <span>Apple Business Connect claim</span>
@@ -611,13 +606,12 @@ export default function AppleMapsReadinessPage() {
       <Footer />
 
       <div className="mobile-cta">
-        {/* MOBILE STICKY CTA — same booking flow */}
-        <AuditPopupButton>
+        <Link href="/contact">
           Buy Apple Business Setup
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>
-        </AuditPopupButton>
+        </Link>
       </div>
       <div id="cursor-dot" aria-hidden="true" />
       <div id="cursor-ring" aria-hidden="true" />
