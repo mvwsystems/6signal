@@ -170,9 +170,14 @@ function StrategyBriefInner() {
         const r = await fetch("/api/generate-strategy", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ audit }),
+          body: JSON.stringify({
+            audit,
+            intakeId: localStorage.getItem("6sig_intake_id") ?? undefined,
+          }),
         });
         if (!r.ok) throw new Error(`Server error ${r.status}`);
+        const strategyId = r.headers.get("x-audit-id");
+        if (strategyId) localStorage.setItem("6sig_strategy_id", strategyId);
         const reader = r.body!.getReader();
         const dec = new TextDecoder();
         let text = "";
@@ -617,7 +622,7 @@ function StrategyBriefInner() {
             <div className="idx sb-pdf-back-tagline">AI Visibility Starts Here</div>
             <div className="sb-pdf-back-url">6signal.co</div>
             <div className="idx sb-pdf-back-email">hello@6signal.co</div>
-            <div className="idx sb-pdf-back-retainer">To engage 6Signal directly: 6signal.co/retainer</div>
+            <div className="idx sb-pdf-back-retainer">To engage 6Signal directly: hello@6signal.co · 6signal.co/#pricing</div>
           </div>
 
         </div>

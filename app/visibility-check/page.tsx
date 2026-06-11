@@ -91,6 +91,10 @@ const FAQS = [
     a: "No. $27 one time. You get the brief. No recurring charges.",
   },
   {
+    q: "What if something goes wrong?",
+    a: "After payment you also receive an email with a permanent link to your brief, so you can reopen it on any device. If generation fails and we can't recover it, email hello@6signal.co and we'll regenerate it or refund the $27.",
+  },
+  {
     q: "Who is 6Signal?",
     a: "6Signal is a DFW-based AI visibility practice that works exclusively with contractors and local service businesses. We built the 6-Signal framework to map and close the gaps that cause local businesses to disappear from AI-generated recommendations.",
   },
@@ -231,7 +235,7 @@ export default function VisibilityCheckPage() {
     if (errors[field]) setErrors((prev) => ({ ...prev, [field]: "" }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length > 0) {
@@ -251,7 +255,24 @@ export default function VisibilityCheckPage() {
         competitors: form.competitors,
       })
     );
-    window.location.href = "https://buy.stripe.com/28EeVebRQ3J1ghz6bf3ks0p";
+
+    // Register the intake server-side so the purchase can always be linked
+    // back to this form data (Stripe client_reference_id → recovery link).
+    let intakeId: string | null = null;
+    try {
+      const r = await fetch("/api/intake", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (r.ok) intakeId = (await r.json())?.id ?? null;
+    } catch { /* funnel works without it */ }
+    if (intakeId) localStorage.setItem("6sig_intake_id", intakeId);
+
+    const stripeUrl = "https://buy.stripe.com/28EeVebRQ3J1ghz6bf3ks0p";
+    window.location.href = intakeId
+      ? `${stripeUrl}?client_reference_id=${intakeId}`
+      : stripeUrl;
   };
 
   const scrollToForm = (e: React.MouseEvent) => {

@@ -1,0 +1,116 @@
+import { NextResponse } from "next/server";
+import crypto from "crypto";
+import { markIntakePaid, recordPurchase } from "../../lib/db";
+import { sendEmail, emailShell, heading, paragraph, button, monoLabel } from "../../lib/email";
+
+// Stripe webhook: records every checkout.session.completed so purchases are
+// linked to intakes server-side, and emails the buyer a recovery link to
+// their brief. Configure in Stripe Dashboard:
+//   endpoint  https://6signal.co/api/stripe-webhook
+//   events    checkout.session.completed
+// and set STRIPE_WEBHOOK_SECRET in Netlify env.
+
+const SITE = "https://6signal.co";
+
+function verifyStripeSignature(payload: string, header: string, secret: string): boolean {
+  const parts = Object.fromEntries(
+    header.split(",").map((kv) => kv.split("=") as [string, string])
+  );
+  const t = parts["t"];
+  const v1 = parts["v1"];
+  if (!t || !v1) return false;
+  // 5-minute tolerance against replay
+  if (Math.abs(Date.now() / 1000 - Number(t)) > 300) return false;
+  const expected = crypto
+    .createHmac("sha256", secret)
+    .update(`${t}.${payload}`)
+    .digest("hex");
+  try {
+    return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(v1));
+  } catch {
+    return false;
+  }
+}
+
+function productFromAmount(amountTotal: number | null): string {
+  switch (amountTotal) {
+    case 2700: return "brief_27";
+    case 9700: return "strategy_97";
+    case 19700: return "call_197";
+    default: return "unknown";
+  }
+}
+
+export async function POST(req: Request) {
+  const secret = process.env.STRIPE_WEBHOOK_SECRET;
+  const payload = await req.text();
+  const signature = req.headers.get("stripe-signature") ?? "";
+
+  if (!secret) {
+    console.warn("[stripe-webhook] STRIPE_WEBHOOK_SECRET not set — ignoring event");
+    return NextResponse.json({ received: true });
+  }
+  if (!verifyStripeSignature(payload, signature, secret)) {
+    return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
+  }
+
+  let event: { type?: string; data?: { object?: Record<string, unknown> } };
+  try {
+    event = JSON.parse(payload);
+  } catch {
+    return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
+  }
+
+  if (event.type !== "checkout.session.completed") {
+    return NextResponse.json({ received: true });
+  }
+
+  const session = event.data?.object ?? {};
+  const sessionId = String(session.id ?? "");
+  const intakeId = (session.client_reference_id as string | null) ?? null;
+  const email =
+    ((session.customer_details as Record<string, unknown> | undefined)?.email as string | undefined) ??
+    (session.customer_email as string | undefined) ??
+    null;
+  const amountTotal = (session.amount_total as number | undefined) ?? null;
+  const product = productFromAmount(amountTotal);
+
+  if (!sessionId) return NextResponse.json({ received: true });
+
+  const isNew = await recordPurchase({
+    stripeSessionId: sessionId,
+    intakeId,
+    email,
+    amountTotal,
+    currency: (session.currency as string | undefined) ?? null,
+    product,
+    raw: session,
+  });
+
+  if (intakeId) await markIntakePaid(intakeId);
+
+  // Recovery email: even if localStorage dies on the way back from Stripe,
+  // the buyer has a durable link to their results.
+  if (isNew && email && intakeId && (product === "brief_27" || product === "strategy_97")) {
+    const link = `${SITE}/audit-results?intake=${intakeId}`;
+    await sendEmail({
+      to: email,
+      subject: "Your 6 Signal brief — permanent access link",
+      html: emailShell(
+        [
+          monoLabel("Order confirmed"),
+          heading("Your brief is ready when you are."),
+          paragraph(
+            "Your results should already be on screen. If you closed the tab, switched devices, or anything interrupted the page, this link regenerates your brief from the details you submitted — any time, any device."
+          ),
+          button("Open my brief", link),
+          paragraph(
+            `If anything looks wrong, reply to this email or write <a href="mailto:hello@6signal.co" style="color:#E6FF00;">hello@6signal.co</a> and we'll fix it or refund you. No forms, no friction.`
+          ),
+        ].join("")
+      ),
+    });
+  }
+
+  return NextResponse.json({ received: true });
+}

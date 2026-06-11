@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { upsertBusiness, insertAuditRow, completeAudit, failAudit } from "../../lib/db";
 
 export const maxDuration = 300;
+
+const MODEL = "claude-haiku-4-5-20251001";
+const PROMPT_VERSION = "2.0.0";
 
 const SYSTEM_PROMPT = `You are a senior AI visibility strategist at 6Signal. A contractor or local service business has just received their AI Visibility Intelligence Brief (a scored assessment across 6 signals: GEO, AEO, LEO, VEO, PEO, IEO). Now you are writing their Full Strategy Brief — the implementation document they will actually hand to a developer and a writer to execute.
 
@@ -123,7 +127,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "ANTHROPIC_API_KEY is not configured on this server." }, { status: 500 });
   }
 
-  const auditData = audit as Record<string, unknown> & { business?: { name?: string; trade?: string; city?: string } };
+  const auditData = audit as Record<string, unknown> & { business?: { name?: string; url?: string; trade?: string; city?: string } };
+
+  // Persist the strategy run (best-effort)
+  const strategyId = crypto.randomUUID();
+  const biz = auditData.business;
+  const businessId =
+    biz?.name && biz?.trade && biz?.city
+      ? await upsertBusiness({ name: biz.name, url: biz.url ?? null, trade: biz.trade, city: biz.city })
+      : null;
+  await insertAuditRow({
+    id: strategyId,
+    businessId,
+    intakeId: (body as { intakeId?: string } | null)?.intakeId || null,
+    tier: "strategy_97",
+    model: MODEL,
+    promptVersion: PROMPT_VERSION,
+  });
 
   const userPrompt = `Here is the full AI Visibility Intelligence Brief for this business. Use every detail in it to write their Full Strategy Brief now.
 
@@ -149,9 +169,10 @@ Write the complete Full Strategy Brief JSON. Every recommendation must be specif
             "anthropic-version": "2023-06-01",
           },
           body: JSON.stringify({
-            model: "claude-haiku-4-5-20251001",
+            model: MODEL,
             max_tokens: 8192,
             stream: true,
+            temperature: 0,
             system: SYSTEM_PROMPT,
             messages: [{ role: "user", content: userPrompt }],
           }),
@@ -176,7 +197,7 @@ Write the complete Full Strategy Brief JSON. Every recommendation must be specif
         const reader = anthropicRes.body.getReader();
         const dec = new TextDecoder();
         let sseBuf = "";
-        let totalChars = 0;
+        let fullText = "";
 
         while (true) {
           const { done, value } = await reader.read();
@@ -196,22 +217,39 @@ Write the complete Full Strategy Brief JSON. Every recommendation must be specif
               const ev = JSON.parse(data);
               if (ev.type === "content_block_delta" && ev.delta?.type === "text_delta") {
                 const chunk = ev.delta.text as string;
-                totalChars += chunk.length;
+                fullText += chunk;
                 controller.enqueue(enc.encode(chunk));
               }
             } catch { /* skip malformed SSE lines */ }
           }
         }
 
-        console.log("[generate-strategy] stream done, total chars streamed:", totalChars);
+        console.log("[generate-strategy] stream done, total chars streamed:", fullText.length);
+
+        // Persist the completed strategy document (best-effort).
+        try {
+          const clean = fullText.replace(/```json\n?|```\n?/g, "").trim();
+          const parsed = JSON.parse(clean);
+          const strategyData = parsed.strategy ?? parsed;
+          await completeAudit({ id: strategyId, payload: strategyData, overallScore: null });
+        } catch (persistErr) {
+          console.error("[generate-strategy] persistence parse failed:", persistErr);
+          await failAudit(strategyId);
+        }
       } catch (e) {
         console.error("[generate-strategy] error:", e);
         controller.enqueue(enc.encode(JSON.stringify({ error: String(e) })));
+        await failAudit(strategyId);
       }
 
       controller.close();
     },
   });
 
-  return new Response(stream, { headers: { "Content-Type": "text/plain; charset=utf-8" } });
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "text/plain; charset=utf-8",
+      "X-Audit-Id": strategyId,
+    },
+  });
 }

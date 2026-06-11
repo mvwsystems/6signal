@@ -8819,3 +8819,12 @@ svg {
   .lp-cta-pair { flex-direction: column; align-items: stretch; }
   .lp-cta-pair .btn { justify-content: center; }
 }
+
+/* Free-check projected-response disclaimer */
+.avc-ai-disclaimer {
+  margin-top: 14px;
+  color: #555553;
+  letter-spacing: 0.14em;
+  line-height: 1.7;
+  text-transform: none;
+}

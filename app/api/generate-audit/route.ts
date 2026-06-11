@@ -1,6 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
+import { collectSiteEvidence, evidenceForPrompt } from "../../lib/evidence";
+import {
+  upsertBusiness,
+  insertAuditRow,
+  completeAudit,
+  failAudit,
+  saveSignalScores,
+  saveSiteSnapshot,
+} from "../../lib/db";
 
 export const maxDuration = 300;
+
+const MODEL = "claude-haiku-4-5-20251001";
+// Bump whenever the prompt or scoring method changes — scores are only
+// comparable within a prompt_version.
+const PROMPT_VERSION = "2.0.0-evidence";
 
 const SYSTEM_PROMPT = `You are a senior AEO/GEO strategist and AI visibility analyst at 6Signal — a firm that helps contractors and local service businesses become the recommended answer across AI search surfaces including ChatGPT, Perplexity, Google AI Mode, Google AI Overviews, Gemini, and voice assistants.
 
@@ -190,7 +204,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { name, url, trade, city, competitors } = body ?? {};
+  const { name, url, trade, city, competitors, intakeId } = body ?? {};
   if (!name || !url || !trade || !city) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
@@ -202,6 +216,43 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "ANTHROPIC_API_KEY is not configured on this server." }, { status: 500 });
   }
 
+  // Real crawl evidence: deterministic IEO checklist, observed facts for the
+  // prompt. Best-effort — if the crawl fails entirely, that itself is evidence.
+  const evidence = await collectSiteEvidence(url).catch(() => null);
+
+  // Persist the run before streaming so a record exists even if the client
+  // disconnects mid-generation.
+  const auditId = crypto.randomUUID();
+  const businessId = await upsertBusiness({ name, url, trade, city });
+  await insertAuditRow({
+    id: auditId,
+    businessId,
+    intakeId: intakeId || null,
+    tier: "brief_27",
+    model: MODEL,
+    promptVersion: PROMPT_VERSION,
+  });
+  if (evidence) {
+    void saveSiteSnapshot(auditId, {
+      url: evidence.url,
+      fetched: evidence.fetched,
+      http_status: evidence.http_status,
+      robots_allows_ai: evidence.robots_allows_ai,
+      ai_bots_blocked: evidence.ai_bots_blocked,
+      has_schema: evidence.has_schema,
+      schema_types: evidence.schema_types,
+      has_local_business: evidence.has_local_business,
+      has_faq_schema: evidence.has_faq_schema,
+      sitemap_ok: evidence.sitemap_ok,
+      title: evidence.title,
+      has_meta_description: evidence.has_meta_description,
+      h1_count: evidence.h1_count,
+      word_count: evidence.word_count,
+      ieo_score: evidence.ieo_score,
+      checks: evidence.checks,
+    });
+  }
+
   const userPrompt = `Run a full 6Signal AI Visibility Intelligence Audit on this business:
 
 Business Name: ${name}
@@ -209,6 +260,8 @@ Website URL: ${url}
 Trade / Service Category: ${trade}
 City / Market: ${city}
 ${competitors ? `Known Competitors: ${competitors}` : ""}
+
+${evidence ? evidenceForPrompt(evidence) : ""}
 
 Produce the complete intelligence brief JSON now. Be specific, deep, and strategic. Reference this business by name throughout.`;
 
@@ -229,9 +282,10 @@ Produce the complete intelligence brief JSON now. Be specific, deep, and strateg
             "anthropic-version": "2023-06-01",
           },
           body: JSON.stringify({
-            model: "claude-haiku-4-5-20251001",
+            model: MODEL,
             max_tokens: 8192,
             stream: true,
+            temperature: 0,
             system: SYSTEM_PROMPT,
             messages: [{ role: "user", content: userPrompt }],
           }),
@@ -256,7 +310,7 @@ Produce the complete intelligence brief JSON now. Be specific, deep, and strateg
         const reader = anthropicRes.body.getReader();
         const dec = new TextDecoder();
         let sseBuf = "";
-        let totalChars = 0;
+        let fullText = "";
 
         while (true) {
           const { done, value } = await reader.read();
@@ -276,22 +330,53 @@ Produce the complete intelligence brief JSON now. Be specific, deep, and strateg
               const ev = JSON.parse(data);
               if (ev.type === "content_block_delta" && ev.delta?.type === "text_delta") {
                 const chunk = ev.delta.text as string;
-                totalChars += chunk.length;
+                fullText += chunk;
                 controller.enqueue(enc.encode(chunk));
               }
             } catch { /* skip malformed SSE lines */ }
           }
         }
 
-        console.log("[generate-audit] stream done, total chars streamed:", totalChars);
+        console.log("[generate-audit] stream done, total chars streamed:", fullText.length);
+
+        // Persist the completed brief + per-signal scores (best-effort).
+        try {
+          const clean = fullText.replace(/```json\n?|```\n?/g, "").trim();
+          const parsed = JSON.parse(clean);
+          const auditData = parsed.audit ?? parsed;
+          const overall = Number(auditData?.overall?.score);
+          await completeAudit({
+            id: auditId,
+            payload: auditData,
+            overallScore: Number.isFinite(overall) ? overall : null,
+          });
+          const signals = auditData?.signals ?? {};
+          await saveSignalScores(
+            auditId,
+            ["geo", "aeo", "leo", "veo", "peo", "ieo"].map((sig) => ({
+              signal: sig,
+              score: Number(signals?.[sig]?.score),
+              evidence: sig === "ieo" && evidence ? evidence.checks : undefined,
+            }))
+          );
+        } catch (persistErr) {
+          console.error("[generate-audit] persistence parse failed:", persistErr);
+          await failAudit(auditId);
+        }
       } catch (e) {
         console.error("[generate-audit] error:", e);
         controller.enqueue(enc.encode(JSON.stringify({ error: String(e) })));
+        await failAudit(auditId);
       }
 
       controller.close();
     },
   });
 
-  return new Response(stream, { headers: { "Content-Type": "text/plain; charset=utf-8" } });
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "text/plain; charset=utf-8",
+      "X-Audit-Id": auditId,
+    },
+  });
 }

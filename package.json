@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.108.1",
     "@typeform/embed-react": "^5.0.0",
     "gray-matter": "^4.0.3",
     "next": "15.5.18",

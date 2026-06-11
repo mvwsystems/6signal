@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { upsertBusiness, insertLead, insertAuditRow, completeAudit } from "../../lib/db";
 
 export const maxDuration = 30;
+
+const MODEL = "claude-haiku-4-5-20251001";
+const PROMPT_VERSION = "1.1.0";
 
 const SYSTEM_PROMPT = `You are an AI visibility analyst for 6Signal. A contractor has submitted their business for a free AI visibility check.
 
@@ -67,7 +71,7 @@ export async function POST(req: NextRequest) {
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
+        model: MODEL,
         max_tokens: 600,
         temperature: 0,
         system: SYSTEM_PROMPT,
@@ -105,6 +109,25 @@ export async function POST(req: NextRequest) {
       } else {
         return NextResponse.json({ error: "Check failed. Please try again." }, { status: 500 });
       }
+    }
+
+    // Persist: every free check becomes a contactable lead + a stored result
+    // (best-effort; never blocks the response on failure).
+    try {
+      const businessId = await upsertBusiness({ name, url: null, trade, city });
+      await insertLead({ businessId, email, source: "free_check" });
+      const checkId = crypto.randomUUID();
+      await insertAuditRow({
+        id: checkId,
+        businessId,
+        intakeId: null,
+        tier: "free_check",
+        model: MODEL,
+        promptVersion: PROMPT_VERSION,
+      });
+      await completeAudit({ id: checkId, payload: parsed, overallScore: null });
+    } catch (persistErr) {
+      console.error("[free-check] persistence failed:", persistErr);
     }
 
     return NextResponse.json(parsed);

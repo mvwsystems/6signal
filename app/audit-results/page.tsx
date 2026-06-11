@@ -439,21 +439,24 @@ function AuditResultsInner() {
   };
 
   useEffect(() => {
-    // Cache-first: use pre-generated result if available
-    try {
-      const cached = localStorage.getItem("6sig_audit_result");
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        if (parsed?.business?.name) {
-          setAudit(parsed);
-          return;
-        }
-      }
-    } catch { /* ignore */ }
+    const params = new URLSearchParams(window.location.search);
+    const permalinkId = params.get("id");
+    const intakeParam = params.get("intake");
 
-    // Otherwise generate from form data (production Stripe flow)
-    const data = getFormData();
-    if (!data || !data.name) return;
+    // Cache-first: use pre-generated result if available (skip when following
+    // a permalink — the stored version is the source of truth there)
+    if (!permalinkId) {
+      try {
+        const cached = localStorage.getItem("6sig_audit_result");
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (parsed?.business?.name) {
+            setAudit(parsed);
+            return;
+          }
+        }
+      } catch { /* ignore */ }
+    }
 
     let msgIdx = 0;
     const interval = setInterval(() => {
@@ -461,16 +464,60 @@ function AuditResultsInner() {
       setLoadingMsg(LOADING_MSGS[msgIdx]);
     }, 2200);
 
-    setLoading(true);
-
     (async () => {
+      // Permalink: render a previously generated brief without regenerating
+      if (permalinkId) {
+        setLoading(true);
+        try {
+          const r = await fetch(`/api/audit/${permalinkId}`);
+          if (r.ok) {
+            const saved = await r.json();
+            if (saved?.payload?.business?.name) {
+              setAudit(saved.payload);
+              localStorage.setItem("6sig_audit_result", JSON.stringify(saved.payload));
+              clearInterval(interval);
+              setLoading(false);
+              return;
+            }
+          }
+        } catch { /* fall through to generation paths */ }
+      }
+
+      // Form data: localStorage first, then server-side intake (recovery link
+      // from the purchase email — works on any device)
+      let data = getFormData();
+      let intakeId: string | null = localStorage.getItem("6sig_intake_id");
+      if ((!data || !data.name) && intakeParam) {
+        try {
+          const r = await fetch(`/api/intake/${intakeParam}`);
+          if (r.ok) {
+            const intake = await r.json();
+            if (intake?.form?.name) {
+              data = intake.form;
+              intakeId = intakeParam;
+              localStorage.setItem("6sig_audit_data", JSON.stringify(intake.form));
+            }
+          }
+        } catch { /* ignore */ }
+      }
+      if (intakeParam) intakeId = intakeParam;
+
+      if (!data || !data.name) {
+        clearInterval(interval);
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
       try {
         const r = await fetch("/api/generate-audit", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
+          body: JSON.stringify({ ...data, intakeId: intakeId ?? undefined }),
         });
         if (!r.ok) throw new Error(`Server error ${r.status}`);
+        const auditId = r.headers.get("x-audit-id");
+        if (auditId) localStorage.setItem("6sig_audit_id", auditId);
         const reader = r.body!.getReader();
         const dec = new TextDecoder();
         let text = "";
@@ -499,9 +546,11 @@ function AuditResultsInner() {
 
   const total = SLIDE_LABELS.length;
   const hasData = !!getFormData()?.name;
+  const hasRecoveryParam =
+    typeof window !== "undefined" && /[?&](id|intake)=/.test(window.location.search);
 
   // ─── No data ───
-  if (!hasData && !loading && !audit) {
+  if (!hasData && !hasRecoveryParam && !loading && !audit) {
     return (
       <div className="ar-page">
         <div id="cursor-dot" aria-hidden="true" />

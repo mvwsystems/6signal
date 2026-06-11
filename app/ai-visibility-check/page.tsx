@@ -22,39 +22,39 @@ interface FreeCheckResult {
 const SIGNALS = [
   {
     num: "01",
-    name: "Search Signal",
-    short: "Can people find you on Google?",
-    body: "Your website, page structure, and content determine whether search engines surface you when buyers are actively looking for what you do.",
+    name: "GEO — Generative Engine Optimization",
+    short: "Does AI name you in its recommendations?",
+    body: "When a homeowner asks ChatGPT, Gemini, or Perplexity for a contractor recommendation, is your company one of the names in the answer — or is a competitor filling your spot?",
   },
   {
     num: "02",
-    name: "AI Signal",
-    short: "Can AI understand and recommend you?",
-    body: "ChatGPT, Gemini, and Perplexity pull from structured, clear, authoritative sources. If your presence is vague or thin, AI skips over you.",
+    name: "AEO — Answer Engine Optimization",
+    short: "Are you cited in Google's AI answers?",
+    body: "Google now answers questions directly above the results — before anyone scrolls. AEO gets your company cited in those answers so buyers see your name before they ever click a link.",
   },
   {
     num: "03",
-    name: "Local Signal",
-    short: "Are your location and service areas clear?",
-    body: "Maps, local packs, and voice results depend on how well your location data is structured, verified, and consistent across every platform.",
+    name: "LEO — Local Entity Optimization",
+    short: "Is your local data consistent everywhere?",
+    body: "Google Maps, Apple Maps, Yelp, directories — every listing, every citation. LEO reconciles them all so every system a buyer checks sees the same company, consistently.",
   },
   {
     num: "04",
-    name: "Trust Signal",
-    short: "Do reviews and proof support your claims?",
-    body: "AI and search algorithms weigh third-party proof. Generic, sparse, or inconsistent reviews drag your signal down and your competitors up.",
+    name: "VEO — Voice Engine Optimization",
+    short: "Are you the answer when someone asks Siri or Alexa?",
+    body: "A homeowner standing next to a burst pipe asks Siri who to call. VEO makes sure your company is the answer — hands-free, urgent, and local.",
   },
   {
     num: "05",
-    name: "Content Signal",
-    short: "Do you answer the questions customers ask?",
-    body: "The companies AI recommends have already answered the questions buyers ask before they call. Useful content is the signal AI reads first.",
+    name: "PEO — Prompt Engine Optimization",
+    short: "Do you surface in the queries buyers actually type?",
+    body: "Homeowners search with specific language: 'emergency repair open now,' 'best plumber in [city].' PEO makes sure your company surfaces inside the actual queries your customers are already asking.",
   },
   {
     num: "06",
-    name: "Conversion Signal",
-    short: "Once people find you, do they call, book, or request a quote?",
-    body: "Visibility without conversion is traffic without revenue. A weak conversion path amplifies every upstream signal problem you have.",
+    name: "IEO — Index Engine Optimization",
+    short: "Can AI crawlers read and cite your site?",
+    body: "Every AI and search system reads your site, schema, and business data to understand what you do and where you work. IEO makes that data clean, structured, and machine-readable.",
   },
 ];
 
@@ -300,8 +300,9 @@ export default function AIVisibilityCheckPage() {
             <em>in 60 seconds, for free.</em>
           </h1>
           <p className="avc-hero-sub reveal">
-            Enter your business below. We&rsquo;ll show you exactly what ChatGPT returns when a
-            customer asks for your trade in your city — and whether your name appears.
+            Enter your business below. We&rsquo;ll show you how AI engines answer when a
+            customer asks for your trade in your city — and whether your name is in
+            the answer set.
           </p>
           <div className="avc-hero-cta reveal">
             <button className="btn btn-primary btn-lg" onClick={scrollToForm}>
@@ -427,17 +428,20 @@ export default function AIVisibilityCheckPage() {
 
               {/* Mock AI interface */}
               <div className="avc-mock-ai">
-                <div className="idx avc-mock-label">What AI Returns When a Customer Asks:</div>
+                <div className="idx avc-mock-label">How AI Answers When a Customer Asks:</div>
                 <div className="avc-mock-query">
                   &ldquo;Who is the best {form.trade.toLowerCase()} in {form.city}?&rdquo;
                 </div>
                 <div className="avc-ai-response-block">
-                  <div className="idx avc-ai-label">AI Response</div>
+                  <div className="idx avc-ai-label">Projected AI Response</div>
                   <p className="avc-ai-text">{result.ai_response}</p>
                   <p className={`avc-found-line${result.found ? " avc-found-line--present" : " avc-found-line--absent"}`}>
                     {result.found
-                      ? `${form.name} appears in these results.`
-                      : `${form.name} does not appear in these results.`}
+                      ? `${form.name} appears in this answer set.`
+                      : `${form.name} does not appear in this answer set.`}
+                  </p>
+                  <p className="idx avc-ai-disclaimer">
+                    Projection based on current AI recommendation patterns for your trade and market. Engines vary by user and day — the full brief maps where you stand across all of them.
                   </p>
                 </div>
               </div>
