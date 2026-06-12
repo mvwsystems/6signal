@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
+import { trackEvent } from "../lib/fbq";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -269,6 +270,7 @@ export default function VisibilityCheckPage() {
     } catch { /* funnel works without it */ }
     if (intakeId) localStorage.setItem("6sig_intake_id", intakeId);
 
+    trackEvent("InitiateCheckout", { value: 27.00, currency: "USD" });
     const stripeUrl = "https://buy.stripe.com/28EeVebRQ3J1ghz6bf3ks0p";
     window.location.href = intakeId
       ? `${stripeUrl}?client_reference_id=${intakeId}`

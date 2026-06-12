@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback, Suspense } from "react";
 import Link from "next/link";
 import Nav from "../components/Nav";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
+import { trackEvent, clampScore } from "../lib/fbq";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -210,7 +211,7 @@ function SlideSignals({ a }: { a: AuditData }) {
               <div className="ar-signal-head">
                 <span className="ar-signal-acro">{key.toUpperCase()}</span>
                 <span className="ar-signal-score" style={{ color: col }}>
-                  {s.score}<span className="ar-signal-denom"> / 100</span>
+                  {clampScore(s.score)}<span className="ar-signal-denom"> / 100</span>
                 </span>
               </div>
               <p className="ar-signal-finding">{s.finding}</p>
@@ -429,6 +430,19 @@ function AuditResultsInner() {
   const [slide, setSlide] = useState(0);
 
   const handlePrint = useCallback(() => { window.print(); }, []);
+
+  // Fire Purchase $27 once for fresh post-purchase arrivals (not permalink/recovery loads)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("id") || params.get("intake")) return;
+    const intakeId = (() => { try { return localStorage.getItem("6sig_intake_id"); } catch { return null; } })();
+    const key = `6sig_pxl_p27_${intakeId ?? "default"}`;
+    try {
+      if (localStorage.getItem(key)) return;
+      localStorage.setItem(key, "1");
+    } catch { return; }
+    trackEvent("Purchase", { value: 27.00, currency: "USD" });
+  }, []);
 
   const getFormData = () => {
     try {
@@ -673,6 +687,7 @@ function AuditResultsInner() {
               <div className="ar-pdf-back-tagline">AI Visibility Starts Here</div>
               <div className="ar-pdf-back-url">6signal.co</div>
               <div className="ar-pdf-back-email">hello@6signal.co</div>
+              <div className="ar-pdf-back-next">Next step: The Full Strategy Brief — $97 → 6signal.co/visibility-check</div>
             </div>
           </div>
 

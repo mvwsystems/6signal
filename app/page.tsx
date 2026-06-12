@@ -268,8 +268,8 @@ export default function Home() {
             <br />
             The audit tells you if one of them is yours.
           </h3>
-          <a href="/audit" className="btn btn-primary">
-            See Where You Get Skipped
+          <a href="/visibility-check" className="btn btn-primary">
+            Get the Audit — $27
             <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>

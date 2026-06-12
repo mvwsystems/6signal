@@ -135,8 +135,8 @@ export default function VisibilityPage() {
             <br />
             <em>The audit tells you whether you&rsquo;re on it.</em>
           </h3>
-          <a href="/audit" className="btn btn-primary">
-            Find the Gaps
+          <a href="/visibility-check" className="btn btn-primary">
+            Get the Audit — $27
             <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>

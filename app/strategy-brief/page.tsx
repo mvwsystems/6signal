@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback, Suspense } from "react";
 import Link from "next/link";
 import Nav from "../components/Nav";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
+import { trackEvent, clampScore } from "../lib/fbq";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -121,6 +122,17 @@ function StrategyBriefInner() {
       setCopiedReview(true);
       setTimeout(() => setCopiedReview(false), 2000);
     } catch { /* ignore */ }
+  }, []);
+
+  // Fire Purchase $97 once per audit on first strategy-brief load
+  useEffect(() => {
+    const auditId = (() => { try { return localStorage.getItem("6sig_audit_id"); } catch { return null; } })();
+    const key = `6sig_pxl_p97_${auditId ?? "default"}`;
+    try {
+      if (localStorage.getItem(key)) return;
+      localStorage.setItem(key, "1");
+    } catch { return; }
+    trackEvent("Purchase", { value: 97.00, currency: "USD" });
   }, []);
 
   useEffect(() => {
@@ -292,7 +304,7 @@ function StrategyBriefInner() {
                     <div className="sb-scores-row" key={sig}>
                       <span className="sb-scores-sig">{sig}</span>
                       <span className="sb-scores-val">
-                        {auditScores[sig] !== undefined ? `${auditScores[sig]} / 100` : "—"}
+                        {auditScores[sig] !== undefined ? `${clampScore(auditScores[sig])} / 100` : "—"}
                       </span>
                     </div>
                   ))}
@@ -303,7 +315,7 @@ function StrategyBriefInner() {
                     <div className="sb-scores-row" key={sig}>
                       <span className="sb-scores-arrow">→</span>
                       <span className="sb-scores-target">
-                        {targetScores[sig] !== undefined ? `${targetScores[sig]} / 100` : "—"}
+                        {targetScores[sig] !== undefined ? `${clampScore(targetScores[sig])} / 100` : "—"}
                       </span>
                     </div>
                   ))}
@@ -357,9 +369,9 @@ function StrategyBriefInner() {
                     <div className="sb-sp-head">
                       <div className="sb-sp-acro sb-sp-acro--solid">{s.signal}</div>
                       <div className="sb-sp-scores">
-                        <span className="sb-sp-score sb-sp-score--current">{s.current_score} / 100 now</span>
+                        <span className="sb-sp-score sb-sp-score--current">{clampScore(s.current_score)} / 100 now</span>
                         <span className="sb-sp-arrow">→</span>
-                        <span className="sb-sp-score sb-sp-score--target">{s.target_score} / 100 target</span>
+                        <span className="sb-sp-score sb-sp-score--target">{clampScore(s.target_score)} / 100 target</span>
                       </div>
                     </div>
                     <div className="sb-sp-problem">{s.the_problem}</div>

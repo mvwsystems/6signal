@@ -35,6 +35,11 @@ You must return a JSON object with exactly these fields:
   ]
 }
 
+Signal name rules:
+- Every "signal" value MUST be one of these exact strings, in all caps: GEO, AEO, LEO, VEO, PEO, IEO.
+- GEO = Generative Engine Optimization, AEO = Answer Engine Optimization, LEO = Local Entity Optimization, VEO = Voice Engine Optimization, PEO = Prompt Engine Optimization, IEO = Index Engine Optimization.
+- Never invent, abbreviate, or rename signals. Use only these six names.
+
 Rules:
 - "found" should almost always be false unless the business name is a well-known regional chain you are highly confident appears in AI training data. Default to false for any local independent contractor.
 - The ai_response must sound like a real AI assistant — confident, helpful, citing sources or review platforms. Do not say "I don't know" or hedge.

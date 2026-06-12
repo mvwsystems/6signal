@@ -3,6 +3,7 @@ import { useState, useCallback } from "react";
 import Link from "next/link";
 import Nav from "../components/Nav";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
+import { trackEvent } from "../lib/fbq";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -220,6 +221,7 @@ export default function AIVisibilityCheckPage() {
         return;
       }
       setResult(data as FreeCheckResult);
+      trackEvent("Lead");
 
       // TODO: POST to /api/send-free-check-email
       // Sends the check result to the user's email via Kit/Resend

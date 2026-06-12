@@ -196,7 +196,7 @@ export async function saveSignalScores(
   try {
     const rows = scores
       .filter((r) => ["geo", "aeo", "leo", "veo", "peo", "ieo"].includes(r.signal) && Number.isFinite(r.score))
-      .map((r) => ({ audit_id: auditId, signal: r.signal, score: r.score, evidence: r.evidence ?? null }));
+      .map((r) => ({ audit_id: auditId, signal: r.signal, score: Math.min(100, Math.max(0, Math.round(r.score))), evidence: r.evidence ?? null }));
     if (!rows.length) return;
     const { error } = await s.from("signal_scores").upsert(rows);
     if (error) throw error;
