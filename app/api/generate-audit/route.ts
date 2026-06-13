@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { randomUUID } from "crypto";
 import { collectSiteEvidence, evidenceForPrompt } from "../../lib/evidence";
 import {
   upsertBusiness,
@@ -222,7 +223,7 @@ export async function POST(req: NextRequest) {
 
   // Persist the run before streaming so a record exists even if the client
   // disconnects mid-generation.
-  const auditId = crypto.randomUUID();
+  const auditId = randomUUID();
   const businessId = await upsertBusiness({ name, url, trade, city });
   await insertAuditRow({
     id: auditId,

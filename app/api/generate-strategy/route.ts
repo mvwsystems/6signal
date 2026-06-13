@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { randomUUID } from "crypto";
 import { upsertBusiness, insertAuditRow, completeAudit, failAudit } from "../../lib/db";
 
 export const maxDuration = 300;
@@ -130,7 +131,7 @@ export async function POST(req: NextRequest) {
   const auditData = audit as Record<string, unknown> & { business?: { name?: string; url?: string; trade?: string; city?: string } };
 
   // Persist the strategy run (best-effort)
-  const strategyId = crypto.randomUUID();
+  const strategyId = randomUUID();
   const biz = auditData.business;
   const businessId =
     biz?.name && biz?.trade && biz?.city

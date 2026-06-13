@@ -8,12 +8,22 @@ let client: SupabaseClient | null | undefined;
 
 export function db(): SupabaseClient | null {
   if (client !== undefined) return client;
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  // Trim to defend against trailing whitespace/newlines pasted into env vars,
+  // a common cause of an otherwise-valid URL failing createClient's URL parse.
+  const url = process.env.SUPABASE_URL?.trim();
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
   if (url && key) {
-    client = createClient(url, key, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    });
+    try {
+      client = createClient(url, key, {
+        auth: { persistSession: false, autoRefreshToken: false },
+      });
+    } catch (e) {
+      // A malformed SUPABASE_URL makes createClient throw. Persistence must
+      // never break the funnel, so degrade to "off" instead of crashing the
+      // request. Expected URL form: https://<ref>.supabase.co
+      client = null;
+      console.error("[db] createClient failed — persistence disabled. Check SUPABASE_URL format:", e);
+    }
   } else {
     client = null;
     console.warn("[db] SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY not set — persistence disabled");

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { randomUUID } from "crypto";
 import { upsertBusiness, insertLead, insertAuditRow, completeAudit } from "../../lib/db";
 
 export const maxDuration = 30;
@@ -121,7 +122,7 @@ export async function POST(req: NextRequest) {
     try {
       const businessId = await upsertBusiness({ name, url: null, trade, city });
       await insertLead({ businessId, email, source: "free_check" });
-      const checkId = crypto.randomUUID();
+      const checkId = randomUUID();
       await insertAuditRow({
         id: checkId,
         businessId,
