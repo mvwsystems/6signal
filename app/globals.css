@@ -8865,6 +8865,24 @@ svg {
   }
   .ar-page, .sb-page { background: #ffffff !important; }
 
+  /* Kill raster-forcing decoration: pseudo-element grids/gradients, glows,
+     filters, and blend modes. These don't show much but force Chrome to
+     rasterize each full page, ballooning the PDF to tens of MB. The `*` reset
+     above can't reach pseudo-elements, so handle them explicitly here. */
+  *, *::before, *::after {
+    filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    mix-blend-mode: normal !important;
+  }
+  .ar-page *::before, .ar-page *::after,
+  .sb-page *::before, .sb-page *::after,
+  body::before, body::after {
+    background: none !important;
+    background-image: none !important;
+    box-shadow: none !important;
+  }
+
   /* Secondary text → lighter gray for hierarchy (wins over reset by order) */
   .ar-signal-finding, .ar-gap-text, .ar-citation-summary, .ar-exec-situation,
   .ar-cover-deck, .hero-deck,
