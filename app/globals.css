@@ -8828,3 +8828,105 @@ svg {
   line-height: 1.7;
   text-transform: none;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PRINT — CLEAN LIGHT REPORT  (authoritative; placed last so it overrides the
+   earlier scattered dark-print rules by source order)
+
+   Why: /audit-results and /strategy-brief are screen-first DARK decks. Printing
+   them rasterized the black backgrounds + grid textures + glows into a ~40MB
+   PDF that depended on the browser's "Background graphics" toggle to be legible
+   at all. This converts both into a flat LIGHT document: white ground, dark
+   ink, no textures — which prints reliably everywhere and is a fraction of the
+   size.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media print {
+  @page { margin: 16mm 14mm; }
+  html, body { background: #ffffff !important; }
+
+  /* Drop on-screen chrome that doesn't belong in a printed deliverable */
+  .nav, .mobile-cta, #cursor-dot, #cursor-ring, .hero-glow,
+  .ar-tabs, .ar-nav, .ar-upsell-section, .ar-print-btn, .ar-deck-meta-sep,
+  .ar-upgrade-btn-wrap,
+  .sb-print-btn, .sb-close-ctas, .sb-copy-btn, .sb-decision-btn {
+    display: none !important;
+  }
+
+  /* Broad reset across both report subtrees: white ground, dark ink, no
+     shadows / textures / glows. This is what kills the 40MB rasterization. */
+  .ar-page, .ar-page *, .sb-page, .sb-page * {
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    color: #1a1a1a !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .ar-page, .sb-page { background: #ffffff !important; }
+
+  /* Secondary text → lighter gray for hierarchy (wins over reset by order) */
+  .ar-signal-finding, .ar-gap-text, .ar-citation-summary, .ar-exec-situation,
+  .ar-cover-deck, .hero-deck,
+  .sb-sp-problem, .sb-sp-fix, .sb-spa-detail, .sb-cal-deliverables li,
+  .sb-close-note, .sb-pc-purpose, .sb-schema-why, .sb-ra-text {
+    color: #4a4a4a !important;
+  }
+
+  /* Mono labels / eyebrows → muted olive (electric yellow is invisible on white) */
+  .idx, .ar-slide-label, .ar-gap-label, .ar-upgrade-pdf-link,
+  .sb-scores-col-head, .sb-section-head .idx {
+    color: #7a7a00 !important;
+  }
+
+  /* Borders → light hairlines; subtle fill only on callout blocks */
+  .ar-slide-inner, .ar-signal-card, .ar-citation-item, .ar-gap-block,
+  .ar-roadmap-row, .ar-content-row, .ar-journey-stage, .ar-exec-card,
+  .sb-page-card, .sb-sp-action, .sb-schema, .sb-review-card, .sb-cal-period,
+  .sb-quick-win, .sb-signal-plan, .sb-scores-block {
+    border-color: #dcdcdc !important;
+  }
+  .ar-gap-block, .sb-qw-callout, .ar-exec-card { background: #f6f6f2 !important; }
+
+  /* White brand logos are invisible on white — hide them; text wordmarks remain */
+  .ar-pdf-back-logo, .ar-page img[src*="LOGO"], .sb-page img[src*="LOGO"] {
+    display: none !important;
+  }
+
+  /* Deck → flowing document: render every slide, one section per page */
+  .ar-slide-inactive { display: block !important; }
+  .ar-slide-wrap {
+    page-break-after: always; break-after: page;
+    page-break-inside: avoid; break-inside: avoid;
+  }
+  .ar-slide-wrap:last-of-type { page-break-after: avoid; break-after: avoid; }
+  .ar-slide-shell { min-height: auto !important; border: none !important; overflow: visible !important; }
+  .ar-signal-grid { grid-template-columns: repeat(3, 1fr) !important; }
+
+  /* Keep individual cards from splitting across a page break */
+  .ar-signal-card, .ar-citation-item, .ar-roadmap-row, .ar-content-row,
+  .sb-signal-plan, .sb-cal-period, .sb-quick-win, .sb-review-card {
+    page-break-inside: avoid; break-inside: avoid;
+  }
+
+  /* Scores stay bold dark and readable; the "/100" goes gray */
+  .ar-signal-score, .ar-overall-score, .sb-sp-score, .sb-scores-val,
+  .sb-scores-target { color: #111 !important; font-weight: 700 !important; }
+  .ar-signal-denom { color: #888 !important; }
+
+  /* Back cover → light final page */
+  .ar-pdf-back-cover-wrap, .sb-pdf-back-cover {
+    display: block !important;
+    page-break-before: always; break-before: page;
+    page-break-after: avoid; break-after: avoid;
+  }
+  .ar-pdf-back-cover, .sb-pdf-back-cover {
+    background: #ffffff !important; min-height: auto !important; text-align: center; padding: 48px;
+  }
+  .ar-pdf-back-tagline { color: #7a7a00 !important; }
+  .ar-pdf-back-next { color: #4a4a4a !important; font-size: 12px !important; }
+
+  /* Show the PDF-only text links (CTAs become plain URLs on paper) */
+  .ar-upgrade-pdf-link, .sb-decision-pdf-url { display: block !important; }
+}
+
