@@ -1,6 +1,12 @@
 [build]
   command = "npm run build"
 
+[build.environment]
+  # The Supabase project URL is a public endpoint, not a secret. Exempt it from
+  # Netlify's secret scanner so documenting it (e.g. in .env.example) can't fail
+  # the build. Real secrets (service role key, Stripe/Resend keys) stay scanned.
+  SECRETS_SCAN_OMIT_KEYS = "SUPABASE_URL"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
   pinned_version = "5.15.11"
