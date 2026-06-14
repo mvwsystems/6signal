@@ -428,6 +428,9 @@ function AuditResultsInner() {
   const [loadingMsg, setLoadingMsg] = useState(LOADING_MSGS[0]);
   const [error, setError] = useState<string | null>(null);
   const [slide, setSlide] = useState(0);
+  const [auditPermalinkId, setAuditPermalinkId] = useState<string | null>(() => {
+    try { return localStorage.getItem("6sig_audit_id"); } catch { return null; }
+  });
 
   const handlePrint = useCallback(() => { window.print(); }, []);
 
@@ -482,6 +485,7 @@ function AuditResultsInner() {
       // Permalink: render a previously generated brief without regenerating
       if (permalinkId) {
         setLoading(true);
+        setAuditPermalinkId(permalinkId);
         try {
           const r = await fetch(`/api/audit/${permalinkId}`);
           if (r.ok) {
@@ -527,11 +531,13 @@ function AuditResultsInner() {
         const r = await fetch("/api/generate-audit", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...data, intakeId: intakeId ?? undefined }),
+          // notify=true only on a genuine first generation — not when
+          // re-viewing via a recovery link (?intake=) or permalink (?id=).
+          body: JSON.stringify({ ...data, intakeId: intakeId ?? undefined, notify: !intakeParam }),
         });
         if (!r.ok) throw new Error(`Server error ${r.status}`);
         const auditId = r.headers.get("x-audit-id");
-        if (auditId) localStorage.setItem("6sig_audit_id", auditId);
+        if (auditId) { localStorage.setItem("6sig_audit_id", auditId); setAuditPermalinkId(auditId); }
         const reader = r.body!.getReader();
         const dec = new TextDecoder();
         let text = "";
@@ -687,7 +693,11 @@ function AuditResultsInner() {
               <div className="ar-pdf-back-tagline">AI Visibility Starts Here</div>
               <div className="ar-pdf-back-url">6signal.co</div>
               <div className="ar-pdf-back-email">hello@6signal.co</div>
-              <div className="ar-pdf-back-next">Next step: The Full Strategy Brief — $97 → 6signal.co/visibility-check</div>
+              <div className="ar-pdf-back-next">
+                {auditPermalinkId
+                  ? `Next step: Upgrade to the Full Strategy Brief — $97. Available anytime on your results page: 6signal.co/audit-results?id=${auditPermalinkId}`
+                  : "Next step: Upgrade to the Full Strategy Brief — $97. Available anytime on your results page at 6signal.co"}
+              </div>
             </div>
           </div>
 

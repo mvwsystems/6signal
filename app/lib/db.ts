@@ -197,6 +197,31 @@ export async function getAudit(id: string): Promise<Record<string, unknown> | nu
   }
 }
 
+// The buyer's email is captured by Stripe at checkout, not in the intake form.
+// It lands in `purchases` (via the webhook), linked by intake_id. Generation
+// completes after payment, so by then the purchase row almost always exists;
+// if it doesn't yet, we return null and skip the email (no crash, no funnel
+// impact). Returns the most recent email seen for this intake.
+export async function getEmailForIntake(intakeId: string): Promise<string | null> {
+  const s = db();
+  if (!s) return null;
+  try {
+    const { data, error } = await s
+      .from("purchases")
+      .select("email, created_at")
+      .eq("intake_id", intakeId)
+      .not("email", "is", null)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (error) throw error;
+    return (data?.email as string | undefined) ?? null;
+  } catch (e) {
+    console.error("[db] getEmailForIntake failed:", e);
+    return null;
+  }
+}
+
 export async function saveSignalScores(
   auditId: string,
   scores: Array<{ signal: string; score: number; evidence?: unknown }>

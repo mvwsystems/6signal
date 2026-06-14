@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
-import { upsertBusiness, insertAuditRow, completeAudit, failAudit } from "../../lib/db";
+import { upsertBusiness, insertAuditRow, completeAudit, failAudit, getEmailForIntake } from "../../lib/db";
+import { sendReportReadyEmail } from "../../lib/email";
 
 export const maxDuration = 300;
 
@@ -129,6 +130,10 @@ export async function POST(req: NextRequest) {
   }
 
   const auditData = audit as Record<string, unknown> & { business?: { name?: string; url?: string; trade?: string; city?: string } };
+  const intakeId = (body as { intakeId?: string } | null)?.intakeId || null;
+  // Email the buyer only on a genuine first generation (the client sets
+  // notify=false / omits it on permalink re-views).
+  const notify = (body as { notify?: boolean } | null)?.notify === true;
 
   // Persist the strategy run (best-effort)
   const strategyId = randomUUID();
@@ -140,7 +145,7 @@ export async function POST(req: NextRequest) {
   await insertAuditRow({
     id: strategyId,
     businessId,
-    intakeId: (body as { intakeId?: string } | null)?.intakeId || null,
+    intakeId,
     tier: "strategy_97",
     model: MODEL,
     promptVersion: PROMPT_VERSION,
@@ -233,6 +238,19 @@ Write the complete Full Strategy Brief JSON. Every recommendation must be specif
           const parsed = JSON.parse(clean);
           const strategyData = parsed.strategy ?? parsed;
           await completeAudit({ id: strategyId, payload: strategyData, overallScore: null });
+
+          // Email the buyer their finished strategy brief (best-effort, once).
+          if (notify && intakeId) {
+            const to = await getEmailForIntake(intakeId);
+            if (to) {
+              await sendReportReadyEmail({
+                to,
+                kind: "strategy",
+                businessName: strategyData?.business_name ?? auditData.business?.name ?? "your business",
+                link: `https://6signal.co/strategy-brief?id=${strategyId}`,
+              });
+            }
+          }
         } catch (persistErr) {
           console.error("[generate-strategy] persistence parse failed:", persistErr);
           await failAudit(strategyId);

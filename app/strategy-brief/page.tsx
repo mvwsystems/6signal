@@ -151,6 +151,42 @@ function StrategyBriefInner() {
       }
     } catch { /* ignore */ }
 
+    // Permalink: render a previously generated strategy without regenerating
+    // (the durable link sent in the "your strategy is ready" email).
+    const permalinkId = new URLSearchParams(window.location.search).get("id");
+    if (permalinkId) {
+      setLoading(true);
+      (async () => {
+        try {
+          const rr = await fetch(`/api/audit/${permalinkId}`);
+          if (rr.ok) {
+            const saved = await rr.json();
+            if (saved?.payload?.business_name) {
+              setStrategy(saved.payload);
+              localStorage.setItem("6sig_strategy_result", JSON.stringify(saved.payload));
+              // On a fresh device the audit result may be absent — derive the
+              // "current scores" column from the strategy's own signal plans.
+              setAuditScores(prev => {
+                if (Object.keys(prev).length) return prev;
+                const sc: Record<string, number> = {};
+                (saved.payload.signal_plans ?? []).forEach((sp: SignalPlan) => {
+                  if (sp.signal) sc[sp.signal.toUpperCase()] = sp.current_score;
+                });
+                return sc;
+              });
+              return;
+            }
+          }
+          setError("Something went wrong loading your strategy brief. Please contact hello@6signal.co.");
+        } catch {
+          setError("Something went wrong loading your strategy brief. Please contact hello@6signal.co.");
+        } finally {
+          setLoading(false);
+        }
+      })();
+      return;
+    }
+
     // Cache-first: use pre-generated strategy if available
     try {
       const cached = localStorage.getItem("6sig_strategy_result");
@@ -185,6 +221,8 @@ function StrategyBriefInner() {
           body: JSON.stringify({
             audit,
             intakeId: localStorage.getItem("6sig_intake_id") ?? undefined,
+            // Fresh first generation — email the buyer their strategy brief.
+            notify: true,
           }),
         });
         if (!r.ok) throw new Error(`Server error ${r.status}`);

@@ -8,7 +8,9 @@ import {
   failAudit,
   saveSignalScores,
   saveSiteSnapshot,
+  getEmailForIntake,
 } from "../../lib/db";
+import { sendReportReadyEmail } from "../../lib/email";
 
 export const maxDuration = 300;
 
@@ -206,6 +208,9 @@ export async function POST(req: NextRequest) {
   }
 
   const { name, url, trade, city, competitors, intakeId } = body ?? {};
+  // Send the buyer their brief by email only on a genuine first generation
+  // (the client sets notify=false on recovery/permalink re-views).
+  const notify = (body as Record<string, unknown> | null)?.notify === true;
   if (!name || !url || !trade || !city) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
@@ -360,6 +365,22 @@ Produce the complete intelligence brief JSON now. Be specific, deep, and strateg
               evidence: sig === "ieo" && evidence ? evidence.checks : undefined,
             }))
           );
+
+          // Email the buyer their finished brief (best-effort, once).
+          if (notify && intakeId) {
+            const to = await getEmailForIntake(intakeId);
+            if (to) {
+              await sendReportReadyEmail({
+                to,
+                kind: "brief",
+                businessName: auditData?.business?.name ?? name,
+                link: `https://6signal.co/audit-results?id=${auditId}`,
+                score: Number.isFinite(overall) ? overall : null,
+                grade: typeof auditData?.overall?.grade === "string" ? auditData.overall.grade : null,
+                critical: auditData?.business?.critical_finding ?? null,
+              });
+            }
+          }
         } catch (persistErr) {
           console.error("[generate-audit] persistence parse failed:", persistErr);
           await failAudit(auditId);

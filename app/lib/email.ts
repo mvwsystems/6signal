@@ -84,3 +84,54 @@ export function monoLabel(text: string): string {
   <span style="font-family:'Courier New',monospace;font-size:11px;letter-spacing:0.22em;color:#7a7a78;text-transform:uppercase;">${text}</span>
 </td></tr>`;
 }
+
+// "Your report is ready" — sent when a paid brief or strategy finishes
+// generating. Carries a summary plus the permanent view/download link.
+// Best-effort like every send: failures are logged, never thrown.
+export async function sendReportReadyEmail(args: {
+  to: string;
+  kind: "brief" | "strategy";
+  businessName: string;
+  link: string;
+  score?: number | null;
+  grade?: string | null;
+  critical?: string | null;
+}): Promise<boolean> {
+  const name = args.businessName || "your business";
+  const inner =
+    args.kind === "brief"
+      ? [
+          monoLabel("AI Visibility Brief · Complete"),
+          heading(
+            Number.isFinite(args.score as number)
+              ? `${name}: ${args.score}/100${args.grade ? ` · Grade ${args.grade}` : ""}`
+              : `Your brief is ready, ${name}.`
+          ),
+          args.critical ? paragraph(`<strong style="color:#f5f5f3;">${args.critical}</strong>`) : "",
+          paragraph(
+            "Your full intelligence brief — all six signals, buyer journey, citation landscape, content gaps, and your 90-day roadmap — is saved at the link below. Open it on any device or download the PDF for your records."
+          ),
+          button("View my brief", args.link),
+          paragraph(
+            `Questions, or want to go deeper? Reply to this email or write <a href="mailto:hello@6signal.co" style="color:#E6FF00;">hello@6signal.co</a>.`
+          ),
+        ].join("")
+      : [
+          monoLabel("Full Strategy Brief · Complete"),
+          heading(`Your 90-day strategy is ready, ${name}.`),
+          paragraph(
+            "Signal-by-signal action plans, content architecture with page specs and H1s, copy-paste schema, review mechanics, and a week-by-week 90-day calendar — all built from your brief and saved at the link below."
+          ),
+          button("Open my strategy brief", args.link),
+          paragraph(
+            `Want us to walk it through live or implement it with you? Reply to this email or write <a href="mailto:hello@6signal.co" style="color:#E6FF00;">hello@6signal.co</a>.`
+          ),
+        ].join("");
+
+  const subject =
+    args.kind === "brief"
+      ? `Your 6 Signal brief is ready — ${name}`
+      : `Your 6 Signal strategy brief is ready — ${name}`;
+
+  return sendEmail({ to: args.to, subject, html: emailShell(inner) });
+}
