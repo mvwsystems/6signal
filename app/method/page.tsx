@@ -122,7 +122,7 @@ const howWeWork = [
     num: "05",
     phase: "Build",
     title: "Work all six layers every month",
-    body: "Each retainer month covers all six layers: local entity cleanup, answer-ready content and schema, index structure, prompt and AI recommendation work, and voice signal maintenance.",
+    body: "Each engagement month covers all six layers: local entity cleanup, answer-ready content and schema, index structure, prompt and AI recommendation work, and voice signal maintenance.",
   },
   {
     num: "06",

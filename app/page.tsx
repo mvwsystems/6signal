@@ -134,7 +134,7 @@ const faqs = [
   },
   {
     q: "Why only one contractor per market and trade?",
-    a: "Because the shortlist has three names. If we're building your company into that shortlist, we can't simultaneously build your direct competitor into the same shortlist in the same city. One roofer per market. One HVAC company per market. One plumber per market. The exclusivity is structural, not a sales tactic — it means the retainer never works against itself.",
+    a: "Because the shortlist has three names. If we're building your company into that shortlist, we can't simultaneously build your direct competitor into the same shortlist in the same city. One roofer per market. One HVAC company per market. One plumber per market. The exclusivity is structural, not a sales tactic — it means the engagement never works against itself.",
   },
 ];
 
@@ -579,24 +579,23 @@ export default function Home() {
         <div className="wrap">
           <div className="sec-head">
             <div className="left">
-              <span className="idx">§ 09 — The retainer</span>
+              <span className="idx">§ 09 — The engagement</span>
               <h2 className="display">
-                One price.<br />
-                <em>One market. Every month.</em>
+                One sprint.<br />
+                <em>One market. Then you decide.</em>
               </h2>
             </div>
             <div className="right">
-              Flat retainer. No tiers. No setup fees. No upsell path. If the audit says
+              One bounded engagement. No tiers. No setup fees. No open-ended contracts. If the audit says
               6 Signal isn&rsquo;t the right call for your market, we&rsquo;ll tell you —
               and you still keep the audit.
             </div>
           </div>
 
           <div className="pricing-core">
-            <div className="p-eyebrow">The 6 Signal Visibility Retainer</div>
-            <div className="p-number">
-              <span className="dollar">$</span>1,250
-              <span className="mo">/ month</span>
+            <div className="p-eyebrow">The 90-Day Visibility Sprint</div>
+            <div className="p-number" style={{ fontSize: "clamp(22px, 3vw, 32px)", letterSpacing: "-0.01em" }}>
+              Priced on your audit call
             </div>
             <div className="p-sub">
               One contractor per market, per trade.{" "}
@@ -611,7 +610,7 @@ export default function Home() {
               </AuditPopupButton>
             </div>
             <div className="p-guarantee">
-              90-day minimum · Month-to-month after · Audit first — retainer only if you want to continue
+              90 days, scored before/after · Month-to-month retainer after — only if the results earn it · Audit first, always
             </div>
           </div>
 
@@ -623,13 +622,13 @@ export default function Home() {
                 </span>{" "}
                 If we are already working with a roofer in your city, we will not take
                 another roofer there. One HVAC company per market. One plumber per market.
-                The retainer never competes against itself.
+                The engagement never competes against itself.
               </p>
               <p style={{ marginTop: "20px" }}>
                 This is structural, not a sales tactic. Visibility work creates competitive
                 advantage — building your company into the three-name shortlist while
                 simultaneously building your direct competitor into the same shortlist would
-                undo the work. The exclusivity makes the retainer meaningful.
+                undo the work. The exclusivity makes the engagement meaningful.
               </p>
               <p className="italic" style={{ marginTop: "20px" }}>
                 The audit includes a market conflict check. If your market is open and you
@@ -639,7 +638,7 @@ export default function Home() {
             </div>
 
             <div className="included">
-              <h4>Included every month</h4>
+              <h4>Included in the engagement</h4>
               <div>Full visibility audit across all six layers</div>
               <div>Local entity cleanup — Maps, listings, citations, directories</div>
               <div>Answer-ready content across your site</div>
@@ -722,10 +721,10 @@ export default function Home() {
             </div>
           </div>
           <div className="safety-note">
-            <span className="safety-note-label">On the retainer conversation</span>
+            <span className="safety-note-label">On the sprint conversation</span>
             <p>
-              <strong>We show you the findings first.</strong> If there&rsquo;s a fit for
-              the retainer, we&rsquo;ll say so once — clearly, without pressure. If it&rsquo;s
+              <strong>We show you the findings first.</strong> If the sprint is a fit,
+              we&rsquo;ll say so once — clearly, without pressure. If it&rsquo;s
               not a fit, we&rsquo;ll say that instead. <em>The full findings are yours either
               way. No follow-up if the answer is no.</em>
             </p>

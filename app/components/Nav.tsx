@@ -6,7 +6,7 @@ import AuditPopupButton from "./AuditPopupButton";
 const NAV_LINKS = [
   { href: "/#framework", label: "The Six" },
   { href: "/#engagement", label: "The Work" },
-  { href: "/#pricing", label: "Retainer" },
+  { href: "/#pricing", label: "The Sprint" },
   { href: "/#faq", label: "FAQ" },
   { href: "/research", label: "Research" },
 ];

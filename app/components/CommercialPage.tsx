@@ -570,25 +570,24 @@ export default function CommercialPage() {
         <div className="wrap">
           <div className="sec-head">
             <div className="left">
-              <span className="idx">§ 09 — The retainer</span>
+              <span className="idx">§ 09 — The engagement</span>
               <h2 className="display">
-                One price.
+                One sprint.
                 <br />
-                <em>One market. Every month.</em>
+                <em>One market. Then you decide.</em>
               </h2>
             </div>
             <div className="right">
-              Flat retainer. No tiers. No setup fees. No upsell path. One
+              One bounded engagement. No tiers. No setup fees. No open-ended contracts. One
               commercial contractor per market — the position is exclusive once
               it&rsquo;s taken.
             </div>
           </div>
 
           <div className="pricing-core">
-            <div className="p-eyebrow">The 6 Signal Visibility Retainer</div>
-            <div className="p-number">
-              <span className="dollar">$</span>1,250
-              <span className="mo">/ month</span>
+            <div className="p-eyebrow">The 90-Day Visibility Sprint</div>
+            <div className="p-number" style={{ fontSize: "clamp(22px, 3vw, 32px)", letterSpacing: "-0.01em" }}>
+              Priced on your audit call
             </div>
             <div className="p-sub">
               One commercial contractor per local market.{" "}
@@ -613,8 +612,7 @@ export default function CommercialPage() {
               </AuditPopupButton>
             </div>
             <div className="p-guarantee">
-              90-day minimum · Month-to-month after · Audit first — retainer only if
-              you want to continue
+              90 days, scored before/after · Month-to-month retainer after — only if the results earn it · Audit first, always
             </div>
           </div>
         </div>

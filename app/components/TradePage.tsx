@@ -285,25 +285,24 @@ export default function TradePage({ data }: TradePageProps) {
         <div className="wrap">
           <div className="sec-head">
             <div className="left">
-              <span className="idx">§ 06 — The retainer</span>
+              <span className="idx">§ 06 — The engagement</span>
               <h2 className="display">
-                One price.
+                One sprint.
                 <br />
-                <em>One market. Every month.</em>
+                <em>One market. Then you decide.</em>
               </h2>
             </div>
             <div className="right">
-              Flat retainer. No tiers. No setup fees. No upsell path. One{" "}
+              One bounded engagement. No tiers. No setup fees. No open-ended contracts. One{" "}
               {sing(data.tradePlural)} per market — the position is exclusive
               once it&rsquo;s taken.
             </div>
           </div>
 
           <div className="pricing-core">
-            <div className="p-eyebrow">The 6 Signal Visibility Retainer</div>
-            <div className="p-number">
-              <span className="dollar">$</span>1,250
-              <span className="mo">/ month</span>
+            <div className="p-eyebrow">The 90-Day Visibility Sprint</div>
+            <div className="p-number" style={{ fontSize: "clamp(22px, 3vw, 32px)", letterSpacing: "-0.01em" }}>
+              Priced on your audit call
             </div>
             <div className="p-sub">
               One {sing(data.tradePlural)} per local market.{" "}
@@ -326,8 +325,7 @@ export default function TradePage({ data }: TradePageProps) {
               </AuditPopupButton>
             </div>
             <div className="p-guarantee">
-              90-day minimum · Month-to-month after · Audit first — retainer only if
-              you want to continue
+              90 days, scored before/after · Month-to-month retainer after — only if the results earn it · Audit first, always
             </div>
           </div>
 
@@ -337,7 +335,7 @@ export default function TradePage({ data }: TradePageProps) {
                 <span className="highlight">
                   One {sing(data.tradePlural)} per local market, per trade.
                 </span>{" "}
-                The retainer never competes against itself — your position is
+                The engagement never competes against itself — your position is
                 exclusive from the day you sign, and we don&rsquo;t take a
                 second client in your market.
               </p>
@@ -349,7 +347,7 @@ export default function TradePage({ data }: TradePageProps) {
             </div>
 
             <div className="included">
-              <h4>Included every month</h4>
+              <h4>Included in the engagement</h4>
               <div>Full visibility audit across all six layers</div>
               <div>Local entity cleanup — Maps, listings, citations, directories</div>
               <div>Answer-ready content structure and schema</div>

@@ -16,7 +16,7 @@
 // See PROOF_NEEDED export at the bottom for a complete checklist.
 // ─────────────────────────────────────────────────────────────────────────────
 
-export type ProofStatus = "needed" | "anonymized" | "example" | "real";
+export type ProofStatus = "needed" | "anonymized" | "example" | "real" | "pending-assets";
 
 export interface Testimonial {
   id: string;
@@ -255,6 +255,40 @@ export const CLIENT_LOGOS: ClientLogo[] = [
 // Never claim results you cannot attribute and verify directly.
 // ─────────────────────────────────────────────────────────────────────────────
 export const CASE_STUDIES: CaseStudy[] = [
+  {
+    // STATUS: pending-assets — results are real and stated by owner.
+    // BEFORE ENABLING: obtain client permission to publish by name, collect
+    // screenshots from client device (ChatGPT/Perplexity recommendation response
+    // before & after, Google AI Overview citation, Map Pack position before & after,
+    // organic ranking before & after). Change status to "real" when all assets confirmed.
+    id: "cs-xact-plumbing",
+    trade: "Plumbing",
+    market: "DFW, TX",
+    headline: "X-Act Plumbing: AI visibility across ChatGPT, Perplexity, and Google AI Overview in 3 weeks",
+    summary:
+      "Starting position: not appearing in any AI recommendation for plumbing queries in market. After 3 weeks of 6 Signal work: named in Google AI Overview, ChatGPT recommendations, and Perplexity answers for target trade+city queries. Map Pack moved to top 3. Organic ranking improved from page 2 to top 3.",
+    results: [
+      "Appeared in Google AI Overview for target plumbing queries — within 3 weeks",
+      "Named in ChatGPT recommendations for '[trade] in [city]' queries — within 3 weeks",
+      "Named in Perplexity recommendations for target queries — within 3 weeks",
+      "Map Pack: entered top 3 positions",
+      "Organic search: moved from page 2 to top 3",
+      "Timeframe: 3 weeks from engagement start",
+    ],
+    slug: null,
+    status: "pending-assets",
+    // screenshotPaths: {
+    //   chatgptBefore: null,       // Screenshot: ChatGPT "[trade] in [city]" — before
+    //   chatgptAfter: null,        // Screenshot: ChatGPT "[trade] in [city]" — after
+    //   perplexityBefore: null,    // Screenshot: Perplexity same query — before
+    //   perplexityAfter: null,     // Screenshot: Perplexity same query — after
+    //   googleAIOBefore: null,     // Screenshot: Google AI Overview — before
+    //   googleAIOAfter: null,      // Screenshot: Google AI Overview — after
+    //   mapPackBefore: null,       // Screenshot: Maps position — before
+    //   mapPackAfter: null,        // Screenshot: Maps position — after
+    // },
+    // clientPermissionNote: "Pending — obtain written or recorded confirmation from X-Act Plumbing before publishing.",
+  },
   {
     id: "cs-001",
     trade: "Roofing",

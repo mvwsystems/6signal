@@ -330,8 +330,8 @@ export const tradesBySlug: Record<string, TradeData> = {
         a: "Blue-link rankings are one output of one system. When a homeowner asks their smart speaker for emergency HVAC repair, that's a different system. When they ask ChatGPT for the best HVAC company in their city, that's another. You can rank on page one and still be invisible in both. We work the five channels your Google ranking doesn't reach.",
       },
       {
-        q: "Our busy season is only a few months. Is a year-round retainer worth it?",
-        a: "Position in AI systems is built in the slow months. The contractors who appear in AI recommendations in June built that position in February. Running the retainer year-round means you're visible when the spike hits — not scrambling after the first hot week.",
+        q: "Our busy season is only a few months. Is a year-round engagement worth it?",
+        a: "Position in AI systems is built in the slow months. The contractors who appear in AI recommendations in June built that position in February. The sprint starts the build — the month-to-month that follows holds it. You're visible when the spike hits, not scrambling after the first hot week.",
       },
       {
         q: "We have maintenance plan customers already. Can this help with renewals?",
@@ -711,8 +711,8 @@ export const tradesBySlug: Record<string, TradeData> = {
         a: "Good reviews are one signal. They need to be recent, specific to service type and location, and consistent across the right platforms to influence AI recommendations. A competitor with fewer reviews but better-structured specialization signals can outperform you in AI results. We find this in most landscaping markets we audit.",
       },
       {
-        q: "We're seasonal. Is a year-round retainer worth it?",
-        a: "The retainer builds position year-round so it peaks at the right time. Landscapers who build AI and search visibility in January and February are the ones getting calls in March. The off-season is when you build the position the busy season harvests.",
+        q: "We're seasonal. Is a year-round engagement worth it?",
+        a: "The sprint builds position, and continuing month-to-month holds it so it peaks at the right time. Landscapers who build AI and search visibility in January and February are the ones getting calls in March. The off-season is when you build the position the busy season harvests.",
       },
       {
         q: "Do you work with multiple landscaping companies in one market?",
@@ -805,8 +805,8 @@ export const tradesBySlug: Record<string, TradeData> = {
         a: "It can — if it's structured. An ISA certification mentioned in a PDF or buried in your about page doesn't exist to a search system. It needs to be in your GBP, in your schema, and on the pages that correspond to the queries homeowners search. The audit shows whether your credentials are machine-readable.",
       },
       {
-        q: "Our busy season is short. Is a year-round retainer worth it?",
-        a: "Position in AI systems is built continuously and harvested when demand spikes. The companies that appear in AI recommendations during a storm surge built that position during the quiet months. Running the retainer year-round is what makes the storm surge calls go to you.",
+        q: "Our busy season is short. Is a year-round engagement worth it?",
+        a: "Position in AI systems is built continuously and harvested when demand spikes. The companies that appear in AI recommendations during a storm surge built that position during the quiet months. The sprint starts that build — continuing month-to-month is what makes the surge calls go to you.",
       },
       {
         q: "Do you work with multiple tree service companies in one market?",
@@ -1093,8 +1093,8 @@ export const tradesBySlug: Record<string, TradeData> = {
         a: "Yes. Portfolio signals don't require client names or project values. Project type, square footage ranges, and location (city, region) are enough to structure searchable capability signals without disclosing confidential details.",
       },
       {
-        q: "We operate in multiple cities. Does the retainer cover all markets?",
-        a: "The retainer is structured per market. Multi-market contractors typically need multiple retainer engagements — one per primary market. The audit shows where your biggest gaps are across your footprint, and we prioritize from there.",
+        q: "We operate in multiple cities. Does the engagement cover all markets?",
+        a: "The engagement is structured per market. Multi-market contractors typically need multiple sprint engagements — one per primary market. The audit shows where your biggest gaps are across your footprint, and we prioritize from there.",
       },
     ],
   },
