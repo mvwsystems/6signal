@@ -3491,6 +3491,23 @@
   * { cursor: none !important; }
 }
 
+/* Functional pages (dashboard + paid report views) use the real OS cursor —
+   the custom dot cursor is a marketing-site flourish, and is invisible/awkward
+   on pages you actually read and click through. */
+.ar-page #cursor-dot, .ar-page #cursor-ring,
+.sb-page #cursor-dot, .sb-page #cursor-ring { display: none !important; }
+@media (pointer: fine) {
+  .dash-root, .dash-root *,
+  .ar-page, .ar-page *,
+  .sb-page, .sb-page * { cursor: auto !important; }
+  .dash-root a, .dash-root button, .dash-root select, .dash-root [role="tab"],
+  .ar-page a, .ar-page button, .ar-page select, .ar-page [role="tab"],
+  .sb-page a, .sb-page button, .sb-page select, .sb-page [role="tab"] { cursor: pointer !important; }
+  .dash-root input, .dash-root textarea,
+  .ar-page input, .ar-page textarea,
+  .sb-page input, .sb-page textarea { cursor: text !important; }
+}
+
 /* RESPONSIVE */
 @media (max-width: 900px) {
   .svc-framing-inner { grid-template-columns: 1fr; gap: 24px; }

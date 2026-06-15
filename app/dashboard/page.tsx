@@ -171,7 +171,7 @@ function Login({ onAuthed, configured }: { onAuthed: () => void; configured: boo
     finally { setBusy(false); }
   };
   return (
-    <div style={{ minHeight: "100vh", background: T.bg, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+    <div className="dash-root" style={{ minHeight: "100vh", background: T.bg, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
       <div style={card({ width: 380, maxWidth: "100%" })}>
         <div style={{ ...eyebrow, marginBottom: 8 }}>6 Signal</div>
         <h1 style={{ fontFamily: DISP, fontSize: 22, fontWeight: 700, color: T.text, margin: "0 0 4px" }}>Command Center</h1>
@@ -426,7 +426,7 @@ export default function DashboardPage() {
 
   const logout = async () => { await fetch("/api/dashboard/auth", { method: "DELETE" }); setState("locked"); setData(null); };
 
-  if (state === "loading") return <div style={{ minHeight: "100vh", background: T.bg, color: T.muted, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 13 }}>Loading…</div>;
+  if (state === "loading") return <div className="dash-root" style={{ minHeight: "100vh", background: T.bg, color: T.muted, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 13 }}>Loading…</div>;
   if (state === "locked") return <Login configured={configured} onAuthed={() => { setState("in"); loadData(); }} />;
 
   const TABS: { id: typeof tab; label: string }[] = [
@@ -436,7 +436,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div style={{ minHeight: "100vh", background: T.bg, color: T.text, fontFamily: BODY }}>
+    <div className="dash-root" style={{ minHeight: "100vh", background: T.bg, color: T.text, fontFamily: BODY }}>
       <div style={{ borderBottom: `1px solid ${T.border}`, padding: "14px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, background: T.surface, zIndex: 10 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div style={{ width: 30, height: 30, background: T.accent, color: "#060606", fontFamily: MONO, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center" }}>6S</div>
