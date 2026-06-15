@@ -251,6 +251,39 @@ export async function saveSiteSnapshot(auditId: string, snapshot: Record<string,
   }
 }
 
+// Everything the internal dashboard needs in one shot. Raw arrays — the client
+// stitches latest-audit-per-business, radar, and trend. Volumes are small at
+// this stage; revisit with server-side aggregation if the tables grow large.
+export async function getDashboardOverview(): Promise<{
+  businesses: Record<string, unknown>[];
+  audits: Record<string, unknown>[];
+  signalScores: Record<string, unknown>[];
+  leads: Record<string, unknown>[];
+  purchases: Record<string, unknown>[];
+} | null> {
+  const s = db();
+  if (!s) return null;
+  try {
+    const [biz, audits, scores, leads, purchases] = await Promise.all([
+      s.from("businesses").select("id, name, url, trade, city, created_at").order("created_at", { ascending: false }),
+      s.from("audits").select("id, business_id, tier, overall_score, status, created_at").eq("status", "complete").order("created_at", { ascending: true }),
+      s.from("signal_scores").select("audit_id, signal, score"),
+      s.from("leads").select("id, business_id, email, source, created_at").order("created_at", { ascending: false }).limit(200),
+      s.from("purchases").select("amount_total, product, email, created_at").order("created_at", { ascending: false }).limit(500),
+    ]);
+    return {
+      businesses: biz.data ?? [],
+      audits: audits.data ?? [],
+      signalScores: scores.data ?? [],
+      leads: leads.data ?? [],
+      purchases: purchases.data ?? [],
+    };
+  } catch (e) {
+    console.error("[db] getDashboardOverview failed:", e);
+    return null;
+  }
+}
+
 export async function recordPurchase(args: {
   stripeSessionId: string;
   intakeId: string | null;
