@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { upsertBusiness, insertLead, insertAuditRow, completeAudit } from "../../lib/db";
+import { sendLeadAlertEmail } from "../../lib/email";
 
 export const maxDuration = 30;
 
@@ -134,6 +135,29 @@ export async function POST(req: NextRequest) {
       await completeAudit({ id: checkId, payload: parsed, overallScore: null });
     } catch (persistErr) {
       console.error("[free-check] persistence failed:", persistErr);
+    }
+
+    // Owner lead alert — fire-and-forget; never block or fail the response.
+    try {
+      const rawSignals = parsed.signal_summary;
+      const signals = Array.isArray(rawSignals)
+        ? (rawSignals as { signal?: string; finding?: string }[]).map((s) => ({
+            signal: String(s.signal ?? ""),
+            finding: String(s.finding ?? ""),
+          }))
+        : [];
+      await sendLeadAlertEmail({
+        to: process.env.LEAD_ALERT_TO || "hello@6signal.co",
+        name,
+        trade,
+        city,
+        email,
+        found: parsed.found === true,
+        aiResponse: typeof parsed.ai_response === "string" ? parsed.ai_response : null,
+        signals,
+      });
+    } catch (alertErr) {
+      console.error("[free-check] lead alert failed:", alertErr);
     }
 
     return NextResponse.json(parsed);

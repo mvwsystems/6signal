@@ -7,6 +7,7 @@ export async function sendEmail(args: {
   to: string;
   subject: string;
   html: string;
+  replyTo?: string;
 }): Promise<boolean> {
   const key = process.env.RESEND_API_KEY;
   if (!key) {
@@ -25,6 +26,7 @@ export async function sendEmail(args: {
         to: [args.to],
         subject: args.subject,
         html: args.html,
+        ...(args.replyTo ? { reply_to: args.replyTo } : {}),
       }),
     });
     if (!res.ok) {
@@ -134,4 +136,66 @@ export async function sendReportReadyEmail(args: {
       : `Your 6 Signal strategy brief is ready — ${name}`;
 
   return sendEmail({ to: args.to, subject, html: emailShell(inner) });
+}
+
+// Internal lead alert — sent to the owner whenever someone runs a free check,
+// with everything the prospect submitted. reply_to is the lead so the owner can
+// reply straight to them.
+export async function sendLeadAlertEmail(args: {
+  to: string;
+  name: string;
+  trade: string;
+  city: string;
+  email: string;
+  found?: boolean;
+  aiResponse?: string | null;
+  signals?: { signal: string; finding: string }[];
+}): Promise<boolean> {
+  const fieldRow = (label: string, value: string) =>
+    `<tr><td style="padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+      <span style="font-family:'Courier New',monospace;font-size:11px;letter-spacing:0.18em;color:#7a7a78;text-transform:uppercase;display:inline-block;width:96px;vertical-align:top;">${label}</span>
+      <span style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#f5f5f3;">${value}</span>
+    </td></tr>`;
+
+  const signals = args.signals ?? [];
+  const signalsHtml = signals.length
+    ? `<tr><td style="padding-top:20px;">
+        <span style="font-family:'Courier New',monospace;font-size:11px;letter-spacing:0.22em;color:#7a7a78;text-transform:uppercase;">Signal gaps flagged</span>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:10px;">
+        ${signals
+          .map(
+            (s) => `<tr><td style="padding:6px 0;">
+          <span style="font-family:'Courier New',monospace;font-size:12px;color:#E6FF00;display:inline-block;width:46px;vertical-align:top;">${s.signal}</span>
+          <span style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#b8b8b5;">${s.finding}</span>
+        </td></tr>`
+          )
+          .join("")}
+        </table>
+      </td></tr>`
+    : "";
+
+  const inner = [
+    monoLabel("New free check · lead"),
+    heading(args.name),
+    `<tr><td style="padding-bottom:8px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        ${fieldRow("Trade", args.trade)}
+        ${fieldRow("Market", args.city)}
+        ${fieldRow("Email", `<a href="mailto:${args.email}" style="color:#E6FF00;">${args.email}</a>`)}
+        ${fieldRow("AI status", args.found ? "Named in AI answer" : "Not named in AI answer")}
+      </table>
+    </td></tr>`,
+    args.aiResponse
+      ? paragraph(`<em style="color:#9a9a97;">Projected AI answer they saw:</em><br/>${args.aiResponse}`)
+      : "",
+    signalsHtml,
+    paragraph(`Just reply to this email to reach ${args.name} directly.`),
+  ].join("");
+
+  return sendEmail({
+    to: args.to,
+    replyTo: args.email,
+    subject: `New free check — ${args.name} (${args.trade}, ${args.city})`,
+    html: emailShell(inner),
+  });
 }
