@@ -174,7 +174,7 @@ function Login({ onAuthed, configured }: { onAuthed: () => void; configured: boo
   return (
     <div className="dash-root" style={{ minHeight: "100vh", background: T.bg, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
       <div style={card({ width: 380, maxWidth: "100%" })}>
-        <div style={{ ...eyebrow, marginBottom: 8 }}>6 Signal</div>
+        <img src="/6SIGDashboardLogo.png" alt="6 Signal" style={{ height: 34, width: "auto", display: "block", marginBottom: 14 }} />
         <h1 style={{ fontFamily: DISP, fontSize: 22, fontWeight: 700, color: T.text, margin: "0 0 4px" }}>Command Center</h1>
         <p style={{ fontFamily: BODY, fontSize: 13, color: T.muted, margin: "0 0 20px" }}>Internal access only.</p>
         {!configured && <p style={{ fontSize: 12, color: T.warn, marginBottom: 12 }}>No dashboard password is set on the server (DASHBOARD_PASSWORD).</p>}
@@ -972,7 +972,7 @@ export default function DashboardPage() {
     <div className="dash-root" style={{ minHeight: "100vh", background: T.bg, color: T.text, fontFamily: BODY }}>
       <div style={{ borderBottom: `1px solid ${T.border}`, padding: "14px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, background: T.surface, zIndex: 10 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div style={{ width: 30, height: 30, background: T.accent, color: "#060606", fontFamily: MONO, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center" }}>6S</div>
+          <img src="/6SIGDashboardLogo.png" alt="6 Signal" style={{ height: 26, width: "auto", display: "block" }} />
           <div>
             <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 15 }}>6 Signal</div>
             <div style={{ ...eyebrow, fontSize: 10 }}>Command Center</div>
