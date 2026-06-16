@@ -194,7 +194,6 @@ function ScanTab() {
   const [running, setRunning] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [audit, setAudit] = useState<any>(null);
-  const [auditId, setAuditId] = useState<string | null>(null);
 
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));
   const ready = form.name && form.url && form.trade && form.city;
@@ -203,19 +202,13 @@ function ScanTab() {
     if (!ready) return;
     setRunning(true); setErr(null); setAudit(null);
     try {
-      const r = await fetch("/api/generate-audit", {
+      const r = await fetch("/api/dashboard/scan", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, notify: false }),
+        body: JSON.stringify(form),
       });
-      if (!r.ok) throw new Error(`Server error ${r.status}`);
-      setAuditId(r.headers.get("x-audit-id"));
-      const reader = r.body!.getReader();
-      const dec = new TextDecoder();
-      let text = "";
-      while (true) { const { done, value } = await reader.read(); if (done) break; text += dec.decode(value, { stream: true }); }
-      const parsed = JSON.parse(text.replace(/```json\n?|```\n?/g, "").trim());
-      if (parsed.error) throw new Error(parsed.error);
-      setAudit(parsed.audit ?? parsed);
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(data.error || `Server error ${r.status}`);
+      setAudit(data);
     } catch (e: any) { setErr(e?.message || "Scan failed."); }
     finally { setRunning(false); }
   };
@@ -240,7 +233,7 @@ function ScanTab() {
             {running ? "Scanning…" : "Run audit"}
           </button>
         </div>
-        {running && <p style={{ fontSize: 12, color: T.muted, marginTop: 12, lineHeight: 1.5 }}>Crawling the site, scoring six signals — this takes ~20–40s.</p>}
+        {running && <p style={{ fontSize: 12, color: T.muted, marginTop: 12, lineHeight: 1.5 }}>Crawling the site and searching the live web to check AI citations — this can take 1–2 min.</p>}
       </div>
 
       <div>
@@ -263,16 +256,49 @@ function ScanTab() {
             <div style={card({ display: "flex", gap: 24, alignItems: "center", marginBottom: 16, borderColor: `${tier.color}55` })}>
               <Ring score={overall} />
               <div style={{ flex: 1 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4, flexWrap: "wrap" }}>
                   <span style={{ fontFamily: DISP, fontWeight: 700, fontSize: 20 }}>{audit?.business?.name || form.name}</span>
                   <span style={{ background: `${tier.color}1f`, color: tier.color, fontWeight: 700, fontSize: 11, padding: "3px 10px", borderRadius: 20, border: `1px solid ${tier.color}55`, fontFamily: MONO }}>{tier.label}</span>
+                  <span style={{ background: audit?.business?.found ? `${T.ok}1f` : `${T.danger}1f`, color: audit?.business?.found ? T.ok : T.danger, fontWeight: 700, fontSize: 11, padding: "3px 10px", borderRadius: 20, fontFamily: MONO }}>
+                    {audit?.business?.found ? "NAMED BY AI" : "NOT NAMED"}
+                  </span>
                 </div>
-                <div style={{ fontSize: 13, color: T.muted, marginBottom: 8 }}>{[form.trade, form.city, form.url].filter(Boolean).join(" · ")}</div>
-                {audit?.business?.critical_finding && <div style={{ fontSize: 13, color: T.text, lineHeight: 1.5 }}>{audit.business.critical_finding}</div>}
-                {auditId && <a href={`/audit-results?id=${auditId}`} target="_blank" rel="noreferrer" style={{ fontFamily: MONO, fontSize: 12, color: T.accent, textDecoration: "none", display: "inline-block", marginTop: 10 }}>Open full brief →</a>}
+                <div style={{ fontSize: 13, color: T.muted }}>{[form.trade, form.city, form.url].filter(Boolean).join(" · ")}</div>
               </div>
               <Radar scores={scores} size={180} />
             </div>
+
+            {audit?.ai_answer && (
+              <div style={card({ marginBottom: 16, borderColor: `${T.accent}33` })}>
+                <div style={{ ...eyebrow, marginBottom: 8 }}>What AI says — &ldquo;best {form.trade} in {form.city}&rdquo;</div>
+                <p style={{ fontSize: 14, lineHeight: 1.6, color: T.text, margin: 0 }}>{audit.ai_answer}</p>
+                {Array.isArray(audit?.competitors) && audit.competitors.length > 0 && (
+                  <div style={{ marginTop: 12, display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    {audit.competitors.map((c: string, i: number) => (
+                      <span key={i} style={{ fontFamily: MONO, fontSize: 11, color: T.textSub, border: `1px solid ${T.border}`, padding: "3px 10px" }}>{c}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {(audit?.top_opportunity || audit?.immediate_win) && (
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+                {audit?.top_opportunity && (
+                  <div style={card()}>
+                    <div style={{ ...eyebrow, color: T.ok, marginBottom: 6 }}>Top opportunity</div>
+                    <p style={{ fontSize: 13, lineHeight: 1.5, color: T.text, margin: 0 }}>{audit.top_opportunity}</p>
+                  </div>
+                )}
+                {audit?.immediate_win && (
+                  <div style={card()}>
+                    <div style={{ ...eyebrow, color: T.accent, marginBottom: 6 }}>Immediate win</div>
+                    <p style={{ fontSize: 13, lineHeight: 1.5, color: T.text, margin: 0 }}>{audit.immediate_win}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
             <div style={card()}>
               <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 14, marginBottom: 18 }}>Signal breakdown</div>
               <SignalBars scores={scores} findings={findings} />
