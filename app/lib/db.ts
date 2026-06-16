@@ -284,6 +284,104 @@ export async function getDashboardOverview(): Promise<{
   }
 }
 
+// ── Continuous tracking ──────────────────────────────────────────────────────
+export async function getBusiness(id: string): Promise<{ id: string; name: string; url: string | null; trade: string; city: string } | null> {
+  const s = db();
+  if (!s) return null;
+  try {
+    const { data, error } = await s.from("businesses").select("id, name, url, trade, city").eq("id", id).single();
+    if (error) throw error;
+    return data as { id: string; name: string; url: string | null; trade: string; city: string };
+  } catch (e) {
+    console.error("[db] getBusiness failed:", e);
+    return null;
+  }
+}
+
+export async function createTrackedPrompts(businessId: string, prompts: string[]): Promise<number> {
+  const s = db();
+  if (!s) return 0;
+  const rows = prompts.map((p) => p.trim()).filter(Boolean).map((prompt) => ({ business_id: businessId, prompt }));
+  if (!rows.length) return 0;
+  try {
+    const { error } = await s.from("tracked_prompts").insert(rows);
+    if (error) throw error;
+    return rows.length;
+  } catch (e) {
+    console.error("[db] createTrackedPrompts failed:", e);
+    return 0;
+  }
+}
+
+export async function listTrackedPrompts(businessId: string): Promise<{ id: string; prompt: string }[]> {
+  const s = db();
+  if (!s) return [];
+  try {
+    const { data, error } = await s.from("tracked_prompts").select("id, prompt").eq("business_id", businessId).eq("active", true).order("created_at", { ascending: true });
+    if (error) throw error;
+    return data ?? [];
+  } catch (e) {
+    console.error("[db] listTrackedPrompts failed:", e);
+    return [];
+  }
+}
+
+export async function deactivateTrackedPrompt(id: string): Promise<void> {
+  const s = db();
+  if (!s) return;
+  try {
+    await s.from("tracked_prompts").update({ active: false }).eq("id", id);
+  } catch (e) {
+    console.error("[db] deactivateTrackedPrompt failed:", e);
+  }
+}
+
+// For the scheduled runner: every active prompt across all businesses, with the
+// business context needed to probe + judge.
+export async function listAllActiveTracked(): Promise<Array<{ id: string; prompt: string; business_id: string; business: { name: string; trade: string; city: string } | null }>> {
+  const s = db();
+  if (!s) return [];
+  try {
+    const { data, error } = await s.from("tracked_prompts").select("id, prompt, business_id, businesses(name, trade, city)").eq("active", true);
+    if (error) throw error;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (data ?? []).map((r: any) => ({ id: r.id, prompt: r.prompt, business_id: r.business_id, business: r.businesses ?? null }));
+  } catch (e) {
+    console.error("[db] listAllActiveTracked failed:", e);
+    return [];
+  }
+}
+
+export async function saveProbeResults(rows: Array<{ business_id: string; prompt_id: string; engine: string; mentioned: boolean; position: number | null; sentiment: string | null; competitors: unknown; sources: unknown; answer: string | null }>): Promise<void> {
+  const s = db();
+  if (!s || !rows.length) return;
+  try {
+    const { error } = await s.from("probe_results").insert(rows);
+    if (error) throw error;
+  } catch (e) {
+    console.error("[db] saveProbeResults failed:", e);
+  }
+}
+
+export async function getProbeResults(businessId: string, sinceDays = 90): Promise<Record<string, unknown>[]> {
+  const s = db();
+  if (!s) return [];
+  try {
+    const since = new Date(Date.now() - sinceDays * 86400000).toISOString();
+    const { data, error } = await s
+      .from("probe_results")
+      .select("prompt_id, engine, mentioned, position, sentiment, competitors, sources, run_at")
+      .eq("business_id", businessId)
+      .gte("run_at", since)
+      .order("run_at", { ascending: true });
+    if (error) throw error;
+    return data ?? [];
+  } catch (e) {
+    console.error("[db] getProbeResults failed:", e);
+    return [];
+  }
+}
+
 export async function recordPurchase(args: {
   stripeSessionId: string;
   intakeId: string | null;

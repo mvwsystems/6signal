@@ -541,6 +541,189 @@ function ExecPlanTab() {
   return <ReportRunner cta="Build 90-day plan" subtitle="Post-signing execution plan" endpoint="/api/dashboard/execution-plan" longNote="Researching the market and phasing the 90-day plan — this can take 2–4 min." render={renderExecPlan} />;
 }
 
+// ─── Tracking tab (continuous multi-engine visibility) ───────────────────────────
+const ENGINE_LABELS: Record<string, string> = { chatgpt: "ChatGPT", perplexity: "Perplexity", gemini: "Gemini" };
+const ENGINE_KEYS = ["chatgpt", "perplexity", "gemini"];
+
+function TrackingTab({ businesses }: { businesses: Biz[] }) {
+  const [bizId, setBizId] = useState("");
+  const [prompts, setPrompts] = useState<{ id: string; prompt: string }[]>([]);
+  const [results, setResults] = useState<any[]>([]);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [newPrompt, setNewPrompt] = useState("");
+  const [busy, setBusy] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const [runMsg, setRunMsg] = useState<string | null>(null);
+
+  const biz = businesses.find((b) => b.id === bizId) || null;
+
+  const loadFor = useCallback(async (id: string) => {
+    if (!id) return;
+    setErr(null);
+    try {
+      const [pr, rr] = await Promise.all([
+        fetch(`/api/dashboard/track/prompts?businessId=${id}`).then((r) => r.json()),
+        fetch(`/api/dashboard/track/results?businessId=${id}`).then((r) => r.json()),
+      ]);
+      setPrompts(pr.prompts ?? []);
+      setResults(rr.results ?? []);
+    } catch { setErr("Could not load tracking data."); }
+  }, []);
+
+  useEffect(() => { if (bizId) loadFor(bizId); else { setPrompts([]); setResults([]); setSuggestions([]); setRunMsg(null); } }, [bizId, loadFor]);
+
+  const addPrompts = async (list: string[]) => {
+    const clean = list.map((s) => s.trim()).filter(Boolean);
+    if (!clean.length || !bizId) return;
+    setBusy("add"); setErr(null);
+    try {
+      const r = await fetch("/api/dashboard/track/prompts", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ businessId: bizId, prompts: clean }) });
+      const d = await r.json().catch(() => ({})); if (!r.ok) throw new Error(d.error || "Add failed");
+      setNewPrompt(""); setSuggestions((s) => s.filter((x) => !clean.includes(x))); await loadFor(bizId);
+    } catch (e: any) { setErr(e?.message || "Add failed"); } finally { setBusy(null); }
+  };
+
+  const suggest = async () => {
+    if (!biz) return;
+    setBusy("suggest"); setErr(null);
+    try {
+      const r = await fetch("/api/dashboard/track/prompts", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ suggest: true, name: biz.name, trade: biz.trade, city: biz.city }) });
+      const d = await r.json().catch(() => ({})); setSuggestions(d.suggestions ?? []);
+    } catch { setErr("Suggest failed"); } finally { setBusy(null); }
+  };
+
+  const remove = async (id: string) => {
+    setBusy("rm" + id);
+    try { await fetch(`/api/dashboard/track/prompts?id=${id}`, { method: "DELETE" }); await loadFor(bizId); } finally { setBusy(null); }
+  };
+
+  const runNow = async () => {
+    if (!bizId) return;
+    setBusy("run"); setErr(null); setRunMsg(null);
+    try {
+      const r = await fetch("/api/dashboard/track/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ businessId: bizId }) });
+      const d = await r.json().catch(() => ({})); if (!r.ok) throw new Error(d.error || "Run failed");
+      setRunMsg(`Probed ${d.promptsRun}/${d.promptsTotal} prompts across ${(d.engines || []).length} engine(s).${d.skipped ? ` ${d.skipped} will run on the weekly schedule.` : ""}`);
+      await loadFor(bizId);
+    } catch (e: any) { setErr(e?.message || "Run failed"); } finally { setBusy(null); }
+  };
+
+  // summary from latest probe per (prompt, engine)
+  const latest: Record<string, any> = {};
+  for (const r of results) latest[`${r.prompt_id}|${r.engine}`] = r;
+  const latestRows = Object.values(latest) as any[];
+  const eng: Record<string, { answered: number; mentioned: number }> = { chatgpt: { answered: 0, mentioned: 0 }, perplexity: { answered: 0, mentioned: 0 }, gemini: { answered: 0, mentioned: 0 } };
+  let bizMentions = 0, compMentions = 0;
+  for (const r of latestRows) { if (eng[r.engine]) { eng[r.engine].answered++; if (r.mentioned) eng[r.engine].mentioned++; } if (r.mentioned) bizMentions++; compMentions += Array.isArray(r.competitors) ? r.competitors.length : 0; }
+  const totMen = latestRows.filter((r) => r.mentioned).length;
+  const overall = latestRows.length ? Math.round((100 * totMen) / latestRows.length) : 0;
+  const sov = bizMentions + compMentions > 0 ? Math.round((100 * bizMentions) / (bizMentions + compMentions)) : 0;
+  const byDay: Record<string, { a: number; m: number }> = {};
+  for (const r of results) { const d = String(r.run_at).slice(0, 10); (byDay[d] ||= { a: 0, m: 0 }); byDay[d].a++; if (r.mentioned) byDay[d].m++; }
+  const days = Object.keys(byDay).sort();
+
+  const selectStyle: React.CSSProperties = { ...inputStyle, width: "auto", minWidth: 260 };
+
+  return (
+    <div>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
+        <select style={selectStyle} value={bizId} onChange={(e) => setBizId(e.target.value)}>
+          <option value="">Select a business…</option>
+          {businesses.map((b) => <option key={b.id} value={b.id}>{b.name} — {b.city}</option>)}
+        </select>
+        {bizId && <button style={{ ...btn(true), opacity: busy === "run" ? 0.5 : 1 }} onClick={runNow} disabled={busy === "run"}>{busy === "run" ? "Probing…" : "Run probes now"}</button>}
+        {runMsg && <span style={{ fontSize: 12, color: T.textSub }}>{runMsg}</span>}
+      </div>
+
+      {!businesses.length && <div style={card({ padding: 48, textAlign: "center" })}><p style={{ fontSize: 14, color: T.muted, margin: 0 }}>No businesses yet. Run a scan or wait for a lead, then track them here.</p></div>}
+      {err && <div style={card({ borderColor: `${T.danger}66`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{err}</span></div>}
+
+      {bizId && (
+        <>
+          {latestRows.length > 0 && (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 12, marginBottom: 20 }}>
+              {ENGINE_KEYS.map((e) => {
+                const rate = eng[e].answered ? Math.round((100 * eng[e].mentioned) / eng[e].answered) : null;
+                return <div key={e} style={card({ display: "flex", flexDirection: "column", gap: 6 })}>
+                  <span style={eyebrow}>{ENGINE_LABELS[e]}</span>
+                  <span style={{ fontFamily: MONO, fontSize: 24, fontWeight: 700, color: rate === null ? T.muted : scoreColor(rate) }}>{rate === null ? "—" : `${rate}%`}</span>
+                  <span style={{ fontSize: 11, color: T.muted }}>named in answers</span>
+                </div>;
+              })}
+              <div style={card({ display: "flex", flexDirection: "column", gap: 6 })}><span style={eyebrow}>Overall</span><span style={{ fontFamily: MONO, fontSize: 24, fontWeight: 700, color: scoreColor(overall) }}>{overall}%</span><span style={{ fontSize: 11, color: T.muted }}>mention rate</span></div>
+              <div style={card({ display: "flex", flexDirection: "column", gap: 6 })}><span style={eyebrow}>Share of voice</span><span style={{ fontFamily: MONO, fontSize: 24, fontWeight: 700, color: T.accent }}>{sov}%</span><span style={{ fontSize: 11, color: T.muted }}>you vs competitors</span></div>
+            </div>
+          )}
+
+          {days.length > 1 && (
+            <div style={card({ marginBottom: 20 })}>
+              <div style={{ ...eyebrow, marginBottom: 12 }}>Mention-rate trend</div>
+              <div style={{ display: "flex", gap: 10, alignItems: "flex-end", height: 80 }}>
+                {days.map((d) => { const pct = byDay[d].a ? Math.round((100 * byDay[d].m) / byDay[d].a) : 0; return (
+                  <div key={d} style={{ flex: 1, textAlign: "center" }}>
+                    <div style={{ height: 60, display: "flex", alignItems: "flex-end" }}><div style={{ width: "100%", height: `${pct}%`, background: scoreColor(pct), minHeight: 2 }} /></div>
+                    <div style={{ fontFamily: MONO, fontSize: 10, color: T.text }}>{pct}%</div>
+                    <div style={{ fontSize: 9, color: T.muted }}>{d.slice(5)}</div>
+                  </div>
+                ); })}
+              </div>
+            </div>
+          )}
+
+          {/* Prompt management */}
+          <div style={card({ marginBottom: 20 })}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+              <span style={eyebrow}>Tracked prompts ({prompts.length})</span>
+              <button style={{ ...btn(), padding: "6px 12px", opacity: busy === "suggest" ? 0.5 : 1 }} onClick={suggest} disabled={busy === "suggest" || !biz}>{busy === "suggest" ? "…" : "Suggest prompts"}</button>
+            </div>
+            {prompts.map((p) => (
+              <div key={p.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", borderBottom: `1px solid ${T.border}` }}>
+                <span style={{ flex: 1, fontSize: 13, color: T.text }}>{p.prompt}</span>
+                <button onClick={() => remove(p.id)} style={{ background: "none", border: "none", color: T.muted, cursor: "pointer", fontSize: 16 }} disabled={busy === "rm" + p.id}>×</button>
+              </div>
+            ))}
+            {!prompts.length && <p style={{ fontSize: 13, color: T.muted, margin: "0 0 12px" }}>No prompts yet — add buyer questions to track, or hit “Suggest prompts”.</p>}
+            <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+              <input style={inputStyle} placeholder="Add a buyer question (e.g. best plumber in Fort Worth)" value={newPrompt} onChange={(e) => setNewPrompt(e.target.value)} onKeyDown={(e) => e.key === "Enter" && addPrompts([newPrompt])} />
+              <button style={{ ...btn(true), opacity: busy === "add" || !newPrompt.trim() ? 0.5 : 1 }} onClick={() => addPrompts([newPrompt])} disabled={busy === "add" || !newPrompt.trim()}>Add</button>
+            </div>
+            {suggestions.length > 0 && (
+              <div style={{ marginTop: 14 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+                  <span style={eyebrow}>Suggestions — click to add</span>
+                  <button style={{ ...btn(), padding: "4px 10px" }} onClick={() => addPrompts(suggestions)}>Add all</button>
+                </div>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  {suggestions.map((s, i) => <button key={i} onClick={() => addPrompts([s])} style={{ textAlign: "left", background: T.bg, border: `1px solid ${T.border}`, color: T.textSub, fontSize: 12, padding: "6px 10px", cursor: "pointer", fontFamily: BODY }}>+ {s}</button>)}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Per-prompt latest verdicts */}
+          {latestRows.length > 0 && (
+            <div style={card({ padding: 0, overflow: "hidden" })}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 90px 90px 90px", padding: "12px 18px", borderBottom: `1px solid ${T.border}`, ...eyebrow }}>
+                <span>Prompt</span>{ENGINE_KEYS.map((e) => <span key={e} style={{ textAlign: "center" }}>{ENGINE_LABELS[e]}</span>)}
+              </div>
+              {prompts.map((p) => (
+                <div key={p.id} style={{ display: "grid", gridTemplateColumns: "1fr 90px 90px 90px", padding: "12px 18px", borderBottom: `1px solid ${T.border}`, alignItems: "center" }}>
+                  <span style={{ fontSize: 13, color: T.text, paddingRight: 12 }}>{p.prompt}</span>
+                  {ENGINE_KEYS.map((e) => { const r = latest[`${p.id}|${e}`]; return (
+                    <span key={e} style={{ textAlign: "center", fontFamily: MONO, fontSize: 13, color: !r ? T.muted : r.mentioned ? T.ok : T.danger }}>
+                      {!r ? "—" : r.mentioned ? (r.position ? `#${r.position}` : "✓") : "✗"}
+                    </span>
+                  ); })}
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
 // ─── Overview tab ────────────────────────────────────────────────────────────────
 function OverviewTab({ data }: { data: Overview }) {
   const [selected, setSelected] = useState<string | null>(null);
@@ -656,7 +839,7 @@ function AdsTab() {
 export default function DashboardPage() {
   const [state, setState] = useState<"loading" | "locked" | "in">("loading");
   const [configured, setConfigured] = useState(true);
-  const [tab, setTab] = useState<"overview" | "scan" | "battle" | "exec" | "ads">("overview");
+  const [tab, setTab] = useState<"overview" | "scan" | "battle" | "exec" | "track" | "ads">("overview");
   const [data, setData] = useState<Overview | null>(null);
   const [dataErr, setDataErr] = useState<string | null>(null);
 
@@ -691,6 +874,7 @@ export default function DashboardPage() {
     { id: "scan", label: "Quick Scan" },
     { id: "battle", label: "Battle Plan" },
     { id: "exec", label: "90-Day Plan" },
+    { id: "track", label: "Tracking" },
     { id: "ads", label: "Ads" },
   ];
 
@@ -725,6 +909,7 @@ export default function DashboardPage() {
         {tab === "scan" && <ScanTab />}
         {tab === "battle" && <BattlePlanTab />}
         {tab === "exec" && <ExecPlanTab />}
+        {tab === "track" && <TrackingTab businesses={data?.businesses ?? []} />}
         {tab === "ads" && <AdsTab />}
         <div style={{ marginTop: 32, paddingTop: 20, borderTop: `1px solid ${T.border}`, textAlign: "center", ...eyebrow }}>
           6 Signal Command Center · Internal
