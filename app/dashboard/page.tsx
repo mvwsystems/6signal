@@ -544,6 +544,64 @@ function ExecPlanTab() {
 // ─── Tracking tab (continuous multi-engine visibility) ───────────────────────────
 const ENGINE_LABELS: Record<string, string> = { chatgpt: "ChatGPT", perplexity: "Perplexity", gemini: "Gemini" };
 const ENGINE_KEYS = ["chatgpt", "perplexity", "gemini"];
+const ENGINE_COLORS: Record<string, string> = { chatgpt: "#5ad1ff", perplexity: "#c9a0ff", gemini: "#ff9e64" };
+const COMP_COLORS = ["#74746e", "#8e8e86", "#a8a8a0", "#c2c2b8", "#dcdcd2"];
+
+// ── Hand-built on-brand charts (no dependency) ───────────────────────────────
+function LineChart({ days, series, height = 190 }: { days: string[]; series: { label: string; color: string; values: (number | null)[] }[]; height?: number }) {
+  const w = 680, h = height, padL = 26, padR = 12, padT = 10, padB = 22;
+  const iw = w - padL - padR, ih = h - padT - padB, n = days.length;
+  const x = (i: number) => (n <= 1 ? padL + iw / 2 : padL + (iw * i) / (n - 1));
+  const y = (v: number) => padT + ih * (1 - v / 100);
+  return (
+    <svg viewBox={`0 0 ${w} ${h}`} width="100%" style={{ display: "block" }}>
+      {[0, 25, 50, 75, 100].map((g) => (
+        <g key={g}>
+          <line x1={padL} y1={y(g)} x2={w - padR} y2={y(g)} stroke={T.border} strokeWidth="1" />
+          <text x={padL - 6} y={y(g) + 3} textAnchor="end" fontSize="9" fill={T.muted} fontFamily={MONO}>{g}</text>
+        </g>
+      ))}
+      {series.map((s, si) => {
+        const pts = s.values.map((v, i) => (v == null ? null : `${x(i)},${y(v)}`)).filter(Boolean) as string[];
+        const isOverall = s.label === "Overall";
+        return (
+          <g key={si}>
+            <polyline points={pts.join(" ")} fill="none" stroke={s.color} strokeWidth={isOverall ? 2.6 : 1.6} strokeLinejoin="round" strokeLinecap="round" />
+            {s.values.map((v, i) => (v == null ? null : <circle key={i} cx={x(i)} cy={y(v)} r={isOverall ? 3 : 2.4} fill={s.color} />))}
+          </g>
+        );
+      })}
+      {days.map((d, i) => (i === 0 || i === n - 1 || i === Math.floor(n / 2) ? <text key={i} x={x(i)} y={h - 5} textAnchor="middle" fontSize="9" fill={T.muted} fontFamily={MONO}>{d.slice(5)}</text> : null))}
+    </svg>
+  );
+}
+
+function Donut({ segments, size = 150 }: { segments: { label: string; value: number; color: string }[]; size?: number }) {
+  const total = segments.reduce((a, b) => a + b.value, 0) || 1;
+  const r = size * 0.4, c = 2 * Math.PI * r, cx = size / 2, cy = size / 2, sw = size * 0.13;
+  let acc = 0;
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke={T.border} strokeWidth={sw} />
+      {segments.map((s, i) => {
+        const frac = s.value / total, dash = `${frac * c} ${c}`, off = -acc * c;
+        acc += frac;
+        return <circle key={i} cx={cx} cy={cy} r={r} fill="none" stroke={s.color} strokeWidth={sw} strokeDasharray={dash} strokeDashoffset={off} transform={`rotate(-90 ${cx} ${cy})`} />;
+      })}
+      <text x={cx} y={cy - 1} textAnchor="middle" fontFamily={MONO} fontWeight="700" fontSize={size * 0.2} fill={T.accent}>{Math.round((100 * (segments[0]?.value || 0)) / total)}%</text>
+      <text x={cx} y={cy + size * 0.13} textAnchor="middle" fontSize={size * 0.08} fill={T.muted} fontFamily={MONO}>SoV</text>
+    </svg>
+  );
+}
+
+function Sparkline({ values, color, width = 130, height = 26 }: { values: (number | null)[]; color: string; width?: number; height?: number }) {
+  if ((values.filter((v) => v != null) as number[]).length < 2) return null;
+  const n = values.length;
+  const x = (i: number) => (width * i) / (n - 1);
+  const y = (v: number) => height - 2 - (height - 4) * (v / 100);
+  const pts = values.map((v, i) => (v == null ? null : `${x(i)},${y(v)}`)).filter(Boolean) as string[];
+  return <svg width={width} height={height} style={{ display: "block", marginTop: 4 }}><polyline points={pts.join(" ")} fill="none" stroke={color} strokeWidth="1.5" strokeLinejoin="round" /></svg>;
+}
 
 function TrackingTab({ businesses }: { businesses: Biz[] }) {
   const [bizId, setBizId] = useState("");
@@ -613,14 +671,27 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
   for (const r of results) latest[`${r.prompt_id}|${r.engine}`] = r;
   const latestRows = Object.values(latest) as any[];
   const eng: Record<string, { answered: number; mentioned: number }> = { chatgpt: { answered: 0, mentioned: 0 }, perplexity: { answered: 0, mentioned: 0 }, gemini: { answered: 0, mentioned: 0 } };
-  let bizMentions = 0, compMentions = 0;
-  for (const r of latestRows) { if (eng[r.engine]) { eng[r.engine].answered++; if (r.mentioned) eng[r.engine].mentioned++; } if (r.mentioned) bizMentions++; compMentions += Array.isArray(r.competitors) ? r.competitors.length : 0; }
+  let bizMentions = 0;
+  for (const r of latestRows) { if (eng[r.engine]) { eng[r.engine].answered++; if (r.mentioned) eng[r.engine].mentioned++; } if (r.mentioned) bizMentions++; }
   const totMen = latestRows.filter((r) => r.mentioned).length;
   const overall = latestRows.length ? Math.round((100 * totMen) / latestRows.length) : 0;
-  const sov = bizMentions + compMentions > 0 ? Math.round((100 * bizMentions) / (bizMentions + compMentions)) : 0;
   const byDay: Record<string, { a: number; m: number }> = {};
   for (const r of results) { const d = String(r.run_at).slice(0, 10); (byDay[d] ||= { a: 0, m: 0 }); byDay[d].a++; if (r.mentioned) byDay[d].m++; }
   const days = Object.keys(byDay).sort();
+
+  const engDay: Record<string, Record<string, { a: number; m: number }>> = { chatgpt: {}, perplexity: {}, gemini: {} };
+  for (const r of results) { if (!engDay[r.engine]) continue; const d = String(r.run_at).slice(0, 10); (engDay[r.engine][d] ||= { a: 0, m: 0 }); engDay[r.engine][d].a++; if (r.mentioned) engDay[r.engine][d].m++; }
+  const rateSeries = (pd: Record<string, { a: number; m: number }>) => days.map((d) => (pd[d] ? Math.round((100 * pd[d].m) / pd[d].a) : null));
+  const trendSeries = [
+    { label: "ChatGPT", color: ENGINE_COLORS.chatgpt, values: rateSeries(engDay.chatgpt) },
+    { label: "Perplexity", color: ENGINE_COLORS.perplexity, values: rateSeries(engDay.perplexity) },
+    { label: "Gemini", color: ENGINE_COLORS.gemini, values: rateSeries(engDay.gemini) },
+    { label: "Overall", color: T.accent, values: days.map((d) => (byDay[d] ? Math.round((100 * byDay[d].m) / byDay[d].a) : null)) },
+  ];
+  const compCounts: Record<string, number> = {};
+  for (const r of latestRows) if (Array.isArray(r.competitors)) for (const c of r.competitors) { const k = String(c).trim(); if (k) compCounts[k] = (compCounts[k] || 0) + 1; }
+  const topComps = Object.entries(compCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const donutSegments = [{ label: biz?.name || "You", value: bizMentions, color: T.accent }, ...topComps.map(([name, count], i) => ({ label: name, value: count, color: COMP_COLORS[i % COMP_COLORS.length] }))];
 
   const selectStyle: React.CSSProperties = { ...inputStyle, width: "auto", minWidth: 260 };
 
@@ -641,31 +712,43 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
       {bizId && (
         <>
           {latestRows.length > 0 && (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 12, marginBottom: 20 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 12 }}>
               {ENGINE_KEYS.map((e) => {
                 const rate = eng[e].answered ? Math.round((100 * eng[e].mentioned) / eng[e].answered) : null;
                 return <div key={e} style={card({ display: "flex", flexDirection: "column", gap: 6 })}>
                   <span style={eyebrow}>{ENGINE_LABELS[e]}</span>
                   <span style={{ fontFamily: MONO, fontSize: 24, fontWeight: 700, color: rate === null ? T.muted : scoreColor(rate) }}>{rate === null ? "—" : `${rate}%`}</span>
                   <span style={{ fontSize: 11, color: T.muted }}>named in answers</span>
+                  <Sparkline values={rateSeries(engDay[e])} color={ENGINE_COLORS[e]} />
                 </div>;
               })}
-              <div style={card({ display: "flex", flexDirection: "column", gap: 6 })}><span style={eyebrow}>Overall</span><span style={{ fontFamily: MONO, fontSize: 24, fontWeight: 700, color: scoreColor(overall) }}>{overall}%</span><span style={{ fontSize: 11, color: T.muted }}>mention rate</span></div>
-              <div style={card({ display: "flex", flexDirection: "column", gap: 6 })}><span style={eyebrow}>Share of voice</span><span style={{ fontFamily: MONO, fontSize: 24, fontWeight: 700, color: T.accent }}>{sov}%</span><span style={{ fontSize: 11, color: T.muted }}>you vs competitors</span></div>
+              <div style={card({ display: "flex", flexDirection: "column", gap: 6 })}><span style={eyebrow}>Overall</span><span style={{ fontFamily: MONO, fontSize: 24, fontWeight: 700, color: scoreColor(overall) }}>{overall}%</span><span style={{ fontSize: 11, color: T.muted }}>mention rate</span><Sparkline values={trendSeries[3].values} color={T.accent} /></div>
             </div>
           )}
 
-          {days.length > 1 && (
-            <div style={card({ marginBottom: 20 })}>
-              <div style={{ ...eyebrow, marginBottom: 12 }}>Mention-rate trend</div>
-              <div style={{ display: "flex", gap: 10, alignItems: "flex-end", height: 80 }}>
-                {days.map((d) => { const pct = byDay[d].a ? Math.round((100 * byDay[d].m) / byDay[d].a) : 0; return (
-                  <div key={d} style={{ flex: 1, textAlign: "center" }}>
-                    <div style={{ height: 60, display: "flex", alignItems: "flex-end" }}><div style={{ width: "100%", height: `${pct}%`, background: scoreColor(pct), minHeight: 2 }} /></div>
-                    <div style={{ fontFamily: MONO, fontSize: 10, color: T.text }}>{pct}%</div>
-                    <div style={{ fontSize: 9, color: T.muted }}>{d.slice(5)}</div>
-                  </div>
-                ); })}
+          {latestRows.length > 0 && (
+            <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 12, marginBottom: 20 }}>
+              <div style={card()}>
+                <div style={{ ...eyebrow, marginBottom: 10 }}>Mention-rate trend</div>
+                {days.length > 1 ? (
+                  <>
+                    <LineChart days={days} series={trendSeries} />
+                    <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 8 }}>
+                      {trendSeries.map((s) => <span key={s.label} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: T.textSub }}><span style={{ width: 12, height: 2, background: s.color, display: "inline-block" }} />{s.label}</span>)}
+                    </div>
+                  </>
+                ) : <p style={{ fontSize: 13, color: T.muted, margin: 0 }}>Run probes on at least two different days to see the trend build — the weekly schedule does this for you automatically.</p>}
+              </div>
+              <div style={card({ display: "flex", flexDirection: "column", alignItems: "center" })}>
+                <div style={{ ...eyebrow, marginBottom: 10, alignSelf: "flex-start" }}>Share of voice</div>
+                {donutSegments.some((s) => s.value > 0) ? (
+                  <>
+                    <Donut segments={donutSegments} />
+                    <div style={{ marginTop: 12, width: "100%" }}>
+                      {donutSegments.slice(0, 6).map((s, i) => <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: T.textSub, marginBottom: 3 }}><span style={{ width: 8, height: 8, background: s.color, display: "inline-block", flexShrink: 0 }} /><span style={{ flex: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{s.label}</span><span style={{ fontFamily: MONO, color: T.muted }}>{s.value}</span></div>)}
+                    </div>
+                  </>
+                ) : <p style={{ fontSize: 13, color: T.muted }}>No mentions recorded yet.</p>}
               </div>
             </div>
           )}
