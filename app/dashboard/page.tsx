@@ -43,6 +43,7 @@ const tierOf = (s: number) =>
   : s < 60 ? { label: "Emerging", color: T.warn }
   : s < 75 ? { label: "Visible", color: "#eab308" }
   : { label: "Dominant", color: T.ok };
+const effortColor = (e: string) => (e === "LOW" ? T.ok : e === "MEDIUM" ? "#eab308" : T.warn);
 
 const fmtMoney = (cents: number) => `$${(cents / 100).toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
 const fmtDate = (s?: string) => {
@@ -188,126 +189,356 @@ function Login({ onAuthed, configured }: { onAuthed: () => void; configured: boo
   );
 }
 
-// ─── Scan tab (live audit engine) ───────────────────────────────────────────────
-function ScanTab() {
+// ─── Shared report runner (scan / battle plan / 90-day plan) ─────────────────────
+function signalView(data: any) {
+  const scores: Record<string, number> = {};
+  const findings: Record<string, { finding?: string; gap?: string }> = {};
+  if (data?.signals) for (const k of Object.keys(data.signals)) { scores[k] = Number(data.signals[k]?.score) || 0; findings[k] = { finding: data.signals[k]?.finding, gap: data.signals[k]?.gap }; }
+  const overall = Number(data?.overall?.score) || 0;
+  return { scores, findings, overall, tier: tierOf(overall) };
+}
+
+function ReportRunner({ cta, subtitle, longNote, endpoint, render }: {
+  cta: string; subtitle: string; longNote: string; endpoint: string;
+  render: (data: any, form: Record<string, string>) => React.ReactNode;
+}) {
   const [form, setForm] = useState({ name: "", url: "", trade: "", city: "" });
   const [running, setRunning] = useState(false);
   const [err, setErr] = useState<string | null>(null);
-  const [audit, setAudit] = useState<any>(null);
-
+  const [data, setData] = useState<any>(null);
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));
   const ready = form.name && form.url && form.trade && form.city;
 
   const run = async () => {
     if (!ready) return;
-    setRunning(true); setErr(null); setAudit(null);
+    setRunning(true); setErr(null); setData(null);
     try {
-      const r = await fetch("/api/dashboard/scan", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(data.error || `Server error ${r.status}`);
-      setAudit(data);
-    } catch (e: any) { setErr(e?.message || "Scan failed."); }
+      const r = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || `Server error ${r.status}`);
+      setData(d);
+    } catch (e: any) { setErr(e?.message || "Request failed."); }
     finally { setRunning(false); }
   };
-
-  const scores: Record<string, number> = {};
-  const findings: Record<string, { finding?: string; gap?: string }> = {};
-  if (audit?.signals) for (const k of Object.keys(audit.signals)) { scores[k] = Number(audit.signals[k]?.score) || 0; findings[k] = { finding: audit.signals[k]?.finding, gap: audit.signals[k]?.gap }; }
-  const overall = Number(audit?.overall?.score) || 0;
-  const tier = tierOf(overall);
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: 20, alignItems: "start" }}>
       <div style={card()}>
-        <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 15, marginBottom: 4 }}>Run a scan</div>
-        <div style={{ ...eyebrow, marginBottom: 16 }}>Live 6-signal audit</div>
+        <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{cta}</div>
+        <div style={{ ...eyebrow, marginBottom: 16 }}>{subtitle}</div>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <input style={inputStyle} placeholder="Business name" value={form.name} onChange={set("name")} />
           <input style={inputStyle} placeholder="Website (e.g. acme.com)" value={form.url} onChange={set("url")} />
           <input style={inputStyle} placeholder="Trade (e.g. Plumbing)" value={form.trade} onChange={set("trade")} />
           <input style={inputStyle} placeholder="City / market" value={form.city} onChange={set("city")} />
           <button style={{ ...btn(true), width: "100%", opacity: running || !ready ? 0.5 : 1 }} onClick={run} disabled={running || !ready}>
-            {running ? "Scanning…" : "Run audit"}
+            {running ? "Working…" : cta}
           </button>
         </div>
-        {running && <p style={{ fontSize: 12, color: T.muted, marginTop: 12, lineHeight: 1.5 }}>Crawling the site and searching the live web to check AI citations — this can take 1–2 min.</p>}
+        {running && <p style={{ fontSize: 12, color: T.muted, marginTop: 12, lineHeight: 1.5 }}>{longNote}</p>}
       </div>
-
       <div>
-        {err && <div style={{ ...card({ borderColor: `${T.danger}66`, marginBottom: 16 }) }}><span style={{ color: T.danger, fontSize: 13 }}>{err}</span></div>}
-        {!audit && !running && !err && (
+        {err && <div style={card({ borderColor: `${T.danger}66`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{err}</span></div>}
+        {!data && !running && !err && (
           <div style={card({ padding: 56, textAlign: "center", border: `1px dashed ${T.border}` })}>
-            <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 18, marginBottom: 8 }}>AI Visibility scan</div>
-            <p style={{ fontSize: 14, color: T.muted, maxWidth: 380, margin: "0 auto", lineHeight: 1.6 }}>
-              Enter a business and run a live audit to score all six signals. Saved automatically — it shows up in Overview and feeds the trend.
-            </p>
+            <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 18, marginBottom: 8 }}>{cta}</div>
+            <p style={{ fontSize: 14, color: T.muted, maxWidth: 420, margin: "0 auto", lineHeight: 1.6 }}>{subtitle}. Enter a business and run it — saved automatically and fed into Overview + trend.</p>
           </div>
         )}
-        {running && !audit && (
+        {running && !data && (
           <div style={card({ padding: 56, textAlign: "center" })}>
-            <div style={{ fontFamily: MONO, color: T.accent, fontSize: 13 }}>Scanning {form.name}…</div>
+            <div style={{ fontFamily: MONO, color: T.accent, fontSize: 13 }}>Working on {form.name}…</div>
+            <p style={{ fontSize: 12, color: T.muted, marginTop: 8 }}>{longNote}</p>
           </div>
         )}
-        {audit && (
-          <div>
-            <div style={card({ display: "flex", gap: 24, alignItems: "center", marginBottom: 16, borderColor: `${tier.color}55` })}>
-              <Ring score={overall} />
-              <div style={{ flex: 1 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4, flexWrap: "wrap" }}>
-                  <span style={{ fontFamily: DISP, fontWeight: 700, fontSize: 20 }}>{audit?.business?.name || form.name}</span>
-                  <span style={{ background: `${tier.color}1f`, color: tier.color, fontWeight: 700, fontSize: 11, padding: "3px 10px", borderRadius: 20, border: `1px solid ${tier.color}55`, fontFamily: MONO }}>{tier.label}</span>
-                  <span style={{ background: audit?.business?.found ? `${T.ok}1f` : `${T.danger}1f`, color: audit?.business?.found ? T.ok : T.danger, fontWeight: 700, fontSize: 11, padding: "3px 10px", borderRadius: 20, fontFamily: MONO }}>
-                    {audit?.business?.found ? "NAMED BY AI" : "NOT NAMED"}
-                  </span>
-                </div>
-                <div style={{ fontSize: 13, color: T.muted }}>{[form.trade, form.city, form.url].filter(Boolean).join(" · ")}</div>
-              </div>
-              <Radar scores={scores} size={180} />
-            </div>
-
-            {audit?.ai_answer && (
-              <div style={card({ marginBottom: 16, borderColor: `${T.accent}33` })}>
-                <div style={{ ...eyebrow, marginBottom: 8 }}>What AI says — &ldquo;best {form.trade} in {form.city}&rdquo;</div>
-                <p style={{ fontSize: 14, lineHeight: 1.6, color: T.text, margin: 0 }}>{audit.ai_answer}</p>
-                {Array.isArray(audit?.competitors) && audit.competitors.length > 0 && (
-                  <div style={{ marginTop: 12, display: "flex", gap: 8, flexWrap: "wrap" }}>
-                    {audit.competitors.map((c: string, i: number) => (
-                      <span key={i} style={{ fontFamily: MONO, fontSize: 11, color: T.textSub, border: `1px solid ${T.border}`, padding: "3px 10px" }}>{c}</span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {(audit?.top_opportunity || audit?.immediate_win) && (
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
-                {audit?.top_opportunity && (
-                  <div style={card()}>
-                    <div style={{ ...eyebrow, color: T.ok, marginBottom: 6 }}>Top opportunity</div>
-                    <p style={{ fontSize: 13, lineHeight: 1.5, color: T.text, margin: 0 }}>{audit.top_opportunity}</p>
-                  </div>
-                )}
-                {audit?.immediate_win && (
-                  <div style={card()}>
-                    <div style={{ ...eyebrow, color: T.accent, marginBottom: 6 }}>Immediate win</div>
-                    <p style={{ fontSize: 13, lineHeight: 1.5, color: T.text, margin: 0 }}>{audit.immediate_win}</p>
-                  </div>
-                )}
-              </div>
-            )}
-
-            <div style={card()}>
-              <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 14, marginBottom: 18 }}>Signal breakdown</div>
-              <SignalBars scores={scores} findings={findings} />
-            </div>
-          </div>
-        )}
+        {data && <div>{render(data, form)}</div>}
       </div>
     </div>
   );
+}
+
+const ownerColor = (o?: string) => (String(o).toLowerCase().includes("client") ? T.textSub : T.accent);
+
+// ─── Scan render ───
+function renderScan(data: any, form: Record<string, string>) {
+  const { scores, findings, overall, tier } = signalView(data);
+  const trade = data?.business?.trade || form.trade;
+  const city = data?.business?.city || form.city;
+  return (
+    <div>
+      <div style={card({ display: "flex", gap: 24, alignItems: "center", marginBottom: 16, borderColor: `${tier.color}55` })}>
+        <Ring score={overall} />
+        <div style={{ flex: 1 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4, flexWrap: "wrap" }}>
+            <span style={{ fontFamily: DISP, fontWeight: 700, fontSize: 20 }}>{data?.business?.name || form.name}</span>
+            <span style={{ background: `${tier.color}1f`, color: tier.color, fontWeight: 700, fontSize: 11, padding: "3px 10px", borderRadius: 20, border: `1px solid ${tier.color}55`, fontFamily: MONO }}>{tier.label}</span>
+            <span style={{ background: data?.business?.found ? `${T.ok}1f` : `${T.danger}1f`, color: data?.business?.found ? T.ok : T.danger, fontWeight: 700, fontSize: 11, padding: "3px 10px", borderRadius: 20, fontFamily: MONO }}>{data?.business?.found ? "NAMED BY AI" : "NOT NAMED"}</span>
+          </div>
+          <div style={{ fontSize: 13, color: T.muted }}>{[trade, city, form.url].filter(Boolean).join(" · ")}</div>
+        </div>
+        <Radar scores={scores} size={180} />
+      </div>
+      {data?.ai_answer && (
+        <div style={card({ marginBottom: 16, borderColor: `${T.accent}33` })}>
+          <div style={{ ...eyebrow, marginBottom: 8 }}>What AI says — &ldquo;best {trade} in {city}&rdquo;</div>
+          <p style={{ fontSize: 14, lineHeight: 1.6, color: T.text, margin: 0 }}>{data.ai_answer}</p>
+          {Array.isArray(data?.competitors) && data.competitors.length > 0 && (
+            <div style={{ marginTop: 12, display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {data.competitors.map((c: string, i: number) => <span key={i} style={{ fontFamily: MONO, fontSize: 11, color: T.textSub, border: `1px solid ${T.border}`, padding: "3px 10px" }}>{c}</span>)}
+            </div>
+          )}
+        </div>
+      )}
+      {(data?.top_opportunity || data?.immediate_win) && (
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+          {data?.top_opportunity && <div style={card()}><div style={{ ...eyebrow, color: T.ok, marginBottom: 6 }}>Top opportunity</div><p style={{ fontSize: 13, lineHeight: 1.5, color: T.text, margin: 0 }}>{data.top_opportunity}</p></div>}
+          {data?.immediate_win && <div style={card()}><div style={{ ...eyebrow, color: T.accent, marginBottom: 6 }}>Immediate win</div><p style={{ fontSize: 13, lineHeight: 1.5, color: T.text, margin: 0 }}>{data.immediate_win}</p></div>}
+        </div>
+      )}
+      <div style={card()}><div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 14, marginBottom: 18 }}>Signal breakdown</div><SignalBars scores={scores} findings={findings} /></div>
+    </div>
+  );
+}
+
+// ─── Battle plan render ───
+function renderBattlePlan(data: any, form: Record<string, string>) {
+  const { scores, findings, overall, tier } = signalView(data);
+  const b = data?.business ?? {};
+  const trade = b.trade || form.trade, city = b.city || form.city;
+  const badge = (text: string, color: string) => <span style={{ background: `${color}1f`, color, fontWeight: 700, fontSize: 11, padding: "3px 10px", borderRadius: 20, fontFamily: MONO }}>{text}</span>;
+  return (
+    <div>
+      <div style={card({ display: "flex", gap: 24, alignItems: "center", marginBottom: 16, borderColor: `${tier.color}55` })}>
+        <Ring score={overall} />
+        <div style={{ flex: 1 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6, flexWrap: "wrap" }}>
+            <span style={{ fontFamily: DISP, fontWeight: 700, fontSize: 20 }}>{b.name || form.name}</span>
+            {badge(tier.label, tier.color)}
+            {badge(b.found ? "NAMED BY AI" : "NOT NAMED", b.found ? T.ok : T.danger)}
+            {b.ai_status && badge(b.ai_status, T.textSub)}
+            {b.risk && badge(`${b.risk} RISK`, b.risk === "CRITICAL" ? T.danger : b.risk === "HIGH" ? T.warn : T.textSub)}
+          </div>
+          <div style={{ fontSize: 13, color: T.muted }}>{[trade, city, form.url].filter(Boolean).join(" · ")}</div>
+          {data?.headline && <p style={{ fontSize: 15, color: T.text, lineHeight: 1.5, marginTop: 10, marginBottom: 0 }}>{data.headline}</p>}
+        </div>
+        <Radar scores={scores} size={180} />
+      </div>
+
+      {data?.ai_answer && <div style={card({ marginBottom: 16, borderColor: `${T.accent}33` })}><div style={{ ...eyebrow, marginBottom: 8 }}>What AI says — &ldquo;best {trade} in {city}&rdquo;</div><p style={{ fontSize: 14, lineHeight: 1.6, color: T.text, margin: 0 }}>{data.ai_answer}</p></div>}
+
+      {data?.local_audit && (
+        <div style={card({ marginBottom: 16 })}>
+          <div style={{ ...eyebrow, marginBottom: 10 }}>Local / GBP audit</div>
+          <div style={{ display: "flex", gap: 24, marginBottom: 10, flexWrap: "wrap" }}>
+            <div><span style={{ fontFamily: MONO, fontSize: 20, fontWeight: 700, color: T.text }}>{String(data.local_audit.rating ?? "—")}</span><span style={{ fontSize: 12, color: T.muted, marginLeft: 6 }}>rating</span></div>
+            <div><span style={{ fontFamily: MONO, fontSize: 20, fontWeight: 700, color: T.text }}>{String(data.local_audit.reviews ?? "—")}</span><span style={{ fontSize: 12, color: T.muted, marginLeft: 6 }}>reviews</span></div>
+          </div>
+          {data.local_audit.gbp_finding && <p style={{ fontSize: 13, color: T.textSub, lineHeight: 1.5, margin: "0 0 6px" }}>{data.local_audit.gbp_finding}</p>}
+          {data.local_audit.review_velocity_gap && <p style={{ fontSize: 13, color: T.warn, lineHeight: 1.5, margin: 0 }}>↳ {data.local_audit.review_velocity_gap}</p>}
+        </div>
+      )}
+
+      {Array.isArray(data?.competitor_teardown) && data.competitor_teardown.length > 0 && (
+        <div style={card({ marginBottom: 16 })}>
+          <div style={{ ...eyebrow, marginBottom: 12 }}>Competitor teardown</div>
+          {data.competitor_teardown.map((c: any, i: number) => (
+            <div key={i} style={{ borderTop: i ? `1px solid ${T.border}` : "none", paddingTop: i ? 12 : 0, marginTop: i ? 12 : 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                <span style={{ fontWeight: 700, fontSize: 14, color: T.text }}>{c.name}</span>
+                {c.threat && <span style={{ fontFamily: MONO, fontSize: 10, color: c.threat === "HIGH" ? T.danger : T.warn }}>{c.threat} THREAT</span>}
+              </div>
+              <p style={{ fontSize: 13, color: T.textSub, lineHeight: 1.5, margin: "0 0 4px" }}>{c.why_winning}</p>
+              {c.what_they_have && <p style={{ fontSize: 12, color: T.muted, lineHeight: 1.5, margin: 0 }}>Has: {c.what_they_have}</p>}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {data?.buyer_journey && (
+        <div style={card({ marginBottom: 16 })}>
+          <div style={{ ...eyebrow, marginBottom: 8 }}>Buyer journey</div>
+          {data.buyer_journey.persona && <p style={{ fontSize: 13, color: T.textSub, lineHeight: 1.5, marginTop: 0, marginBottom: 14 }}>{data.buyer_journey.persona}</p>}
+          {Array.isArray(data.buyer_journey.stages) && data.buyer_journey.stages.map((s: any, i: number) => (
+            <div key={i} style={{ marginBottom: 12 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontFamily: MONO, fontSize: 11, color: T.accent }}>{s.label || `Stage ${s.stage}`}</span>
+                <span style={{ fontFamily: MONO, fontSize: 10, color: s.is_business_present ? T.ok : T.danger }}>{s.is_business_present ? "PRESENT" : "ABSENT"}</span>
+              </div>
+              {s.buyer_question && <p style={{ fontSize: 13, color: T.text, margin: "4px 0 2px", fontStyle: "italic" }}>&ldquo;{s.buyer_question}&rdquo;</p>}
+              {s.who_answers_now && <p style={{ fontSize: 12, color: T.muted, margin: "0 0 2px" }}>Answered by: {s.who_answers_now}</p>}
+              {s.gap && <p style={{ fontSize: 12, color: T.warn, margin: 0 }}>↳ {s.gap}</p>}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div style={card({ marginBottom: 16 })}><div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 14, marginBottom: 18 }}>Signal breakdown</div><SignalBars scores={scores} findings={findings} /></div>
+
+      {Array.isArray(data?.content_gaps) && data.content_gaps.length > 0 && (
+        <div style={card({ marginBottom: 16 })}>
+          <div style={{ ...eyebrow, marginBottom: 12 }}>Content gaps</div>
+          {data.content_gaps.map((c: any, i: number) => (
+            <div key={i} style={{ display: "flex", gap: 10, marginBottom: 8 }}>
+              <span style={{ fontFamily: MONO, fontSize: 10, color: c.priority === "HIGH" ? T.danger : T.warn, minWidth: 56 }}>{c.priority}</span>
+              <div><span style={{ fontSize: 13, fontWeight: 600, color: T.text }}>{c.content_type}</span>{c.why_it_matters && <span style={{ fontSize: 13, color: T.textSub }}> — {c.why_it_matters}</span>}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {Array.isArray(data?.priority_roadmap) && data.priority_roadmap.length > 0 && (
+        <div style={card({ marginBottom: 16 })}>
+          <div style={{ ...eyebrow, marginBottom: 12 }}>Priority roadmap</div>
+          {data.priority_roadmap.map((r: any, i: number) => (
+            <div key={i} style={{ display: "flex", gap: 12, marginBottom: 10 }}>
+              <span style={{ fontFamily: MONO, fontWeight: 700, fontSize: 14, color: T.accent, minWidth: 18 }}>{r.rank ?? i + 1}</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 2 }}>
+                  <span style={{ fontFamily: MONO, fontSize: 11, color: T.muted }}>{r.timeframe}</span>
+                  {r.effort && <span style={{ fontFamily: MONO, fontSize: 11, color: effortColor(r.effort) }}>{r.effort}</span>}
+                </div>
+                <p style={{ fontSize: 13, color: T.text, margin: "0 0 2px" }}>{r.action}</p>
+                {r.expected_impact && <p style={{ fontSize: 12, color: T.muted, margin: 0 }}>→ {r.expected_impact}</p>}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {Array.isArray(data?.pitch_angles) && data.pitch_angles.length > 0 && (
+        <div style={card({ marginBottom: 16, borderColor: `${T.accent}55`, background: `${T.accent}0a` })}>
+          <div style={{ ...eyebrow, color: T.accent, marginBottom: 12 }}>Pitch angles — use these on the call</div>
+          {data.pitch_angles.map((p: string, i: number) => (
+            <div key={i} style={{ display: "flex", gap: 10, marginBottom: 8 }}>
+              <span style={{ fontFamily: MONO, fontWeight: 700, color: T.accent }}>{i + 1}.</span>
+              <span style={{ fontSize: 14, color: T.text, lineHeight: 1.5 }}>{p}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {data?.cost_of_inaction && <div style={card({ borderColor: `${T.danger}55` })}><div style={{ ...eyebrow, color: T.danger, marginBottom: 6 }}>Cost of inaction</div><p style={{ fontSize: 13, color: T.text, lineHeight: 1.5, margin: 0 }}>{data.cost_of_inaction}</p></div>}
+    </div>
+  );
+}
+
+// ─── 90-day execution plan render ───
+function renderExecPlan(data: any, form: Record<string, string>) {
+  const b = data?.business ?? {};
+  return (
+    <div>
+      <div style={card({ marginBottom: 16, borderColor: `${T.accent}55` })}>
+        <div style={{ ...eyebrow, marginBottom: 6 }}>90-Day Execution Plan — {b.name || form.name}</div>
+        {data?.north_star && <p style={{ fontFamily: DISP, fontWeight: 700, fontSize: 18, color: T.text, margin: "0 0 12px", lineHeight: 1.35 }}>{data.north_star}</p>}
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <Ring score={Number(data?.current_overall) || 0} size={84} />
+          <span style={{ fontFamily: MONO, fontSize: 22, color: T.muted }}>→</span>
+          <Ring score={Number(data?.target_overall_90d) || 0} size={84} />
+          <span style={{ fontSize: 12, color: T.muted }}>current → day 90 target</span>
+        </div>
+      </div>
+
+      {Array.isArray(data?.signal_targets) && data.signal_targets.length > 0 && (
+        <div style={card({ marginBottom: 16 })}>
+          <div style={{ ...eyebrow, marginBottom: 12 }}>Signal targets</div>
+          {data.signal_targets.map((s: any, i: number) => (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+              <span style={{ fontFamily: MONO, fontWeight: 700, fontSize: 13, color: T.text, minWidth: 44 }}>{s.signal}</span>
+              <span style={{ fontFamily: MONO, fontSize: 13, color: scoreColor(Number(s.current) || 0) }}>{s.current}</span>
+              <span style={{ color: T.muted }}>→</span>
+              <span style={{ fontFamily: MONO, fontSize: 13, color: scoreColor(Number(s.target_90d) || 0) }}>{s.target_90d}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {Array.isArray(data?.phases) && data.phases.map((p: any, i: number) => (
+        <div key={i} style={card({ marginBottom: 16 })}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 8, marginBottom: 6 }}>
+            <span style={{ fontFamily: DISP, fontWeight: 700, fontSize: 15, color: T.accent }}>{p.phase}</span>
+            {p.milestone && <span style={{ fontSize: 12, color: T.muted }}>Milestone: {p.milestone}</span>}
+          </div>
+          {p.focus && <p style={{ fontSize: 13, color: T.textSub, margin: "0 0 12px", lineHeight: 1.5 }}>{p.focus}</p>}
+          {Array.isArray(p.deliverables) && p.deliverables.map((d: any, j: number) => (
+            <div key={j} style={{ display: "flex", gap: 10, marginBottom: 8, alignItems: "baseline" }}>
+              <span style={{ fontFamily: MONO, fontSize: 10, color: ownerColor(d.owner), minWidth: 56 }}>{d.owner}</span>
+              {d.signal && <span style={{ fontFamily: MONO, fontSize: 10, color: T.muted, minWidth: 34 }}>{d.signal}</span>}
+              <div><span style={{ fontSize: 13, fontWeight: 600, color: T.text }}>{d.task}</span>{d.detail && <span style={{ fontSize: 13, color: T.textSub }}> — {d.detail}</span>}</div>
+            </div>
+          ))}
+        </div>
+      ))}
+
+      {Array.isArray(data?.content_plan) && data.content_plan.length > 0 && (
+        <div style={card({ marginBottom: 16 })}>
+          <div style={{ ...eyebrow, marginBottom: 12 }}>Content to build</div>
+          {data.content_plan.map((c: any, i: number) => (
+            <div key={i} style={{ borderTop: i ? `1px solid ${T.border}` : "none", paddingTop: i ? 12 : 0, marginTop: i ? 12 : 0 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
+                <span style={{ fontSize: 14, fontWeight: 700, color: T.text }}>{c.page_title}</span>
+                <span style={{ fontFamily: MONO, fontSize: 12, color: T.muted }}>{c.url_slug}</span>
+              </div>
+              {c.h1 && <p style={{ fontSize: 13, color: T.textSub, margin: "4px 0 2px" }}>H1: {c.h1}</p>}
+              {c.purpose && <p style={{ fontSize: 12, color: T.muted, margin: "0 0 4px" }}>{c.purpose}</p>}
+              {Array.isArray(c.faqs) && c.faqs.length > 0 && <ul style={{ margin: "4px 0 0", paddingLeft: 18, color: T.textSub, fontSize: 12 }}>{c.faqs.map((q: string, k: number) => <li key={k}>{q}</li>)}</ul>}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {Array.isArray(data?.schema_plan) && data.schema_plan.length > 0 && (
+        <div style={card({ marginBottom: 16 })}>
+          <div style={{ ...eyebrow, marginBottom: 12 }}>Schema</div>
+          {data.schema_plan.map((s: any, i: number) => (
+            <div key={i} style={{ borderTop: i ? `1px solid ${T.border}` : "none", paddingTop: i ? 12 : 0, marginTop: i ? 12 : 0 }}>
+              <span style={{ fontFamily: MONO, fontSize: 13, fontWeight: 700, color: T.accent }}>{s.type}</span>
+              {s.why && <p style={{ fontSize: 12, color: T.textSub, margin: "4px 0" }}>{s.why}</p>}
+              {Array.isArray(s.required_fields) && <div style={{ fontFamily: MONO, fontSize: 11, color: T.muted }}>{s.required_fields.join(" · ")}</div>}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {data?.gbp_plan && (
+        <div style={card({ marginBottom: 16 })}>
+          <div style={{ ...eyebrow, marginBottom: 12 }}>Google Business Profile</div>
+          {Array.isArray(data.gbp_plan.actions) && data.gbp_plan.actions.map((a: string, i: number) => (
+            <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6 }}><span style={{ color: T.accent }}>•</span><span style={{ fontSize: 13, color: T.text }}>{a}</span></div>
+          ))}
+          {data.gbp_plan.review_script && (
+            <div style={{ marginTop: 10, background: T.bg, border: `1px solid ${T.border}`, borderRadius: 2, padding: 12 }}>
+              <div style={{ ...eyebrow, marginBottom: 6 }}>Review request script</div>
+              <p style={{ fontSize: 13, color: T.textSub, lineHeight: 1.6, margin: 0, whiteSpace: "pre-wrap" }}>{data.gbp_plan.review_script}</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {Array.isArray(data?.quick_wins) && data.quick_wins.length > 0 && (
+        <div style={card({ marginBottom: 16 })}>
+          <div style={{ ...eyebrow, marginBottom: 12 }}>Quick wins</div>
+          {data.quick_wins.map((w: any, i: number) => (
+            <div key={i} style={{ display: "flex", gap: 10, marginBottom: 8 }}>
+              <span style={{ fontFamily: MONO, fontWeight: 700, color: T.accent }}>{i + 1}.</span>
+              <div><span style={{ fontSize: 13, fontWeight: 600, color: T.text }}>{w.win}</span>{w.impact && <span style={{ fontSize: 13, color: T.textSub }}> — {w.impact}</span>}{w.effort && <span style={{ fontFamily: MONO, fontSize: 11, color: T.muted }}> · {w.effort}</span>}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {data?.measurement && <div style={card()}><div style={{ ...eyebrow, marginBottom: 6 }}>How we prove day-90 results</div><p style={{ fontSize: 13, color: T.text, lineHeight: 1.5, margin: 0 }}>{data.measurement}</p></div>}
+    </div>
+  );
+}
+
+function ScanTab() {
+  return <ReportRunner cta="Run scan" subtitle="Fast live triage" endpoint="/api/dashboard/scan" longNote="Crawling the site + live web search to check AI citations — ~1–2 min." render={renderScan} />;
+}
+function BattlePlanTab() {
+  return <ReportRunner cta="Build battle plan" subtitle="Deep pre-meeting intel" endpoint="/api/dashboard/battle-plan" longNote="Deep web research + competitor teardown + local audit — this can take 2–4 min." render={renderBattlePlan} />;
+}
+function ExecPlanTab() {
+  return <ReportRunner cta="Build 90-day plan" subtitle="Post-signing execution plan" endpoint="/api/dashboard/execution-plan" longNote="Researching the market and phasing the 90-day plan — this can take 2–4 min." render={renderExecPlan} />;
 }
 
 // ─── Overview tab ────────────────────────────────────────────────────────────────
@@ -425,7 +656,7 @@ function AdsTab() {
 export default function DashboardPage() {
   const [state, setState] = useState<"loading" | "locked" | "in">("loading");
   const [configured, setConfigured] = useState(true);
-  const [tab, setTab] = useState<"overview" | "scan" | "ads">("overview");
+  const [tab, setTab] = useState<"overview" | "scan" | "battle" | "exec" | "ads">("overview");
   const [data, setData] = useState<Overview | null>(null);
   const [dataErr, setDataErr] = useState<string | null>(null);
 
@@ -457,7 +688,9 @@ export default function DashboardPage() {
 
   const TABS: { id: typeof tab; label: string }[] = [
     { id: "overview", label: "Overview" },
-    { id: "scan", label: "Run Scan" },
+    { id: "scan", label: "Quick Scan" },
+    { id: "battle", label: "Battle Plan" },
+    { id: "exec", label: "90-Day Plan" },
     { id: "ads", label: "Ads" },
   ];
 
@@ -490,6 +723,8 @@ export default function DashboardPage() {
         {dataErr && <div style={card({ borderColor: `${T.danger}66`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{dataErr}</span></div>}
         {tab === "overview" && (data ? <OverviewTab data={data} /> : <div style={{ color: T.muted, fontFamily: MONO, fontSize: 13, padding: 40, textAlign: "center" }}>Loading data…</div>)}
         {tab === "scan" && <ScanTab />}
+        {tab === "battle" && <BattlePlanTab />}
+        {tab === "exec" && <ExecPlanTab />}
         {tab === "ads" && <AdsTab />}
         <div style={{ marginTop: 32, paddingTop: 20, borderTop: `1px solid ${T.border}`, textAlign: "center", ...eyebrow }}>
           6 Signal Command Center · Internal
