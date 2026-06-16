@@ -549,7 +549,7 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
   const [bizId, setBizId] = useState("");
   const [prompts, setPrompts] = useState<{ id: string; prompt: string }[]>([]);
   const [results, setResults] = useState<any[]>([]);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<{ prompt: string; source?: string; volume?: number | null }[]>([]);
   const [newPrompt, setNewPrompt] = useState("");
   const [busy, setBusy] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -579,7 +579,7 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
     try {
       const r = await fetch("/api/dashboard/track/prompts", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ businessId: bizId, prompts: clean }) });
       const d = await r.json().catch(() => ({})); if (!r.ok) throw new Error(d.error || "Add failed");
-      setNewPrompt(""); setSuggestions((s) => s.filter((x) => !clean.includes(x))); await loadFor(bizId);
+      setNewPrompt(""); setSuggestions((s) => s.filter((x) => !clean.includes(x.prompt))); await loadFor(bizId);
     } catch (e: any) { setErr(e?.message || "Add failed"); } finally { setBusy(null); }
   };
 
@@ -690,11 +690,18 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
             {suggestions.length > 0 && (
               <div style={{ marginTop: 14 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-                  <span style={eyebrow}>Suggestions — click to add</span>
-                  <button style={{ ...btn(), padding: "4px 10px" }} onClick={() => addPrompts(suggestions)}>Add all</button>
+                  <span style={eyebrow}>Suggestions — grounded in real demand · click to add</span>
+                  <button style={{ ...btn(), padding: "4px 10px" }} onClick={() => addPrompts(suggestions.map((s) => s.prompt))}>Add all</button>
                 </div>
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  {suggestions.map((s, i) => <button key={i} onClick={() => addPrompts([s])} style={{ textAlign: "left", background: T.bg, border: `1px solid ${T.border}`, color: T.textSub, fontSize: 12, padding: "6px 10px", cursor: "pointer", fontFamily: BODY }}>+ {s}</button>)}
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  {suggestions.map((s, i) => (
+                    <button key={i} onClick={() => addPrompts([s.prompt])} style={{ textAlign: "left", background: T.bg, border: `1px solid ${T.border}`, color: T.text, fontSize: 13, padding: "8px 10px", cursor: "pointer", fontFamily: BODY, display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
+                      <span>+ {s.prompt}</span>
+                      <span style={{ fontFamily: MONO, fontSize: 10, color: T.muted, whiteSpace: "nowrap" }}>
+                        {s.source === "paa" ? "PAA" : "autocomplete"}{typeof s.volume === "number" ? ` · ~${s.volume.toLocaleString()}/mo` : ""}
+                      </span>
+                    </button>
+                  ))}
                 </div>
               </div>
             )}
