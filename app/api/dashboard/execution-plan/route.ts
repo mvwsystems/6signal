@@ -5,6 +5,7 @@ import { collectSiteEvidence, evidenceForPrompt } from "../../../lib/evidence";
 import { localLandscape, localForPrompt } from "../../../lib/places";
 import { runWebGroundedJSON, SCAN_MODEL } from "../../../lib/aiScan";
 import { upsertBusiness, insertAuditRow, completeAudit, failAudit, getAudit } from "../../../lib/db";
+import { seedTrackingPrompts } from "../../../lib/autoOnboard";
 
 export const maxDuration = 300;
 
@@ -94,5 +95,9 @@ Search the web as needed, then return the execution plan JSON.`;
   const target = Number(plan.target_overall_90d);
   await completeAudit({ id: auditId, payload: plan, overallScore: Number.isFinite(target) ? Math.max(0, Math.min(100, Math.round(target))) : null });
 
-  return NextResponse.json({ id: auditId, ...plan });
+  // Auto-onboard into continuous tracking — a signed client's 90-day story
+  // needs a baseline from day one.
+  const trackingSeeded = businessId ? await seedTrackingPrompts(businessId, { name, trade, city }) : 0;
+
+  return NextResponse.json({ id: auditId, tracking_seeded: trackingSeeded, ...plan });
 }

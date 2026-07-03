@@ -5,6 +5,7 @@ import { collectSiteEvidence, evidenceForPrompt } from "../../../lib/evidence";
 import { localLandscape, localForPrompt } from "../../../lib/places";
 import { runWebGroundedJSON, clampScore, SCAN_MODEL } from "../../../lib/aiScan";
 import { upsertBusiness, insertAuditRow, completeAudit, failAudit, saveSignalScores, saveSiteSnapshot } from "../../../lib/db";
+import { seedTrackingPrompts } from "../../../lib/autoOnboard";
 
 export const maxDuration = 300;
 
@@ -100,5 +101,9 @@ Search the web thoroughly, then return the battle plan JSON.`;
   await completeAudit({ id: auditId, payload: plan, overallScore: overall });
   await saveSignalScores(auditId, SIGNAL_KEYS.map((k) => ({ signal: k, score: signals[k].score as number, evidence: k === "ieo" && evidence ? evidence.checks : undefined })));
 
-  return NextResponse.json({ id: auditId, ...plan });
+  // Auto-onboard into continuous tracking: seed evidence-based prompts so the
+  // weekly cron starts building this business's baseline immediately.
+  const trackingSeeded = businessId ? await seedTrackingPrompts(businessId, { name, trade, city }) : 0;
+
+  return NextResponse.json({ id: auditId, tracking_seeded: trackingSeeded, ...plan });
 }

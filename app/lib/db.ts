@@ -352,6 +352,32 @@ export async function listAllActiveTracked(): Promise<Array<{ id: string; prompt
   }
 }
 
+// Latest run_at per prompt over the recent window — lets the cron probe
+// least-recently-probed prompts first so a bounded tick rotates fairly.
+export async function getLastProbeTimes(): Promise<Record<string, string>> {
+  const s = db();
+  if (!s) return {};
+  try {
+    const since = new Date(Date.now() - 60 * 86400000).toISOString();
+    const { data, error } = await s
+      .from("probe_results")
+      .select("prompt_id, run_at")
+      .gte("run_at", since)
+      .order("run_at", { ascending: false })
+      .limit(5000);
+    if (error) throw error;
+    const out: Record<string, string> = {};
+    for (const r of data ?? []) {
+      const pid = r.prompt_id as string;
+      if (!(pid in out)) out[pid] = r.run_at as string; // first seen = latest
+    }
+    return out;
+  } catch (e) {
+    console.error("[db] getLastProbeTimes failed:", e);
+    return {};
+  }
+}
+
 export async function saveProbeResults(rows: Array<{ business_id: string; prompt_id: string; engine: string; mentioned: boolean; position: number | null; sentiment: string | null; competitors: unknown; sources: unknown; answer: string | null }>): Promise<void> {
   const s = db();
   if (!s || !rows.length) return;

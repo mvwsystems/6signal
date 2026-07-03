@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { listAllActiveTracked, saveProbeResults } from "../../../../lib/db";
+import { listAllActiveTracked, saveProbeResults, getLastProbeTimes } from "../../../../lib/db";
 import { probeAllEngines, analyzePrompt, ENGINES, enginesWithKeys } from "../../../../lib/engines";
 
 export const maxDuration = 300;
@@ -16,8 +16,15 @@ export async function POST(req: NextRequest) {
   }
   if (enginesWithKeys().length === 0) return NextResponse.json({ error: "No engine keys" }, { status: 503 });
 
-  const all = await listAllActiveTracked();
-  const slice = all.slice(0, MAX_PROMPTS_PER_TICK);
+  // Fair rotation: never-probed prompts first, then oldest-probed. A bounded
+  // tick (count + time) still covers the whole set across successive runs.
+  const [all, lastProbed] = await Promise.all([listAllActiveTracked(), getLastProbeTimes()]);
+  const sorted = [...all].sort((a, b) => {
+    const ta = lastProbed[a.id] ?? "";
+    const tb = lastProbed[b.id] ?? "";
+    return ta.localeCompare(tb); // "" (never probed) sorts first
+  });
+  const slice = sorted.slice(0, MAX_PROMPTS_PER_TICK);
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 290_000);
