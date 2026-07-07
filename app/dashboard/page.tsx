@@ -560,9 +560,9 @@ function ExecPlanTab({ businesses }: { businesses: Biz[] }) {
 }
 
 // ─── Tracking tab (continuous multi-engine visibility) ───────────────────────────
-const ENGINE_LABELS: Record<string, string> = { chatgpt: "ChatGPT", perplexity: "Perplexity", gemini: "Gemini" };
-const ENGINE_KEYS = ["chatgpt", "perplexity", "gemini"];
-const ENGINE_COLORS: Record<string, string> = { chatgpt: "#5ad1ff", perplexity: "#c9a0ff", gemini: "#ff9e64" };
+const ENGINE_LABELS: Record<string, string> = { chatgpt: "ChatGPT", claude: "Claude", perplexity: "Perplexity", gemini: "Gemini", "google-ai": "AI Overviews", maps: "Maps" };
+const ENGINE_KEYS = ["chatgpt", "claude", "perplexity", "gemini", "google-ai", "maps"];
+const ENGINE_COLORS: Record<string, string> = { chatgpt: "#5ad1ff", claude: "#e8825a", perplexity: "#b48aff", gemini: "#ffd166", "google-ai": "#6ee7b7", maps: "#f472b6" };
 const COMP_COLORS = ["#74746e", "#8e8e86", "#a8a8a0", "#c2c2b8", "#dcdcd2"];
 
 // ── Hand-built on-brand charts (no dependency) ───────────────────────────────
@@ -630,6 +630,7 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
   const [busy, setBusy] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [runMsg, setRunMsg] = useState<string | null>(null);
+  const [diag, setDiag] = useState<{ engine: string; ok: boolean; error: string | null; ms: number }[] | null>(null);
 
   const biz = businesses.find((b) => b.id === bizId) || null;
 
@@ -691,7 +692,8 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
   const latest: Record<string, any> = {};
   for (const r of results) latest[`${r.prompt_id}|${r.engine}`] = r;
   const latestRows = Object.values(latest) as any[];
-  const eng: Record<string, { answered: number; mentioned: number }> = { chatgpt: { answered: 0, mentioned: 0 }, perplexity: { answered: 0, mentioned: 0 }, gemini: { answered: 0, mentioned: 0 } };
+  const eng: Record<string, { answered: number; mentioned: number }> = {};
+  for (const e of ENGINE_KEYS) eng[e] = { answered: 0, mentioned: 0 };
   let bizMentions = 0;
   for (const r of latestRows) { if (eng[r.engine]) { eng[r.engine].answered++; if (r.mentioned) eng[r.engine].mentioned++; } if (r.mentioned) bizMentions++; }
   const totMen = latestRows.filter((r) => r.mentioned).length;
@@ -700,15 +702,15 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
   for (const r of results) { const d = String(r.run_at).slice(0, 10); (byDay[d] ||= { a: 0, m: 0 }); byDay[d].a++; if (r.mentioned) byDay[d].m++; }
   const days = Object.keys(byDay).sort();
 
-  const engDay: Record<string, Record<string, { a: number; m: number }>> = { chatgpt: {}, perplexity: {}, gemini: {} };
+  const engDay: Record<string, Record<string, { a: number; m: number }>> = {};
+  for (const e of ENGINE_KEYS) engDay[e] = {};
   for (const r of results) { if (!engDay[r.engine]) continue; const d = String(r.run_at).slice(0, 10); (engDay[r.engine][d] ||= { a: 0, m: 0 }); engDay[r.engine][d].a++; if (r.mentioned) engDay[r.engine][d].m++; }
   const rateSeries = (pd: Record<string, { a: number; m: number }>) => days.map((d) => (pd[d] ? Math.round((100 * pd[d].m) / pd[d].a) : null));
   const trendSeries = [
-    { label: "ChatGPT", color: ENGINE_COLORS.chatgpt, values: rateSeries(engDay.chatgpt) },
-    { label: "Perplexity", color: ENGINE_COLORS.perplexity, values: rateSeries(engDay.perplexity) },
-    { label: "Gemini", color: ENGINE_COLORS.gemini, values: rateSeries(engDay.gemini) },
+    ...ENGINE_KEYS.map((e) => ({ label: ENGINE_LABELS[e], color: ENGINE_COLORS[e], values: rateSeries(engDay[e]) })),
     { label: "Overall", color: T.accent, values: days.map((d) => (byDay[d] ? Math.round((100 * byDay[d].m) / byDay[d].a) : null)) },
   ];
+  const overallSeries = trendSeries[trendSeries.length - 1];
   const compCounts: Record<string, number> = {};
   for (const r of latestRows) if (Array.isArray(r.competitors)) for (const c of r.competitors) { const k = String(c).trim(); if (k) compCounts[k] = (compCounts[k] || 0) + 1; }
   const topComps = Object.entries(compCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
@@ -724,8 +726,30 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
           {businesses.map((b) => <option key={b.id} value={b.id}>{b.name} — {b.city}</option>)}
         </select>
         {bizId && <button style={{ ...btn(true), opacity: busy === "run" ? 0.5 : 1 }} onClick={runNow} disabled={busy === "run"}>{busy === "run" ? "Probing…" : "Run probes now"}</button>}
+        <button style={{ ...btn(), opacity: busy === "diag" ? 0.5 : 1 }} disabled={busy === "diag"} onClick={async () => {
+          setBusy("diag"); setDiag(null); setErr(null);
+          try {
+            const r = await fetch("/api/dashboard/track/diag", { method: "POST" });
+            const d = await r.json().catch(() => ({}));
+            if (!r.ok) throw new Error(d.error || "Test failed");
+            setDiag(d.results ?? []);
+          } catch (e: any) { setErr(e?.message || "Test failed"); } finally { setBusy(null); }
+        }}>{busy === "diag" ? "Testing…" : "Test engines"}</button>
         {runMsg && <span style={{ fontSize: 12, color: T.textSub }}>{runMsg}</span>}
       </div>
+
+      {diag && (
+        <div style={card({ marginBottom: 16 })}>
+          <div style={{ ...eyebrow, marginBottom: 10 }}>Engine self-test</div>
+          {diag.map((d) => (
+            <div key={d.engine} style={{ display: "flex", gap: 12, alignItems: "baseline", marginBottom: 6 }}>
+              <span style={{ fontFamily: MONO, fontSize: 12, minWidth: 100, color: T.text }}>{ENGINE_LABELS[d.engine] ?? d.engine}</span>
+              <span style={{ fontFamily: MONO, fontSize: 12, color: d.ok ? T.ok : T.danger }}>{d.ok ? `OK · ${(d.ms / 1000).toFixed(1)}s` : "FAILED"}</span>
+              {!d.ok && <span style={{ fontSize: 12, color: T.textSub, wordBreak: "break-all" }}>{d.error}</span>}
+            </div>
+          ))}
+        </div>
+      )}
 
       {!businesses.length && <div style={card({ padding: 48, textAlign: "center" })}><p style={{ fontSize: 14, color: T.muted, margin: 0 }}>No businesses yet. Run a scan or wait for a lead, then track them here.</p></div>}
       {err && <div style={card({ borderColor: `${T.danger}66`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{err}</span></div>}
@@ -733,7 +757,7 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
       {bizId && (
         <>
           {latestRows.length > 0 && (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 12 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 12, marginBottom: 12 }}>
               {ENGINE_KEYS.map((e) => {
                 const rate = eng[e].answered ? Math.round((100 * eng[e].mentioned) / eng[e].answered) : null;
                 return <div key={e} style={card({ display: "flex", flexDirection: "column", gap: 6 })}>
@@ -743,7 +767,7 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
                   <Sparkline values={rateSeries(engDay[e])} color={ENGINE_COLORS[e]} />
                 </div>;
               })}
-              <div style={card({ display: "flex", flexDirection: "column", gap: 6 })}><span style={eyebrow}>Overall</span><span style={{ fontFamily: MONO, fontSize: 24, fontWeight: 700, color: scoreColor(overall) }}>{overall}%</span><span style={{ fontSize: 11, color: T.muted }}>mention rate</span><Sparkline values={trendSeries[3].values} color={T.accent} /></div>
+              <div style={card({ display: "flex", flexDirection: "column", gap: 6 })}><span style={eyebrow}>Overall</span><span style={{ fontFamily: MONO, fontSize: 24, fontWeight: 700, color: scoreColor(overall) }}>{overall}%</span><span style={{ fontSize: 11, color: T.muted }}>mention rate</span><Sparkline values={overallSeries.values} color={T.accent} /></div>
             </div>
           )}
 
@@ -814,11 +838,11 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
           {/* Per-prompt latest verdicts */}
           {latestRows.length > 0 && (
             <div style={card({ padding: 0, overflow: "hidden" })}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 90px 90px 90px", padding: "12px 18px", borderBottom: `1px solid ${T.border}`, ...eyebrow }}>
+              <div style={{ display: "grid", gridTemplateColumns: `1fr repeat(${ENGINE_KEYS.length}, 84px)`, padding: "12px 18px", borderBottom: `1px solid ${T.border}`, ...eyebrow, fontSize: 10 }}>
                 <span>Prompt</span>{ENGINE_KEYS.map((e) => <span key={e} style={{ textAlign: "center" }}>{ENGINE_LABELS[e]}</span>)}
               </div>
               {prompts.map((p) => (
-                <div key={p.id} style={{ display: "grid", gridTemplateColumns: "1fr 90px 90px 90px", padding: "12px 18px", borderBottom: `1px solid ${T.border}`, alignItems: "center" }}>
+                <div key={p.id} style={{ display: "grid", gridTemplateColumns: `1fr repeat(${ENGINE_KEYS.length}, 84px)`, padding: "12px 18px", borderBottom: `1px solid ${T.border}`, alignItems: "center" }}>
                   <span style={{ fontSize: 13, color: T.text, paddingRight: 12 }}>{p.prompt}</span>
                   {ENGINE_KEYS.map((e) => { const r = latest[`${p.id}|${e}`]; return (
                     <span key={e} style={{ textAlign: "center", fontFamily: MONO, fontSize: 13, color: !r ? T.muted : r.mentioned ? T.ok : T.danger }}>

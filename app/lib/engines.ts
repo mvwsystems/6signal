@@ -6,8 +6,8 @@
 // Engine answers are live and non-deterministic — we store the raw answer +
 // timestamp per probe so a result is reproducible-as-recorded, not re-runnable.
 
-export type Engine = "chatgpt" | "perplexity" | "gemini";
-export const ENGINES: Engine[] = ["chatgpt", "perplexity", "gemini"];
+export type Engine = "chatgpt" | "claude" | "perplexity" | "gemini" | "google-ai" | "maps";
+export const ENGINES: Engine[] = ["chatgpt", "claude", "perplexity", "gemini", "google-ai", "maps"];
 
 export interface EngineAnswer {
   engine: Engine;
@@ -26,8 +26,11 @@ export interface Verdict {
 
 function keyFor(engine: Engine): string | undefined {
   if (engine === "chatgpt") return process.env.OPENAI_API_KEY?.trim();
+  if (engine === "claude") return process.env.ANTHROPIC_API_KEY?.trim();
   if (engine === "perplexity") return process.env.PERPLEXITY_API_KEY?.trim();
-  return process.env.GEMINI_API_KEY?.trim();
+  if (engine === "gemini") return process.env.GEMINI_API_KEY?.trim();
+  if (engine === "google-ai") return process.env.SERPAPI_KEY?.trim();
+  return process.env.GOOGLE_PLACES_API_KEY?.trim(); // maps
 }
 
 export function enginesWithKeys(): Engine[] {
@@ -35,15 +38,14 @@ export function enginesWithKeys(): Engine[] {
 }
 
 // ── Per-engine probes ────────────────────────────────────────────────────────
-async function probeOpenAI(prompt: string, key: string, signal?: AbortSignal): Promise<EngineAnswer> {
-  const model = process.env.OPENAI_MODEL?.trim() || "gpt-5.5";
+async function openAIOnce(prompt: string, key: string, model: string, signal?: AbortSignal): Promise<{ ok: boolean; status: number; errText: string; text: string; sources: string[] }> {
   const res = await fetch("https://api.openai.com/v1/responses", {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
     body: JSON.stringify({ model, tools: [{ type: "web_search" }], input: prompt, include: ["web_search_call.action.sources"] }),
     signal,
   });
-  if (!res.ok) throw new Error(`OpenAI ${res.status}: ${(await res.text().catch(() => "")).slice(0, 200)}`);
+  if (!res.ok) return { ok: false, status: res.status, errText: (await res.text().catch(() => "")).slice(0, 300), text: "", sources: [] };
   const data = await res.json();
   let text = "";
   const sources: string[] = [];
@@ -56,7 +58,89 @@ async function probeOpenAI(prompt: string, key: string, signal?: AbortSignal): P
     }
     if (item.type === "web_search_call") for (const s of item.action?.sources ?? []) if (s.url) sources.push(s.url);
   }
-  return { engine: "chatgpt", ok: true, text, sources: dedupe(sources) };
+  return { ok: true, status: 200, errText: "", text, sources };
+}
+
+async function probeOpenAI(prompt: string, key: string, signal?: AbortSignal): Promise<EngineAnswer> {
+  const primary = process.env.OPENAI_MODEL?.trim() || "gpt-5.5";
+  let r = await openAIOnce(prompt, key, primary, signal);
+  // Model not available on this account → fall back to the stable workhorse.
+  if (!r.ok && (r.status === 404 || /model/i.test(r.errText))) {
+    r = await openAIOnce(prompt, key, "gpt-4.1", signal);
+  }
+  if (!r.ok) throw new Error(`OpenAI ${r.status}: ${r.errText}`);
+  return { engine: "chatgpt", ok: true, text: r.text, sources: dedupe(r.sources) };
+}
+
+async function probeClaude(prompt: string, key: string, signal?: AbortSignal): Promise<EngineAnswer> {
+  const model = process.env.CLAUDE_ENGINE_MODEL?.trim() || "claude-sonnet-4-6";
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01" },
+    body: JSON.stringify({
+      model,
+      max_tokens: 1024,
+      tools: [{ type: "web_search_20260209", name: "web_search", max_uses: 3 }],
+      messages: [{ role: "user", content: prompt }],
+    }),
+    signal,
+  });
+  if (!res.ok) throw new Error(`Claude ${res.status}: ${(await res.text().catch(() => "")).slice(0, 200)}`);
+  const data = await res.json();
+  let text = "";
+  const sources: string[] = [];
+  for (const block of data.content ?? []) {
+    if (block.type === "text" && block.text) text += block.text;
+    if (block.type === "web_search_tool_result") {
+      for (const r of block.content ?? []) if (r.url) sources.push(r.url);
+    }
+  }
+  return { engine: "claude", ok: true, text, sources: dedupe(sources) };
+}
+
+// Google AI Overviews via SerpAPI: the actual AI Overview block Google shows
+// for this query (env-gated by SERPAPI_KEY). "No AI Overview" is itself a
+// meaningful answer — nobody is being named there.
+async function probeGoogleAI(prompt: string, key: string, signal?: AbortSignal): Promise<EngineAnswer> {
+  const params = new URLSearchParams({ engine: "google", q: prompt, api_key: key, gl: "us", hl: "en" });
+  const res = await fetch(`https://serpapi.com/search.json?${params}`, { signal });
+  if (!res.ok) throw new Error(`SerpAPI ${res.status}: ${(await res.text().catch(() => "")).slice(0, 200)}`);
+  const data = await res.json();
+  const ai = data.ai_overview;
+  if (!ai || (!ai.text_blocks && !ai.answer)) {
+    return { engine: "google-ai", ok: true, text: "No AI Overview appeared for this query.", sources: [] };
+  }
+  const parts: string[] = [];
+  const walk = (node: unknown): void => {
+    if (!node || typeof node !== "object") return;
+    const n = node as Record<string, unknown>;
+    if (typeof n.snippet === "string") parts.push(n.snippet);
+    if (typeof n.answer === "string") parts.push(n.answer);
+    if (typeof n.title === "string" && n.snippet) parts.push(String(n.title));
+    for (const v of Object.values(n)) if (Array.isArray(v)) v.forEach(walk);
+  };
+  walk(ai);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sources = ((ai.references ?? []) as any[]).map((r) => r.link).filter(Boolean);
+  return { engine: "google-ai", ok: true, text: parts.join("\n").slice(0, 6000) || "AI Overview present but empty.", sources: dedupe(sources) };
+}
+
+// Google Maps ranking via the existing Places key: the ranked local results a
+// buyer sees for this query. The judge reads the ordered list for position.
+async function probeMaps(prompt: string, signal?: AbortSignal): Promise<EngineAnswer> {
+  void signal;
+  const { placesTextSearch } = await import("./places");
+  const results = await placesTextSearch(prompt, 10);
+  if (!results.length) return { engine: "maps", ok: true, text: "No Google Maps results for this query.", sources: [] };
+  const lines = results.map((p, i) => {
+    const name = p.displayName?.text ?? "?";
+    const rating = typeof p.rating === "number" ? `${p.rating}★` : "no rating";
+    const reviews = typeof p.userRatingCount === "number" ? `${p.userRatingCount} reviews` : "";
+    return `${i + 1}. ${name} — ${rating}${reviews ? ` (${reviews})` : ""}`;
+  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sources = results.map((p: any) => p.googleMapsUri).filter(Boolean);
+  return { engine: "maps", ok: true, text: `Google Maps results for this query, in ranked order:\n${lines.join("\n")}`, sources: dedupe(sources) };
 }
 
 async function probePerplexity(prompt: string, key: string, signal?: AbortSignal): Promise<EngineAnswer> {
@@ -100,11 +184,14 @@ export async function probeEngine(engine: Engine, prompt: string, signal?: Abort
   if (!key) return { engine, ok: false, text: "", sources: [], error: "no API key" };
   try {
     if (engine === "chatgpt") return await probeOpenAI(prompt, key, signal);
+    if (engine === "claude") return await probeClaude(prompt, key, signal);
     if (engine === "perplexity") return await probePerplexity(prompt, key, signal);
-    return await probeGemini(prompt, key, signal);
+    if (engine === "gemini") return await probeGemini(prompt, key, signal);
+    if (engine === "google-ai") return await probeGoogleAI(prompt, key, signal);
+    return await probeMaps(prompt, signal);
   } catch (e) {
     console.error(`[engines] ${engine} probe failed:`, e);
-    return { engine, ok: false, text: "", sources: [], error: String(e).slice(0, 200) };
+    return { engine, ok: false, text: "", sources: [], error: String(e).slice(0, 300) };
   }
 }
 

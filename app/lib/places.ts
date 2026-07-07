@@ -30,8 +30,9 @@ const FIELD_MASK = [
   "places.googleMapsUri",
 ].join(",");
 
+// Exported for the Maps tracking engine (ranked local results per buyer query).
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function textSearch(query: string, maxResultCount: number): Promise<any[]> {
+export async function placesTextSearch(query: string, maxResultCount: number): Promise<any[]> {
   const key = process.env.GOOGLE_PLACES_API_KEY?.trim();
   if (!key) return [];
   try {
@@ -69,8 +70,8 @@ function norm(p: any): PlaceInfo {
 export async function localLandscape(name: string, trade: string, city: string): Promise<LocalLandscape | null> {
   if (!process.env.GOOGLE_PLACES_API_KEY?.trim()) return null;
   const [bizResults, tradeResults] = await Promise.all([
-    textSearch(`${name} ${city}`, 1),
-    textSearch(`${trade} in ${city}`, 10),
+    placesTextSearch(`${name} ${city}`, 1),
+    placesTextSearch(`${trade} in ${city}`, 10),
   ]);
   const business = bizResults.length ? norm(bizResults[0]) : { found: false };
   const competitors = tradeResults
