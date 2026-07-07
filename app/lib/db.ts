@@ -42,10 +42,24 @@ export async function upsertBusiness(b: BusinessInput): Promise<string | null> {
   const s = db();
   if (!s) return null;
   try {
+    // Reuse an existing business on a case-insensitive match first — the exact
+    // (name,city,trade) unique constraint treats "Plumbing"/"plumber" or
+    // "TX"/"tx" as different businesses, which created duplicates. ilike with
+    // no wildcards = case-insensitive equality.
+    const { data: existing } = await s
+      .from("businesses")
+      .select("id")
+      .ilike("name", b.name.trim())
+      .ilike("trade", b.trade.trim())
+      .ilike("city", b.city.trim())
+      .limit(1)
+      .maybeSingle();
+    if (existing?.id) return existing.id as string;
+
     const { data, error } = await s
       .from("businesses")
       .upsert(
-        { name: b.name, url: b.url ?? null, trade: b.trade, city: b.city },
+        { name: b.name.trim(), url: b.url ?? null, trade: b.trade.trim(), city: b.city.trim() },
         { onConflict: "name,city,trade" }
       )
       .select("id")

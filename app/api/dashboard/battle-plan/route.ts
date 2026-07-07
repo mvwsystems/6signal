@@ -3,7 +3,7 @@ import { randomUUID } from "crypto";
 import { isAuthed } from "../../../lib/dashboard-auth";
 import { collectSiteEvidence, evidenceForPrompt } from "../../../lib/evidence";
 import { localLandscape, localForPrompt } from "../../../lib/places";
-import { runWebGroundedJSON, clampScore, SCAN_MODEL } from "../../../lib/aiScan";
+import { runWebGroundedJSON, clampScore, streamedJSONResponse, SCAN_MODEL } from "../../../lib/aiScan";
 import { upsertBusiness, insertAuditRow, completeAudit, failAudit, saveSignalScores, saveSiteSnapshot } from "../../../lib/db";
 import { seedTrackingPrompts } from "../../../lib/autoOnboard";
 
@@ -45,31 +45,35 @@ export async function POST(req: NextRequest) {
   if (!name || !trade || !city) return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   if (url && !/^https?:\/\//i.test(url)) url = `https://${url}`;
 
-  const [evidence, local] = await Promise.all([
-    url ? collectSiteEvidence(url).catch(() => null) : Promise.resolve(null),
-    localLandscape(name, trade, city).catch(() => null),
-  ]);
+  // Heartbeat-streamed: Netlify's gateway 504s silent responses after ~2 min,
+  // and a battle plan legitimately takes 2–4. See streamedJSONResponse.
+  const finalUrl = url;
+  return streamedJSONResponse(async (signal) => {
+    const [evidence, local] = await Promise.all([
+      finalUrl ? collectSiteEvidence(finalUrl).catch(() => null) : Promise.resolve(null),
+      localLandscape(name, trade, city).catch(() => null),
+    ]);
 
-  const auditId = randomUUID();
-  const businessId = await upsertBusiness({ name, url: url ?? null, trade, city });
-  await insertAuditRow({ id: auditId, businessId, intakeId: null, tier: "brief_27", model: SCAN_MODEL, promptVersion: PROMPT_VERSION });
-  if (evidence) {
-    void saveSiteSnapshot(auditId, {
-      url: evidence.url, fetched: evidence.fetched, http_status: evidence.http_status,
-      robots_allows_ai: evidence.robots_allows_ai, ai_bots_blocked: evidence.ai_bots_blocked,
-      has_schema: evidence.has_schema, schema_types: evidence.schema_types,
-      has_local_business: evidence.has_local_business, has_faq_schema: evidence.has_faq_schema,
-      sitemap_ok: evidence.sitemap_ok, title: evidence.title, has_meta_description: evidence.has_meta_description,
-      h1_count: evidence.h1_count, word_count: evidence.word_count, ieo_score: evidence.ieo_score, checks: evidence.checks,
-    });
-  }
+    const auditId = randomUUID();
+    const businessId = await upsertBusiness({ name, url: finalUrl ?? null, trade, city });
+    await insertAuditRow({ id: auditId, businessId, intakeId: null, tier: "brief_27", model: SCAN_MODEL, promptVersion: PROMPT_VERSION });
+    if (evidence) {
+      void saveSiteSnapshot(auditId, {
+        url: evidence.url, fetched: evidence.fetched, http_status: evidence.http_status,
+        robots_allows_ai: evidence.robots_allows_ai, ai_bots_blocked: evidence.ai_bots_blocked,
+        has_schema: evidence.has_schema, schema_types: evidence.schema_types,
+        has_local_business: evidence.has_local_business, has_faq_schema: evidence.has_faq_schema,
+        sitemap_ok: evidence.sitemap_ok, title: evidence.title, has_meta_description: evidence.has_meta_description,
+        h1_count: evidence.h1_count, word_count: evidence.word_count, ieo_score: evidence.ieo_score, checks: evidence.checks,
+      });
+    }
 
-  const user = `Build the internal battle plan.
+    const user = `Build the internal battle plan.
 
 Business: ${name}
 Trade: ${trade}
 City / Market: ${city}
-${url ? `Website: ${url}` : "Website: (none provided)"}
+${finalUrl ? `Website: ${finalUrl}` : "Website: (none provided)"}
 
 ${evidence ? evidenceForPrompt(evidence) : "No site crawl available."}
 
@@ -77,33 +81,29 @@ ${localForPrompt(local)}
 
 Search the web thoroughly, then return the battle plan JSON.`;
 
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 290_000);
-  let plan: Record<string, unknown>;
-  try {
-    plan = await runWebGroundedJSON({ system: SYSTEM_PROMPT, user, maxTokens: 8192, maxSearches: 8, signal: controller.signal });
-  } catch (e) {
-    console.error("[dashboard/battle-plan]", e);
-    await failAudit(auditId);
-    return NextResponse.json({ error: "Battle plan failed or timed out." }, { status: 502 });
-  } finally {
-    clearTimeout(timer);
-  }
+    let plan: Record<string, unknown>;
+    try {
+      plan = await runWebGroundedJSON({ system: SYSTEM_PROMPT, user, maxTokens: 8192, maxSearches: 8, signal });
+    } catch (e) {
+      await failAudit(auditId);
+      throw new Error("Battle plan failed or timed out — try again.");
+    }
 
-  const signals = (plan.signals ?? {}) as Record<string, { score?: number; finding?: string; gap?: string }>;
-  for (const k of SIGNAL_KEYS) signals[k] = { score: clampScore(signals[k]?.score), finding: signals[k]?.finding ?? "", gap: signals[k]?.gap ?? "" };
-  if (evidence && Number.isFinite(evidence.ieo_score)) signals.ieo.score = clampScore(evidence.ieo_score);
-  plan.signals = signals;
-  const overall = Math.round(SIGNAL_KEYS.reduce((s, k) => s + (signals[k].score as number), 0) / SIGNAL_KEYS.length);
-  plan.overall = { score: overall };
-  plan.kind = "battle_plan";
+    const signals = (plan.signals ?? {}) as Record<string, { score?: number; finding?: string; gap?: string }>;
+    for (const k of SIGNAL_KEYS) signals[k] = { score: clampScore(signals[k]?.score), finding: signals[k]?.finding ?? "", gap: signals[k]?.gap ?? "" };
+    if (evidence && Number.isFinite(evidence.ieo_score)) signals.ieo.score = clampScore(evidence.ieo_score);
+    plan.signals = signals;
+    const overall = Math.round(SIGNAL_KEYS.reduce((s, k) => s + (signals[k].score as number), 0) / SIGNAL_KEYS.length);
+    plan.overall = { score: overall };
+    plan.kind = "battle_plan";
 
-  await completeAudit({ id: auditId, payload: plan, overallScore: overall });
-  await saveSignalScores(auditId, SIGNAL_KEYS.map((k) => ({ signal: k, score: signals[k].score as number, evidence: k === "ieo" && evidence ? evidence.checks : undefined })));
+    await completeAudit({ id: auditId, payload: plan, overallScore: overall });
+    await saveSignalScores(auditId, SIGNAL_KEYS.map((k) => ({ signal: k, score: signals[k].score as number, evidence: k === "ieo" && evidence ? evidence.checks : undefined })));
 
-  // Auto-onboard into continuous tracking: seed evidence-based prompts so the
-  // weekly cron starts building this business's baseline immediately.
-  const trackingSeeded = businessId ? await seedTrackingPrompts(businessId, { name, trade, city }) : 0;
+    // Auto-onboard into continuous tracking: seed evidence-based prompts so the
+    // weekly cron starts building this business's baseline immediately.
+    const trackingSeeded = businessId ? await seedTrackingPrompts(businessId, { name, trade, city }) : 0;
 
-  return NextResponse.json({ id: auditId, tracking_seeded: trackingSeeded, ...plan });
+    return { id: auditId, tracking_seeded: trackingSeeded, ...plan };
+  });
 }

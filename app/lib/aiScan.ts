@@ -58,3 +58,38 @@ export async function runWebGroundedJSON(opts: {
 }
 
 export const clampScore = (n: unknown): number => Math.max(0, Math.min(100, Math.round(Number(n) || 0)));
+
+// Long-running dashboard work must STREAM or Netlify's gateway 504s the browser
+// after ~2 minutes of silence (the lambda keeps running — the client just never
+// hears back). This wraps a slow job in a heartbeat stream: a whitespace byte
+// every few seconds keeps the connection alive, then the final JSON is the only
+// non-whitespace content. Clients read the full text, trim, and JSON.parse.
+export function streamedJSONResponse(
+  work: (signal: AbortSignal) => Promise<Record<string, unknown>>,
+  opts?: { timeoutMs?: number }
+): Response {
+  const enc = new TextEncoder();
+  const abort = new AbortController();
+  const stream = new ReadableStream({
+    start(controller) {
+      const timer = setTimeout(() => abort.abort(), opts?.timeoutMs ?? 280_000);
+      const heartbeat = setInterval(() => {
+        try { controller.enqueue(enc.encode(" ")); } catch { /* stream closed */ }
+      }, 8000);
+      work(abort.signal)
+        .then((result) => controller.enqueue(enc.encode(JSON.stringify(result))))
+        .catch((e) => {
+          console.error("[streamedJSON] work failed:", e);
+          try { controller.enqueue(enc.encode(JSON.stringify({ error: String(e).slice(0, 300) }))); } catch { /* closed */ }
+        })
+        .finally(() => {
+          clearInterval(heartbeat);
+          clearTimeout(timer);
+          try { controller.close(); } catch { /* closed */ }
+        });
+    },
+  });
+  return new Response(stream, {
+    headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-cache" },
+  });
+}

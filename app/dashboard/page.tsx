@@ -198,15 +198,24 @@ function signalView(data: any) {
   return { scores, findings, overall, tier: tierOf(overall) };
 }
 
-function ReportRunner({ cta, subtitle, longNote, endpoint, render }: {
+function ReportRunner({ cta, subtitle, longNote, endpoint, render, businesses = [] }: {
   cta: string; subtitle: string; longNote: string; endpoint: string;
   render: (data: any, form: Record<string, string>) => React.ReactNode;
+  businesses?: Biz[];
 }) {
   const [form, setForm] = useState({ name: "", url: "", trade: "", city: "" });
   const [running, setRunning] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [data, setData] = useState<any>(null);
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  // Picking an existing business autofills its exact url/trade/city — the #1
+  // source of duplicate business rows was retyping "TX" as "Texas" etc.
+  const setName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const v = e.target.value;
+    const match = businesses.find((b) => b.name.toLowerCase() === v.toLowerCase());
+    if (match) setForm({ name: match.name, url: match.url ?? "", trade: match.trade, city: match.city });
+    else setForm((f) => ({ ...f, name: v }));
+  };
   const ready = form.name && form.url && form.trade && form.city;
 
   const run = async () => {
@@ -214,8 +223,14 @@ function ReportRunner({ cta, subtitle, longNote, endpoint, render }: {
     setRunning(true); setErr(null); setData(null);
     try {
       const r = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
-      const d = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(d.error || `Server error ${r.status}`);
+      if (!r.ok) {
+        const d = await r.json().catch(() => ({}));
+        throw new Error(d.error || `Server error ${r.status}`);
+      }
+      // Response is heartbeat-streamed: whitespace keepalives, then one JSON object.
+      const text = await r.text();
+      const d = JSON.parse(text.trim());
+      if (d.error) throw new Error(d.error);
       setData(d);
     } catch (e: any) { setErr(e?.message || "Request failed."); }
     finally { setRunning(false); }
@@ -227,7 +242,10 @@ function ReportRunner({ cta, subtitle, longNote, endpoint, render }: {
         <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{cta}</div>
         <div style={{ ...eyebrow, marginBottom: 16 }}>{subtitle}</div>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <input style={inputStyle} placeholder="Business name" value={form.name} onChange={set("name")} />
+          <input style={inputStyle} placeholder="Business name" value={form.name} onChange={setName} list="rr-biz-list" />
+          <datalist id="rr-biz-list">
+            {businesses.map((b) => <option key={b.id} value={b.name} />)}
+          </datalist>
           <input style={inputStyle} placeholder="Website (e.g. acme.com)" value={form.url} onChange={set("url")} />
           <input style={inputStyle} placeholder="Trade (e.g. Plumbing)" value={form.trade} onChange={set("trade")} />
           <input style={inputStyle} placeholder="City / market" value={form.city} onChange={set("city")} />
@@ -531,14 +549,14 @@ function renderExecPlan(data: any, form: Record<string, string>) {
   );
 }
 
-function ScanTab() {
-  return <ReportRunner cta="Run scan" subtitle="Fast live triage" endpoint="/api/dashboard/scan" longNote="Crawling the site + live web search to check AI citations — ~1–2 min." render={renderScan} />;
+function ScanTab({ businesses }: { businesses: Biz[] }) {
+  return <ReportRunner businesses={businesses} cta="Run scan" subtitle="Fast live triage" endpoint="/api/dashboard/scan" longNote="Crawling the site + live web search to check AI citations — ~1–2 min." render={renderScan} />;
 }
-function BattlePlanTab() {
-  return <ReportRunner cta="Build battle plan" subtitle="Deep pre-meeting intel" endpoint="/api/dashboard/battle-plan" longNote="Deep web research + competitor teardown + local audit — this can take 2–4 min." render={renderBattlePlan} />;
+function BattlePlanTab({ businesses }: { businesses: Biz[] }) {
+  return <ReportRunner businesses={businesses} cta="Build battle plan" subtitle="Deep pre-meeting intel" endpoint="/api/dashboard/battle-plan" longNote="Deep web research + competitor teardown + local audit — this can take 2–4 min." render={renderBattlePlan} />;
 }
-function ExecPlanTab() {
-  return <ReportRunner cta="Build 90-day plan" subtitle="Post-signing execution plan" endpoint="/api/dashboard/execution-plan" longNote="Researching the market and phasing the 90-day plan — this can take 2–4 min." render={renderExecPlan} />;
+function ExecPlanTab({ businesses }: { businesses: Biz[] }) {
+  return <ReportRunner businesses={businesses} cta="Build 90-day plan" subtitle="Post-signing execution plan" endpoint="/api/dashboard/execution-plan" longNote="Researching the market and phasing the 90-day plan — this can take 2–4 min." render={renderExecPlan} />;
 }
 
 // ─── Tracking tab (continuous multi-engine visibility) ───────────────────────────
@@ -660,7 +678,10 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
     setBusy("run"); setErr(null); setRunMsg(null);
     try {
       const r = await fetch("/api/dashboard/track/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ businessId: bizId }) });
-      const d = await r.json().catch(() => ({})); if (!r.ok) throw new Error(d.error || "Run failed");
+      if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.error || "Run failed"); }
+      // Heartbeat-streamed: whitespace keepalives, then one JSON object.
+      const d = JSON.parse((await r.text()).trim());
+      if (d.error) throw new Error(d.error);
       setRunMsg(`Probed ${d.promptsRun}/${d.promptsTotal} prompts across ${(d.engines || []).length} engine(s).${d.skipped ? ` ${d.skipped} will run on the weekly schedule.` : ""}`);
       await loadFor(bizId);
     } catch (e: any) { setErr(e?.message || "Run failed"); } finally { setBusy(null); }
@@ -996,9 +1017,9 @@ export default function DashboardPage() {
       <div style={{ padding: 24, maxWidth: 1320, margin: "0 auto" }}>
         {dataErr && <div style={card({ borderColor: `${T.danger}66`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{dataErr}</span></div>}
         {tab === "overview" && (data ? <OverviewTab data={data} /> : <div style={{ color: T.muted, fontFamily: MONO, fontSize: 13, padding: 40, textAlign: "center" }}>Loading data…</div>)}
-        {tab === "scan" && <ScanTab />}
-        {tab === "battle" && <BattlePlanTab />}
-        {tab === "exec" && <ExecPlanTab />}
+        {tab === "scan" && <ScanTab businesses={data?.businesses ?? []} />}
+        {tab === "battle" && <BattlePlanTab businesses={data?.businesses ?? []} />}
+        {tab === "exec" && <ExecPlanTab businesses={data?.businesses ?? []} />}
         {tab === "track" && <TrackingTab businesses={data?.businesses ?? []} />}
         {tab === "ads" && <AdsTab />}
         <div style={{ marginTop: 32, paddingTop: 20, borderTop: `1px solid ${T.border}`, textAlign: "center", ...eyebrow }}>

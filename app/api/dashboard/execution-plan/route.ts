@@ -3,7 +3,7 @@ import { randomUUID } from "crypto";
 import { isAuthed } from "../../../lib/dashboard-auth";
 import { collectSiteEvidence, evidenceForPrompt } from "../../../lib/evidence";
 import { localLandscape, localForPrompt } from "../../../lib/places";
-import { runWebGroundedJSON, SCAN_MODEL } from "../../../lib/aiScan";
+import { runWebGroundedJSON, streamedJSONResponse, SCAN_MODEL } from "../../../lib/aiScan";
 import { upsertBusiness, insertAuditRow, completeAudit, failAudit, getAudit } from "../../../lib/db";
 import { seedTrackingPrompts } from "../../../lib/autoOnboard";
 
@@ -47,28 +47,32 @@ export async function POST(req: NextRequest) {
   if (!name || !trade || !city) return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   if (url && !/^https?:\/\//i.test(url)) url = `https://${url}`;
 
-  // Optional: ground in a prior battle plan / scan.
-  let prior: unknown = null;
-  if (fromAuditId && /^[0-9a-f-]{36}$/i.test(fromAuditId)) {
-    const row = await getAudit(fromAuditId);
-    if (row?.payload) prior = row.payload;
-  }
+  // Heartbeat-streamed — see streamedJSONResponse (Netlify gateway 504s
+  // non-streaming responses that take longer than ~2 minutes).
+  const finalUrl = url;
+  return streamedJSONResponse(async (signal) => {
+    // Optional: ground in a prior battle plan / scan.
+    let prior: unknown = null;
+    if (fromAuditId && /^[0-9a-f-]{36}$/i.test(fromAuditId)) {
+      const row = await getAudit(fromAuditId);
+      if (row?.payload) prior = row.payload;
+    }
 
-  const [evidence, local] = await Promise.all([
-    url ? collectSiteEvidence(url).catch(() => null) : Promise.resolve(null),
-    localLandscape(name, trade, city).catch(() => null),
-  ]);
+    const [evidence, local] = await Promise.all([
+      finalUrl ? collectSiteEvidence(finalUrl).catch(() => null) : Promise.resolve(null),
+      localLandscape(name, trade, city).catch(() => null),
+    ]);
 
-  const auditId = randomUUID();
-  const businessId = await upsertBusiness({ name, url: url ?? null, trade, city });
-  await insertAuditRow({ id: auditId, businessId, intakeId: null, tier: "strategy_97", model: SCAN_MODEL, promptVersion: PROMPT_VERSION });
+    const auditId = randomUUID();
+    const businessId = await upsertBusiness({ name, url: finalUrl ?? null, trade, city });
+    await insertAuditRow({ id: auditId, businessId, intakeId: null, tier: "strategy_97", model: SCAN_MODEL, promptVersion: PROMPT_VERSION });
 
-  const user = `Write the 90-day execution plan.
+    const user = `Write the 90-day execution plan.
 
 Business: ${name}
 Trade: ${trade}
 City / Market: ${city}
-${url ? `Website: ${url}` : "Website: (none provided)"}
+${finalUrl ? `Website: ${finalUrl}` : "Website: (none provided)"}
 
 ${evidence ? evidenceForPrompt(evidence) : "No site crawl available."}
 
@@ -78,26 +82,22 @@ ${prior ? `PRIOR BATTLE PLAN / SCAN FINDINGS (build on these):\n${JSON.stringify
 
 Search the web as needed, then return the execution plan JSON.`;
 
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 290_000);
-  let plan: Record<string, unknown>;
-  try {
-    plan = await runWebGroundedJSON({ system: SYSTEM_PROMPT, user, maxTokens: 8192, maxSearches: 6, signal: controller.signal });
-  } catch (e) {
-    console.error("[dashboard/execution-plan]", e);
-    await failAudit(auditId);
-    return NextResponse.json({ error: "Execution plan failed or timed out." }, { status: 502 });
-  } finally {
-    clearTimeout(timer);
-  }
+    let plan: Record<string, unknown>;
+    try {
+      plan = await runWebGroundedJSON({ system: SYSTEM_PROMPT, user, maxTokens: 8192, maxSearches: 6, signal });
+    } catch (e) {
+      await failAudit(auditId);
+      throw new Error("Execution plan failed or timed out — try again.");
+    }
 
-  plan.kind = "execution_plan";
-  const target = Number(plan.target_overall_90d);
-  await completeAudit({ id: auditId, payload: plan, overallScore: Number.isFinite(target) ? Math.max(0, Math.min(100, Math.round(target))) : null });
+    plan.kind = "execution_plan";
+    const target = Number(plan.target_overall_90d);
+    await completeAudit({ id: auditId, payload: plan, overallScore: Number.isFinite(target) ? Math.max(0, Math.min(100, Math.round(target))) : null });
 
-  // Auto-onboard into continuous tracking — a signed client's 90-day story
-  // needs a baseline from day one.
-  const trackingSeeded = businessId ? await seedTrackingPrompts(businessId, { name, trade, city }) : 0;
+    // Auto-onboard into continuous tracking — a signed client's 90-day story
+    // needs a baseline from day one.
+    const trackingSeeded = businessId ? await seedTrackingPrompts(businessId, { name, trade, city }) : 0;
 
-  return NextResponse.json({ id: auditId, tracking_seeded: trackingSeeded, ...plan });
+    return { id: auditId, tracking_seeded: trackingSeeded, ...plan };
+  });
 }
