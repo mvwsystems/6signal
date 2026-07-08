@@ -228,49 +228,26 @@ function ReportRunner({ cta, subtitle, longNote, endpoint, render, businesses = 
         const d = await r.json().catch(() => ({}));
         throw new Error(d.error || `Server error ${r.status}`);
       }
-      // Heartbeat-streamed: line 1 = {"pending":"<auditId>"}, then whitespace
-      // keepalives, then the result JSON. Read manually so that if any network
-      // layer kills the stream mid-run, we still hold the pending id and can
-      // poll for the persisted result (the server keeps working regardless).
-      let text = "";
-      let pendingId: string | null = null;
-      try {
-        const reader = r.body!.getReader();
-        const dec = new TextDecoder();
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          text += dec.decode(value, { stream: true });
-          if (!pendingId) {
-            const nl = text.indexOf("\n");
-            if (nl > 0) { try { pendingId = JSON.parse(text.slice(0, nl)).pending ?? null; } catch { /* not a preamble */ } }
-          }
-        }
-      } catch { /* stream died — recover via polling below */ }
-
-      const nl = text.indexOf("\n");
-      const tail = (nl >= 0 ? text.slice(nl + 1) : text).trim();
-      if (tail) {
-        const d = JSON.parse(tail);
-        if (d.error) throw new Error(d.error);
-        setData(d);
+      // The route only ENQUEUES (the heavy work runs in a background function
+      // with a 15-min runtime — request lambdas get killed ~60s in on this
+      // host). We get { pending: auditId } instantly, then poll the permalink
+      // API until the finished report lands (typically 1.5–4 minutes).
+      const d0 = await r.json();
+      const pendingId = d0.pending;
+      if (!pendingId) {
+        if (d0.error) throw new Error(d0.error);
+        setData(d0);
         return;
       }
-
-      if (pendingId) {
-        // Connection dropped mid-run. The report finishes server-side — poll
-        // the permalink API until it lands (up to ~5 minutes).
-        for (let i = 0; i < 38; i++) {
-          await new Promise((res) => setTimeout(res, 8000));
-          const pr = await fetch(`/api/audit/${pendingId}`);
-          if (pr.ok) {
-            const saved = await pr.json().catch(() => null);
-            if (saved?.payload) { setData({ id: pendingId, ...saved.payload }); return; }
-          }
-        }
-        throw new Error("The connection dropped and the result hasn't landed yet — it may still finish. Check Overview in a couple of minutes.");
+      for (let i = 0; i < 60; i++) {
+        await new Promise((res) => setTimeout(res, 8000));
+        const pr = await fetch(`/api/audit/${pendingId}`);
+        if (!pr.ok) continue;
+        const saved = await pr.json().catch(() => null);
+        if (saved?.payload) { setData({ id: pendingId, ...saved.payload }); return; }
+        if (saved?.status === "failed") throw new Error("The report run failed server-side — hit the button again to retry.");
       }
-      throw new Error("Empty response from server.");
+      throw new Error("Timed out after 8 minutes — check Overview shortly; the report may still land.");
     } catch (e: any) { setErr(e?.message || "Request failed."); }
     finally { setRunning(false); }
   };

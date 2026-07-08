@@ -202,6 +202,21 @@ export async function failAudit(id: string): Promise<void> {
   }
 }
 
+// Status regardless of completion — lets pollers distinguish "still working"
+// from "failed" from "gone".
+export async function getAuditStatus(id: string): Promise<{ id: string; status: string } | null> {
+  const s = db();
+  if (!s) return null;
+  try {
+    const { data, error } = await s.from("audits").select("id, status").eq("id", id).maybeSingle();
+    if (error) throw error;
+    return (data as { id: string; status: string } | null) ?? null;
+  } catch (e) {
+    console.error("[db] getAuditStatus failed:", e);
+    return null;
+  }
+}
+
 export async function getAudit(id: string): Promise<Record<string, unknown> | null> {
   const s = db();
   if (!s) return null;

@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAudit } from "../../../lib/db";
+import { getAudit, getAuditStatus } from "../../../lib/db";
 
 // Permalink retrieval for a completed brief or strategy document:
 // /audit-results?id=<auditId> renders from here instead of regenerating.
+// For in-flight audits (background report worker), returns { id, status } so
+// pollers can distinguish "still working" from "failed".
 
 export async function GET(
   _req: NextRequest,
@@ -13,11 +15,15 @@ export async function GET(
     return NextResponse.json({ error: "Invalid id" }, { status: 400 });
   }
   const audit = await getAudit(id);
-  if (!audit) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  return NextResponse.json({
-    id: audit.id,
-    tier: audit.tier,
-    payload: audit.payload,
-    created_at: audit.created_at,
-  });
+  if (audit) {
+    return NextResponse.json({
+      id: audit.id,
+      tier: audit.tier,
+      payload: audit.payload,
+      created_at: audit.created_at,
+    });
+  }
+  const meta = await getAuditStatus(id);
+  if (!meta) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  return NextResponse.json({ id: meta.id, status: meta.status });
 }
