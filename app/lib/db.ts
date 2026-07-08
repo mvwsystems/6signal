@@ -48,13 +48,22 @@ export async function upsertBusiness(b: BusinessInput): Promise<string | null> {
     // no wildcards = case-insensitive equality.
     const { data: existing } = await s
       .from("businesses")
-      .select("id")
+      .select("id, url")
       .ilike("name", b.name.trim())
       .ilike("trade", b.trade.trim())
       .ilike("city", b.city.trim())
       .limit(1)
       .maybeSingle();
-    if (existing?.id) return existing.id as string;
+    if (existing?.id) {
+      // Heal a missing website: free-check rows are created without one, which
+      // leaves url null forever and breaks form autofill.
+      if (b.url && !existing.url) {
+        void s.from("businesses").update({ url: b.url }).eq("id", existing.id).then(({ error }) => {
+          if (error) console.error("[db] url heal failed:", error);
+        });
+      }
+      return existing.id as string;
+    }
 
     const { data, error } = await s
       .from("businesses")

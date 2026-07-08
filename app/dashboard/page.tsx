@@ -213,7 +213,8 @@ function ReportRunner({ cta, subtitle, longNote, endpoint, render, businesses = 
   const setName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const v = e.target.value;
     const match = businesses.find((b) => b.name.toLowerCase() === v.toLowerCase());
-    if (match) setForm({ name: match.name, url: match.url ?? "", trade: match.trade, city: match.city });
+    // Keep an already-typed URL if the matched record has none on file.
+    if (match) setForm((f) => ({ name: match.name, url: match.url || f.url, trade: match.trade, city: match.city }));
     else setForm((f) => ({ ...f, name: v }));
   };
   const ready = form.name && form.url && form.trade && form.city;
