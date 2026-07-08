@@ -227,11 +227,49 @@ function ReportRunner({ cta, subtitle, longNote, endpoint, render, businesses = 
         const d = await r.json().catch(() => ({}));
         throw new Error(d.error || `Server error ${r.status}`);
       }
-      // Response is heartbeat-streamed: whitespace keepalives, then one JSON object.
-      const text = await r.text();
-      const d = JSON.parse(text.trim());
-      if (d.error) throw new Error(d.error);
-      setData(d);
+      // Heartbeat-streamed: line 1 = {"pending":"<auditId>"}, then whitespace
+      // keepalives, then the result JSON. Read manually so that if any network
+      // layer kills the stream mid-run, we still hold the pending id and can
+      // poll for the persisted result (the server keeps working regardless).
+      let text = "";
+      let pendingId: string | null = null;
+      try {
+        const reader = r.body!.getReader();
+        const dec = new TextDecoder();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          text += dec.decode(value, { stream: true });
+          if (!pendingId) {
+            const nl = text.indexOf("\n");
+            if (nl > 0) { try { pendingId = JSON.parse(text.slice(0, nl)).pending ?? null; } catch { /* not a preamble */ } }
+          }
+        }
+      } catch { /* stream died — recover via polling below */ }
+
+      const nl = text.indexOf("\n");
+      const tail = (nl >= 0 ? text.slice(nl + 1) : text).trim();
+      if (tail) {
+        const d = JSON.parse(tail);
+        if (d.error) throw new Error(d.error);
+        setData(d);
+        return;
+      }
+
+      if (pendingId) {
+        // Connection dropped mid-run. The report finishes server-side — poll
+        // the permalink API until it lands (up to ~5 minutes).
+        for (let i = 0; i < 38; i++) {
+          await new Promise((res) => setTimeout(res, 8000));
+          const pr = await fetch(`/api/audit/${pendingId}`);
+          if (pr.ok) {
+            const saved = await pr.json().catch(() => null);
+            if (saved?.payload) { setData({ id: pendingId, ...saved.payload }); return; }
+          }
+        }
+        throw new Error("The connection dropped and the result hasn't landed yet — it may still finish. Check Overview in a couple of minutes.");
+      }
+      throw new Error("Empty response from server.");
     } catch (e: any) { setErr(e?.message || "Request failed."); }
     finally { setRunning(false); }
   };

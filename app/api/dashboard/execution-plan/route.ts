@@ -88,9 +88,13 @@ export async function POST(req: NextRequest) {
   if (!name || !trade || !city) return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   if (url && !/^https?:\/\//i.test(url)) url = `https://${url}`;
 
-  // Heartbeat-streamed — see streamedJSONResponse (Netlify gateway 504s
-  // non-streaming responses that take longer than ~2 minutes).
+  // Heartbeat-streamed with a pending-id preamble — if the connection dies
+  // mid-run, the client polls /api/audit/<id> for the persisted result.
   const finalUrl = url;
+  const auditId = randomUUID();
+  const businessId = await upsertBusiness({ name, url: finalUrl ?? null, trade, city });
+  await insertAuditRow({ id: auditId, businessId, intakeId: null, tier: "strategy_97", model: SCAN_MODEL, promptVersion: PROMPT_VERSION });
+
   return streamedJSONResponse(async (signal) => {
     // Optional: ground in a prior battle plan / scan.
     let prior: unknown = null;
@@ -103,10 +107,6 @@ export async function POST(req: NextRequest) {
       finalUrl ? collectSiteEvidence(finalUrl).catch(() => null) : Promise.resolve(null),
       localLandscape(name, trade, city).catch(() => null),
     ]);
-
-    const auditId = randomUUID();
-    const businessId = await upsertBusiness({ name, url: finalUrl ?? null, trade, city });
-    await insertAuditRow({ id: auditId, businessId, intakeId: null, tier: "strategy_97", model: SCAN_MODEL, promptVersion: PROMPT_VERSION });
 
     const user = `Write the 90-day execution plan.
 
@@ -125,7 +125,7 @@ Search the web as needed, then return the execution plan JSON.`;
 
     let plan: Record<string, unknown>;
     try {
-      plan = await runWebGroundedJSON({ system: SYSTEM_PROMPT, user, maxTokens: 8192, maxSearches: 6, signal });
+      plan = await runWebGroundedJSON({ system: SYSTEM_PROMPT, user, maxTokens: 8192, maxSearches: 5, signal });
     } catch (e) {
       await failAudit(auditId);
       throw new Error("Execution plan failed or timed out — try again.");
@@ -144,5 +144,5 @@ Search the web as needed, then return the execution plan JSON.`;
     const tasksCreated = businessId ? await createPlanTasks(tasksFromPlan(plan, businessId, auditId)) : 0;
 
     return { id: auditId, tracking_seeded: trackingSeeded, tasks_created: tasksCreated, ...plan };
-  });
+  }, { pendingId: auditId });
 }

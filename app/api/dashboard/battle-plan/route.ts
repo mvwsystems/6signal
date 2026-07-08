@@ -45,18 +45,19 @@ export async function POST(req: NextRequest) {
   if (!name || !trade || !city) return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   if (url && !/^https?:\/\//i.test(url)) url = `https://${url}`;
 
-  // Heartbeat-streamed: Netlify's gateway 504s silent responses after ~2 min,
-  // and a battle plan legitimately takes 2–4. See streamedJSONResponse.
+  // Heartbeat-streamed with a pending-id preamble: if any layer kills the
+  // connection mid-run, the lambda keeps working and the client polls
+  // /api/audit/<id> for the persisted result. See streamedJSONResponse.
   const finalUrl = url;
+  const auditId = randomUUID();
+  const businessId = await upsertBusiness({ name, url: finalUrl ?? null, trade, city });
+  await insertAuditRow({ id: auditId, businessId, intakeId: null, tier: "brief_27", model: SCAN_MODEL, promptVersion: PROMPT_VERSION });
+
   return streamedJSONResponse(async (signal) => {
     const [evidence, local] = await Promise.all([
       finalUrl ? collectSiteEvidence(finalUrl).catch(() => null) : Promise.resolve(null),
       localLandscape(name, trade, city).catch(() => null),
     ]);
-
-    const auditId = randomUUID();
-    const businessId = await upsertBusiness({ name, url: finalUrl ?? null, trade, city });
-    await insertAuditRow({ id: auditId, businessId, intakeId: null, tier: "brief_27", model: SCAN_MODEL, promptVersion: PROMPT_VERSION });
     if (evidence) {
       void saveSiteSnapshot(auditId, {
         url: evidence.url, fetched: evidence.fetched, http_status: evidence.http_status,
@@ -83,7 +84,7 @@ Search the web thoroughly, then return the battle plan JSON.`;
 
     let plan: Record<string, unknown>;
     try {
-      plan = await runWebGroundedJSON({ system: SYSTEM_PROMPT, user, maxTokens: 8192, maxSearches: 8, signal });
+      plan = await runWebGroundedJSON({ system: SYSTEM_PROMPT, user, maxTokens: 8192, maxSearches: 5, signal });
     } catch (e) {
       await failAudit(auditId);
       throw new Error("Battle plan failed or timed out — try again.");
@@ -105,5 +106,5 @@ Search the web thoroughly, then return the battle plan JSON.`;
     const trackingSeeded = businessId ? await seedTrackingPrompts(businessId, { name, trade, city }) : 0;
 
     return { id: auditId, tracking_seeded: trackingSeeded, ...plan };
-  });
+  }, { pendingId: auditId });
 }

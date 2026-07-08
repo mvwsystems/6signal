@@ -66,16 +66,24 @@ export const clampScore = (n: unknown): number => Math.max(0, Math.min(100, Math
 // non-whitespace content. Clients read the full text, trim, and JSON.parse.
 export function streamedJSONResponse(
   work: (signal: AbortSignal) => Promise<Record<string, unknown>>,
-  opts?: { timeoutMs?: number }
+  opts?: { timeoutMs?: number; pendingId?: string }
 ): Response {
   const enc = new TextEncoder();
   const abort = new AbortController();
+  // 1KB padding forces intermediary buffers to actually flush — a single space
+  // can sit in a proxy buffer forever, which reads as silence and gets killed.
+  const HEARTBEAT = " ".repeat(1024);
   const stream = new ReadableStream({
     start(controller) {
+      // First line = the pending id. If the connection dies mid-run, the client
+      // polls /api/audit/<id> for the persisted result (the lambda keeps going).
+      if (opts?.pendingId) {
+        try { controller.enqueue(enc.encode(JSON.stringify({ pending: opts.pendingId }) + "\n")); } catch { /* closed */ }
+      }
       const timer = setTimeout(() => abort.abort(), opts?.timeoutMs ?? 280_000);
       const heartbeat = setInterval(() => {
-        try { controller.enqueue(enc.encode(" ")); } catch { /* stream closed */ }
-      }, 8000);
+        try { controller.enqueue(enc.encode(HEARTBEAT)); } catch { /* stream closed */ }
+      }, 4000);
       work(abort.signal)
         .then((result) => controller.enqueue(enc.encode(JSON.stringify(result))))
         .catch((e) => {
@@ -90,6 +98,6 @@ export function streamedJSONResponse(
     },
   });
   return new Response(stream, {
-    headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-cache" },
+    headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-cache", "X-Accel-Buffering": "no" },
   });
 }

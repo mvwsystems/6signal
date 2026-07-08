@@ -37,18 +37,18 @@ export async function POST(req: NextRequest) {
   if (!name || !trade || !city) return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   if (url && !/^https?:\/\//i.test(url)) url = `https://${url}`;
 
-  // Heartbeat-streamed — see streamedJSONResponse (Netlify gateway 504s
-  // non-streaming responses that take longer than ~2 minutes).
+  // Heartbeat-streamed with a pending-id preamble — if the connection dies
+  // mid-run, the client polls /api/audit/<id> for the persisted result.
   const finalUrl = url;
+  const auditId = randomUUID();
+  const businessId = await upsertBusiness({ name, url: finalUrl ?? null, trade, city });
+  await insertAuditRow({ id: auditId, businessId, intakeId: null, tier: "brief_27", model: SCAN_MODEL, promptVersion: PROMPT_VERSION });
+
   return streamedJSONResponse(async (signal) => {
     const [evidence, local] = await Promise.all([
       finalUrl ? collectSiteEvidence(finalUrl).catch(() => null) : Promise.resolve(null),
       localLandscape(name, trade, city).catch(() => null),
     ]);
-
-    const auditId = randomUUID();
-    const businessId = await upsertBusiness({ name, url: finalUrl ?? null, trade, city });
-    await insertAuditRow({ id: auditId, businessId, intakeId: null, tier: "brief_27", model: SCAN_MODEL, promptVersion: PROMPT_VERSION });
     if (evidence) {
       void saveSiteSnapshot(auditId, {
         url: evidence.url, fetched: evidence.fetched, http_status: evidence.http_status,
@@ -92,5 +92,5 @@ Search the web now, then return the scan JSON.`;
     await saveSignalScores(auditId, SIGNAL_KEYS.map((k) => ({ signal: k, score: signals[k].score as number, evidence: k === "ieo" && evidence ? evidence.checks : undefined })));
 
     return { id: auditId, ...scan };
-  });
+  }, { pendingId: auditId });
 }
