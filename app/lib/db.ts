@@ -202,6 +202,26 @@ export async function failAudit(id: string): Promise<void> {
   }
 }
 
+// Completed report history for one business (dashboard "Past reports" list).
+export async function listCompletedAudits(businessId: string): Promise<Record<string, unknown>[]> {
+  const s = db();
+  if (!s) return [];
+  try {
+    const { data, error } = await s
+      .from("audits")
+      .select("id, prompt_version, tier, overall_score, created_at")
+      .eq("business_id", businessId)
+      .eq("status", "complete")
+      .order("created_at", { ascending: false })
+      .limit(25);
+    if (error) throw error;
+    return data ?? [];
+  } catch (e) {
+    console.error("[db] listCompletedAudits failed:", e);
+    return [];
+  }
+}
+
 // Status regardless of completion — lets pollers distinguish "still working"
 // from "failed" from "gone".
 export async function getAuditStatus(id: string): Promise<{ id: string; status: string } | null> {

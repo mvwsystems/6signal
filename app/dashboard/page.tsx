@@ -198,15 +198,40 @@ function signalView(data: any) {
   return { scores, findings, overall, tier: tierOf(overall) };
 }
 
-function ReportRunner({ cta, subtitle, longNote, endpoint, render, businesses = [] }: {
+function ReportRunner({ cta, subtitle, longNote, endpoint, render, businesses = [], historyPrefix }: {
   cta: string; subtitle: string; longNote: string; endpoint: string;
   render: (data: any, form: Record<string, string>) => React.ReactNode;
   businesses?: Biz[];
+  historyPrefix?: string; // prompt_version prefix, e.g. "battleplan"
 }) {
   const [form, setForm] = useState({ name: "", url: "", trade: "", city: "" });
   const [running, setRunning] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [data, setData] = useState<any>(null);
+  const [history, setHistory] = useState<{ id: string; created_at: string; overall_score: number | null }[]>([]);
+
+  // Every report is stored permanently — when the typed name matches a known
+  // business, list its past reports of this kind so any of them reopens.
+  const matchedBiz = businesses.find((b) => b.name.toLowerCase() === form.name.toLowerCase()) || null;
+  useEffect(() => {
+    if (!matchedBiz || !historyPrefix) { setHistory([]); return; }
+    fetch(`/api/dashboard/reports?businessId=${matchedBiz.id}`)
+      .then((r) => r.json())
+      .then((d) => setHistory((d.reports ?? []).filter((r: any) => String(r.prompt_version ?? "").startsWith(historyPrefix)).map((r: any) => ({ id: r.id, created_at: r.created_at, overall_score: r.overall_score }))))
+      .catch(() => setHistory([]));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [matchedBiz?.id, historyPrefix, data]);
+
+  const openPast = async (id: string) => {
+    setErr(null); setRunning(true); setData(null);
+    try {
+      const r = await fetch(`/api/audit/${id}`);
+      const saved = await r.json().catch(() => null);
+      if (!saved?.payload) throw new Error("Could not load that report.");
+      setData({ id, ...saved.payload });
+    } catch (e: any) { setErr(e?.message || "Could not load that report."); }
+    finally { setRunning(false); }
+  };
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));
   // Picking an existing business autofills its exact url/trade/city — the #1
   // source of duplicate business rows was retyping "TX" as "Texas" etc.
@@ -270,6 +295,18 @@ function ReportRunner({ cta, subtitle, longNote, endpoint, render, businesses = 
           </button>
         </div>
         {running && <p style={{ fontSize: 12, color: T.muted, marginTop: 12, lineHeight: 1.5 }}>{longNote}</p>}
+        {history.length > 0 && (
+          <div style={{ marginTop: 16, borderTop: `1px solid ${T.border}`, paddingTop: 12 }}>
+            <div style={{ ...eyebrow, marginBottom: 8 }}>Past reports — click to reopen</div>
+            {history.map((h) => (
+              <button key={h.id} onClick={() => openPast(h.id)}
+                style={{ display: "flex", justifyContent: "space-between", width: "100%", background: "none", border: "none", cursor: "pointer", padding: "5px 0", fontFamily: MONO, fontSize: 12, color: T.textSub }}>
+                <span>{String(h.created_at).slice(0, 10)}</span>
+                <span style={{ color: h.overall_score != null ? scoreColor(Number(h.overall_score)) : T.muted }}>{h.overall_score ?? "—"}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
       <div>
         {err && <div style={card({ borderColor: `${T.danger}66`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{err}</span></div>}
@@ -566,13 +603,13 @@ function renderExecPlan(data: any, form: Record<string, string>) {
 }
 
 function ScanTab({ businesses }: { businesses: Biz[] }) {
-  return <ReportRunner businesses={businesses} cta="Run scan" subtitle="Fast live triage" endpoint="/api/dashboard/scan" longNote="Crawling the site + live web search to check AI citations — ~1–2 min." render={renderScan} />;
+  return <ReportRunner businesses={businesses} historyPrefix="scan" cta="Run scan" subtitle="Fast live triage" endpoint="/api/dashboard/scan" longNote="Runs in the background — crawl + live web search. Result appears here in ~1–3 min." render={renderScan} />;
 }
 function BattlePlanTab({ businesses }: { businesses: Biz[] }) {
-  return <ReportRunner businesses={businesses} cta="Build battle plan" subtitle="Deep pre-meeting intel" endpoint="/api/dashboard/battle-plan" longNote="Deep web research + competitor teardown + local audit — this can take 2–4 min." render={renderBattlePlan} />;
+  return <ReportRunner businesses={businesses} historyPrefix="battleplan" cta="Build battle plan" subtitle="Deep pre-meeting intel" endpoint="/api/dashboard/battle-plan" longNote="Runs in the background — deep research + competitor teardown. Result appears here in ~2–4 min." render={renderBattlePlan} />;
 }
 function ExecPlanTab({ businesses }: { businesses: Biz[] }) {
-  return <ReportRunner businesses={businesses} cta="Build 90-day plan" subtitle="Post-signing execution plan" endpoint="/api/dashboard/execution-plan" longNote="Researching the market and phasing the 90-day plan — this can take 2–4 min." render={renderExecPlan} />;
+  return <ReportRunner businesses={businesses} historyPrefix="execplan" cta="Build 90-day plan" subtitle="Post-signing execution plan" endpoint="/api/dashboard/execution-plan" longNote="Runs in the background — market research + phased plan. Result appears here in ~2–4 min." render={renderExecPlan} />;
 }
 
 // ─── Tracking tab (continuous multi-engine visibility) ───────────────────────────
