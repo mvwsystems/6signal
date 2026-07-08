@@ -7,11 +7,11 @@ import { streamedJSONResponse } from "../../../../lib/aiScan";
 export const maxDuration = 300;
 
 // Run a tracking probe for one business: every active prompt × every engine with
-// a key, judged by Claude, persisted to probe_results. Bounded so an on-demand
-// run fits the function window; the scheduled runner handles the full set.
-// Heartbeat-streamed — 8 prompts × 3 engines can take several minutes and
-// Netlify's gateway 504s silent responses (see streamedJSONResponse).
-const MAX_PROMPTS_PER_RUN = 8;
+// a key, judged by Claude, persisted to probe_results. Netlify cuts every HTTP
+// response at 60s (measured 2026-07-08 via stream-test), so the on-demand run is
+// sized to finish inside that window — the weekly cron covers the full set (its
+// lambda keeps running after the proxy cut, so it isn't bound by the 60s).
+const MAX_PROMPTS_PER_RUN = 4;
 
 export async function POST(req: NextRequest) {
   if (!isAuthed(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
