@@ -863,6 +863,20 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
 // ─── Overview tab ────────────────────────────────────────────────────────────────
 function OverviewTab({ data }: { data: Overview }) {
   const [selected, setSelected] = useState<string | null>(null);
+  const [tasks, setTasks] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!selected) { setTasks([]); return; }
+    fetch(`/api/dashboard/tasks?businessId=${selected}`)
+      .then((r) => r.json())
+      .then((d) => setTasks(d.tasks ?? []))
+      .catch(() => setTasks([]));
+  }, [selected]);
+
+  const markTask = async (id: string, status: string) => {
+    setTasks((ts) => ts.map((t) => (t.id === id ? { ...t, status } : t)));
+    await fetch("/api/dashboard/tasks", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, status }) }).catch(() => {});
+  };
 
   // latest complete audit per business (audits come ascending → last wins)
   const latestByBiz = useMemo(() => {
@@ -947,6 +961,28 @@ function OverviewTab({ data }: { data: Overview }) {
               </>
             ) : (
               <p style={{ fontSize: 13, color: T.muted }}>No completed audit yet for this business.</p>
+            )}
+
+            {tasks.length > 0 && (
+              <div style={{ marginTop: 16, borderTop: `1px solid ${T.border}`, paddingTop: 12 }}>
+                <div style={{ ...eyebrow, marginBottom: 8 }}>
+                  Plan tasks · {tasks.filter((t) => t.status === "done").length}/{tasks.length} done
+                </div>
+                {tasks.map((t) => (
+                  <div key={t.id} style={{ display: "flex", gap: 8, alignItems: "baseline", marginBottom: 6 }}>
+                    <button
+                      onClick={() => markTask(t.id, t.status === "done" ? "open" : "done")}
+                      style={{ background: "none", border: `1px solid ${t.status === "done" ? T.ok : T.border}`, color: t.status === "done" ? T.ok : T.muted, width: 16, height: 16, fontSize: 10, lineHeight: 1, cursor: "pointer", flexShrink: 0 }}
+                    >
+                      {t.status === "done" ? "✓" : ""}
+                    </button>
+                    <span style={{ fontFamily: MONO, fontSize: 9, color: t.owner === "Client" ? T.warn : T.accent, minWidth: 44 }}>{t.owner}</span>
+                    <span style={{ fontSize: 12, color: t.status === "done" ? T.muted : T.text, textDecoration: t.status === "done" ? "line-through" : "none", lineHeight: 1.4 }}>
+                      {t.task}
+                    </span>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         )}

@@ -4,8 +4,49 @@ import { isAuthed } from "../../../lib/dashboard-auth";
 import { collectSiteEvidence, evidenceForPrompt } from "../../../lib/evidence";
 import { localLandscape, localForPrompt } from "../../../lib/places";
 import { runWebGroundedJSON, streamedJSONResponse, SCAN_MODEL } from "../../../lib/aiScan";
-import { upsertBusiness, insertAuditRow, completeAudit, failAudit, getAudit } from "../../../lib/db";
+import { upsertBusiness, insertAuditRow, completeAudit, failAudit, getAudit, createPlanTasks, PlanTaskInput } from "../../../lib/db";
 import { seedTrackingPrompts } from "../../../lib/autoOnboard";
+
+// "Days 1-30: Foundation" → a due date ~N days out; quick wins get 14 days.
+function dueFromPhase(phase: string): string {
+  const m = phase.match(/(\d+)\s*[-–]\s*(\d+)/);
+  const days = m ? Number(m[2]) : 30;
+  return new Date(Date.now() + days * 86400000).toISOString().slice(0, 10);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function tasksFromPlan(plan: any, businessId: string, auditId: string): PlanTaskInput[] {
+  const rows: PlanTaskInput[] = [];
+  for (const p of plan.phases ?? []) {
+    for (const d of p.deliverables ?? []) {
+      if (!d?.task) continue;
+      rows.push({
+        business_id: businessId,
+        plan_audit_id: auditId,
+        phase: String(p.phase ?? ""),
+        task: String(d.task),
+        detail: d.detail ? String(d.detail) : null,
+        owner: /client/i.test(String(d.owner)) ? "Client" : "6Signal",
+        signal: d.signal ? String(d.signal).toUpperCase() : null,
+        due_date: dueFromPhase(String(p.phase ?? "")),
+      });
+    }
+  }
+  for (const w of plan.quick_wins ?? []) {
+    if (!w?.win) continue;
+    rows.push({
+      business_id: businessId,
+      plan_audit_id: auditId,
+      phase: "Quick wins",
+      task: String(w.win),
+      detail: w.impact ? String(w.impact) : null,
+      owner: "6Signal",
+      signal: null,
+      due_date: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10),
+    });
+  }
+  return rows;
+}
 
 export const maxDuration = 300;
 
@@ -98,6 +139,10 @@ Search the web as needed, then return the execution plan JSON.`;
     // needs a baseline from day one.
     const trackingSeeded = businessId ? await seedTrackingPrompts(businessId, { name, trade, city }) : 0;
 
-    return { id: auditId, tracking_seeded: trackingSeeded, ...plan };
+    // The plan becomes a live work queue: every deliverable → a plan_task with
+    // owner + due date, which the Monday briefing works through.
+    const tasksCreated = businessId ? await createPlanTasks(tasksFromPlan(plan, businessId, auditId)) : 0;
+
+    return { id: auditId, tracking_seeded: trackingSeeded, tasks_created: tasksCreated, ...plan };
   });
 }

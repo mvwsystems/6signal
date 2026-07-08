@@ -422,6 +422,85 @@ export async function getProbeResults(businessId: string, sinceDays = 90): Promi
   }
 }
 
+// ── Plan tasks (living execution plan) ───────────────────────────────────────
+export interface PlanTaskInput {
+  business_id: string;
+  plan_audit_id: string | null;
+  phase: string | null;
+  task: string;
+  detail: string | null;
+  owner: string;
+  signal: string | null;
+  due_date: string | null; // YYYY-MM-DD
+}
+
+export async function createPlanTasks(rows: PlanTaskInput[]): Promise<number> {
+  const s = db();
+  if (!s || !rows.length) return 0;
+  try {
+    const { error } = await s.from("plan_tasks").insert(rows);
+    if (error) throw error;
+    return rows.length;
+  } catch (e) {
+    console.error("[db] createPlanTasks failed:", e);
+    return 0;
+  }
+}
+
+export async function listTasks(businessId: string): Promise<Record<string, unknown>[]> {
+  const s = db();
+  if (!s) return [];
+  try {
+    const { data, error } = await s
+      .from("plan_tasks")
+      .select("id, phase, task, detail, owner, signal, status, due_date")
+      .eq("business_id", businessId)
+      .neq("status", "skipped")
+      .order("due_date", { ascending: true });
+    if (error) throw error;
+    return data ?? [];
+  } catch (e) {
+    console.error("[db] listTasks failed:", e);
+    return [];
+  }
+}
+
+export async function updateTaskStatus(id: string, status: "open" | "in_progress" | "done" | "skipped"): Promise<boolean> {
+  const s = db();
+  if (!s) return false;
+  try {
+    const { error } = await s
+      .from("plan_tasks")
+      .update({ status, completed_at: status === "done" ? new Date().toISOString() : null })
+      .eq("id", id);
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error("[db] updateTaskStatus failed:", e);
+    return false;
+  }
+}
+
+// Every business that has open tasks OR tracked prompts — the briefing roster.
+export async function briefingRoster(): Promise<Array<{ id: string; name: string; trade: string; city: string }>> {
+  const s = db();
+  if (!s) return [];
+  try {
+    const [tasks, tracked] = await Promise.all([
+      s.from("plan_tasks").select("business_id").eq("status", "open"),
+      s.from("tracked_prompts").select("business_id").eq("active", true),
+    ]);
+    const ids = Array.from(new Set([...(tasks.data ?? []), ...(tracked.data ?? [])].map((r) => r.business_id as string)));
+    if (!ids.length) return [];
+    const { data, error } = await s.from("businesses").select("id, name, trade, city").in("id", ids);
+    if (error) throw error;
+    return (data ?? []) as Array<{ id: string; name: string; trade: string; city: string }>;
+  } catch (e) {
+    console.error("[db] briefingRoster failed:", e);
+    return [];
+  }
+}
+
 export async function recordPurchase(args: {
   stripeSessionId: string;
   intakeId: string | null;
