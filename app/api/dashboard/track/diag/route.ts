@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
           engine: e,
           ok: a.ok,
           error: a.error ?? null,
+          note: a.note ?? null,
           answerChars: a.text.length,
           sources: a.sources.length,
           ms: Date.now() - started,

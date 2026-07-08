@@ -15,6 +15,7 @@ export interface EngineAnswer {
   text: string;
   sources: string[];
   error?: string;
+  note?: string; // non-fatal degradation worth surfacing (e.g. model fallback)
 }
 
 export interface Verdict {
@@ -64,12 +65,14 @@ async function openAIOnce(prompt: string, key: string, model: string, signal?: A
 async function probeOpenAI(prompt: string, key: string, signal?: AbortSignal): Promise<EngineAnswer> {
   const primary = process.env.OPENAI_MODEL?.trim() || "gpt-5.5";
   let r = await openAIOnce(prompt, key, primary, signal);
+  let note: string | undefined;
   // Model not available on this account → fall back to the stable workhorse.
   if (!r.ok && (r.status === 404 || /model/i.test(r.errText))) {
     r = await openAIOnce(prompt, key, "gpt-4.1", signal);
+    if (r.ok) note = `primary model "${primary}" unavailable — fell back to gpt-4.1 (set OPENAI_MODEL to silence this)`;
   }
   if (!r.ok) throw new Error(`OpenAI ${r.status}: ${r.errText}`);
-  return { engine: "chatgpt", ok: true, text: r.text, sources: dedupe(r.sources) };
+  return { engine: "chatgpt", ok: true, text: r.text, sources: dedupe(r.sources), note };
 }
 
 async function probeClaude(prompt: string, key: string, signal?: AbortSignal): Promise<EngineAnswer> {
