@@ -8,6 +8,7 @@ export async function sendEmail(args: {
   subject: string;
   html: string;
   replyTo?: string;
+  cc?: string[];
 }): Promise<boolean> {
   const key = process.env.RESEND_API_KEY;
   if (!key) {
@@ -27,6 +28,7 @@ export async function sendEmail(args: {
         subject: args.subject,
         html: args.html,
         ...(args.replyTo ? { reply_to: args.replyTo } : {}),
+        ...(args.cc?.length ? { cc: args.cc } : {}),
       }),
     });
     if (!res.ok) {

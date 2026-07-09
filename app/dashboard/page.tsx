@@ -1137,6 +1137,18 @@ function OverviewTab({ data }: { data: Overview }) {
     } catch { /* ignore */ }
   };
 
+  const [welcomeState, setWelcomeState] = useState<string | null>(null);
+  const sendWelcome = async () => {
+    if (!selected || !emailTo) return;
+    setWelcomeState("sending");
+    try {
+      const r = await fetch("/api/dashboard/welcome-client", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ businessId: selected, email: emailTo }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Send failed");
+      setWelcomeState("sent");
+    } catch (e: any) { setWelcomeState(e?.message || "Send failed"); }
+  };
+
   const sendClientUpdate = async () => {
     if (!selected || !emailTo) return;
     setEmailState("sending");
@@ -1304,9 +1316,14 @@ function OverviewTab({ data }: { data: Overview }) {
             </div>
 
             <div style={{ marginTop: 16, borderTop: `1px solid ${T.border}`, paddingTop: 12 }}>
-              <div style={{ ...eyebrow, marginBottom: 8 }}>Client update email</div>
+              <div style={{ ...eyebrow, marginBottom: 8 }}>Client emails</div>
               <input style={{ ...inputStyle, marginBottom: 8 }} placeholder="client@email.com" value={emailTo} onChange={(e) => setEmailTo(e.target.value)} />
-              <button style={{ ...btn(true), width: "100%", opacity: emailState === "sending" || !emailTo ? 0.5 : 1 }} disabled={emailState === "sending" || !emailTo} onClick={sendClientUpdate}>
+              <button style={{ ...btn(true), width: "100%", marginBottom: 8, opacity: welcomeState === "sending" || !emailTo ? 0.5 : 1 }} disabled={welcomeState === "sending" || !emailTo} onClick={sendWelcome}>
+                {welcomeState === "sending" ? "Preparing welcome…" : "Send welcome + baseline"}
+              </button>
+              {welcomeState === "sent" && <p style={{ fontSize: 12, color: T.ok, margin: "0 0 8px" }}>Welcome sent ✓ — baseline + live link included, you&rsquo;re CC&rsquo;d.</p>}
+              {welcomeState && welcomeState !== "sent" && welcomeState !== "sending" && <p style={{ fontSize: 12, color: T.danger, margin: "0 0 8px" }}>{welcomeState}</p>}
+              <button style={{ ...btn(), width: "100%", opacity: emailState === "sending" || !emailTo ? 0.5 : 1 }} disabled={emailState === "sending" || !emailTo} onClick={sendClientUpdate}>
                 {emailState === "sending" ? "Composing & sending…" : "Send client update"}
               </button>
               {emailState === "sent" && <p style={{ fontSize: 12, color: T.ok, marginTop: 8 }}>Sent ✓ — what we did, what we&rsquo;re doing, and what they need to do.</p>}

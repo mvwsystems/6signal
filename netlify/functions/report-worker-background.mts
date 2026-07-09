@@ -6,6 +6,8 @@
 import { runScanReport, runBattlePlanReport, runExecutionPlanReport } from "../../app/lib/reports";
 import { runProbeSweep } from "../../app/lib/probes";
 import { runMonthlyClientReports } from "../../app/lib/clientReport";
+import { runWatchdog } from "../../app/lib/watchdog";
+import { runOwnerBriefing } from "../../app/lib/briefing";
 
 export default async (req: Request) => {
   if (req.method !== "POST") return new Response("method not allowed", { status: 405 });
@@ -36,6 +38,10 @@ export default async (req: Request) => {
       await runProbeSweep({ cap: 30 });
     } else if (kind === "client-reports-cron") {
       await runMonthlyClientReports();
+    } else if (kind === "watchdog") {
+      await runWatchdog();
+    } else if (kind === "briefing") {
+      await runOwnerBriefing();
     } else {
       return new Response("unknown kind", { status: 400 });
     }

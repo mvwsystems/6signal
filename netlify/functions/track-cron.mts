@@ -1,6 +1,7 @@
-// Netlify Scheduled Function — weekly AI-visibility probe run.
-// Pings the cron endpoint with the shared secret; the endpoint does the work.
-// Config-only schedule (no @netlify/functions type import to avoid a dep).
+// Netlify Scheduled Function — BIWEEKLY AI-visibility probe run.
+// Fires every Monday but only acts on even epoch-weeks (every 2 weeks) —
+// clients don't need weekly probes. The endpoint enqueues the sweep onto the
+// background worker, so this trigger returns instantly (no retry duplicates).
 
 export default async () => {
   const base = process.env.URL || "https://6signal.co";
@@ -9,6 +10,9 @@ export default async () => {
     console.warn("[track-cron] CRON_SECRET not set — skipping");
     return new Response("skipped: no CRON_SECRET", { status: 200 });
   }
+  // Biweekly gate: act only on even weeks since epoch (deterministic).
+  const week = Math.floor(Date.now() / (7 * 86400000));
+  if (week % 2 === 1) return new Response("skipped: off-week (biweekly cadence)", { status: 200 });
   try {
     const r = await fetch(`${base}/api/dashboard/track/cron`, {
       method: "POST",
@@ -23,5 +27,5 @@ export default async () => {
   }
 };
 
-// Mondays at 08:00 UTC. Adjust cadence here.
+// Mondays at 08:00 UTC; the parity gate above makes it biweekly.
 export const config = { schedule: "0 8 * * 1" };
