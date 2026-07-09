@@ -56,7 +56,7 @@ const fmtDate = (s?: string) => {
 };
 
 // ─── Types ───────────────────────────────────────────────────────────────────
-interface Biz { id: string; name: string; url: string | null; trade: string; city: string; created_at: string }
+interface Biz { id: string; name: string; url: string | null; trade: string; city: string; contact_email?: string | null; created_at: string }
 interface AuditRow { id: string; business_id: string | null; tier: string; overall_score: number | null; status: string; created_at: string }
 interface ScoreRow { audit_id: string; signal: string; score: number }
 interface LeadRow { id: string; business_id: string | null; email: string; source: string; created_at: string }
@@ -731,13 +731,24 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
     if (!bizId) return;
     setBusy("run"); setErr(null); setRunMsg(null);
     try {
+      // The run executes in the background worker; verdicts land incrementally.
+      const sinceMs = Date.now() - 30_000; // small buffer for clock skew
       const r = await fetch("/api/dashboard/track/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ businessId: bizId }) });
-      if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.error || "Run failed"); }
-      // Heartbeat-streamed: whitespace keepalives, then one JSON object.
-      const d = JSON.parse((await r.text()).trim());
-      if (d.error) throw new Error(d.error);
-      setRunMsg(`Probed ${d.promptsRun}/${d.promptsTotal} prompts across ${(d.engines || []).length} engine(s).${d.skipped ? ` ${d.skipped} will run on the weekly schedule.` : ""}`);
-      await loadFor(bizId);
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Run failed");
+      setRunMsg(`Probing ${d.prompts} prompts across ${(d.engines || []).length} engine(s) in the background — verdicts appear as they land…`);
+      let lastNew = 0, stable = 0;
+      for (let i = 0; i < 36; i++) {
+        await new Promise((res) => setTimeout(res, 10_000));
+        const rr = await fetch(`/api/dashboard/track/results?businessId=${bizId}`).then((x) => x.json()).catch(() => null);
+        if (!rr) continue;
+        setResults(rr.results ?? []);
+        const fresh = (rr.results ?? []).filter((x: any) => new Date(String(x.run_at)).getTime() > sinceMs).length;
+        setRunMsg(`${fresh} fresh verdicts so far…`);
+        if (fresh > 0 && fresh === lastNew) { stable++; if (stable >= 2) break; } else { stable = 0; }
+        lastNew = fresh;
+      }
+      setRunMsg(lastNew > 0 ? `Done — ${lastNew} fresh verdicts recorded.` : "No fresh verdicts landed — check Test Engines.");
     } catch (e: any) { setErr(e?.message || "Run failed"); } finally { setBusy(null); }
   };
 
@@ -931,6 +942,54 @@ function OverviewTab({ data }: { data: Overview }) {
     await fetch("/api/dashboard/tasks", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, status }) }).catch(() => {});
   };
 
+  // Client file: every stored report for the selected business, reopenable.
+  const [reports, setReports] = useState<any[]>([]);
+  const [openReport, setOpenReport] = useState<{ pv: string; data: any } | null>(null);
+  const [emailTo, setEmailTo] = useState("");
+  const [emailState, setEmailState] = useState<string | null>(null);
+
+  useEffect(() => {
+    setOpenReport(null); setEmailState(null);
+    if (!selected) { setReports([]); setEmailTo(""); return; }
+    setEmailTo(data.businesses.find((b) => b.id === selected)?.contact_email ?? "");
+    fetch(`/api/dashboard/reports?businessId=${selected}`)
+      .then((r) => r.json())
+      .then((d) => setReports(d.reports ?? []))
+      .catch(() => setReports([]));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected]);
+
+  const reportKind = (pv: string, tier: string) => {
+    const v = String(pv ?? "");
+    if (v.startsWith("battleplan")) return { label: "Battle Plan", mode: "battle" as const };
+    if (v.startsWith("execplan")) return { label: "90-Day Plan", mode: "exec" as const };
+    if (v.startsWith("scan")) return { label: "Quick Scan", mode: "scan" as const };
+    if (tier === "strategy_97") return { label: "$97 Strategy", mode: "ext-strategy" as const };
+    return { label: "$27 Brief", mode: "ext-brief" as const };
+  };
+
+  const openStoredReport = async (rep: any) => {
+    const kind = reportKind(rep.prompt_version, rep.tier);
+    if (kind.mode === "ext-brief") { window.open(`/audit-results?id=${rep.id}`, "_blank"); return; }
+    if (kind.mode === "ext-strategy") { window.open(`/strategy-brief?id=${rep.id}`, "_blank"); return; }
+    try {
+      const r = await fetch(`/api/audit/${rep.id}`);
+      const saved = await r.json().catch(() => null);
+      if (saved?.payload) setOpenReport({ pv: String(rep.prompt_version), data: { id: rep.id, ...saved.payload } });
+    } catch { /* ignore */ }
+  };
+
+  const sendClientUpdate = async () => {
+    if (!selected || !emailTo) return;
+    setEmailState("sending");
+    try {
+      const r = await fetch("/api/dashboard/client-update", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ businessId: selected, email: emailTo }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Send failed");
+      setEmailState("sent");
+    } catch (e: any) { setEmailState(e?.message || "Send failed"); }
+  };
+
   // latest complete audit per business (audits come ascending → last wins)
   const latestByBiz = useMemo(() => {
     const m: Record<string, AuditRow> = {};
@@ -1037,9 +1096,47 @@ function OverviewTab({ data }: { data: Overview }) {
                 ))}
               </div>
             )}
+
+            {reports.length > 0 && (
+              <div style={{ marginTop: 16, borderTop: `1px solid ${T.border}`, paddingTop: 12 }}>
+                <div style={{ ...eyebrow, marginBottom: 8 }}>Reports — click to open</div>
+                {reports.map((rep) => {
+                  const k = reportKind(rep.prompt_version, rep.tier);
+                  return (
+                    <button key={rep.id} onClick={() => openStoredReport(rep)}
+                      style={{ display: "flex", justifyContent: "space-between", gap: 8, width: "100%", background: "none", border: "none", cursor: "pointer", padding: "5px 0", fontFamily: MONO, fontSize: 11, color: T.textSub }}>
+                      <span>{String(rep.created_at).slice(0, 10)} · {k.label}</span>
+                      <span style={{ color: rep.overall_score != null ? scoreColor(Number(rep.overall_score)) : T.muted }}>{rep.overall_score ?? "—"}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
+            <div style={{ marginTop: 16, borderTop: `1px solid ${T.border}`, paddingTop: 12 }}>
+              <div style={{ ...eyebrow, marginBottom: 8 }}>Client update email</div>
+              <input style={{ ...inputStyle, marginBottom: 8 }} placeholder="client@email.com" value={emailTo} onChange={(e) => setEmailTo(e.target.value)} />
+              <button style={{ ...btn(true), width: "100%", opacity: emailState === "sending" || !emailTo ? 0.5 : 1 }} disabled={emailState === "sending" || !emailTo} onClick={sendClientUpdate}>
+                {emailState === "sending" ? "Composing & sending…" : "Send client update"}
+              </button>
+              {emailState === "sent" && <p style={{ fontSize: 12, color: T.ok, marginTop: 8 }}>Sent ✓ — what we did, what we&rsquo;re doing, and what they need to do.</p>}
+              {emailState && emailState !== "sent" && emailState !== "sending" && <p style={{ fontSize: 12, color: T.danger, marginTop: 8 }}>{emailState}</p>}
+            </div>
           </div>
         )}
       </div>
+
+      {openReport && sel && (
+        <div style={{ marginTop: 20 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+            <span style={eyebrow}>{reportKind(openReport.pv, "").label} · {sel.name} · stored report</span>
+            <button style={{ ...btn(), padding: "6px 12px" }} onClick={() => setOpenReport(null)}>Close ×</button>
+          </div>
+          {openReport.pv.startsWith("battleplan") && renderBattlePlan(openReport.data, { name: sel.name, trade: sel.trade, city: sel.city, url: sel.url ?? "" })}
+          {openReport.pv.startsWith("execplan") && renderExecPlan(openReport.data, { name: sel.name, trade: sel.trade, city: sel.city, url: sel.url ?? "" })}
+          {openReport.pv.startsWith("scan") && renderScan(openReport.data, { name: sel.name, trade: sel.trade, city: sel.city, url: sel.url ?? "" })}
+        </div>
+      )}
     </div>
   );
 }

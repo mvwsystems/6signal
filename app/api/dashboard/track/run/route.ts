@@ -1,17 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAuthed } from "../../../../lib/dashboard-auth";
-import { getBusiness, listTrackedPrompts, saveProbeResults } from "../../../../lib/db";
-import { probeAllEngines, analyzePrompt, ENGINES, enginesWithKeys } from "../../../../lib/engines";
-import { streamedJSONResponse } from "../../../../lib/aiScan";
+import { getBusiness, listTrackedPrompts } from "../../../../lib/db";
+import { enginesWithKeys } from "../../../../lib/engines";
+import { enqueueWorker } from "../../../../lib/enqueue";
 
-export const maxDuration = 300;
-
-// Run a tracking probe for one business: every active prompt × every engine with
-// a key, judged by Claude, persisted to probe_results. Netlify cuts every HTTP
-// response at 60s (measured 2026-07-08 via stream-test), so the on-demand run is
-// sized to finish inside that window — the weekly cron covers the full set (its
-// lambda keeps running after the proxy cut, so it isn't bound by the 60s).
-const MAX_PROMPTS_PER_RUN = 4;
+// Thin enqueue: probe runs execute in the background worker (6 engines × many
+// prompts far exceeds the 60s request window). The client polls track/results
+// and watches verdicts appear incrementally.
 
 export async function POST(req: NextRequest) {
   if (!isAuthed(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -24,57 +19,13 @@ export async function POST(req: NextRequest) {
   const haveKeys = enginesWithKeys();
   if (haveKeys.length === 0) return NextResponse.json({ error: "No engine API keys configured (OPENAI/PERPLEXITY/GEMINI)." }, { status: 503 });
 
-  return streamedJSONResponse(async (signal) => {
-    const business = await getBusiness(businessId);
-    if (!business) throw new Error("Business not found.");
+  const business = await getBusiness(businessId);
+  if (!business) return NextResponse.json({ error: "Business not found." }, { status: 404 });
+  const prompts = await listTrackedPrompts(businessId);
+  if (prompts.length === 0) return NextResponse.json({ error: "No tracked prompts for this business yet." }, { status: 400 });
 
-    const allPrompts = await listTrackedPrompts(businessId);
-    if (allPrompts.length === 0) throw new Error("No tracked prompts for this business yet.");
-    const prompts = allPrompts.slice(0, MAX_PROMPTS_PER_RUN);
+  const queued = await enqueueWorker({ kind: "probe-run", businessId });
+  if (!queued.ok) return NextResponse.json({ error: queued.error }, { status: 502 });
 
-    const rows: Array<{ business_id: string; prompt_id: string; engine: string; mentioned: boolean; position: number | null; sentiment: string | null; competitors: unknown; sources: unknown; answer: string | null }> = [];
-    const perEngine: Record<string, { answered: number; mentioned: number }> = {};
-    for (const e of ENGINES) perEngine[e] = { answered: 0, mentioned: 0 };
-
-    try {
-      // Sequential per prompt (engines parallel within) to stay friendly to rate limits.
-      for (const p of prompts) {
-        const answers = await probeAllEngines(p.prompt, signal);
-        const verdicts = await analyzePrompt(business, p.prompt, answers, signal);
-        for (const e of ENGINES) {
-          const a = answers.find((x) => x.engine === e);
-          if (!a || !a.ok) continue; // engine errored or no key
-          const v = verdicts[e];
-          perEngine[e].answered++;
-          if (v.mentioned) perEngine[e].mentioned++;
-          rows.push({
-            business_id: businessId,
-            prompt_id: p.id,
-            engine: e,
-            mentioned: v.mentioned,
-            position: v.position,
-            sentiment: v.sentiment,
-            competitors: v.competitors,
-            sources: a.sources,
-            answer: a.text.slice(0, 8000),
-          });
-        }
-      }
-    } catch (e) {
-      // Timeout mid-run: keep whatever finished.
-      console.error("[dashboard/track/run]", e);
-    }
-
-    await saveProbeResults(rows);
-
-    return {
-      ok: true,
-      promptsRun: prompts.length,
-      promptsTotal: allPrompts.length,
-      skipped: Math.max(0, allPrompts.length - prompts.length),
-      engines: haveKeys,
-      perEngine,
-      results: rows.length,
-    };
-  });
+  return NextResponse.json({ queued: true, prompts: Math.min(prompts.length, 20), engines: haveKeys });
 }

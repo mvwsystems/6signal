@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { listAllActiveTracked, saveProbeResults, getLastProbeTimes } from "../../../../lib/db";
-import { probeAllEngines, analyzePrompt, ENGINES, enginesWithKeys } from "../../../../lib/engines";
+import { enqueueWorker } from "../../../../lib/enqueue";
+import { enginesWithKeys } from "../../../../lib/engines";
 
-export const maxDuration = 300;
-
-// Scheduled probe runner. Authorized by CRON_SECRET (not the dashboard cookie)
-// so the Netlify scheduled function can call it. Bounded per invocation; at
-// higher client counts, raise cadence or chunk by business.
-const MAX_PROMPTS_PER_TICK = 30;
+// Weekly probe tick — thin enqueue onto the background worker. (Running the
+// sweep inside this route would die at the host's ~60s lambda kill; the
+// background worker gets a guaranteed 15 minutes.)
 
 export async function POST(req: NextRequest) {
   const secret = process.env.CRON_SECRET;
@@ -16,40 +13,7 @@ export async function POST(req: NextRequest) {
   }
   if (enginesWithKeys().length === 0) return NextResponse.json({ error: "No engine keys" }, { status: 503 });
 
-  // Fair rotation: never-probed prompts first, then oldest-probed. A bounded
-  // tick (count + time) still covers the whole set across successive runs.
-  const [all, lastProbed] = await Promise.all([listAllActiveTracked(), getLastProbeTimes()]);
-  const sorted = [...all].sort((a, b) => {
-    const ta = lastProbed[a.id] ?? "";
-    const tb = lastProbed[b.id] ?? "";
-    return ta.localeCompare(tb); // "" (never probed) sorts first
-  });
-  const slice = sorted.slice(0, MAX_PROMPTS_PER_TICK);
-
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 290_000);
-  const rows: Array<{ business_id: string; prompt_id: string; engine: string; mentioned: boolean; position: number | null; sentiment: string | null; competitors: unknown; sources: unknown; answer: string | null }> = [];
-  let processed = 0;
-
-  try {
-    for (const p of slice) {
-      if (!p.business) continue;
-      const answers = await probeAllEngines(p.prompt, controller.signal);
-      const verdicts = await analyzePrompt(p.business, p.prompt, answers, controller.signal);
-      for (const e of ENGINES) {
-        const a = answers.find((x) => x.engine === e);
-        if (!a || !a.ok) continue;
-        const v = verdicts[e];
-        rows.push({ business_id: p.business_id, prompt_id: p.id, engine: e, mentioned: v.mentioned, position: v.position, sentiment: v.sentiment, competitors: v.competitors, sources: a.sources, answer: a.text.slice(0, 8000) });
-      }
-      processed++;
-    }
-  } catch (e) {
-    console.error("[track/cron]", e);
-  } finally {
-    clearTimeout(timer);
-  }
-
-  await saveProbeResults(rows);
-  return NextResponse.json({ ok: true, processed, total: all.length, results: rows.length });
+  const queued = await enqueueWorker({ kind: "probe-cron" });
+  if (!queued.ok) return NextResponse.json({ error: queued.error }, { status: 502 });
+  return NextResponse.json({ ok: true, queued: true });
 }

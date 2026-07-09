@@ -202,6 +202,16 @@ export async function failAudit(id: string): Promise<void> {
   }
 }
 
+export async function setBusinessContactEmail(id: string, email: string): Promise<void> {
+  const s = db();
+  if (!s) return;
+  try {
+    await s.from("businesses").update({ contact_email: email }).eq("id", id);
+  } catch (e) {
+    console.error("[db] setBusinessContactEmail failed:", e);
+  }
+}
+
 // Completed report history for one business (dashboard "Past reports" list).
 export async function listCompletedAudits(businessId: string): Promise<Record<string, unknown>[]> {
   const s = db();
@@ -323,7 +333,7 @@ export async function getDashboardOverview(): Promise<{
   if (!s) return null;
   try {
     const [biz, audits, scores, leads, purchases] = await Promise.all([
-      s.from("businesses").select("id, name, url, trade, city, created_at").order("created_at", { ascending: false }),
+      s.from("businesses").select("id, name, url, trade, city, contact_email, created_at").order("created_at", { ascending: false }),
       s.from("audits").select("id, business_id, tier, overall_score, status, created_at").eq("status", "complete").order("created_at", { ascending: true }),
       s.from("signal_scores").select("audit_id, signal, score"),
       s.from("leads").select("id, business_id, email, source, created_at").order("created_at", { ascending: false }).limit(200),
