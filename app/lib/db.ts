@@ -202,6 +202,88 @@ export async function failAudit(id: string): Promise<void> {
   }
 }
 
+// ── Client reports (baseline + monthly) + share links ───────────────────────
+export async function saveClientReport(businessId: string, periodLabel: string, payload: unknown): Promise<string | null> {
+  const s = db();
+  if (!s) return null;
+  try {
+    const { data, error } = await s.from("client_reports").insert({ business_id: businessId, period_label: periodLabel, payload }).select("id").single();
+    if (error) throw error;
+    return data.id as string;
+  } catch (e) {
+    console.error("[db] saveClientReport failed:", e);
+    return null;
+  }
+}
+
+export async function listClientReports(businessId: string): Promise<Record<string, unknown>[]> {
+  const s = db();
+  if (!s) return [];
+  try {
+    const { data, error } = await s.from("client_reports").select("id, period_label, created_at").eq("business_id", businessId).order("created_at", { ascending: false }).limit(24);
+    if (error) throw error;
+    return data ?? [];
+  } catch (e) {
+    console.error("[db] listClientReports failed:", e);
+    return [];
+  }
+}
+
+export async function getClientReport(id: string): Promise<Record<string, unknown> | null> {
+  const s = db();
+  if (!s) return null;
+  try {
+    const { data, error } = await s.from("client_reports").select("id, business_id, period_label, payload, created_at").eq("id", id).maybeSingle();
+    if (error) throw error;
+    return data ?? null;
+  } catch (e) {
+    console.error("[db] getClientReport failed:", e);
+    return null;
+  }
+}
+
+export async function getLatestClientReport(businessId: string): Promise<Record<string, unknown> | null> {
+  const s = db();
+  if (!s) return null;
+  try {
+    const { data, error } = await s.from("client_reports").select("id, period_label, payload, created_at").eq("business_id", businessId).order("created_at", { ascending: false }).limit(1).maybeSingle();
+    if (error) throw error;
+    return data ?? null;
+  } catch (e) {
+    console.error("[db] getLatestClientReport failed:", e);
+    return null;
+  }
+}
+
+export async function ensureShareToken(businessId: string): Promise<string | null> {
+  const s = db();
+  if (!s) return null;
+  try {
+    const { data } = await s.from("businesses").select("share_token").eq("id", businessId).maybeSingle();
+    if (data?.share_token) return data.share_token as string;
+    const token = Array.from(crypto.getRandomValues(new Uint8Array(18))).map((b) => b.toString(16).padStart(2, "0")).join("");
+    const { error } = await s.from("businesses").update({ share_token: token }).eq("id", businessId);
+    if (error) throw error;
+    return token;
+  } catch (e) {
+    console.error("[db] ensureShareToken failed:", e);
+    return null;
+  }
+}
+
+export async function getBusinessByShareToken(token: string): Promise<{ id: string; name: string; trade: string; city: string } | null> {
+  const s = db();
+  if (!s || !/^[0-9a-f]{24,64}$/i.test(token)) return null;
+  try {
+    const { data, error } = await s.from("businesses").select("id, name, trade, city").eq("share_token", token).maybeSingle();
+    if (error) throw error;
+    return (data as { id: string; name: string; trade: string; city: string } | null) ?? null;
+  } catch (e) {
+    console.error("[db] getBusinessByShareToken failed:", e);
+    return null;
+  }
+}
+
 export async function setBusinessContactEmail(id: string, email: string): Promise<void> {
   const s = db();
   if (!s) return;

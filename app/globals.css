@@ -8965,3 +8965,33 @@ svg {
   .ar-upgrade-pdf-link, .sb-decision-pdf-url { display: block !important; }
 }
 
+
+/* ── Dashboard + client-share print (PDF downloads) ─────────────────────────
+   Any page containing a .dash-print-area prints ONLY that area, on white,
+   with dark text. SVG charts keep their colors (fill/stroke attributes are
+   untouched); div-based chart bars opt in to keeping their background via
+   [data-keep]. Buttons/controls marked .no-print disappear. */
+@media print {
+  .no-print { display: none !important; }
+  body:has(.dash-print-area) { background: #ffffff !important; }
+  body:has(.dash-print-area) * { visibility: hidden; }
+  body:has(.dash-print-area) .dash-print-area,
+  body:has(.dash-print-area) .dash-print-area * { visibility: visible; }
+  body:has(.dash-print-area) .dash-print-area {
+    position: absolute !important; left: 0; top: 0; width: 100% !important;
+    max-width: 100% !important; margin: 0 !important; padding: 24px !important;
+  }
+  .dash-print-area :not([data-keep]) {
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  .dash-print-area, .dash-print-area * {
+    color: #1a1a1a !important;
+    border-color: #d8d8d2 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .dash-print-area svg text { fill: #444440 !important; }
+  .dash-print-area [data-keep] { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

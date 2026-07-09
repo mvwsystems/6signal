@@ -5,6 +5,7 @@
 
 import { runScanReport, runBattlePlanReport, runExecutionPlanReport } from "../../app/lib/reports";
 import { runProbeSweep } from "../../app/lib/probes";
+import { runMonthlyClientReports } from "../../app/lib/clientReport";
 
 export default async (req: Request) => {
   if (req.method !== "POST") return new Response("method not allowed", { status: 405 });
@@ -33,6 +34,8 @@ export default async (req: Request) => {
       await runProbeSweep({ businessId: body.businessId, cap: 20 });
     } else if (kind === "probe-cron") {
       await runProbeSweep({ cap: 30 });
+    } else if (kind === "client-reports-cron") {
+      await runMonthlyClientReports();
     } else {
       return new Response("unknown kind", { status: 400 });
     }

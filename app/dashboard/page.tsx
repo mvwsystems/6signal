@@ -126,7 +126,7 @@ function SignalBars({ scores, findings }: { scores: Record<string, number>; find
               <span style={{ fontFamily: MONO, fontWeight: 700, fontSize: 13, color: col }}>{sc} / 100</span>
             </div>
             <div style={{ height: 5, background: T.border, borderRadius: 0, overflow: "hidden" }}>
-              <div style={{ height: "100%", width: `${sc}%`, background: col, transition: "width .8s ease" }} />
+              <div data-keep style={{ height: "100%", width: `${sc}%`, background: col, transition: "width .8s ease" }} />
             </div>
             {f?.finding && <div style={{ fontSize: 12, color: T.textSub, marginTop: 6, lineHeight: 1.5 }}>{f.finding}</div>}
             {f?.gap && <div style={{ fontSize: 12, color: T.warn, marginTop: 3, lineHeight: 1.5 }}>↳ {f.gap}</div>}
@@ -322,13 +322,71 @@ function ReportRunner({ cta, subtitle, longNote, endpoint, render, businesses = 
             <p style={{ fontSize: 12, color: T.muted, marginTop: 8 }}>{longNote}</p>
           </div>
         )}
-        {data && <div>{render(data, form)}</div>}
+        {data && (
+          <div className="dash-print-area">
+            <div className="no-print" style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}><PrintBtn /></div>
+            {render(data, form)}
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
 const ownerColor = (o?: string) => (String(o).toLowerCase().includes("client") ? T.textSub : T.accent);
+
+function PrintBtn() {
+  return <button className="no-print" onClick={() => window.print()} style={{ ...btn(), padding: "6px 12px" }}>Download PDF</button>;
+}
+
+// ─── Client report render (baseline + monthly editions) ───
+function renderClientReport(data: any) {
+  const m = data?.metrics;
+  const n = data?.narrative;
+  const bar = (label: string, rate: number | null, prev: number | null) => rate == null ? null : (
+    <div key={label} style={{ marginBottom: 12 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
+        <span style={{ fontSize: 13, color: T.text }}>{label}</span>
+        <span style={{ fontFamily: MONO, fontSize: 13, color: scoreColor(rate) }}>{rate}%{prev != null ? <span style={{ color: T.muted }}> · was {prev}%</span> : null}</span>
+      </div>
+      <div style={{ height: 6, background: T.border }}><div data-keep style={{ height: "100%", width: `${rate}%`, background: scoreColor(rate) }} /></div>
+    </div>
+  );
+  return (
+    <div>
+      <div style={card({ marginBottom: 16, borderColor: `${T.accent}44` })}>
+        <div style={{ ...eyebrow, marginBottom: 6 }}>{data?.period_label}{data?.is_baseline ? " · starting line" : ""}</div>
+        <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 22, marginBottom: 6 }}>{data?.business?.name}</div>
+        {n?.headline && <p style={{ fontFamily: DISP, fontWeight: 700, fontSize: 16, color: T.text, margin: "0 0 8px", lineHeight: 1.4 }}>{n.headline}</p>}
+        {n?.summary && <p style={{ fontSize: 14, color: T.textSub, lineHeight: 1.7, margin: "0 0 8px" }}>{n.summary}</p>}
+        {n?.what_this_means && <p style={{ fontSize: 14, color: T.textSub, lineHeight: 1.7, margin: 0 }}>{n.what_this_means}</p>}
+      </div>
+      {m && (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 12, marginBottom: 16 }}>
+          <div style={card()}><div style={eyebrow}>Named by AI</div><div style={{ fontFamily: MONO, fontSize: 26, fontWeight: 700, color: m.mention_rate != null ? scoreColor(m.mention_rate) : T.muted, marginTop: 6 }}>{m.mention_rate ?? "—"}%</div><div style={{ fontSize: 11, color: T.muted }}>{m.mention_rate_prev != null ? `was ${m.mention_rate_prev}%` : "of tracked buyer questions"}</div></div>
+          <div style={card()}><div style={eyebrow}>Share of voice</div><div style={{ fontFamily: MONO, fontSize: 26, fontWeight: 700, color: T.accent, marginTop: 6 }}>{m.share_of_voice ?? "—"}%</div><div style={{ fontSize: 11, color: T.muted }}>vs competitors in AI answers</div></div>
+          <div style={card()}><div style={eyebrow}>Plan progress</div><div style={{ fontFamily: MONO, fontSize: 26, fontWeight: 700, color: T.text, marginTop: 6 }}>{m.tasks_done}/{m.tasks_total}</div><div style={{ fontSize: 11, color: T.muted }}>work items done</div></div>
+        </div>
+      )}
+      {m?.engines && (
+        <div style={card({ marginBottom: 16 })}>
+          <div style={{ ...eyebrow, marginBottom: 14 }}>Engine by engine</div>
+          {ENGINE_KEYS.map((e) => bar(ENGINE_LABELS[e] ?? e, m.engines[e]?.rate ?? null, m.engines[e]?.prev ?? null))}
+        </div>
+      )}
+      {data?.wins?.length > 0 && (
+        <div style={card({ marginBottom: 16, borderColor: `${T.ok}44` })}>
+          <div style={{ ...eyebrow, color: T.ok, marginBottom: 10 }}>New wins</div>
+          {data.wins.map((w: string, i: number) => <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6 }}><span style={{ color: T.ok }}>✓</span><span style={{ fontSize: 13, color: T.text }}>{w}</span></div>)}
+        </div>
+      )}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+        {n?.focus_next?.length > 0 && <div style={card()}><div style={{ ...eyebrow, marginBottom: 10 }}>What we&rsquo;re doing next</div>{n.focus_next.map((f: string, i: number) => <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6 }}><span style={{ color: T.accent }}>•</span><span style={{ fontSize: 13, color: T.textSub }}>{f}</span></div>)}</div>}
+        {n?.client_actions?.length > 0 && <div style={card({ borderColor: `${T.accent}44` })}><div style={{ ...eyebrow, color: T.accent, marginBottom: 10 }}>What we need from the client</div>{n.client_actions.map((a: string, i: number) => <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6 }}><span style={{ color: T.accent }}>→</span><span style={{ fontSize: 13, color: T.text }}>{a}</span></div>)}</div>}
+      </div>
+    </div>
+  );
+}
 
 // ─── Scan render ───
 function renderScan(data: any, form: Record<string, string>) {
@@ -602,6 +660,51 @@ function renderExecPlan(data: any, form: Record<string, string>) {
   );
 }
 
+// ─── Prospects batch scanner ───
+function ProspectsTab() {
+  const [text, setText] = useState("");
+  const [log, setLog] = useState<string[]>([]);
+  const [busy, setBusy] = useState(false);
+  const queue = async () => {
+    const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
+    if (!lines.length) return;
+    setBusy(true); setLog([]);
+    for (const line of lines) {
+      const parts = line.split(/\s*[|,]\s*/);
+      if (parts.length < 4) { setLog((L) => [...L, `✗ "${line}" — format: Name | website | Trade | City`]); continue; }
+      const [name, url, trade, ...cityParts] = parts;
+      const city = cityParts.join(", ");
+      try {
+        const r = await fetch("/api/dashboard/scan", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, url, trade, city }) });
+        const d = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(d.error || `error ${r.status}`);
+        setLog((L) => [...L, `✓ ${name} — scan queued`]);
+      } catch (e: any) { setLog((L) => [...L, `✗ ${name} — ${e?.message}`]); }
+    }
+    setLog((L) => [...L, "Scans run in the background (~2–4 min each). Results land in Overview — open a prospect there and hit “Draft outreach email”."]);
+    setBusy(false);
+  };
+  return (
+    <div style={{ maxWidth: 760 }}>
+      <div style={card()}>
+        <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 15, marginBottom: 4 }}>Prospect batch scanner</div>
+        <div style={{ ...eyebrow, marginBottom: 14 }}>One prospect per line: Name | website | Trade | City</div>
+        <textarea value={text} onChange={(e) => setText(e.target.value)} rows={8}
+          placeholder={"Combat Plumbing | combatplumbing.com | Plumbing | Red Oak, TX\nAcme HVAC | acmehvac.com | HVAC | Waxahachie, TX"}
+          style={{ ...inputStyle, fontFamily: MONO, fontSize: 12, resize: "vertical" }} />
+        <button style={{ ...btn(true), marginTop: 12, opacity: busy ? 0.5 : 1 }} onClick={queue} disabled={busy}>
+          {busy ? "Queueing…" : "Queue scans"}
+        </button>
+        {log.length > 0 && (
+          <div style={{ marginTop: 14 }}>
+            {log.map((l, i) => <div key={i} style={{ fontFamily: MONO, fontSize: 12, color: l.startsWith("✗") ? T.danger : T.textSub, marginBottom: 4 }}>{l}</div>)}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function ScanTab({ businesses }: { businesses: Biz[] }) {
   return <ReportRunner businesses={businesses} historyPrefix="scan" cta="Run scan" subtitle="Fast live triage" endpoint="/api/dashboard/scan" longNote="Runs in the background — crawl + live web search. Result appears here in ~1–3 min." render={renderScan} />;
 }
@@ -799,6 +902,7 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
             setDiag(d.results ?? []);
           } catch (e: any) { setErr(e?.message || "Test failed"); } finally { setBusy(null); }
         }}>{busy === "diag" ? "Testing…" : "Test engines"}</button>
+        {bizId && <PrintBtn />}
         {runMsg && <span style={{ fontSize: 12, color: T.textSub }}>{runMsg}</span>}
       </div>
 
@@ -820,7 +924,7 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
       {err && <div style={card({ borderColor: `${T.danger}66`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{err}</span></div>}
 
       {bizId && (
-        <>
+        <div className="dash-print-area">
           {latestRows.length > 0 && (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 12, marginBottom: 12 }}>
               {ENGINE_KEYS.map((e) => {
@@ -864,7 +968,7 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
           )}
 
           {/* Prompt management */}
-          <div style={card({ marginBottom: 20 })}>
+          <div className="no-print" style={card({ marginBottom: 20 })}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
               <span style={eyebrow}>Tracked prompts ({prompts.length})</span>
               <button style={{ ...btn(), padding: "6px 12px", opacity: busy === "suggest" ? 0.5 : 1 }} onClick={suggest} disabled={busy === "suggest" || !biz}>{busy === "suggest" ? "…" : "Suggest prompts"}</button>
@@ -918,7 +1022,7 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
               ))}
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );
@@ -944,20 +1048,74 @@ function OverviewTab({ data }: { data: Overview }) {
 
   // Client file: every stored report for the selected business, reopenable.
   const [reports, setReports] = useState<any[]>([]);
+  const [clientReports, setClientReports] = useState<any[]>([]);
   const [openReport, setOpenReport] = useState<{ pv: string; data: any } | null>(null);
   const [emailTo, setEmailTo] = useState("");
   const [emailState, setEmailState] = useState<string | null>(null);
+  const [genState, setGenState] = useState<string | null>(null);
+  const [shareState, setShareState] = useState<string | null>(null);
+  const [outreach, setOutreach] = useState<{ subject: string; body: string } | null>(null);
+  const [outreachBusy, setOutreachBusy] = useState(false);
 
   useEffect(() => {
-    setOpenReport(null); setEmailState(null);
-    if (!selected) { setReports([]); setEmailTo(""); return; }
+    setOpenReport(null); setEmailState(null); setGenState(null); setShareState(null); setOutreach(null);
+    if (!selected) { setReports([]); setClientReports([]); setEmailTo(""); return; }
     setEmailTo(data.businesses.find((b) => b.id === selected)?.contact_email ?? "");
     fetch(`/api/dashboard/reports?businessId=${selected}`)
       .then((r) => r.json())
       .then((d) => setReports(d.reports ?? []))
       .catch(() => setReports([]));
+    fetch(`/api/dashboard/client-report?businessId=${selected}`)
+      .then((r) => r.json())
+      .then((d) => setClientReports(d.reports ?? []))
+      .catch(() => setClientReports([]));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected]);
+
+  const generateClientReport = async () => {
+    if (!selected) return;
+    setGenState("working");
+    try {
+      const r = await fetch("/api/dashboard/client-report", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ businessId: selected }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Generation failed");
+      setClientReports((cr) => [{ id: d.id, period_label: d.payload?.period_label, created_at: new Date().toISOString() }, ...cr]);
+      setOpenReport({ pv: "client-report", data: d.payload });
+      setGenState(null);
+    } catch (e: any) { setGenState(e?.message || "Generation failed"); }
+  };
+
+  const openClientReport = async (id: string) => {
+    try {
+      const r = await fetch(`/api/dashboard/client-report?id=${id}`);
+      const d = await r.json().catch(() => null);
+      if (d?.payload) setOpenReport({ pv: "client-report", data: d.payload });
+    } catch { /* ignore */ }
+  };
+
+  const copyShareLink = async () => {
+    if (!selected) return;
+    setShareState("working");
+    try {
+      const r = await fetch("/api/dashboard/share-link", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ businessId: selected }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Failed");
+      await navigator.clipboard.writeText(d.url);
+      setShareState(`Copied ✓ ${d.url}`);
+    } catch (e: any) { setShareState(e?.message || "Failed"); }
+  };
+
+  const draftOutreach = async () => {
+    if (!selected) return;
+    setOutreachBusy(true); setOutreach(null);
+    try {
+      const r = await fetch("/api/dashboard/outreach", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ businessId: selected }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Draft failed");
+      setOutreach({ subject: d.subject, body: d.body });
+    } catch (e: any) { setOutreach({ subject: "Draft failed", body: e?.message || "" }); }
+    finally { setOutreachBusy(false); }
+  };
 
   const reportKind = (pv: string, tier: string) => {
     const v = String(pv ?? "");
@@ -1114,6 +1272,38 @@ function OverviewTab({ data }: { data: Overview }) {
             )}
 
             <div style={{ marginTop: 16, borderTop: `1px solid ${T.border}`, paddingTop: 12 }}>
+              <div style={{ ...eyebrow, marginBottom: 8 }}>Client reports</div>
+              <button style={{ ...btn(true), width: "100%", marginBottom: 8, opacity: genState === "working" ? 0.5 : 1 }} disabled={genState === "working"} onClick={generateClientReport}>
+                {genState === "working" ? "Building report…" : clientReports.length ? "Generate new report" : "Generate baseline report"}
+              </button>
+              {genState && genState !== "working" && <p style={{ fontSize: 12, color: T.danger, margin: "0 0 8px" }}>{genState}</p>}
+              {clientReports.map((cr) => (
+                <button key={cr.id} onClick={() => openClientReport(cr.id)} style={{ display: "flex", justifyContent: "space-between", width: "100%", background: "none", border: "none", cursor: "pointer", padding: "4px 0", fontFamily: MONO, fontSize: 11, color: T.textSub }}>
+                  <span>{cr.period_label ?? String(cr.created_at).slice(0, 10)}</span>
+                  <span style={{ color: T.muted }}>open</span>
+                </button>
+              ))}
+              <button style={{ ...btn(), width: "100%", marginTop: 8 }} onClick={copyShareLink}>
+                {shareState === "working" ? "…" : "Copy client share link"}
+              </button>
+              {shareState && shareState !== "working" && <p style={{ fontSize: 11, color: shareState.startsWith("Copied") ? T.ok : T.danger, marginTop: 6, wordBreak: "break-all" }}>{shareState}</p>}
+            </div>
+
+            <div style={{ marginTop: 16, borderTop: `1px solid ${T.border}`, paddingTop: 12 }}>
+              <div style={{ ...eyebrow, marginBottom: 8 }}>Outreach (prospects)</div>
+              <button style={{ ...btn(), width: "100%", opacity: outreachBusy ? 0.5 : 1 }} disabled={outreachBusy} onClick={draftOutreach}>
+                {outreachBusy ? "Drafting…" : "Draft outreach email"}
+              </button>
+              {outreach && (
+                <div style={{ marginTop: 8 }}>
+                  <div style={{ fontFamily: MONO, fontSize: 11, color: T.accent, marginBottom: 4 }}>{outreach.subject}</div>
+                  <textarea readOnly value={outreach.body} rows={7} style={{ ...inputStyle, fontSize: 12, resize: "vertical" }} onFocus={(e) => e.target.select()} />
+                  <button style={{ ...btn(), width: "100%", marginTop: 6 }} onClick={() => navigator.clipboard.writeText(`Subject: ${outreach.subject}\n\n${outreach.body}`)}>Copy draft</button>
+                </div>
+              )}
+            </div>
+
+            <div style={{ marginTop: 16, borderTop: `1px solid ${T.border}`, paddingTop: 12 }}>
               <div style={{ ...eyebrow, marginBottom: 8 }}>Client update email</div>
               <input style={{ ...inputStyle, marginBottom: 8 }} placeholder="client@email.com" value={emailTo} onChange={(e) => setEmailTo(e.target.value)} />
               <button style={{ ...btn(true), width: "100%", opacity: emailState === "sending" || !emailTo ? 0.5 : 1 }} disabled={emailState === "sending" || !emailTo} onClick={sendClientUpdate}>
@@ -1127,11 +1317,15 @@ function OverviewTab({ data }: { data: Overview }) {
       </div>
 
       {openReport && sel && (
-        <div style={{ marginTop: 20 }}>
+        <div className="dash-print-area" style={{ marginTop: 20 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-            <span style={eyebrow}>{reportKind(openReport.pv, "").label} · {sel.name} · stored report</span>
-            <button style={{ ...btn(), padding: "6px 12px" }} onClick={() => setOpenReport(null)}>Close ×</button>
+            <span style={eyebrow}>{openReport.pv === "client-report" ? "Client Report" : reportKind(openReport.pv, "").label} · {sel.name} · stored report</span>
+            <span className="no-print" style={{ display: "flex", gap: 8 }}>
+              <PrintBtn />
+              <button style={{ ...btn(), padding: "6px 12px" }} onClick={() => setOpenReport(null)}>Close ×</button>
+            </span>
           </div>
+          {openReport.pv === "client-report" && renderClientReport(openReport.data)}
           {openReport.pv.startsWith("battleplan") && renderBattlePlan(openReport.data, { name: sel.name, trade: sel.trade, city: sel.city, url: sel.url ?? "" })}
           {openReport.pv.startsWith("execplan") && renderExecPlan(openReport.data, { name: sel.name, trade: sel.trade, city: sel.city, url: sel.url ?? "" })}
           {openReport.pv.startsWith("scan") && renderScan(openReport.data, { name: sel.name, trade: sel.trade, city: sel.city, url: sel.url ?? "" })}
@@ -1161,7 +1355,7 @@ function AdsTab() {
 export default function DashboardPage() {
   const [state, setState] = useState<"loading" | "locked" | "in">("loading");
   const [configured, setConfigured] = useState(true);
-  const [tab, setTab] = useState<"overview" | "scan" | "battle" | "exec" | "track" | "ads">("overview");
+  const [tab, setTab] = useState<"overview" | "scan" | "battle" | "exec" | "track" | "prospects" | "ads">("overview");
   const [data, setData] = useState<Overview | null>(null);
   const [dataErr, setDataErr] = useState<string | null>(null);
 
@@ -1197,6 +1391,7 @@ export default function DashboardPage() {
     { id: "battle", label: "Battle Plan" },
     { id: "exec", label: "90-Day Plan" },
     { id: "track", label: "Tracking" },
+    { id: "prospects", label: "Prospects" },
     { id: "ads", label: "Ads" },
   ];
 
@@ -1232,6 +1427,7 @@ export default function DashboardPage() {
         {tab === "battle" && <BattlePlanTab businesses={data?.businesses ?? []} />}
         {tab === "exec" && <ExecPlanTab businesses={data?.businesses ?? []} />}
         {tab === "track" && <TrackingTab businesses={data?.businesses ?? []} />}
+        {tab === "prospects" && <ProspectsTab />}
         {tab === "ads" && <AdsTab />}
         <div style={{ marginTop: 32, paddingTop: 20, borderTop: `1px solid ${T.border}`, textAlign: "center", ...eyebrow }}>
           6 Signal Command Center · Internal
