@@ -8,6 +8,7 @@ import { runProbeSweep } from "../../app/lib/probes";
 import { runMonthlyClientReports } from "../../app/lib/clientReport";
 import { runWatchdog } from "../../app/lib/watchdog";
 import { runOwnerBriefing } from "../../app/lib/briefing";
+import { runContentGeneration } from "../../app/lib/content";
 
 export default async (req: Request) => {
   if (req.method !== "POST") return new Response("method not allowed", { status: 405 });
@@ -42,6 +43,9 @@ export default async (req: Request) => {
       await runWatchdog();
     } else if (kind === "briefing") {
       await runOwnerBriefing();
+    } else if (kind === "content-generate") {
+      if (!body.postId || !body.businessId) return new Response("missing postId/businessId", { status: 400 });
+      await runContentGeneration({ postId: body.postId, businessId: body.businessId });
     } else {
       return new Response("unknown kind", { status: 400 });
     }

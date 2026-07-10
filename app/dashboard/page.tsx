@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Radar, Ring, SignalBars, LineChart, Donut, Sparkline } from "../components/charts";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1244,11 +1244,230 @@ function AdsTab() {
   return <iframe title="Ads reporting" src={url} style={{ width: "100%", height: "82vh", border: `1px solid ${T.border}`, borderRadius: 2 }} />;
 }
 
+// ─── Content tab (generate + publish articles to client sites) ───────────────────
+interface ContentPost {
+  id: string; status: string; title: string | null; slug: string | null;
+  meta_description: string | null; target_prompt: string | null; summary: string | null;
+  url: string | null; created_at: string; published_at: string | null;
+  article_html?: string | null; faqs?: { q: string; a: string }[] | null;
+}
+interface ContentTopic { targetPrompt: string; mentionRate: number; enginesMissing: string[]; probes: number }
+
+function ContentTab({ businesses }: { businesses: Biz[] }) {
+  const [bizId, setBizId] = useState("");
+  const [posts, setPosts] = useState<ContentPost[]>([]);
+  const [topics, setTopics] = useState<ContentTopic[]>([]);
+  const [repo, setRepo] = useState<string | null>(null);
+  const [repoInput, setRepoInput] = useState("");
+  const [githubReady, setGithubReady] = useState(true);
+  const [custom, setCustom] = useState("");
+  const [busy, setBusy] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const [open, setOpen] = useState<ContentPost | null>(null);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const biz = businesses.find((b) => b.id === bizId) || null;
+
+  const loadFor = useCallback(async (id: string) => {
+    if (!id) return;
+    setErr(null);
+    try {
+      const d = await fetch(`/api/dashboard/content?businessId=${id}`).then((r) => r.json());
+      setPosts(d.posts ?? []); setTopics(d.topics ?? []); setRepo(d.repo ?? null); setGithubReady(!!d.githubReady);
+      setRepoInput(d.repo ?? "");
+    } catch { setErr("Could not load content data."); }
+  }, []);
+
+  useEffect(() => { if (bizId) loadFor(bizId); else { setPosts([]); setTopics([]); setRepo(null); setOpen(null); } }, [bizId, loadFor]);
+
+  // Poll while any post is generating.
+  useEffect(() => {
+    const generating = posts.some((p) => p.status === "generating");
+    if (!generating || !bizId) { if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; } return; }
+    if (pollRef.current) return;
+    pollRef.current = setInterval(() => loadFor(bizId), 8000);
+    return () => { if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; } };
+  }, [posts, bizId, loadFor]);
+
+  const generate = async (targetPrompt: string) => {
+    if (!bizId || !targetPrompt.trim()) return;
+    setBusy("gen"); setErr(null);
+    try {
+      const r = await fetch("/api/dashboard/content", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ businessId: bizId, targetPrompt: targetPrompt.trim() }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || `error ${r.status}`);
+      setCustom(""); await loadFor(bizId);
+    } catch (e: any) { setErr(e?.message || "Generate failed"); } finally { setBusy(null); }
+  };
+
+  const saveRepo = async () => {
+    if (!bizId) return;
+    setBusy("repo"); setErr(null);
+    try {
+      const r = await fetch("/api/dashboard/content", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ businessId: bizId, repo: repoInput || null }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || !d.ok) throw new Error(d.error || "Could not save repo");
+      setRepo(d.repo);
+    } catch (e: any) { setErr(e?.message || "Could not save repo"); } finally { setBusy(null); }
+  };
+
+  const openPost = async (id: string) => {
+    setErr(null);
+    try {
+      const d = await fetch(`/api/dashboard/content/${id}`).then((r) => r.json());
+      if (d.post) setOpen(d.post);
+    } catch { setErr("Could not load the draft."); }
+  };
+
+  const saveDraft = async () => {
+    if (!open) return;
+    setBusy("save"); setErr(null);
+    try {
+      const r = await fetch(`/api/dashboard/content/${open.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: open.title, slug: open.slug, meta_description: open.meta_description, summary: open.summary, article_html: open.article_html }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || !d.ok) throw new Error(d.error || "Save failed");
+      await loadFor(bizId);
+    } catch (e: any) { setErr(e?.message || "Save failed"); } finally { setBusy(null); }
+  };
+
+  const publish = async () => {
+    if (!open) return;
+    if (!confirm(`Publish "${open.title}" live to ${repo}? This commits to the client's site and deploys.`)) return;
+    setBusy("pub"); setErr(null);
+    try {
+      const r = await fetch(`/api/dashboard/content/${open.id}`, { method: "POST" });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Publish failed");
+      setOpen(null); await loadFor(bizId);
+    } catch (e: any) { setErr(e?.message || "Publish failed"); } finally { setBusy(null); }
+  };
+
+  const removeDraft = async (id: string) => {
+    if (!confirm("Delete this draft?")) return;
+    setBusy("del"); setErr(null);
+    try { await fetch(`/api/dashboard/content/${id}`, { method: "DELETE" }); setOpen(null); await loadFor(bizId); }
+    finally { setBusy(null); }
+  };
+
+  const statusColor = (s: string) => (s === "published" ? T.ok : s === "draft" ? T.accent : s === "failed" ? T.danger : T.muted);
+  const previewDoc = (p: ContentPost) => {
+    const base = biz?.url ? `${biz.url.replace(/\/+$/, "")}/blog/` : "";
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">${base ? `<base href="${base}">` : ""}<link rel="stylesheet" href="../styles.css"><style>body{margin:0;background:#0a0a0c;}</style></head><body><main>${p.article_html ?? ""}</main></body></html>`;
+  };
+
+  return (
+    <div>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
+        <select style={{ ...inputStyle, width: "auto", minWidth: 260 }} value={bizId} onChange={(e) => { setOpen(null); setBizId(e.target.value); }}>
+          <option value="">Select a client…</option>
+          {businesses.map((b) => <option key={b.id} value={b.id}>{b.name} — {b.city}</option>)}
+        </select>
+        {bizId && (
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+            <input style={{ ...inputStyle, width: 280, fontFamily: MONO, fontSize: 12 }} placeholder="GitHub repo (owner/repo)" value={repoInput} onChange={(e) => setRepoInput(e.target.value)} />
+            <button style={{ ...btn(), opacity: busy === "repo" ? 0.5 : 1 }} onClick={saveRepo} disabled={busy === "repo"}>{repo === (repoInput || null) ? "Repo saved" : "Save repo"}</button>
+          </div>
+        )}
+      </div>
+
+      {err && <div style={card({ borderColor: `${T.danger}66`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{err}</span></div>}
+      {bizId && !githubReady && (
+        <div style={card({ borderColor: `${T.warn}66`, marginBottom: 16 })}>
+          <span style={{ color: T.warn, fontSize: 13 }}>GITHUB_TOKEN is not set in Netlify — you can generate and edit drafts, but publishing is disabled. Add the fine-grained PAT (Contents: read/write on the client repos) as a normal env var (never “secret”), then redeploy.</span>
+        </div>
+      )}
+
+      {!bizId && <div style={{ color: T.muted, fontFamily: MONO, fontSize: 13, padding: 40, textAlign: "center" }}>Pick a client to see topic suggestions and published guides.</div>}
+
+      {bizId && !open && (
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, alignItems: "start" }}>
+          <div style={card()}>
+            <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 15, marginBottom: 4 }}>Write the next article</div>
+            <div style={{ ...eyebrow, marginBottom: 14 }}>Topics ranked by where AI engines are NOT mentioning {biz?.name}</div>
+            {topics.length === 0 && <div style={{ color: T.muted, fontSize: 13, marginBottom: 12 }}>No probe data yet — run tracking probes first, or use a custom topic below.</div>}
+            {topics.map((t) => (
+              <div key={t.targetPrompt} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, padding: "10px 0", borderBottom: `1px solid ${T.border}` }}>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: 13, color: T.text }}>{t.targetPrompt}</div>
+                  <div style={{ fontFamily: MONO, fontSize: 11, color: t.mentionRate < 40 ? T.danger : T.warn }}>
+                    mentioned {t.mentionRate}% · missing on {t.enginesMissing.length ? t.enginesMissing.map((e) => ENGINE_LABELS[e] ?? e).join(", ") : "—"}
+                  </div>
+                </div>
+                <button style={{ ...btn(true), whiteSpace: "nowrap", opacity: busy === "gen" ? 0.5 : 1 }} disabled={busy === "gen"} onClick={() => generate(t.targetPrompt)}>Write article</button>
+              </div>
+            ))}
+            <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
+              <input style={inputStyle} placeholder="Custom topic / buyer question…" value={custom} onChange={(e) => setCustom(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") generate(custom); }} />
+              <button style={{ ...btn(true), whiteSpace: "nowrap", opacity: busy === "gen" ? 0.5 : 1 }} disabled={busy === "gen" || !custom.trim()} onClick={() => generate(custom)}>Generate</button>
+            </div>
+            <div style={{ fontFamily: MONO, fontSize: 11, color: T.muted, marginTop: 10 }}>Generation runs in the background (~2–3 min) — the draft appears in the list when ready.</div>
+          </div>
+
+          <div style={card()}>
+            <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 15, marginBottom: 4 }}>Articles</div>
+            <div style={{ ...eyebrow, marginBottom: 14 }}>{repo ? `Publishing to github.com/${repo}` : "No repo set — publishing disabled for this client"}</div>
+            {posts.length === 0 && <div style={{ color: T.muted, fontSize: 13 }}>Nothing yet.</div>}
+            {posts.map((p) => (
+              <div key={p.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, padding: "10px 0", borderBottom: `1px solid ${T.border}` }}>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: 13, color: T.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.title || p.target_prompt || "(generating…)"}</div>
+                  <div style={{ fontFamily: MONO, fontSize: 11, color: statusColor(p.status) }}>
+                    {p.status}{p.status === "generating" ? "…" : ""} · {(p.published_at || p.created_at || "").slice(0, 10)}
+                  </div>
+                </div>
+                <div style={{ display: "flex", gap: 6 }}>
+                  {p.url && <a href={p.url} target="_blank" rel="noopener noreferrer" style={{ ...btn(), textDecoration: "none", whiteSpace: "nowrap" }}>View live</a>}
+                  {(p.status === "draft" || p.status === "published") && <button style={btn(p.status === "draft")} onClick={() => openPost(p.id)}>{p.status === "draft" ? "Review" : "Open"}</button>}
+                  {p.status === "failed" && <button style={btn()} onClick={() => removeDraft(p.id)}>Delete</button>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {bizId && open && (
+        <div style={card()}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 10 }}>
+            <div>
+              <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 15 }}>{open.status === "published" ? "Published article" : "Review draft"}</div>
+              <div style={{ ...eyebrow }}>Target: {open.target_prompt}</div>
+            </div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <button style={btn()} onClick={() => setOpen(null)}>← Back</button>
+              {open.status === "draft" && <button style={{ ...btn(), opacity: busy === "save" ? 0.5 : 1 }} disabled={busy === "save"} onClick={saveDraft}>{busy === "save" ? "Saving…" : "Save edits"}</button>}
+              {open.status === "draft" && <button style={{ ...btn(), color: T.danger }} onClick={() => removeDraft(open.id)}>Delete</button>}
+              {open.status === "draft" && <button style={{ ...btn(true), opacity: busy === "pub" || !githubReady || !repo ? 0.5 : 1 }} disabled={busy === "pub" || !githubReady || !repo} onClick={publish}>{busy === "pub" ? "Publishing…" : "Publish live →"}</button>}
+              {open.status === "published" && open.url && <a href={open.url} target="_blank" rel="noopener noreferrer" style={{ ...btn(true), textDecoration: "none" }}>View live →</a>}
+            </div>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
+            <div>
+              <div style={{ ...eyebrow, marginBottom: 6 }}>Title</div>
+              <input style={inputStyle} value={open.title ?? ""} onChange={(e) => setOpen({ ...open, title: e.target.value })} readOnly={open.status === "published"} />
+            </div>
+            <div>
+              <div style={{ ...eyebrow, marginBottom: 6 }}>URL slug</div>
+              <input style={{ ...inputStyle, fontFamily: MONO, fontSize: 12 }} value={open.slug ?? ""} onChange={(e) => setOpen({ ...open, slug: e.target.value })} readOnly={open.status === "published"} />
+            </div>
+          </div>
+          <div style={{ marginBottom: 14 }}>
+            <div style={{ ...eyebrow, marginBottom: 6 }}>Meta description</div>
+            <input style={inputStyle} value={open.meta_description ?? ""} onChange={(e) => setOpen({ ...open, meta_description: e.target.value })} readOnly={open.status === "published"} />
+          </div>
+          <div style={{ ...eyebrow, marginBottom: 6 }}>Preview (rendered with the client site’s own stylesheet)</div>
+          <iframe title="Article preview" sandbox="" srcDoc={previewDoc(open)} style={{ width: "100%", height: "70vh", border: `1px solid ${T.border}`, borderRadius: 2, background: "#0a0a0c" }} />
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Main ────────────────────────────────────────────────────────────────────────
 export default function DashboardPage() {
   const [state, setState] = useState<"loading" | "locked" | "in">("loading");
   const [configured, setConfigured] = useState(true);
-  const [tab, setTab] = useState<"overview" | "scan" | "battle" | "exec" | "track" | "prospects" | "ads">("overview");
+  const [tab, setTab] = useState<"overview" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "ads">("overview");
   const [data, setData] = useState<Overview | null>(null);
   const [dataErr, setDataErr] = useState<string | null>(null);
 
@@ -1284,6 +1503,7 @@ export default function DashboardPage() {
     { id: "battle", label: "Battle Plan" },
     { id: "exec", label: "90-Day Plan" },
     { id: "track", label: "Tracking" },
+    { id: "content", label: "Content" },
     { id: "prospects", label: "Prospects" },
     { id: "ads", label: "Ads" },
   ];
@@ -1320,6 +1540,7 @@ export default function DashboardPage() {
         {tab === "battle" && <BattlePlanTab businesses={data?.businesses ?? []} />}
         {tab === "exec" && <ExecPlanTab businesses={data?.businesses ?? []} />}
         {tab === "track" && <TrackingTab businesses={data?.businesses ?? []} />}
+        {tab === "content" && <ContentTab businesses={data?.businesses ?? []} />}
         {tab === "prospects" && <ProspectsTab />}
         {tab === "ads" && <AdsTab />}
         <div style={{ marginTop: 32, paddingTop: 20, borderTop: `1px solid ${T.border}`, textAlign: "center", ...eyebrow }}>

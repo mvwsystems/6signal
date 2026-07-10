@@ -435,16 +435,116 @@ export async function getDashboardOverview(): Promise<{
 }
 
 // ── Continuous tracking ──────────────────────────────────────────────────────
-export async function getBusiness(id: string): Promise<{ id: string; name: string; url: string | null; trade: string; city: string } | null> {
+export async function getBusiness(id: string): Promise<{ id: string; name: string; url: string | null; trade: string; city: string; github_repo: string | null } | null> {
   const s = db();
   if (!s) return null;
   try {
-    const { data, error } = await s.from("businesses").select("id, name, url, trade, city").eq("id", id).single();
+    const { data, error } = await s.from("businesses").select("id, name, url, trade, city, github_repo").eq("id", id).single();
     if (error) throw error;
-    return data as { id: string; name: string; url: string | null; trade: string; city: string };
+    return data as { id: string; name: string; url: string | null; trade: string; city: string; github_repo: string | null };
   } catch (e) {
     console.error("[db] getBusiness failed:", e);
     return null;
+  }
+}
+
+export async function setBusinessGithubRepo(id: string, repo: string | null): Promise<boolean> {
+  const s = db();
+  if (!s) return false;
+  try {
+    const { error } = await s.from("businesses").update({ github_repo: repo }).eq("id", id);
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error("[db] setBusinessGithubRepo failed:", e);
+    return false;
+  }
+}
+
+// ── Content engine ────────────────────────────────────────────────────────────
+
+export async function createContentPost(businessId: string, targetPrompt: string | null): Promise<string | null> {
+  const s = db();
+  if (!s) return null;
+  try {
+    const { data, error } = await s.from("content_posts")
+      .insert({ business_id: businessId, status: "generating", target_prompt: targetPrompt })
+      .select("id").single();
+    if (error) throw error;
+    return (data as { id: string }).id;
+  } catch (e) {
+    console.error("[db] createContentPost failed:", e);
+    return null;
+  }
+}
+
+export async function updateContentPost(id: string, fields: Record<string, unknown>): Promise<boolean> {
+  const s = db();
+  if (!s) return false;
+  try {
+    const { error } = await s.from("content_posts").update(fields).eq("id", id);
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error("[db] updateContentPost failed:", e);
+    return false;
+  }
+}
+
+export async function getContentPost(id: string): Promise<Record<string, unknown> | null> {
+  const s = db();
+  if (!s) return null;
+  try {
+    const { data, error } = await s.from("content_posts").select("*").eq("id", id).single();
+    if (error) throw error;
+    return data as Record<string, unknown>;
+  } catch (e) {
+    console.error("[db] getContentPost failed:", e);
+    return null;
+  }
+}
+
+export async function listContentPosts(businessId: string): Promise<Record<string, unknown>[]> {
+  const s = db();
+  if (!s) return [];
+  try {
+    const { data, error } = await s.from("content_posts")
+      .select("id, status, title, slug, meta_description, target_prompt, summary, url, created_at, published_at")
+      .eq("business_id", businessId).order("created_at", { ascending: false }).limit(100);
+    if (error) throw error;
+    return (data ?? []) as Record<string, unknown>[];
+  } catch (e) {
+    console.error("[db] listContentPosts failed:", e);
+    return [];
+  }
+}
+
+export async function listPublishedPosts(businessId: string): Promise<Array<{ slug: string; title: string; summary: string | null; published_at: string }>> {
+  const s = db();
+  if (!s) return [];
+  try {
+    const { data, error } = await s.from("content_posts")
+      .select("slug, title, summary, published_at")
+      .eq("business_id", businessId).eq("status", "published")
+      .order("published_at", { ascending: false });
+    if (error) throw error;
+    return (data ?? []) as Array<{ slug: string; title: string; summary: string | null; published_at: string }>;
+  } catch (e) {
+    console.error("[db] listPublishedPosts failed:", e);
+    return [];
+  }
+}
+
+export async function deleteContentPostDraft(id: string): Promise<boolean> {
+  const s = db();
+  if (!s) return false;
+  try {
+    const { error } = await s.from("content_posts").delete().eq("id", id).neq("status", "published");
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error("[db] deleteContentPostDraft failed:", e);
+    return false;
   }
 }
 
