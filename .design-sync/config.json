@@ -7,5 +7,22 @@
   "guidelinesGlob": [
     "6SIGNAL_BRAND_BRIEF.md"
   ],
-  "readmeHeader": ".design-sync/conventions.md"
+  "readmeHeader": ".design-sync/conventions.md",
+  "srcDir": "app",
+  "componentSrcMap": {
+    "Radar": "app/components/charts.tsx",
+    "Ring": "app/components/charts.tsx",
+    "SignalBars": "app/components/charts.tsx",
+    "LineChart": "app/components/charts.tsx",
+    "Donut": "app/components/charts.tsx",
+    "Sparkline": "app/components/charts.tsx"
+  },
+  "overrides": {
+    "LineChart": {
+      "cardMode": "column"
+    },
+    "SignalBars": {
+      "cardMode": "column"
+    }
+  }
 }

@@ -1,8 +1,10 @@
 # design-sync notes — 6signal
 
-- This repo is a **Next.js site, not a component library**. The sync is deliberately **brand-layer only** (tokens-only mode): tokens + compiled class vocabulary + guidelines. Zero React components ship.
-- **Entry is a stub**: `.design-sync/ds-entry.mjs` (`export {}`) passed via `--entry`. All `app/components/*` are welded to Next internals (next/link, router hooks, Typeform) and would render broken outside Next — do not sync them as-is.
-- **Component candidates for a future re-sync**: the chart primitives (Radar, Ring, LineChart, Donut, Sparkline, SignalBars) living inline in `app/dashboard/page.tsx`. Syncing them requires first extracting them into an importable module (real refactor — touches the live dashboard; user deferred on 2026-07-09).
+- This repo is a **Next.js site, not a component library**. The sync ships the **brand layer** (tokens + compiled class vocabulary + guidelines) **plus six chart primitives** extracted 2026-07-09 into [app/components/charts.tsx](../app/components/charts.tsx): Radar, Ring, SignalBars, LineChart, Donut, Sparkline. That module is dependency-free (hand-built SVG, inline styles) — safe outside Next. The rest of `app/components/*` stays welded to Next internals (next/link, router hooks, Typeform) — do not sync as-is.
+- **Entry**: `.design-sync/ds-entry.mjs` re-exports the six charts + SIGNALS/scoreColor/tierOf from `app/components/charts` — passed via `--entry`.
+- **Previews are hand-authored** in `.design-sync/previews/*.tsx`. Every cell must be wrapped in the dark `Ground` helper (`background:#060606`, inline-block, padding 20) — the app's preview card ground is light and the components' near-white text/gridlines wash out without it. Do not remove the wrapper on rebuilds.
+- **cardMode overrides**: LineChart and SignalBars are wide → `overrides.{LineChart,SignalBars}.cardMode: "column"` in config.json fixes [GRID_OVERFLOW]. Keep them.
+- **Sparkline [RENDER_THIN] is benign**: it's a 26px axis-less line by design. Triage as pass; don't iterate on it.
 - **cssEntry is GENERATED** (`.design-sync/.cache/ds.css`, gitignored). Regenerate before every re-sync:
   ```sh
   grep -v '@import "@typeform' app/globals.css > .design-sync/.cache/globals-input.css
@@ -13,7 +15,8 @@
 - Fonts are **Google-hosted remote** (`@import` in cssEntry) → `[FONT_REMOTE]` is expected, not a problem.
 
 ## Known render warns
-- `[RENDER_SKIPPED]` — accepted while the DS is tokens-only (0 previews exist; nothing to render). Install playwright + chromium the day components are added.
+- Playwright + chromium installed 2026-07-09 (user approved) — captures run for real now.
+- `[RENDER_THIN]` on Sparkline — expected, see above.
 
 ## Re-sync risks
 - `ds.css` is a **compiled snapshot** — a re-sync without regenerating it (command above) uploads stale styling silently.

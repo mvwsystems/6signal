@@ -1,3 +1,2 @@
-// 6 Signal design-sync entry — brand layer only (tokens + CSS + fonts).
-// Chart components can be added here on a future re-sync.
-export {};
+// 6 Signal design-sync entry — brand layer + chart primitives.
+export { Radar, Ring, SignalBars, LineChart, Donut, Sparkline, SIGNALS, scoreColor, tierOf } from "../app/components/charts";

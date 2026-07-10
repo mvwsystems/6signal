@@ -20,6 +20,16 @@
 
 For anything the vocabulary doesn't cover, write inline styles or new CSS **using the tokens above** — dark panels are `background:#0e0e0c; border:1px solid rgba(255,255,255,0.07); border-radius:2px; padding:20-24px`. Numbers and metrics render in JetBrains Mono with a color that encodes meaning (accent or status).
 
+## Chart components (real, from `window.SixSignal`)
+Six data-viz primitives ship as compiled components — use them for any score, trend, or share-of-voice display instead of hand-drawing SVG:
+- `Radar` — six-signal profile (GEO/AEO/LEO/VEO/PEO/IEO) on a hex grid; takes `scores: {geo, aeo, leo, veo, peo, ieo}` (0–100).
+- `Ring` — single 0–100 score with a tier-colored arc (Invisible/Emerging/Visible/Dominant).
+- `SignalBars` — per-signal horizontal bars with optional `findings` annotations.
+- `LineChart` — multi-series 0–100 trend; a series labeled `"Overall"` renders heavier.
+- `Donut` — share-of-voice; first segment is "you" (accent yellow), center shows its %.
+- `Sparkline` — tiny 26px trend line for stat cards; no axes by design.
+All draw their own colors (accent #E6FF00 + the ok/warn/danger status trio) and mono numerals. **Always place them on a dark ground** (`#060606`/`#0e0e0c` panel) — text and gridlines are near-white and vanish on light backgrounds.
+
 ## Where the truth lives
 Read `styles.css` and its import `_ds_bundle.css` before styling — the full class vocabulary and every token definition is there. `guidelines/6SIGNAL_BRAND_BRIEF.md` carries the voice and layout language.
 
