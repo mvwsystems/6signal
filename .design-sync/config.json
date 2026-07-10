@@ -1,0 +1,11 @@
+{
+  "projectId": "0eb91097-cba3-4024-aa12-2d0d2d8e0aa6",
+  "shape": "package",
+  "pkg": "6signal-site",
+  "globalName": "SixSignal",
+  "cssEntry": ".design-sync/.cache/ds.css",
+  "guidelinesGlob": [
+    "6SIGNAL_BRAND_BRIEF.md"
+  ],
+  "readmeHeader": ".design-sync/conventions.md"
+}
