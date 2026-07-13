@@ -742,6 +742,130 @@ function MapGridCard({ bizId, trade }: { bizId: string; trade: string }) {
   );
 }
 
+// ─── Citation intelligence (which sources AI trusts) ─────────────────────────────
+interface CiteRow { domain: string; count: number; engines: string[]; prompts: string[]; owned: boolean }
+
+function CitationCard({ bizId }: { bizId: string }) {
+  const [data, setData] = useState<{ rows: CiteRow[]; siteDomain: string | null; ownedInTop: number; topN: number } | null>(null);
+
+  useEffect(() => {
+    setData(null);
+    fetch(`/api/dashboard/citations?businessId=${bizId}`).then((r) => r.json()).then((d) => { if (d?.rows) setData(d); }).catch(() => {});
+  }, [bizId]);
+
+  if (!data || !data.rows.length) return null;
+  const max = data.rows[0]?.count || 1;
+  return (
+    <div style={card({ marginBottom: 20 })}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 8, marginBottom: 4 }}>
+        <span style={eyebrow}>Citation intelligence — the sources AI trusts</span>
+        <span style={{ fontFamily: MONO, fontSize: 12, color: data.ownedInTop === 0 ? T.danger : T.ok }}>
+          you own {data.ownedInTop} of the top {data.topN}
+        </span>
+      </div>
+      <div style={{ fontSize: 12, color: T.muted, marginBottom: 14 }}>
+        Domains cited by AI engines when answering this client&rsquo;s tracked buyer questions (latest answers). Getting the client onto — or above — these sources is the citation work order.
+      </div>
+      {data.rows.map((r) => (
+        <div key={r.domain} style={{ display: "grid", gridTemplateColumns: "220px 1fr auto", gap: 12, alignItems: "center", padding: "7px 0", borderBottom: `1px solid ${T.border}` }}>
+          <span style={{ fontFamily: MONO, fontSize: 12, color: r.owned ? T.accent : T.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {r.domain}{r.owned && <span style={{ marginLeft: 8, fontSize: 9, letterSpacing: "0.15em", color: T.accent }}>YOU</span>}
+          </span>
+          <div style={{ height: 5, background: T.border, overflow: "hidden" }}>
+            <div data-keep style={{ height: "100%", width: `${(100 * r.count) / max}%`, background: r.owned ? T.accent : "#8e8e86" }} />
+          </div>
+          <span style={{ fontFamily: MONO, fontSize: 11, color: T.muted, whiteSpace: "nowrap" }}>
+            {r.count}× · {r.engines.map((e) => ENGINE_LABELS[e] ?? e).join(", ")}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── Town-level AI visibility (place-name scan across the service area) ──────────
+interface TownScanRow {
+  id: string; created_at: string;
+  towns: { town: string; prompt: string; engines: Partial<Record<string, { ok: boolean; mentioned: boolean; position: number | null }>>; score: number }[];
+  stats: { avg_score: number; best_town: string | null; worst_town: string | null; engines_used: string[] };
+}
+
+function TownScanCard({ bizId, city }: { bizId: string; city: string }) {
+  const [scans, setScans] = useState<TownScanRow[]>([]);
+  const [towns, setTowns] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    const d = await fetch(`/api/dashboard/ai-towns?businessId=${bizId}`).then((r) => r.json()).catch(() => null);
+    if (d?.scans) setScans(d.scans);
+    return d?.scans ?? [];
+  }, [bizId]);
+
+  useEffect(() => { setScans([]); setMsg(null); setErr(null); setTowns(city.split(",")[0] ?? ""); load(); }, [bizId, city, load]);
+
+  const run = async () => {
+    const list = towns.split(",").map((t) => t.trim()).filter(Boolean);
+    if (!list.length) return;
+    setBusy(true); setErr(null); setMsg(null);
+    const prevNewest = scans[0]?.id ?? null;
+    try {
+      const r = await fetch("/api/dashboard/ai-towns", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ businessId: bizId, towns: list }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || `error ${r.status}`);
+      setMsg(`Asking every AI engine about ${list.length} town(s) — ${Math.max(2, list.length)} min or so…`);
+      for (let i = 0; i < 45; i++) {
+        await new Promise((res) => setTimeout(res, 10000));
+        const fresh = await load();
+        if (fresh[0] && fresh[0].id !== prevNewest) { setMsg(null); break; }
+        if (i === 44) setMsg("Still running — refresh in a couple of minutes.");
+      }
+    } catch (e: any) { setErr(e?.message || "Scan failed"); setMsg(null); } finally { setBusy(false); }
+  };
+
+  const scan = scans[0] ?? null;
+  return (
+    <div style={card({ marginBottom: 20 })}>
+      <div className="no-print" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 6 }}>
+        <span style={eyebrow}>AI visibility by town</span>
+        <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+          <input style={{ ...inputStyle, width: 320, padding: "7px 10px", fontSize: 13 }} placeholder="Towns, comma-separated (Red Oak, Waxahachie, Ferris…)" value={towns} onChange={(e) => setTowns(e.target.value)} />
+          <button style={{ ...btn(true), opacity: busy ? 0.5 : 1 }} onClick={run} disabled={busy}>{busy ? "Scanning…" : "Scan towns"}</button>
+        </div>
+      </div>
+      {err && <div style={{ color: T.danger, fontSize: 13, marginBottom: 8 }}>{err}</div>}
+      {msg && <div style={{ fontFamily: MONO, fontSize: 12, color: T.accent, marginBottom: 8 }}>{msg}</div>}
+      {!scan && !busy && <p style={{ fontSize: 13, color: T.muted, margin: "8px 0 0" }}>AI answers change town by town (&ldquo;best plumber in Waxahachie&rdquo; ≠ &ldquo;…in Red Oak&rdquo;). Scan the whole service area to see where the client is recommended and where they don&rsquo;t exist.</p>}
+      {scan && (
+        <div>
+          <div style={{ fontFamily: MONO, fontSize: 11, color: T.muted, marginBottom: 12 }}>
+            {scan.created_at.slice(0, 10)} · avg {scan.stats.avg_score}%{scan.stats.best_town ? ` · strongest: ${scan.stats.best_town}` : ""}{scan.stats.worst_town ? ` · weakest: ${scan.stats.worst_town}` : ""}
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: `160px 70px repeat(${ENGINE_KEYS.length}, 1fr)`, gap: 0, ...eyebrow, fontSize: 10, padding: "0 0 8px", borderBottom: `1px solid ${T.border}` }}>
+            <span>Town</span><span>Score</span>
+            {ENGINE_KEYS.map((e) => <span key={e} style={{ textAlign: "center" }}>{ENGINE_LABELS[e]}</span>)}
+          </div>
+          {scan.towns.map((t) => (
+            <div key={t.town} style={{ display: "grid", gridTemplateColumns: `160px 70px repeat(${ENGINE_KEYS.length}, 1fr)`, alignItems: "center", padding: "9px 0", borderBottom: `1px solid ${T.border}` }}>
+              <span style={{ fontSize: 13, color: T.text }}>{t.town}</span>
+              <span style={{ fontFamily: MONO, fontSize: 14, fontWeight: 700, color: scoreColor(t.score) }}>{t.score}%</span>
+              {ENGINE_KEYS.map((e) => {
+                const v = t.engines[e];
+                return (
+                  <span key={e} style={{ textAlign: "center", fontFamily: MONO, fontSize: 13, color: !v || !v.ok ? T.muted : v.mentioned ? T.ok : T.danger }}>
+                    {!v || !v.ok ? "—" : v.mentioned ? (v.position ? `#${v.position}` : "✓") : "✗"}
+                  </span>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function TrackingTab({ businesses }: { businesses: Biz[] }) {
   const [bizId, setBizId] = useState("");
   const [prompts, setPrompts] = useState<{ id: string; prompt: string }[]>([]);
@@ -933,6 +1057,8 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
           )}
 
           <MapGridCard bizId={bizId} trade={biz?.trade ?? ""} />
+          <TownScanCard bizId={bizId} city={biz?.city ?? ""} />
+          <CitationCard bizId={bizId} />
 
           {/* Prompt management */}
           <div className="no-print" style={card({ marginBottom: 20 })}>

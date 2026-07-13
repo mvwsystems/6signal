@@ -107,6 +107,39 @@ export default function ClientSharePage() {
           </div>
         )}
 
+        {Array.isArray(rep?.ai_towns) && rep.ai_towns.length > 0 && (
+          <div style={card}>
+            <div style={{ ...eyebrow, marginBottom: 4 }}>AI visibility across your service area</div>
+            <div style={{ fontSize: 12, color: T.muted, marginBottom: 12 }}>
+              How often AI assistants recommend you when someone asks in each town you serve.
+            </div>
+            {rep.ai_towns.map((t: any) => (
+              <div key={t.town} style={{ display: "grid", gridTemplateColumns: "140px 1fr 56px", gap: 12, alignItems: "center", marginBottom: 9 }}>
+                <span style={{ fontSize: 13, color: T.text }}>{t.town}</span>
+                <div style={{ height: 6, background: T.border }}><div data-keep style={{ height: "100%", width: `${t.score}%`, background: rateColor(t.score) }} /></div>
+                <span style={{ fontFamily: MONO, fontSize: 13, fontWeight: 700, color: rateColor(t.score), textAlign: "right" }}>{t.score}%</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {Array.isArray(rep?.top_citations) && rep.top_citations.length > 0 && (
+          <div style={card}>
+            <div style={{ ...eyebrow, marginBottom: 4 }}>The sources AI trusts in your market</div>
+            <div style={{ fontSize: 12, color: T.muted, marginBottom: 12 }}>
+              When AI assistants answer questions about {data.business.trade.toLowerCase()} services in your area, these are the websites they pull from. Our job is getting you onto — and above — this list.
+            </div>
+            {rep.top_citations.map((c: any) => (
+              <div key={c.domain} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "7px 0", borderBottom: `1px solid ${T.border}` }}>
+                <span style={{ fontFamily: MONO, fontSize: 12, color: c.owned ? T.accent : T.text }}>
+                  {c.domain}{c.owned && <span style={{ marginLeft: 8, fontSize: 9, letterSpacing: "0.15em", color: T.accent }}>YOU</span>}
+                </span>
+                <span style={{ fontFamily: MONO, fontSize: 11, color: T.muted }}>cited {c.count}×</span>
+              </div>
+            ))}
+          </div>
+        )}
+
         {Array.isArray(data.trend) && data.trend.length > 1 && (
           <div style={card}>
             <div style={{ ...eyebrow, marginBottom: 14 }}>Your visibility over time</div>

@@ -10,6 +10,7 @@ import { runWatchdog } from "../../app/lib/watchdog";
 import { runOwnerBriefing } from "../../app/lib/briefing";
 import { runContentGeneration } from "../../app/lib/content";
 import { runMapsGridScan } from "../../app/lib/mapsGrid";
+import { runTownScan } from "../../app/lib/townScan";
 
 export default async (req: Request) => {
   if (req.method !== "POST") return new Response("method not allowed", { status: 405 });
@@ -50,6 +51,9 @@ export default async (req: Request) => {
     } else if (kind === "maps-grid") {
       if (!body.businessId) return new Response("missing businessId", { status: 400 });
       await runMapsGridScan({ businessId: body.businessId, keyword: body.keyword, gridSize: body.gridSize, spacingMiles: body.spacingMiles });
+    } else if (kind === "ai-towns") {
+      if (!body.businessId || !Array.isArray(body.towns)) return new Response("missing businessId/towns", { status: 400 });
+      await runTownScan({ businessId: body.businessId, towns: body.towns });
     } else {
       return new Response("unknown kind", { status: 400 });
     }

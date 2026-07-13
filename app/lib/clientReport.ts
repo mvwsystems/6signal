@@ -4,7 +4,8 @@
 // writes the plain-English narrative. Stored in client_reports, rendered in
 // the dashboard, on the public share page, and printable to PDF.
 
-import { getBusiness, getProbeResults, listTrackedPrompts, listTasks, saveClientReport, listClientReports, briefingRoster, getLatestMapsGrid } from "./db";
+import { getBusiness, getProbeResults, listTrackedPrompts, listTasks, saveClientReport, listClientReports, briefingRoster, getLatestMapsGrid, getLatestTownScan } from "./db";
+import { citationIntel } from "./citations";
 import { ENGINES } from "./engines";
 import { sendEmail, emailShell, heading, paragraph, monoLabel } from "./email";
 
@@ -30,18 +31,22 @@ export interface ClientReportPayload {
     points: { rank: number | null }[];
     stats: { present: number; top3: number; top10: number; total: number; avg_rank: number | null; coverage: number };
   } | null;
+  ai_towns?: { town: string; score: number }[] | null;
+  top_citations?: { domain: string; count: number; owned: boolean }[] | null;
 }
 
 export async function buildClientReport(businessId: string): Promise<{ id: string | null; payload: ClientReportPayload } | null> {
   const business = await getBusiness(businessId);
   if (!business) return null;
 
-  const [results, prompts, tasks, existing, gridScan] = await Promise.all([
+  const [results, prompts, tasks, existing, gridScan, townScan, citations] = await Promise.all([
     getProbeResults(businessId, 62),
     listTrackedPrompts(businessId),
     listTasks(businessId),
     listClientReports(businessId),
     getLatestMapsGrid(businessId),
+    getLatestTownScan(businessId),
+    citationIntel(businessId).catch(() => null),
   ]);
   const isBaseline = existing.length === 0;
 
@@ -151,6 +156,12 @@ export async function buildClientReport(businessId: string): Promise<{ id: strin
       points: (gridScan.points as { rank: number | null }[]).map((p) => ({ rank: p.rank })),
       stats: gridScan.stats as { present: number; top3: number; top10: number; total: number; avg_rank: number | null; coverage: number },
     } : null,
+    ai_towns: townScan
+      ? (townScan.towns as { town: string; score: number }[]).map((t) => ({ town: t.town, score: t.score }))
+      : null,
+    top_citations: citations?.rows.length
+      ? citations.rows.slice(0, 8).map((r) => ({ domain: r.domain, count: r.count, owned: r.owned }))
+      : null,
   };
   const id = await saveClientReport(businessId, periodLabel, payload);
   return { id, payload };

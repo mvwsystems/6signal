@@ -573,6 +573,41 @@ export async function getLatestMapsGrid(businessId: string): Promise<Record<stri
   return rows[0] ?? null;
 }
 
+// ── Town-level AI visibility scans ────────────────────────────────────────────
+
+export async function saveTownScan(row: { business_id: string; towns: unknown; stats: unknown }): Promise<string | null> {
+  const s = db();
+  if (!s) return null;
+  try {
+    const { data, error } = await s.from("ai_town_scans").insert(row).select("id").single();
+    if (error) throw error;
+    return (data as { id: string }).id;
+  } catch (e) {
+    console.error("[db] saveTownScan failed:", e);
+    return null;
+  }
+}
+
+export async function listTownScans(businessId: string, limit = 12): Promise<Record<string, unknown>[]> {
+  const s = db();
+  if (!s) return [];
+  try {
+    const { data, error } = await s.from("ai_town_scans")
+      .select("*").eq("business_id", businessId)
+      .order("created_at", { ascending: false }).limit(limit);
+    if (error) throw error;
+    return (data ?? []) as Record<string, unknown>[];
+  } catch (e) {
+    console.error("[db] listTownScans failed:", e);
+    return [];
+  }
+}
+
+export async function getLatestTownScan(businessId: string): Promise<Record<string, unknown> | null> {
+  const rows = await listTownScans(businessId, 1);
+  return rows[0] ?? null;
+}
+
 export async function deleteContentPostDraft(id: string): Promise<boolean> {
   const s = db();
   if (!s) return false;
