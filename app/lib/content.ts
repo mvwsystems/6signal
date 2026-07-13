@@ -99,11 +99,12 @@ export async function runContentGeneration(args: { postId: string; businessId: s
       try {
         const branch = await getDefaultBranch(business.github_repo).catch(() => "main");
         const paths = await listRepoPaths(business.github_repo, branch);
-        const tpl = paths.find((p) => /^services\/.+\.html$/.test(p)) || paths.find((p) => p === "index.html");
-        if (tpl) {
+        // Not every page has a <main> (X-Act's commercial-new-builds doesn't) —
+        // walk the candidates until one does.
+        for (const tpl of templateCandidates(paths)) {
           const html = await getRepoFile(business.github_repo, tpl, branch);
           const main = html?.match(/<main[\s\S]*?<\/main>/i)?.[0] ?? "";
-          templateSample = main.slice(0, 6000);
+          if (main) { templateSample = main.slice(0, 6000); break; }
         }
         existing = paths.filter((p) => p.endsWith(".html")).slice(0, 40);
       } catch (e) {
@@ -163,6 +164,15 @@ function siteBaseFrom(templateHtml: string, fallbackUrl: string | null): string 
 }
 
 interface Shell { nav: string; foot: string; favicon: string; base: string }
+
+/** Pages to try as the shell template, best-first. Blog pages are excluded —
+ *  using a generated page as its own template would compound any drift. */
+function templateCandidates(paths: string[]): string[] {
+  const services = paths.filter((p) => /^services\/.+\.html$/.test(p)).sort();
+  const locations = paths.filter((p) => /^locations\/.+\.html$/.test(p)).sort();
+  const roots = paths.filter((p) => /^[^/]+\.html$/.test(p) && p !== "index.html").sort();
+  return [...services, ...locations, "index.html", ...roots].filter((p) => paths.includes(p));
+}
 
 function extractShell(templateHtml: string, fallbackUrl: string | null): Shell {
   const body = templateHtml.match(/<body[^>]*>([\s\S]*)<\/body>/i)?.[1];
@@ -342,15 +352,22 @@ export async function publishContentPost(postId: string): Promise<{ url: string;
 
   const branch = await getDefaultBranch(repo);
   const paths = await listRepoPaths(repo, branch);
-  const tplPath = paths.find((p) => /^services\/.+\.html$/.test(p)) || "index.html";
-  const [tplHtml, sitemap, llms, toml] = await Promise.all([
-    getRepoFile(repo, tplPath, branch),
+  const [sitemap, llms, toml] = await Promise.all([
     getRepoFile(repo, "sitemap.xml", branch),
     getRepoFile(repo, "llms.txt", branch),
     getRepoFile(repo, "netlify.toml", branch),
   ]);
-  if (!tplHtml) throw new Error(`Could not read template page ${tplPath} from ${repo}.`);
-  const shell = extractShell(tplHtml, business.url);
+  // Try template pages until one yields a clean nav/footer shell (some pages
+  // lack a <main> to split on).
+  let shell: Shell | null = null;
+  let lastErr = "no template candidates found";
+  for (const tplPath of templateCandidates(paths)) {
+    const tplHtml = await getRepoFile(repo, tplPath, branch);
+    if (!tplHtml) continue;
+    try { shell = extractShell(tplHtml, business.url); break; }
+    catch (e) { lastErr = e instanceof Error ? e.message : String(e); }
+  }
+  if (!shell) throw new Error(`No usable template page in ${repo} (${lastErr}).`);
 
   const nowISO = new Date().toISOString();
   const already = await listPublishedPosts(String(post.business_id));
