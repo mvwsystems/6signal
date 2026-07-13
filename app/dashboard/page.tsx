@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { Radar, Ring, SignalBars, LineChart, Donut, Sparkline, GeoGrid } from "../components/charts";
+import { Radar, Ring, SignalBars, LineChart, Donut, Sparkline, MapHeatGrid } from "../components/charts";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 6 Signal — internal AI Visibility Command Center (/dashboard)
@@ -656,7 +656,7 @@ const COMP_COLORS = ["#74746e", "#8e8e86", "#a8a8a0", "#c2c2b8", "#dcdcd2"];
 // ─── Map coverage radar (geo-grid Maps ranking) ──────────────────────────────────
 interface GridScan {
   id: string; keyword: string; grid_size: number; spacing_miles: number;
-  center: { label?: string }; points: { rank: number | null; top: string[] }[];
+  center: { lat?: number; lng?: number; label?: string }; points: { lat?: number; lng?: number; rank: number | null; top: string[] }[];
   stats: { present: number; top3: number; top10: number; total: number; avg_rank: number | null; coverage: number };
   created_at: string;
 }
@@ -720,7 +720,7 @@ function MapGridCard({ bizId, trade }: { bizId: string; trade: string }) {
       {!scan && !busy && <p style={{ fontSize: 13, color: T.muted, margin: "8px 0 0" }}>No grid scans yet. One scan checks the map-pack ranking from 25 points across the service area — where the business actually wins on Google Maps, block by block.</p>}
       {scan && (
         <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: 24, alignItems: "center" }}>
-          <GeoGrid points={scan.points} gridSize={scan.grid_size} spacingMiles={Number(scan.spacing_miles)} />
+          <MapHeatGrid points={scan.points} center={scan.center?.lat != null && scan.center?.lng != null ? { lat: scan.center.lat, lng: scan.center.lng } : null} gridSize={scan.grid_size} spacingMiles={Number(scan.spacing_miles)} />
           <div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 12, marginBottom: 16 }}>
               <div><div style={eyebrow}>Coverage</div><div style={{ fontFamily: MONO, fontSize: 30, fontWeight: 700, color: scoreColor(scan.stats.coverage) }}>{scan.stats.coverage}%</div>{delta != null && delta !== 0 && <div style={{ fontFamily: MONO, fontSize: 11, color: delta > 0 ? T.ok : T.danger }}>{delta > 0 ? "▲" : "▼"} {Math.abs(delta)} pts vs prior</div>}</div>

@@ -228,6 +228,83 @@ export function GeoGrid({ points, gridSize, spacingMiles, size = 440 }: {
   );
 }
 
+/**
+ * Map heat grid: the GeoGrid scan rendered over a real (dark-styled) map with
+ * heat blooms per rank tier — the Local Falcon view, on-brand. Needs each
+ * point's lat/lng and the scan center; degrades to the abstract GeoGrid radar
+ * when the map image can't load (Static Maps API not enabled, offline, or an
+ * old scan without coordinates).
+ */
+export function MapHeatGrid({ points, center, gridSize, spacingMiles, size = 440 }: {
+  points: { lat?: number; lng?: number; rank: number | null }[];
+  center?: { lat: number; lng: number } | null;
+  gridSize: number; spacingMiles: number; size?: number;
+}) {
+  const [imgFailed, setImgFailed] = React.useState(false);
+  const hasCoords = Boolean(center && points.every((p) => Number.isFinite(p.lat) && Number.isFinite(p.lng)));
+  if (!hasCoords || imgFailed) return <GeoGrid points={points} gridSize={gridSize} spacingMiles={spacingMiles} size={size} />;
+  const c = center as { lat: number; lng: number };
+
+  // Web Mercator: pick the integer zoom that fits the grid span in a 640px map.
+  const latR = (c.lat * Math.PI) / 180;
+  const spanMeters = Math.max(1, gridSize - 1) * spacingMiles * 1609.34 * 1.55;
+  const zoom = Math.max(3, Math.min(15, Math.floor(Math.log2((156543.03392 * Math.cos(latR) * 640) / spanMeters))));
+  const world = (lat: number, lng: number) => {
+    const s = Math.min(0.9999, Math.max(-0.9999, Math.sin((lat * Math.PI) / 180)));
+    return {
+      x: ((lng + 180) / 360) * 256 * 2 ** zoom,
+      y: (0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI)) * 256 * 2 ** zoom,
+    };
+  };
+  const cw = world(c.lat, c.lng);
+  const toPx = (lat: number, lng: number) => {
+    const w = world(lat, lng);
+    return { x: size / 2 + (w.x - cw.x) * (size / 640), y: size / 2 + (w.y - cw.y) * (size / 640) };
+  };
+  const metersPerPx = (156543.03392 * Math.cos(latR)) / 2 ** zoom;
+  const cellPx = ((spacingMiles * 1609.34) / metersPerPx) * (size / 640);
+  const dotR = Math.max(10, Math.min(16, cellPx * 0.28));
+  const tierColor = (rank: number | null) => (rank == null ? C.danger : rank <= 3 ? C.ok : rank <= 10 ? "#eab308" : C.warn);
+  const hq = toPx(c.lat, c.lng);
+
+  return (
+    <div style={{ position: "relative", width: size, height: size, overflow: "hidden", border: `1px solid ${C.border}`, borderRadius: 2, background: C.bg }}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={`/api/map-image?lat=${c.lat.toFixed(6)}&lng=${c.lng.toFixed(6)}&zoom=${zoom}`} alt=""
+        onError={() => setImgFailed(true)}
+        style={{ position: "absolute", inset: 0, width: size, height: size, objectFit: "cover", filter: "saturate(0.7) brightness(0.95)" }} />
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ position: "absolute", inset: 0 }}>
+        <defs>
+          <filter id="mh-heat" x="-120%" y="-120%" width="340%" height="340%">
+            <feGaussianBlur stdDeviation={cellPx * 0.42} />
+          </filter>
+        </defs>
+        {/* heat blooms */}
+        {points.map((p, i) => {
+          const px = toPx(p.lat as number, p.lng as number);
+          return <circle key={`h${i}`} cx={px.x} cy={px.y} r={cellPx * 0.62} fill={tierColor(p.rank)} opacity={p.rank == null ? 0.16 : p.rank <= 3 ? 0.4 : 0.3} filter="url(#mh-heat)" />;
+        })}
+        {/* rank dots */}
+        {points.map((p, i) => {
+          const px = toPx(p.lat as number, p.lng as number);
+          const col = tierColor(p.rank);
+          const absent = p.rank == null;
+          return (
+            <g key={i}>
+              <circle cx={px.x} cy={px.y} r={dotR} fill={absent ? "rgba(6,6,6,0.55)" : col} stroke={absent ? col : "rgba(6,6,6,0.85)"} strokeWidth={absent ? 1.4 : 1.5} />
+              <text x={px.x} y={px.y + dotR * 0.36} textAnchor="middle" fontFamily={MONO} fontWeight="700"
+                fontSize={dotR * (absent ? 1.0 : 0.95)} fill={absent ? col : "#060606"}>{absent ? "—" : p.rank}</text>
+            </g>
+          );
+        })}
+        {/* HQ marker */}
+        <circle cx={hq.x} cy={hq.y} r={dotR + 5} fill="none" stroke={C.accent} strokeWidth="1.5" strokeDasharray="4 3" />
+        <text x={hq.x + dotR + 9} y={hq.y - dotR - 6} fontFamily={MONO} fontSize="9" fontWeight="700" fill={C.accent} letterSpacing="0.18em">HQ</text>
+      </svg>
+    </div>
+  );
+}
+
 /** Tiny 0–100 trend line for stat cards. Renders nothing with fewer than 2 points. */
 export function Sparkline({ values, color, width = 130, height = 26 }: { values: (number | null)[]; color: string; width?: number; height?: number }) {
   if ((values.filter((v) => v != null) as number[]).length < 2) return null;

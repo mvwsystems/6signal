@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { GeoGrid } from "../../components/charts";
+import { MapHeatGrid } from "../../components/charts";
 
 // Public client results page (/c/<token>) — the live view a client can open
 // any time. Token-gated (unguessable), client-safe data only. Printable.
@@ -91,7 +91,7 @@ export default function ClientSharePage() {
               We searched Google Maps for &ldquo;{rep.maps_grid.keyword}&rdquo; from {rep.maps_grid.stats.total} points across your service area. Each dot is your ranking at that location.
             </div>
             <div style={{ display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap" }}>
-              <GeoGrid points={rep.maps_grid.points} gridSize={rep.maps_grid.grid_size} spacingMiles={Number(rep.maps_grid.spacing_miles)} size={380} />
+              <MapHeatGrid points={rep.maps_grid.points} center={rep.maps_grid.center ?? null} gridSize={rep.maps_grid.grid_size} spacingMiles={Number(rep.maps_grid.spacing_miles)} size={380} />
               <div style={{ flex: 1, minWidth: 220 }}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
                   <div><div style={eyebrow}>Coverage</div><div style={{ fontFamily: MONO, fontSize: 28, fontWeight: 700, color: rateColor(rep.maps_grid.stats.coverage) }}>{rep.maps_grid.stats.coverage}%</div><div style={{ fontSize: 11, color: T.muted }}>of your area sees you in the top 10</div></div>

@@ -28,7 +28,8 @@ export interface ClientReportPayload {
   narrative: { headline: string; summary: string; what_this_means: string; focus_next: string[]; client_actions: string[] };
   maps_grid?: {
     keyword: string; grid_size: number; spacing_miles: number; scanned_at: string;
-    points: { rank: number | null }[];
+    center?: { lat: number; lng: number } | null;
+    points: { lat?: number; lng?: number; rank: number | null }[];
     stats: { present: number; top3: number; top10: number; total: number; avg_rank: number | null; coverage: number };
   } | null;
   ai_towns?: { town: string; score: number }[] | null;
@@ -153,7 +154,8 @@ export async function buildClientReport(businessId: string): Promise<{ id: strin
       grid_size: Number(gridScan.grid_size),
       spacing_miles: Number(gridScan.spacing_miles),
       scanned_at: String(gridScan.created_at),
-      points: (gridScan.points as { rank: number | null }[]).map((p) => ({ rank: p.rank })),
+      center: (() => { const gc = gridScan.center as { lat?: number; lng?: number } | null; return gc?.lat != null && gc?.lng != null ? { lat: gc.lat, lng: gc.lng } : null; })(),
+      points: (gridScan.points as { lat?: number; lng?: number; rank: number | null }[]).map((p) => ({ lat: p.lat, lng: p.lng, rank: p.rank })),
       stats: gridScan.stats as { present: number; top3: number; top10: number; total: number; avg_rank: number | null; coverage: number },
     } : null,
     ai_towns: townScan
