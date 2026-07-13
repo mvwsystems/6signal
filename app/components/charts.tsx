@@ -160,6 +160,74 @@ export function Donut({ segments, size = 150 }: { segments: { label: string; val
   );
 }
 
+/**
+ * Geo-grid coverage radar: map-pack rank at each point of an NxN scan grid
+ * around the business, rendered as an intelligence-briefing radar — concentric
+ * mile rings, tier-colored rank dots (green ≤3, yellow ≤10, orange ≤20, hollow
+ * red = absent), accent ring marking HQ at center. Points are row-major,
+ * north-up. Always place on a dark ground.
+ */
+export function GeoGrid({ points, gridSize, spacingMiles, size = 440 }: {
+  points: { rank: number | null }[]; gridSize: number; spacingMiles: number; size?: number;
+}) {
+  const pad = 34;
+  const plot = size - pad * 2;
+  const half = (gridSize - 1) / 2;
+  const cell = gridSize > 1 ? plot / (gridSize - 1) : 0;
+  const cx = size / 2, cy = size / 2;
+  const dotR = Math.min(17, cell * 0.33);
+  const tier = (rank: number | null) =>
+    rank == null ? { fill: "rgba(239,68,68,0.10)", stroke: "rgba(239,68,68,0.55)", text: "rgba(239,68,68,0.8)", glow: null, label: "—" }
+    : rank <= 3 ? { fill: C.ok, stroke: C.ok, text: "#06230f", glow: C.ok, label: String(rank) }
+    : rank <= 10 ? { fill: "#eab308", stroke: "#eab308", text: "#231c05", glow: null, label: String(rank) }
+    : { fill: C.warn, stroke: C.warn, text: "#2a1204", glow: null, label: String(rank) };
+  const rings = Array.from({ length: Math.max(1, Math.floor(half)) }, (_, i) => i + 1);
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ display: "block" }}>
+      <defs>
+        <filter id="gg-blur" x="-80%" y="-80%" width="260%" height="260%">
+          <feGaussianBlur stdDeviation={dotR * 0.75} />
+        </filter>
+      </defs>
+      {/* crosshair + frame ticks */}
+      <line x1={cx} y1={pad - 14} x2={cx} y2={size - pad + 14} stroke={C.border} strokeWidth="1" />
+      <line x1={pad - 14} y1={cy} x2={size - pad + 14} y2={cy} stroke={C.border} strokeWidth="1" />
+      <text x={cx} y={pad - 20} textAnchor="middle" fontFamily={MONO} fontSize="9" fontWeight="700" fill={C.muted}>N</text>
+      {/* concentric distance rings */}
+      {rings.map((k) => (
+        <g key={k}>
+          <circle cx={cx} cy={cy} r={k * cell} fill="none" stroke={C.border} strokeWidth="1" strokeDasharray="3 5" />
+          <text x={cx + k * cell * 0.7071 + 4} y={cy - k * cell * 0.7071 - 4} fontFamily={MONO} fontSize="8" fill={C.muted} letterSpacing="0.1em">
+            {Number((k * spacingMiles).toFixed(1))} MI
+          </text>
+        </g>
+      ))}
+      {/* glow layer under top-3 dots */}
+      {points.map((p, i) => {
+        const t = tier(p.rank);
+        if (!t.glow) return null;
+        const row = Math.floor(i / gridSize), col = i % gridSize;
+        return <circle key={`g${i}`} cx={pad + col * cell} cy={pad + row * cell} r={dotR * 1.5} fill={t.glow} opacity="0.35" filter="url(#gg-blur)" />;
+      })}
+      {/* rank dots */}
+      {points.map((p, i) => {
+        const t = tier(p.rank);
+        const row = Math.floor(i / gridSize), col = i % gridSize;
+        const x = pad + col * cell, y = pad + row * cell;
+        return (
+          <g key={i}>
+            <circle cx={x} cy={y} r={dotR} fill={t.fill} stroke={t.stroke} strokeWidth={p.rank == null ? 1.2 : 0} />
+            <text x={x} y={y + dotR * 0.36} textAnchor="middle" fontFamily={MONO} fontWeight="700" fontSize={dotR * (p.rank == null ? 1.05 : 0.95)} fill={t.text}>{t.label}</text>
+          </g>
+        );
+      })}
+      {/* HQ marker on the center point */}
+      <circle cx={cx} cy={cy} r={dotR + 5} fill="none" stroke={C.accent} strokeWidth="1.5" strokeDasharray="4 3" />
+      <text x={cx + dotR + 10} y={cy + dotR + 12} fontFamily={MONO} fontSize="8" fill={C.accent} letterSpacing="0.18em">HQ</text>
+    </svg>
+  );
+}
+
 /** Tiny 0–100 trend line for stat cards. Renders nothing with fewer than 2 points. */
 export function Sparkline({ values, color, width = 130, height = 26 }: { values: (number | null)[]; color: string; width?: number; height?: number }) {
   if ((values.filter((v) => v != null) as number[]).length < 2) return null;

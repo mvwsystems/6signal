@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { Radar, Ring, SignalBars, LineChart, Donut, Sparkline } from "../components/charts";
+import { Radar, Ring, SignalBars, LineChart, Donut, Sparkline, GeoGrid } from "../components/charts";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 6 Signal — internal AI Visibility Command Center (/dashboard)
@@ -653,6 +653,95 @@ const COMP_COLORS = ["#74746e", "#8e8e86", "#a8a8a0", "#c2c2b8", "#dcdcd2"];
 
 // LineChart, Donut, and Sparkline are imported from app/components/charts.tsx.
 
+// ─── Map coverage radar (geo-grid Maps ranking) ──────────────────────────────────
+interface GridScan {
+  id: string; keyword: string; grid_size: number; spacing_miles: number;
+  center: { label?: string }; points: { rank: number | null; top: string[] }[];
+  stats: { present: number; top3: number; top10: number; total: number; avg_rank: number | null; coverage: number };
+  created_at: string;
+}
+
+function MapGridCard({ bizId, trade }: { bizId: string; trade: string }) {
+  const [scans, setScans] = useState<GridScan[]>([]);
+  const [viewing, setViewing] = useState(0);
+  const [keyword, setKeyword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    const d = await fetch(`/api/dashboard/maps-grid?businessId=${bizId}`).then((r) => r.json()).catch(() => null);
+    if (d?.scans) setScans(d.scans);
+    return d?.scans ?? [];
+  }, [bizId]);
+
+  useEffect(() => { setScans([]); setViewing(0); setMsg(null); setErr(null); load(); }, [bizId, load]);
+
+  const run = async () => {
+    setBusy(true); setErr(null); setMsg(null);
+    const prevNewest = scans[0]?.id ?? null;
+    try {
+      const r = await fetch("/api/dashboard/maps-grid", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ businessId: bizId, keyword: keyword.trim() || undefined }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || `error ${r.status}`);
+      setMsg("Scanning 25 points across the market — takes about a minute…");
+      for (let i = 0; i < 30; i++) {
+        await new Promise((res) => setTimeout(res, 8000));
+        const fresh = await load();
+        if (fresh[0] && fresh[0].id !== prevNewest) { setViewing(0); setMsg(null); break; }
+        if (i === 29) setMsg("Still running — refresh this tab in a minute.");
+      }
+    } catch (e: any) { setErr(e?.message || "Scan failed"); setMsg(null); } finally { setBusy(false); }
+  };
+
+  const scan = scans[viewing] ?? null;
+  const prior = scans[viewing + 1] ?? null;
+  const delta = scan && prior ? scan.stats.coverage - prior.stats.coverage : null;
+  const LEGEND = [
+    { c: T.ok, l: "Top 3" }, { c: "#eab308", l: "4–10" }, { c: T.warn, l: "11–20" }, { c: T.danger, l: "Not found" },
+  ];
+
+  return (
+    <div style={card({ marginBottom: 20 })}>
+      <div className="no-print" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 6 }}>
+        <span style={eyebrow}>Map coverage radar</span>
+        <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+          {scans.length > 1 && (
+            <select style={{ ...inputStyle, width: "auto", padding: "7px 10px", fontFamily: MONO, fontSize: 11 }} value={viewing} onChange={(e) => setViewing(Number(e.target.value))}>
+              {scans.map((s, i) => <option key={s.id} value={i}>{s.created_at.slice(0, 10)} · “{s.keyword}”</option>)}
+            </select>
+          )}
+          <input style={{ ...inputStyle, width: 180, padding: "7px 10px", fontSize: 13 }} placeholder={`Keyword (${trade.toLowerCase() || "trade"})`} value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+          <button style={{ ...btn(true), opacity: busy ? 0.5 : 1 }} onClick={run} disabled={busy}>{busy ? "Scanning…" : "Run grid scan"}</button>
+        </div>
+      </div>
+      {err && <div style={{ color: T.danger, fontSize: 13, marginBottom: 8 }}>{err}</div>}
+      {msg && <div style={{ fontFamily: MONO, fontSize: 12, color: T.accent, marginBottom: 8 }}>{msg}</div>}
+      {!scan && !busy && <p style={{ fontSize: 13, color: T.muted, margin: "8px 0 0" }}>No grid scans yet. One scan checks the map-pack ranking from 25 points across the service area — where the business actually wins on Google Maps, block by block.</p>}
+      {scan && (
+        <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: 24, alignItems: "center" }}>
+          <GeoGrid points={scan.points} gridSize={scan.grid_size} spacingMiles={Number(scan.spacing_miles)} />
+          <div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 12, marginBottom: 16 }}>
+              <div><div style={eyebrow}>Coverage</div><div style={{ fontFamily: MONO, fontSize: 30, fontWeight: 700, color: scoreColor(scan.stats.coverage) }}>{scan.stats.coverage}%</div>{delta != null && delta !== 0 && <div style={{ fontFamily: MONO, fontSize: 11, color: delta > 0 ? T.ok : T.danger }}>{delta > 0 ? "▲" : "▼"} {Math.abs(delta)} pts vs prior</div>}</div>
+              <div><div style={eyebrow}>Avg position</div><div style={{ fontFamily: MONO, fontSize: 30, fontWeight: 700, color: T.text }}>{scan.stats.avg_rank ?? "—"}</div></div>
+              <div><div style={eyebrow}>Top-3 zones</div><div style={{ fontFamily: MONO, fontSize: 30, fontWeight: 700, color: T.ok }}>{scan.stats.top3}<span style={{ fontSize: 14, color: T.muted }}>/{scan.stats.total}</span></div></div>
+              <div><div style={eyebrow}>Visible</div><div style={{ fontFamily: MONO, fontSize: 30, fontWeight: 700, color: T.text }}>{scan.stats.present}<span style={{ fontSize: 14, color: T.muted }}>/{scan.stats.total}</span></div></div>
+            </div>
+            <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 14 }}>
+              {LEGEND.map((x) => <span key={x.l} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: T.textSub }}><span data-keep style={{ width: 10, height: 10, borderRadius: 999, background: x.c, display: "inline-block" }} />{x.l}</span>)}
+            </div>
+            <div style={{ fontFamily: MONO, fontSize: 11, color: T.muted, lineHeight: 1.8 }}>
+              “{scan.keyword}” · {scan.grid_size}×{scan.grid_size} grid · {Number(scan.spacing_miles)} mi spacing · {scan.created_at.slice(0, 10)}
+              {scan.center?.label ? <> · centered on {scan.center.label}</> : null}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function TrackingTab({ businesses }: { businesses: Biz[] }) {
   const [bizId, setBizId] = useState("");
   const [prompts, setPrompts] = useState<{ id: string; prompt: string }[]>([]);
@@ -842,6 +931,8 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
               </div>
             </div>
           )}
+
+          <MapGridCard bizId={bizId} trade={biz?.trade ?? ""} />
 
           {/* Prompt management */}
           <div className="no-print" style={card({ marginBottom: 20 })}>

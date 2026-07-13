@@ -9,6 +9,7 @@ import { runMonthlyClientReports } from "../../app/lib/clientReport";
 import { runWatchdog } from "../../app/lib/watchdog";
 import { runOwnerBriefing } from "../../app/lib/briefing";
 import { runContentGeneration } from "../../app/lib/content";
+import { runMapsGridScan } from "../../app/lib/mapsGrid";
 
 export default async (req: Request) => {
   if (req.method !== "POST") return new Response("method not allowed", { status: 405 });
@@ -46,6 +47,9 @@ export default async (req: Request) => {
     } else if (kind === "content-generate") {
       if (!body.postId || !body.businessId) return new Response("missing postId/businessId", { status: 400 });
       await runContentGeneration({ postId: body.postId, businessId: body.businessId });
+    } else if (kind === "maps-grid") {
+      if (!body.businessId) return new Response("missing businessId", { status: 400 });
+      await runMapsGridScan({ businessId: body.businessId, keyword: body.keyword, gridSize: body.gridSize, spacingMiles: body.spacingMiles });
     } else {
       return new Response("unknown kind", { status: 400 });
     }

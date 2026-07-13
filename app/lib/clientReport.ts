@@ -4,7 +4,7 @@
 // writes the plain-English narrative. Stored in client_reports, rendered in
 // the dashboard, on the public share page, and printable to PDF.
 
-import { getBusiness, getProbeResults, listTrackedPrompts, listTasks, saveClientReport, listClientReports, briefingRoster } from "./db";
+import { getBusiness, getProbeResults, listTrackedPrompts, listTasks, saveClientReport, listClientReports, briefingRoster, getLatestMapsGrid } from "./db";
 import { ENGINES } from "./engines";
 import { sendEmail, emailShell, heading, paragraph, monoLabel } from "./email";
 
@@ -25,17 +25,23 @@ export interface ClientReportPayload {
   };
   wins: string[];
   narrative: { headline: string; summary: string; what_this_means: string; focus_next: string[]; client_actions: string[] };
+  maps_grid?: {
+    keyword: string; grid_size: number; spacing_miles: number; scanned_at: string;
+    points: { rank: number | null }[];
+    stats: { present: number; top3: number; top10: number; total: number; avg_rank: number | null; coverage: number };
+  } | null;
 }
 
 export async function buildClientReport(businessId: string): Promise<{ id: string | null; payload: ClientReportPayload } | null> {
   const business = await getBusiness(businessId);
   if (!business) return null;
 
-  const [results, prompts, tasks, existing] = await Promise.all([
+  const [results, prompts, tasks, existing, gridScan] = await Promise.all([
     getProbeResults(businessId, 62),
     listTrackedPrompts(businessId),
     listTasks(businessId),
     listClientReports(businessId),
+    getLatestMapsGrid(businessId),
   ]);
   const isBaseline = existing.length === 0;
 
@@ -137,6 +143,14 @@ export async function buildClientReport(businessId: string): Promise<{ id: strin
     period_label: periodLabel, is_baseline: isBaseline,
     generated_at: new Date().toISOString(),
     metrics, wins: wins.slice(0, 8), narrative,
+    maps_grid: gridScan ? {
+      keyword: String(gridScan.keyword),
+      grid_size: Number(gridScan.grid_size),
+      spacing_miles: Number(gridScan.spacing_miles),
+      scanned_at: String(gridScan.created_at),
+      points: (gridScan.points as { rank: number | null }[]).map((p) => ({ rank: p.rank })),
+      stats: gridScan.stats as { present: number; top3: number; top10: number; total: number; avg_rank: number | null; coverage: number },
+    } : null,
   };
   const id = await saveClientReport(businessId, periodLabel, payload);
   return { id, payload };

@@ -535,6 +535,44 @@ export async function listPublishedPosts(businessId: string): Promise<Array<{ sl
   }
 }
 
+// ── Maps geo-grid scans ───────────────────────────────────────────────────────
+
+export async function saveMapsGridScan(row: {
+  business_id: string; keyword: string; center: Record<string, unknown>;
+  grid_size: number; spacing_miles: number; points: unknown; stats: unknown;
+}): Promise<string | null> {
+  const s = db();
+  if (!s) return null;
+  try {
+    const { data, error } = await s.from("maps_grid_scans").insert(row).select("id").single();
+    if (error) throw error;
+    return (data as { id: string }).id;
+  } catch (e) {
+    console.error("[db] saveMapsGridScan failed:", e);
+    return null;
+  }
+}
+
+export async function listMapsGridScans(businessId: string, limit = 12): Promise<Record<string, unknown>[]> {
+  const s = db();
+  if (!s) return [];
+  try {
+    const { data, error } = await s.from("maps_grid_scans")
+      .select("*").eq("business_id", businessId)
+      .order("created_at", { ascending: false }).limit(limit);
+    if (error) throw error;
+    return (data ?? []) as Record<string, unknown>[];
+  } catch (e) {
+    console.error("[db] listMapsGridScans failed:", e);
+    return [];
+  }
+}
+
+export async function getLatestMapsGrid(businessId: string): Promise<Record<string, unknown> | null> {
+  const rows = await listMapsGridScans(businessId, 1);
+  return rows[0] ?? null;
+}
+
 export async function deleteContentPostDraft(id: string): Promise<boolean> {
   const s = db();
   if (!s) return false;

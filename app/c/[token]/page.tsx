@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { GeoGrid } from "../../components/charts";
 
 // Public client results page (/c/<token>) — the live view a client can open
 // any time. Token-gated (unguessable), client-safe data only. Printable.
@@ -80,6 +81,29 @@ export default function ClientSharePage() {
                 <div style={{ height: 6, background: T.border }}><div data-keep style={{ height: "100%", width: `${v.rate}%`, background: rateColor(v.rate) }} /></div>
               </div>
             ))}
+          </div>
+        )}
+
+        {rep?.maps_grid && (
+          <div style={card}>
+            <div style={{ ...eyebrow, marginBottom: 4 }}>Google Maps coverage — where you win, block by block</div>
+            <div style={{ fontSize: 12, color: T.muted, marginBottom: 12 }}>
+              We searched Google Maps for &ldquo;{rep.maps_grid.keyword}&rdquo; from {rep.maps_grid.stats.total} points across your service area. Each dot is your ranking at that location.
+            </div>
+            <div style={{ display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap" }}>
+              <GeoGrid points={rep.maps_grid.points} gridSize={rep.maps_grid.grid_size} spacingMiles={Number(rep.maps_grid.spacing_miles)} size={380} />
+              <div style={{ flex: 1, minWidth: 220 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
+                  <div><div style={eyebrow}>Coverage</div><div style={{ fontFamily: MONO, fontSize: 28, fontWeight: 700, color: rateColor(rep.maps_grid.stats.coverage) }}>{rep.maps_grid.stats.coverage}%</div><div style={{ fontSize: 11, color: T.muted }}>of your area sees you in the top 10</div></div>
+                  <div><div style={eyebrow}>Top-3 zones</div><div style={{ fontFamily: MONO, fontSize: 28, fontWeight: 700, color: T.ok }}>{rep.maps_grid.stats.top3}<span style={{ fontSize: 13, color: T.muted }}>/{rep.maps_grid.stats.total}</span></div><div style={{ fontSize: 11, color: T.muted }}>where you&rsquo;re a top pick</div></div>
+                </div>
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                  {[{ c: T.ok, l: "Top 3" }, { c: "#eab308", l: "4–10" }, { c: T.warn, l: "11–20" }, { c: "#ef4444", l: "Not found" }].map((x) => (
+                    <span key={x.l} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: T.sub }}><span data-keep style={{ width: 10, height: 10, borderRadius: 999, background: x.c, display: "inline-block" }} />{x.l}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
