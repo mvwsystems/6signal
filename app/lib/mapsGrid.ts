@@ -18,7 +18,9 @@ function nameMatches(businessName: string, resultTitle: string): boolean {
   return r.includes(b) || b.includes(r);
 }
 
-/** Business location from Google Places (New); falls back to the city itself. */
+/** Business location from Google Places (New); falls back to the city itself.
+ *  The business hit is only trusted when the returned name actually matches —
+ *  otherwise Places happily returns a competitor as the "top result". */
 async function geocodeCenter(name: string, city: string): Promise<{ lat: number; lng: number; label: string } | null> {
   const key = process.env.GOOGLE_PLACES_API_KEY?.trim();
   if (!key) return null;
@@ -33,7 +35,10 @@ async function geocodeCenter(name: string, city: string): Promise<{ lat: number;
     const p = data.places?.[0];
     return p?.location ? { lat: p.location.latitude, lng: p.location.longitude, label: p.displayName?.text ?? q } : null;
   };
-  return (await search(`${name} ${city}`)) ?? (await search(city));
+  const biz = await search(`${name} ${city}`);
+  if (biz && nameMatches(name, biz.label)) return biz;
+  const town = await search(city);
+  return town ? { ...town, label: town.label } : biz;
 }
 
 async function mapsRankAt(keyword: string, lat: number, lng: number, businessName: string): Promise<{ rank: number | null; top: string[] }> {
@@ -61,7 +66,7 @@ export async function runMapsGridScan(args: { businessId: string; keyword?: stri
   const gridSize = Math.min(7, Math.max(3, args.gridSize ?? 5));
   const spacing = Math.min(5, Math.max(0.5, args.spacingMiles ?? 1.5));
 
-  const center = await geocodeCenter(business.name, `${business.trade} ${business.city}`);
+  const center = await geocodeCenter(business.name, business.city);
   if (!center) throw new Error("Could not geocode the business location (GOOGLE_PLACES_API_KEY).");
 
   const half = (gridSize - 1) / 2;
