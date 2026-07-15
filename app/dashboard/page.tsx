@@ -1663,6 +1663,7 @@ function ContentTab({ businesses }: { businesses: Biz[] }) {
               {open.status === "draft" && <button style={{ ...btn(), opacity: busy === "save" ? 0.5 : 1 }} disabled={busy === "save"} onClick={saveDraft}>{busy === "save" ? "Saving…" : "Save edits"}</button>}
               {open.status === "draft" && <button style={{ ...btn(), color: T.danger }} onClick={() => removeDraft(open.id)}>Delete</button>}
               {open.status === "draft" && <button style={{ ...btn(true), opacity: busy === "pub" || !githubReady || !repo ? 0.5 : 1 }} disabled={busy === "pub" || !githubReady || !repo} onClick={publish}>{busy === "pub" ? "Publishing…" : "Publish live →"}</button>}
+              {open.status === "published" && <button style={{ ...btn(), opacity: busy === "pub" || !githubReady ? 0.5 : 1 }} disabled={busy === "pub" || !githubReady} onClick={publish}>{busy === "pub" ? "Republishing…" : "Republish (refresh design)"}</button>}
               {open.status === "published" && open.url && <a href={open.url} target="_blank" rel="noopener noreferrer" style={{ ...btn(true), textDecoration: "none" }}>View live →</a>}
             </div>
           </div>

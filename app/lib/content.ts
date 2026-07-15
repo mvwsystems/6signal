@@ -13,6 +13,7 @@ import {
   listTrackedPrompts, getProbeResults,
 } from "./db";
 import { getRepoFile, listRepoPaths, commitFiles, getDefaultBranch, githubConfigured } from "./github";
+import { generateOgPng } from "./ogImage";
 
 // ── Topic suggestions: the prompts AI engines are NOT mentioning the client for ──
 
@@ -67,12 +68,12 @@ Writing rules:
 - Name the business naturally 3-5 times, including once in the opening answer and once in the closing CTA. Include the city/service area repeatedly but naturally.
 - No hype, no exclamation points, no "In today's world". Short paragraphs. Concrete numbers and specifics beat adjectives.
 
-HTML rules — this is inserted into the site's existing shell as the page <main>:
-- You are given a TEMPLATE SAMPLE from the site's own pages. Reuse its exact class names, CSS variables, and inline-style idioms so the article is indistinguishable from the site's hand-built pages.
-- Structure: <section class="page-hero"> (with breadcrumb Home / Guides / <short label> and an h1 using the site's display classes) → article body sections inside the site's container/dark-panel pattern (use h2 headings the way the template styles section titles) → an FAQ section (4-5 questions, styled like the template's FAQ blocks) → a closing CTA section reusing the template's cta-section markup with the business phone number.
-- Relative links: the page lives one directory deep (blog/), so ../index.html, ../contact.html, ../services/<page>.html, ../styles.css.
-- Link to 2-3 relevant existing pages of the site in the body text.
-- Do NOT include <html>, <head>, <body>, <nav>, or <footer> — main content only.
+HTML rules — you write ONLY the article body; the publishing system wraps it in the site's hero, FAQ, CTA, and footer automatically:
+- Output semantic content only: <h2> section headings (4-6 of them, short and punchy), <h3> where useful, <p>, <ul>/<ol>, <strong>, <a>, and simple <table> where a comparison genuinely helps.
+- One or two <div class="callout"><strong>Pro tip:</strong> …</div> blocks for field wisdom worth highlighting.
+- Do NOT include any hero, page title/h1, FAQ section, CTA section, or contact block — the template adds all of those. Do NOT use inline styles or classes other than "callout".
+- Relative links: the page lives one directory deep (blog/), so link existing pages as ../services/<page>.html, ../contact.html, ../locations/<page>.html. Work 2-3 such links naturally into the body text.
+- The TEMPLATE SAMPLE is provided only so you match the site's voice and terminology — not its markup.
 
 Return ONLY valid JSON, no prose or fences:
 {
@@ -191,7 +192,46 @@ interface PostDoc {
   article_html: string; faqs: Array<{ q: string; a: string }>;
 }
 
-function buildPostPage(shell: Shell, businessName: string, doc: PostDoc, publishedISO: string): string {
+// Editorial styles injected per post-page <head>, built on the client site's
+// own CSS variables so the design inherits each brand automatically.
+const POST_CSS = `
+  .xg-hero-meta { display:flex; gap:1.25rem; flex-wrap:wrap; margin-top:1.1rem; font-family:var(--font-mono, monospace); font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--white-dim); }
+  .xg-hero-meta span::before { content:"— "; color:var(--red, currentColor); }
+  .xg-article { max-width:760px; margin:0 auto; font-size:1.04rem; line-height:1.85; color:var(--white-dim); }
+  .xg-article > p:first-of-type { font-size:1.18rem; color:var(--white); line-height:1.75; }
+  .xg-article h2 { font-family:var(--font-display); font-size:1.9rem; font-weight:800; text-transform:uppercase; letter-spacing:.02em; color:var(--white); margin:2.8rem 0 1rem; padding-left:16px; border-left:4px solid var(--red); line-height:1.1; }
+  .xg-article h3 { font-family:var(--font-display); font-size:1.25rem; font-weight:700; text-transform:uppercase; color:var(--white); margin:1.9rem 0 .7rem; }
+  .xg-article p { margin:0 0 1.2rem; }
+  .xg-article ul, .xg-article ol { margin:0 0 1.4rem; padding-left:1.3rem; }
+  .xg-article li { margin-bottom:.55rem; }
+  .xg-article li::marker { color:var(--red); }
+  .xg-article strong { color:var(--white); }
+  .xg-article a { color:var(--red); text-decoration:underline; text-underline-offset:3px; text-decoration-color:var(--border-red, rgba(180,40,36,.35)); }
+  .xg-article .callout { background:var(--dark-2); border:1px solid var(--border); border-left:4px solid var(--red); border-radius:var(--radius, 4px); padding:1.3rem 1.6rem; margin:2rem 0; }
+  .xg-article table { width:100%; border-collapse:collapse; margin:1.8rem 0; font-size:.92rem; }
+  .xg-article th { font-family:var(--font-mono, monospace); font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--white-dim); text-align:left; padding:.6rem .8rem; border-bottom:1px solid var(--border); }
+  .xg-article td { padding:.7rem .8rem; border-bottom:1px solid var(--border); color:var(--white-dim); }
+  .xg-faq { max-width:760px; margin:3.5rem auto 0; }
+  .xg-faq-item { border-bottom:1px solid var(--border); padding:1.4rem 0; }
+  .xg-faq-item p.q { font-family:var(--font-display); font-size:1.1rem; font-weight:700; text-transform:uppercase; color:var(--white); margin:0 0 .5rem; }
+  .xg-faq-item p.a { font-size:.95rem; color:var(--white-dim); line-height:1.75; margin:0; }
+  .xg-related { max-width:760px; margin:3.5rem auto 0; display:grid; gap:.8rem; }
+  .xg-related a { display:block; background:var(--dark-2); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:var(--radius, 4px); padding:1.1rem 1.4rem; text-decoration:none; }
+  .xg-related a p.t { font-family:var(--font-display); font-weight:700; text-transform:uppercase; color:var(--white); margin:0 0 .25rem; font-size:1rem; }
+  .xg-related a p.s { font-size:.85rem; color:var(--white-dim); margin:0; line-height:1.6; }
+  .xg-cta { max-width:760px; margin:3.5rem auto 0; background:var(--dark-2); border:1px solid var(--border-red, var(--border)); border-radius:var(--radius-lg, 8px); padding:2.4rem 2.2rem; text-align:center; }
+  .xg-cta h2 { font-family:var(--font-display); font-size:1.9rem; font-weight:800; text-transform:uppercase; color:var(--white); margin:0 0 .6rem; }
+  .xg-cta p { color:var(--white-dim); margin:0 0 1.4rem; }
+  .xg-eyebrow { font-family:var(--font-mono, monospace); font-size:.66rem; letter-spacing:.18em; text-transform:uppercase; color:var(--red); margin:0 0 1rem; }
+`;
+
+const readMinutes = (html: string) => Math.max(2, Math.round(html.replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length / 220));
+
+function buildPostPage(shell: Shell, businessName: string, doc: PostDoc, publishedISO: string, extras?: {
+  ogUrl?: string | null;
+  phone?: string | null;
+  related?: Array<{ slug: string; title: string; summary: string | null }>;
+}): string {
   const url = `${shell.base}/blog/${doc.slug}`;
   const blogPosting = {
     "@context": "https://schema.org", "@type": "BlogPosting",
@@ -213,6 +253,28 @@ function buildPostPage(shell: Shell, businessName: string, doc: PostDoc, publish
       { "@type": "ListItem", position: 3, name: doc.title, item: url },
     ],
   };
+  const og = extras?.ogUrl;
+  const phone = extras?.phone;
+  const tel = phone ? phone.replace(/\D/g, "") : null;
+  const mins = readMinutes(doc.article_html);
+  const dateLabel = new Date(publishedISO).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  const faqHtml = doc.faqs?.length ? `
+    <section class="xg-faq">
+      <p class="xg-eyebrow">Common Questions</p>
+      ${doc.faqs.map((f) => `<div class="xg-faq-item"><p class="q">${esc(f.q)}</p><p class="a">${esc(f.a)}</p></div>`).join("\n      ")}
+    </section>` : "";
+  const relatedHtml = extras?.related?.length ? `
+    <section class="xg-related">
+      <p class="xg-eyebrow">Keep Reading</p>
+      ${extras.related.slice(0, 3).map((r) => `<a href="${esc(r.slug)}.html"><p class="t">${esc(r.title)}</p><p class="s">${esc(r.summary ?? "")}</p></a>`).join("\n      ")}
+    </section>` : "";
+  const ctaHtml = `
+    <section class="xg-cta">
+      <h2>Need It Handled?</h2>
+      <p>${esc(businessName)} — licensed, local, and straight with you about what it costs.</p>
+      ${tel ? `<a href="tel:${tel}" class="btn btn-primary">Call ${esc(phone as string)}</a>` : `<a href="../contact.html" class="btn btn-primary">Get In Touch</a>`}
+    </section>`;
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -223,20 +285,53 @@ function buildPostPage(shell: Shell, businessName: string, doc: PostDoc, publish
   <link rel="canonical" href="${url}">
   <meta property="og:type" content="article">
   <meta property="og:url" content="${url}">
+  <meta property="og:site_name" content="${esc(businessName)}">
   <meta property="og:title" content="${esc(doc.title)}">
   <meta property="og:description" content="${esc(doc.meta_description)}">
-  <meta name="twitter:card" content="summary">
+${og ? `  <meta property="og:image" content="${og}">\n  <meta property="og:image:width" content="1200">\n  <meta property="og:image:height" content="630">\n` : ""}  <meta name="twitter:card" content="${og ? "summary_large_image" : "summary"}">
   <meta name="twitter:title" content="${esc(doc.title)}">
   <meta name="twitter:description" content="${esc(doc.meta_description)}">
-  <script type="application/ld+json">${JSON.stringify(blogPosting)}</script>
+${og ? `  <meta name="twitter:image" content="${og}">\n` : ""}  <script type="application/ld+json">${JSON.stringify(blogPosting)}</script>
 ${faqPage ? `  <script type="application/ld+json">${JSON.stringify(faqPage)}</script>\n` : ""}  <script type="application/ld+json">${JSON.stringify(breadcrumb)}</script>
   <link rel="stylesheet" href="../styles.css">
+  <style>${POST_CSS}</style>
   ${shell.favicon}
 </head>
 <body>
 ${shell.nav}
   <main>
+    <section class="page-hero">
+      <div class="grid-overlay" aria-hidden="true"></div>
+      <div class="container">
+        <div class="page-hero-inner">
+          <div>
+            <nav class="page-hero-breadcrumb" aria-label="Breadcrumb">
+              <a href="../index.html">Home</a>
+              <span aria-hidden="true">/</span>
+              <a href="index.html">Guides</a>
+              <span aria-hidden="true">/</span>
+              <span>${esc(doc.title.length > 40 ? `${doc.title.slice(0, 40)}…` : doc.title)}</span>
+            </nav>
+            <h1 class="display-lg page-hero-title">${esc(doc.title)}</h1>
+            <div class="xg-hero-meta">
+              <span>${esc(dateLabel)}</span>
+              <span>${mins} min read</span>
+              <span>${esc(businessName)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div style="background:var(--dark);padding:4.5rem 0;">
+      <div class="container">
+        <article class="xg-article">
 ${doc.article_html}
+        </article>
+${faqHtml}
+${relatedHtml}
+${ctaHtml}
+      </div>
+    </div>
   </main>
 ${shell.foot}
 </body>
@@ -360,11 +455,12 @@ export async function publishContentPost(postId: string): Promise<{ url: string;
   // Try template pages until one yields a clean nav/footer shell (some pages
   // lack a <main> to split on).
   let shell: Shell | null = null;
+  let shellHtml = "";
   let lastErr = "no template candidates found";
   for (const tplPath of templateCandidates(paths)) {
     const tplHtml = await getRepoFile(repo, tplPath, branch);
     if (!tplHtml) continue;
-    try { shell = extractShell(tplHtml, business.url); break; }
+    try { shell = extractShell(tplHtml, business.url); shellHtml = tplHtml; break; }
     catch (e) { lastErr = e instanceof Error ? e.message : String(e); }
   }
   if (!shell) throw new Error(`No usable template page in ${repo} (${lastErr}).`);
@@ -375,11 +471,41 @@ export async function publishContentPost(postId: string): Promise<{ url: string;
     { slug: doc.slug, title: doc.title, summary: doc.summary, published_at: String(post.published_at ?? nowISO) },
     ...already.filter((p) => p.slug !== doc.slug),
   ];
+  const related = already.filter((p) => p.slug !== doc.slug).map((p) => ({ slug: p.slug, title: p.title, summary: p.summary }));
 
-  const files = [
-    { path: `blog/${doc.slug}.html`, content: buildPostPage(shell, business.name, doc, String(post.published_at ?? nowISO)) },
+  // Brand extras from the site's own shell: phone from the first tel: link,
+  // display/body fonts + accent from the stylesheet vars when available.
+  const rawPhone = shellHtml.match(/href="tel:([\d+]+)"/i)?.[1] ?? null;
+  const phone = rawPhone && rawPhone.replace(/\D/g, "").length === 10
+    ? rawPhone.replace(/\D/g, "").replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3")
+    : rawPhone;
+  const css = (await getRepoFile(repo, "styles.css", branch).catch(() => null)) ?? "";
+  const cssVar = (name: string) => css.match(new RegExp(`--${name}:\\s*([^;]+);`))?.[1]?.trim();
+  const fontOf = (v: string | undefined, fallback: string) => v?.match(/'([^']+)'/)?.[1] ?? fallback;
+
+  // Social share card — best-effort: a publish never fails over an image.
+  let ogUrl: string | null = null;
+  let ogPng: Buffer | null = null;
+  try {
+    ogPng = await generateOgPng({
+      name: business.name,
+      accent: cssVar("red") ?? cssVar("accent") ?? "#b42824",
+      bg: cssVar("black") ?? cssVar("dark") ?? "#0b0a0a",
+      displayFamily: fontOf(cssVar("font-display"), "Barlow Condensed"),
+      bodyFamily: fontOf(cssVar("font-body"), "Barlow"),
+      domain: shell.base.replace(/^https?:\/\//, ""),
+      phone,
+    }, doc.title);
+    ogUrl = `${shell.base}/blog/og/${doc.slug}.png`;
+  } catch (e) {
+    console.warn("[content] og image generation failed (publishing without):", e);
+  }
+
+  const files: import("./github").CommitFile[] = [
+    { path: `blog/${doc.slug}.html`, content: buildPostPage(shell, business.name, doc, String(post.published_at ?? nowISO), { ogUrl, phone, related }) },
     { path: "blog/index.html", content: buildIndexPage(shell, business.name, roster) },
   ];
+  if (ogPng) files.push({ path: `blog/og/${doc.slug}.png`, base64: ogPng.toString("base64") });
   if (sitemap) files.push({ path: "sitemap.xml", content: upsertSitemapUrls(sitemap, shell.base, [doc.slug]) });
   if (llms) files.push({ path: "llms.txt", content: upsertLlmsGuide(llms, shell.base, doc.title, doc.slug, doc.summary) });
   if (toml) {

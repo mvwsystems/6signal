@@ -47,9 +47,11 @@ export async function listRepoPaths(repo: string, branch = "main"): Promise<stri
   return (tree.tree || []).filter((t) => t.type === "blob").map((t) => t.path);
 }
 
-export interface CommitFile { path: string; content: string }
+export interface CommitFile { path: string; content?: string; base64?: string }
 
-/** Commit a set of files (create or update) to the default branch in ONE commit. */
+/** Commit a set of files (create or update) to the default branch in ONE
+ *  commit. Text files inline into the tree; binary files (base64) go through
+ *  the blob API first. */
 export async function commitFiles(repo: string, message: string, files: CommitFile[]): Promise<{ sha: string; branch: string }> {
   if (!githubConfigured()) throw new Error("GITHUB_TOKEN is not configured — cannot publish.");
   if (!files.length) throw new Error("No files to commit.");
@@ -57,12 +59,19 @@ export async function commitFiles(repo: string, message: string, files: CommitFi
   const ref = await gh<{ object: { sha: string } }>(`/repos/${repo}/git/ref/heads/${branch}`);
   const headSha = ref.object.sha;
   const headCommit = await gh<{ tree: { sha: string } }>(`/repos/${repo}/git/commits/${headSha}`);
+  const entries = await Promise.all(files.map(async (f) => {
+    if (f.base64 != null) {
+      const blob = await gh<{ sha: string }>(`/repos/${repo}/git/blobs`, {
+        method: "POST",
+        body: JSON.stringify({ content: f.base64, encoding: "base64" }),
+      });
+      return { path: f.path, mode: "100644", type: "blob", sha: blob.sha };
+    }
+    return { path: f.path, mode: "100644", type: "blob", content: f.content ?? "" };
+  }));
   const tree = await gh<{ sha: string }>(`/repos/${repo}/git/trees`, {
     method: "POST",
-    body: JSON.stringify({
-      base_tree: headCommit.tree.sha,
-      tree: files.map((f) => ({ path: f.path, mode: "100644", type: "blob", content: f.content })),
-    }),
+    body: JSON.stringify({ base_tree: headCommit.tree.sha, tree: entries }),
   });
   const commit = await gh<{ sha: string }>(`/repos/${repo}/git/commits`, {
     method: "POST",

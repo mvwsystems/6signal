@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Native module (OG image rasterizer) — must load at runtime, not bundle.
+  serverExternalPackages: ["@resvg/resvg-js"],
   async redirects() {
     return [
       {
