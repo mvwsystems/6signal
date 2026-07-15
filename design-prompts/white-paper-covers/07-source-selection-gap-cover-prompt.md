@@ -16,7 +16,7 @@ You are producing the **final cover artwork** for a 6Signal Research white paper
 - Published: **September 2026**
 - Research category: **White Paper**
 - Field of study line: **FIELD OF STUDY · GENERATIVE SOURCE SELECTION**
-- Author: **The 6Signal Research Team**
+- Author: **The 6 Signal Research Team**
 - URL: **6signal.co/research/source-selection-gap-ai-search**
 - Read indicator: **44 MIN READ**
 
@@ -26,15 +26,15 @@ A **selection aperture over a field of sources**. The paper's argument: ranking 
 
 ## 4. Composition
 
-- Top: SIXSIGNAL lockup; monospaced metadata (WHITE PAPER · 07 / 07) and FIELD OF STUDY line.
+- Top-left: SIXSIGNAL lockup. Top-right: "● WHITE PAPER · 07 / 07" in wide-tracked mono with a small #E6FF00 dot — the series convention. FIELD OF STUDY line: short yellow dash, then wide-tracked mono gray.
 - As the series closer, this cover can carry the most cinematic structure of the four: the source field may span the upper two-thirds with pathways narrowing downward through the aperture to the answer block near the footer — a vertical funnel of attention — with the headline set into the negative space of the field. Choose a structure distinct from covers 04 (matrix), 05 (light schematic), and 06 (gate sequence).
 - Diagram elements: scattered source nodes with tiny mono tags (some RANKED with position numerals, some INDEXED, some EXTRACTABLE or CORROBORATED); dimmed bypass paths tagged BYPASSED; converging hairline citation pathways (SOURCE PATH); a thin aperture element; one #E6FF00 node and its path tagged SELECTED and CITED, terminating in a small ruled block labeled ANSWER OUTPUT.
-- Footer: author, published month/year, read indicator, URL — quiet monospaced strip.
+- Footer: the series' three-column strip above a hairline — AUTHOR ("The 6 Signal Research Team" + category sub-line "Generative Search · Source Selection" in gray) | PUBLISHED ("September 2026") | READ ("6signal.co/research/source-selection-gap-ai-search →" in #E6FF00 mono).
 - Negative space: the dimmed majority of the field IS the message; keep it airy, let the one yellow path carry all the energy.
 
 ## 5. Typography
 
-- Headline: large industrial/geometric sans (6Signal display style; no decorative faces), white #f5f5f3. Italic emphasis on *Gap* is a natural option.
+- Headline: large industrial/geometric sans (6Signal display style; no decorative faces), uppercase, white #f5f5f3, tight leading — **with the series title signature: the final word in #E6FF00 italic plus a period.** Render as: THE SOURCE SELECTION *GAP.* This deliberately rhymes with cover 02 (THE LOCAL ENTITY *GAP.*) — the two papers are thematically bookended and the echo is intentional; the diagrams must be entirely different (02 is a map-like dot field; 07 is ranked lists, pathways, and an aperture — no starfield, no coordinate map).
 - Metadata, node tags, path labels: monospaced, uppercase, wide-tracked, very small — this cover's labels should feel like annotations on surveillance imagery.
 - Grays for the bypassed field; #E6FF00 exclusively for the selected source, its path, and the answer block edge; one restrained glow along the selected path only.
 
@@ -57,7 +57,8 @@ The closing cover of the same series as The Question Cluster Advantage, The Loca
 - FIELD OF STUDY · GENERATIVE SOURCE SELECTION
 - The Source Selection Gap
 - A white paper on why AI search may cite, summarize, and recommend sources differently than traditional search rankings — and what companies should do about it.
-- The 6Signal Research Team
+- The 6 Signal Research Team
+- Generative Search · Source Selection
 - White Paper · Published September 2026
 - 44 MIN READ
 - 6signal.co/research/source-selection-gap-ai-search
@@ -69,7 +70,7 @@ No AI brains, robots, portraits, or stock photography. No glowing blue technolog
 
 ## 11. Export requirements
 
-One final high-resolution **portrait cover, 1600 × 2071 px**, full-bleed artwork only. No mockup of any kind (book, device, board, workspace), no canvas labels, no crop marks outside the artwork, no alternates in the same image. Sharp readable text, web-ready PNG, all text ≥ 96 px from every edge.
+One final high-resolution **portrait cover, 2040 × 2630 px (the series ratio, ≈ 1 : 1.29)**, full-bleed artwork only. No mockup of any kind (book, device, board, workspace), no canvas labels, no crop marks outside the artwork, no alternates in the same image. Sharp readable text, web-ready PNG, all text ≥ 120 px from every edge.
 
 **Text accuracy:** exact spelling of supplied text only; concise metadata; no invented microcopy; supplied labels only; keep small-text areas simple enough for manual correction.
 
@@ -77,4 +78,4 @@ One final high-resolution **portrait cover, 1600 × 2071 px**, full-bleed artwor
 
 ### Human verification — exact cover text
 
-SIXSIGNAL · WHITE PAPER · 07 / 07 · FIELD OF STUDY · GENERATIVE SOURCE SELECTION · **The Source Selection Gap** · "A white paper on why AI search may cite, summarize, and recommend sources differently than traditional search rankings — and what companies should do about it." · The 6Signal Research Team · White Paper · Published September 2026 · 44 MIN READ · 6signal.co/research/source-selection-gap-ai-search
+SIXSIGNAL · WHITE PAPER · 07 / 07 · FIELD OF STUDY · GENERATIVE SOURCE SELECTION · **The Source Selection Gap** · "A white paper on why AI search may cite, summarize, and recommend sources differently than traditional search rankings — and what companies should do about it." · The 6 Signal Research Team · White Paper · Published September 2026 · 44 MIN READ · 6signal.co/research/source-selection-gap-ai-search

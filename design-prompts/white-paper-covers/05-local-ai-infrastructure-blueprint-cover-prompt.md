@@ -16,7 +16,7 @@ You are producing the **final cover artwork** for a 6Signal Research white paper
 - Published: **July 2026**
 - Research category: **White Paper**
 - Field of study line: **FIELD OF STUDY · LOCAL AI INFRASTRUCTURE**
-- Author: **The 6Signal Research Team**
+- Author: **The 6 Signal Research Team**
 - URL: **6signal.co/research/local-ai-infrastructure-blueprint**
 - Read indicator: **42 MIN READ**
 
@@ -26,15 +26,17 @@ An **architectural section drawing of visibility infrastructure**. The paper's a
 
 ## 4. Composition
 
-- Top: SIXSIGNAL lockup in near-black; monospaced metadata line (WHITE PAPER · 05 / 07) and FIELD OF STUDY line beneath.
+- Top-left: SIXSIGNAL lockup in near-black ink. Top-right: "● WHITE PAPER · 05 / 07" in wide-tracked mono with a small #E6FF00 dot — the series convention.
+- The light cover in the series (Named, Not Just Found) establishes the light-stock devices: a **#E6FF00 spine bar along the left edge**, punch-hole marks, and corner registration crosses. Use the yellow spine here — it doubles as this cover's "acid-yellow edge" accent. A small classification strip (CLASSIFICATION · OPERATIONAL style row) is welcome if it stays quiet.
+- FIELD OF STUDY line below the top band: short yellow dash, then wide-tracked mono.
 - The schematic may dominate the middle band as a wide architectural section, with the headline set either above it or interlocking beside it — choose the stronger structure; do not copy the composition of cover 04.
 - Diagram: the entity node at center or at a golden-section position, layer strata drawn with thin near-black rules, nodes connected with hairline leader lines and small mono labels, faint coordinate/dimension marks like a drawing sheet (dimension ticks, sheet-corner registration marks, a small title-block-like metadata strip is welcome — it suits the blueprint conceit).
-- Footer: author, published month/year, read indicator, URL — quiet, monospaced, drawing-sheet style.
+- Footer: the series' three-column strip above a hairline — AUTHOR ("The 6 Signal Research Team" + category sub-line "Local AEO · Infrastructure" in gray) | PUBLISHED ("July 2026") | READ ("6signal.co/research/local-ai-infrastructure-blueprint →" in near-black or accent mono, drawing-sheet quiet).
 - Negative space: the off-white field should breathe; ink density concentrated in the schematic.
 
 ## 5. Typography
 
-- Headline: large industrial/geometric sans (6Signal display style; no decorative faces), **near-black ink on the light field**, tight leading. Italic emphasis optional on *Blueprint*.
+- Headline: large industrial/geometric sans (6Signal display style; no decorative faces), uppercase, **near-black ink on the light field**, tight leading — **with the series title signature: the final word in #E6FF00 italic plus a period.** Render as: THE LOCAL AI INFRASTRUCTURE *BLUEPRINT.* On the light stock, give the yellow word enough weight/size to stay legible (the field-manual cover proves yellow works on cream when used boldly).
 - Metadata/labels: monospaced technical face, uppercase, wide tracking, small.
 - Secondary text in mid-gray; hairlines in black at low opacity.
 - Accent #E6FF00 used once-to-twice: the resolved node and/or one spine rule. Yellow on off-white must be used as a filled element (node, bar, edge), not as thin yellow text — keep it legible.
@@ -58,7 +60,8 @@ Part of the same series as The Question Cluster Advantage, The Local Entity Gap,
 - FIELD OF STUDY · LOCAL AI INFRASTRUCTURE
 - The Local AI Infrastructure Blueprint
 - A field manual for building the local signals that help businesses get found, verified, and recommended across search, Maps, AI answers, directories, reviews, and voice.
-- The 6Signal Research Team
+- The 6 Signal Research Team
+- Local AEO · Infrastructure
 - White Paper · Published July 2026
 - 42 MIN READ
 - 6signal.co/research/local-ai-infrastructure-blueprint
@@ -70,7 +73,7 @@ No AI brains, robots, portraits, or stock photography. No location pins as the p
 
 ## 11. Export requirements
 
-One final high-resolution **portrait cover, 1600 × 2071 px**, full-bleed artwork only. No presentation mockup, no book on a table, no device frame, no board, no canvas labels, no crop marks outside the artwork, no alternates in the same image. Sharp readable text, web-ready PNG, all text ≥ 96 px from every edge.
+One final high-resolution **portrait cover, 2040 × 2630 px (the series ratio, ≈ 1 : 1.29)**, full-bleed artwork only. No presentation mockup, no book on a table, no device frame, no board, no canvas labels, no crop marks outside the artwork, no alternates in the same image. Sharp readable text, web-ready PNG, all text ≥ 120 px from every edge.
 
 **Text accuracy:** exact spelling of supplied text only; concise metadata; no invented microcopy; supplied labels only; keep small-text areas simple enough for manual correction.
 
@@ -78,4 +81,4 @@ One final high-resolution **portrait cover, 1600 × 2071 px**, full-bleed artwor
 
 ### Human verification — exact cover text
 
-SIXSIGNAL · WHITE PAPER · 05 / 07 · FIELD OF STUDY · LOCAL AI INFRASTRUCTURE · **The Local AI Infrastructure Blueprint** · "A field manual for building the local signals that help businesses get found, verified, and recommended across search, Maps, AI answers, directories, reviews, and voice." · The 6Signal Research Team · White Paper · Published July 2026 · 42 MIN READ · 6signal.co/research/local-ai-infrastructure-blueprint
+SIXSIGNAL · WHITE PAPER · 05 / 07 · FIELD OF STUDY · LOCAL AI INFRASTRUCTURE · **The Local AI Infrastructure Blueprint** · "A field manual for building the local signals that help businesses get found, verified, and recommended across search, Maps, AI answers, directories, reviews, and voice." · The 6 Signal Research Team · White Paper · Published July 2026 · 42 MIN READ · 6signal.co/research/local-ai-infrastructure-blueprint
