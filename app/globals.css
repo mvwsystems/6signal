@@ -8995,3 +8995,18 @@ svg {
   .dash-print-area svg text { fill: #444440 !important; }
   .dash-print-area [data-keep] { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+
+/* ── Dashboard mobile (inline styles are overridden via !important classes;
+      the dashboard is styled inline, so responsive behavior lives here) ─── */
+.dash-root .xscroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+@media (max-width: 760px) {
+  .dash-root .m1col { grid-template-columns: 1fr !important; }
+  .dash-root .m2col { grid-template-columns: repeat(2, 1fr) !important; }
+  .dash-root .mcite { grid-template-columns: 1fr auto !important; }
+  .dash-root .mcite .mhide { display: none !important; }
+  .dash-root .trow { min-width: 620px; }
+  .dash-main { padding: 14px !important; }
+  .dash-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .dash-tabs button { padding: 12px 10px !important; white-space: nowrap; }
+  .dash-root input, .dash-root select, .dash-root textarea { max-width: 100%; }
+}

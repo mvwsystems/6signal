@@ -208,7 +208,7 @@ function ReportRunner({ cta, subtitle, longNote, endpoint, render, businesses = 
   };
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: 20, alignItems: "start" }}>
+    <div className="m1col" style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: 20, alignItems: "start" }}>
       <div style={card()}>
         <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{cta}</div>
         <div style={{ ...eyebrow, marginBottom: 16 }}>{subtitle}</div>
@@ -310,7 +310,7 @@ function renderClientReport(data: any) {
           {data.wins.map((w: string, i: number) => <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6 }}><span style={{ color: T.ok }}>✓</span><span style={{ fontSize: 13, color: T.text }}>{w}</span></div>)}
         </div>
       )}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+      <div className="m1col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
         {n?.focus_next?.length > 0 && <div style={card()}><div style={{ ...eyebrow, marginBottom: 10 }}>What we&rsquo;re doing next</div>{n.focus_next.map((f: string, i: number) => <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6 }}><span style={{ color: T.accent }}>•</span><span style={{ fontSize: 13, color: T.textSub }}>{f}</span></div>)}</div>}
         {n?.client_actions?.length > 0 && <div style={card({ borderColor: `${T.accent}44` })}><div style={{ ...eyebrow, color: T.accent, marginBottom: 10 }}>What we need from the client</div>{n.client_actions.map((a: string, i: number) => <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6 }}><span style={{ color: T.accent }}>→</span><span style={{ fontSize: 13, color: T.text }}>{a}</span></div>)}</div>}
       </div>
@@ -349,7 +349,7 @@ function renderScan(data: any, form: Record<string, string>) {
         </div>
       )}
       {(data?.top_opportunity || data?.immediate_win) && (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+        <div className="m1col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
           {data?.top_opportunity && <div style={card()}><div style={{ ...eyebrow, color: T.ok, marginBottom: 6 }}>Top opportunity</div><p style={{ fontSize: 13, lineHeight: 1.5, color: T.text, margin: 0 }}>{data.top_opportunity}</p></div>}
           {data?.immediate_win && <div style={card()}><div style={{ ...eyebrow, color: T.accent, marginBottom: 6 }}>Immediate win</div><p style={{ fontSize: 13, lineHeight: 1.5, color: T.text, margin: 0 }}>{data.immediate_win}</p></div>}
         </div>
@@ -668,6 +668,14 @@ function MapGridCard({ bizId, trade }: { bizId: string; trade: string }) {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [chartW, setChartW] = useState(440);
+
+  useEffect(() => {
+    const fit = () => setChartW(Math.min(440, window.innerWidth - 60));
+    fit();
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, []);
 
   const load = useCallback(async () => {
     const d = await fetch(`/api/dashboard/maps-grid?businessId=${bizId}`).then((r) => r.json()).catch(() => null);
@@ -719,8 +727,8 @@ function MapGridCard({ bizId, trade }: { bizId: string; trade: string }) {
       {msg && <div style={{ fontFamily: MONO, fontSize: 12, color: T.accent, marginBottom: 8 }}>{msg}</div>}
       {!scan && !busy && <p style={{ fontSize: 13, color: T.muted, margin: "8px 0 0" }}>No grid scans yet. One scan checks the map-pack ranking from 25 points across the service area — where the business actually wins on Google Maps, block by block.</p>}
       {scan && (
-        <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: 24, alignItems: "center" }}>
-          <MapHeatGrid points={scan.points} center={scan.center?.lat != null && scan.center?.lng != null ? { lat: scan.center.lat, lng: scan.center.lng } : null} gridSize={scan.grid_size} spacingMiles={Number(scan.spacing_miles)} />
+        <div className="m1col" style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: 24, alignItems: "center" }}>
+          <MapHeatGrid points={scan.points} center={scan.center?.lat != null && scan.center?.lng != null ? { lat: scan.center.lat, lng: scan.center.lng } : null} gridSize={scan.grid_size} spacingMiles={Number(scan.spacing_miles)} size={chartW} />
           <div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 12, marginBottom: 16 }}>
               <div><div style={eyebrow}>Coverage</div><div style={{ fontFamily: MONO, fontSize: 30, fontWeight: 700, color: scoreColor(scan.stats.coverage) }}>{scan.stats.coverage}%</div>{delta != null && delta !== 0 && <div style={{ fontFamily: MONO, fontSize: 11, color: delta > 0 ? T.ok : T.danger }}>{delta > 0 ? "▲" : "▼"} {Math.abs(delta)} pts vs prior</div>}</div>
@@ -767,11 +775,11 @@ function CitationCard({ bizId }: { bizId: string }) {
         Domains cited by AI engines when answering this client&rsquo;s tracked buyer questions (latest answers). Getting the client onto — or above — these sources is the citation work order.
       </div>
       {data.rows.map((r) => (
-        <div key={r.domain} style={{ display: "grid", gridTemplateColumns: "220px 1fr auto", gap: 12, alignItems: "center", padding: "7px 0", borderBottom: `1px solid ${T.border}` }}>
+        <div key={r.domain} className="mcite" style={{ display: "grid", gridTemplateColumns: "220px 1fr auto", gap: 12, alignItems: "center", padding: "7px 0", borderBottom: `1px solid ${T.border}` }}>
           <span style={{ fontFamily: MONO, fontSize: 12, color: r.owned ? T.accent : T.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {r.domain}{r.owned && <span style={{ marginLeft: 8, fontSize: 9, letterSpacing: "0.15em", color: T.accent }}>YOU</span>}
           </span>
-          <div style={{ height: 5, background: T.border, overflow: "hidden" }}>
+          <div className="mhide" style={{ height: 5, background: T.border, overflow: "hidden" }}>
             <div data-keep style={{ height: "100%", width: `${(100 * r.count) / max}%`, background: r.owned ? T.accent : "#8e8e86" }} />
           </div>
           <span style={{ fontFamily: MONO, fontSize: 11, color: T.muted, whiteSpace: "nowrap" }}>
@@ -838,16 +846,16 @@ function TownScanCard({ bizId, city }: { bizId: string; city: string }) {
       {msg && <div style={{ fontFamily: MONO, fontSize: 12, color: T.accent, marginBottom: 8 }}>{msg}</div>}
       {!scan && !busy && <p style={{ fontSize: 13, color: T.muted, margin: "8px 0 0" }}>AI answers change town by town (&ldquo;best plumber in Waxahachie&rdquo; ≠ &ldquo;…in Red Oak&rdquo;). Scan the whole service area to see where the client is recommended and where they don&rsquo;t exist.</p>}
       {scan && (
-        <div>
+        <div className="xscroll">
           <div style={{ fontFamily: MONO, fontSize: 11, color: T.muted, marginBottom: 12 }}>
             {scan.created_at.slice(0, 10)} · avg {scan.stats.avg_score}%{scan.stats.best_town ? ` · strongest: ${scan.stats.best_town}` : ""}{scan.stats.worst_town ? ` · weakest: ${scan.stats.worst_town}` : ""}
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: `160px 70px repeat(${ENGINE_KEYS.length}, 1fr)`, gap: 0, ...eyebrow, fontSize: 10, padding: "0 0 8px", borderBottom: `1px solid ${T.border}` }}>
+          <div className="trow" style={{ display: "grid", gridTemplateColumns: `160px 70px repeat(${ENGINE_KEYS.length}, 1fr)`, gap: 0, ...eyebrow, fontSize: 10, padding: "0 0 8px", borderBottom: `1px solid ${T.border}` }}>
             <span>Town</span><span>Score</span>
             {ENGINE_KEYS.map((e) => <span key={e} style={{ textAlign: "center" }}>{ENGINE_LABELS[e]}</span>)}
           </div>
           {scan.towns.map((t) => (
-            <div key={t.town} style={{ display: "grid", gridTemplateColumns: `160px 70px repeat(${ENGINE_KEYS.length}, 1fr)`, alignItems: "center", padding: "9px 0", borderBottom: `1px solid ${T.border}` }}>
+            <div key={t.town} className="trow" style={{ display: "grid", gridTemplateColumns: `160px 70px repeat(${ENGINE_KEYS.length}, 1fr)`, alignItems: "center", padding: "9px 0", borderBottom: `1px solid ${T.border}` }}>
               <span style={{ fontSize: 13, color: T.text }}>{t.town}</span>
               <span style={{ fontFamily: MONO, fontSize: 14, fontWeight: 700, color: scoreColor(t.score) }}>{t.score}%</span>
               {ENGINE_KEYS.map((e) => {
@@ -1030,7 +1038,7 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
           )}
 
           {latestRows.length > 0 && (
-            <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 12, marginBottom: 20 }}>
+            <div className="m1col" style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 12, marginBottom: 20 }}>
               <div style={card()}>
                 <div style={{ ...eyebrow, marginBottom: 10 }}>Mention-rate trend</div>
                 {days.length > 1 ? (
@@ -1099,12 +1107,12 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
 
           {/* Per-prompt latest verdicts */}
           {latestRows.length > 0 && (
-            <div style={card({ padding: 0, overflow: "hidden" })}>
-              <div style={{ display: "grid", gridTemplateColumns: `1fr repeat(${ENGINE_KEYS.length}, 84px)`, padding: "12px 18px", borderBottom: `1px solid ${T.border}`, ...eyebrow, fontSize: 10 }}>
+            <div className="xscroll" style={card({ padding: 0 })}>
+              <div className="trow" style={{ display: "grid", gridTemplateColumns: `1fr repeat(${ENGINE_KEYS.length}, 84px)`, padding: "12px 18px", borderBottom: `1px solid ${T.border}`, ...eyebrow, fontSize: 10 }}>
                 <span>Prompt</span>{ENGINE_KEYS.map((e) => <span key={e} style={{ textAlign: "center" }}>{ENGINE_LABELS[e]}</span>)}
               </div>
               {prompts.map((p) => (
-                <div key={p.id} style={{ display: "grid", gridTemplateColumns: `1fr repeat(${ENGINE_KEYS.length}, 84px)`, padding: "12px 18px", borderBottom: `1px solid ${T.border}`, alignItems: "center" }}>
+                <div key={p.id} className="trow" style={{ display: "grid", gridTemplateColumns: `1fr repeat(${ENGINE_KEYS.length}, 84px)`, padding: "12px 18px", borderBottom: `1px solid ${T.border}`, alignItems: "center" }}>
                   <span style={{ fontSize: 13, color: T.text, paddingRight: 12 }}>{p.prompt}</span>
                   {ENGINE_KEYS.map((e) => { const r = latest[`${p.id}|${e}`]; return (
                     <span key={e} style={{ textAlign: "center", fontFamily: MONO, fontSize: 13, color: !r ? T.muted : r.mentioned ? T.ok : T.danger }}>
@@ -1277,14 +1285,14 @@ function OverviewTab({ data }: { data: Overview }) {
 
   return (
     <div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 20 }}>
+      <div className="m2col" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 20 }}>
         <Stat label="Businesses" value={String(data.businesses.length)} accent />
         <Stat label="Leads" value={String(data.leads.length)} />
         <Stat label="Revenue" value={fmtMoney(revenue)} />
         <Stat label="Avg score" value={scored.length ? `${avg} / 100` : "—"} />
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: sel ? "1fr 380px" : "1fr", gap: 20, alignItems: "start" }}>
+      <div className="m1col" style={{ display: "grid", gridTemplateColumns: sel ? "1fr 380px" : "1fr", gap: 20, alignItems: "start" }}>
         <div style={card({ padding: 0, overflow: "hidden" })}>
           <div style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr 0.8fr 0.9fr", padding: "12px 18px", borderBottom: `1px solid ${T.border}`, ...eyebrow }}>
             <span>Business</span><span>Market</span><span style={{ textAlign: "right" }}>Score</span><span style={{ textAlign: "right" }}>Scanned</span>
@@ -1597,7 +1605,7 @@ function ContentTab({ businesses }: { businesses: Biz[] }) {
       {!bizId && <div style={{ color: T.muted, fontFamily: MONO, fontSize: 13, padding: 40, textAlign: "center" }}>Pick a client to see topic suggestions and published guides.</div>}
 
       {bizId && !open && (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, alignItems: "start" }}>
+        <div className="m1col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, alignItems: "start" }}>
           <div style={card()}>
             <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 15, marginBottom: 4 }}>Write the next article</div>
             <div style={{ ...eyebrow, marginBottom: 14 }}>Topics ranked by where AI engines are NOT mentioning {biz?.name}</div>
@@ -1658,7 +1666,7 @@ function ContentTab({ businesses }: { businesses: Biz[] }) {
               {open.status === "published" && open.url && <a href={open.url} target="_blank" rel="noopener noreferrer" style={{ ...btn(true), textDecoration: "none" }}>View live →</a>}
             </div>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
+          <div className="m1col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
             <div>
               <div style={{ ...eyebrow, marginBottom: 6 }}>Title</div>
               <input style={inputStyle} value={open.title ?? ""} onChange={(e) => setOpen({ ...open, title: e.target.value })} readOnly={open.status === "published"} />
@@ -1741,7 +1749,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div style={{ borderBottom: `1px solid ${T.border}`, padding: "0 24px", display: "flex", background: T.surface }}>
+      <div className="dash-tabs" style={{ borderBottom: `1px solid ${T.border}`, padding: "0 24px", display: "flex", background: T.surface }}>
         {TABS.map((t) => (
           <button key={t.id} onClick={() => setTab(t.id)}
             style={{ background: "none", border: "none", color: tab === t.id ? T.accent : T.muted, fontFamily: DISP, fontWeight: 700, fontSize: 13, cursor: "pointer", padding: "14px 18px", borderBottom: `2px solid ${tab === t.id ? T.accent : "transparent"}`, textTransform: "uppercase", letterSpacing: "0.04em" }}>
@@ -1750,7 +1758,7 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      <div style={{ padding: 24, maxWidth: 1320, margin: "0 auto" }}>
+      <div className="dash-main" style={{ padding: 24, maxWidth: 1320, margin: "0 auto" }}>
         {dataErr && <div style={card({ borderColor: `${T.danger}66`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{dataErr}</span></div>}
         {tab === "overview" && (data ? <OverviewTab data={data} /> : <div style={{ color: T.muted, fontFamily: MONO, fontSize: 13, padding: 40, textAlign: "center" }}>Loading data…</div>)}
         {tab === "scan" && <ScanTab businesses={data?.businesses ?? []} />}

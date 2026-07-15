@@ -20,6 +20,14 @@ export default function ClientSharePage() {
   const { token } = useParams<{ token: string }>();
   const [data, setData] = useState<any>(null);
   const [state, setState] = useState<"loading" | "ok" | "missing">("loading");
+  const [mapW, setMapW] = useState(380);
+
+  useEffect(() => {
+    const fit = () => setMapW(Math.min(380, window.innerWidth - 88));
+    fit();
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, []);
 
   useEffect(() => {
     if (!token) return;
@@ -91,7 +99,7 @@ export default function ClientSharePage() {
               We searched Google Maps for &ldquo;{rep.maps_grid.keyword}&rdquo; from {rep.maps_grid.stats.total} points across your service area. Each dot is your ranking at that location.
             </div>
             <div style={{ display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap" }}>
-              <MapHeatGrid points={rep.maps_grid.points} center={rep.maps_grid.center ?? null} gridSize={rep.maps_grid.grid_size} spacingMiles={Number(rep.maps_grid.spacing_miles)} size={380} />
+              <MapHeatGrid points={rep.maps_grid.points} center={rep.maps_grid.center ?? null} gridSize={rep.maps_grid.grid_size} spacingMiles={Number(rep.maps_grid.spacing_miles)} size={mapW} />
               <div style={{ flex: 1, minWidth: 220 }}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
                   <div><div style={eyebrow}>Coverage</div><div style={{ fontFamily: MONO, fontSize: 28, fontWeight: 700, color: rateColor(rep.maps_grid.stats.coverage) }}>{rep.maps_grid.stats.coverage}%</div><div style={{ fontSize: 11, color: T.muted }}>of your area sees you in the top 10</div></div>
