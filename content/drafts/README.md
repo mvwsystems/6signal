@@ -17,3 +17,5 @@ When source-selection-gap-ai-search publishes (Sep 1), add links FROM:
 - the-source-ecosystem-third-party-mentions-ai-recommendations.md
 - ranking-is-not-the-same-as-being-recommended.mdx
 - why-directories-and-aggregators-keep-winning-ai-answers.md
+
+- the-contractor-website-is-becoming-a-source-document-for-ai.md → publish 2026-07-21 (weekly post; links already resolve to live content)
