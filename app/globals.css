@@ -9010,3 +9010,13 @@ svg {
   .dash-tabs button { padding: 12px 10px !important; white-space: nowrap; }
   .dash-root input, .dash-root select, .dash-root textarea { max-width: 100%; }
 }
+
+/* Research article figures (white paper diagrams) */
+.post-body img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 2.2rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 2px;
+}

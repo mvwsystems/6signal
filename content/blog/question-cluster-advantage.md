@@ -94,6 +94,8 @@ The difference is not visible in a content audit that counts pages. It is visibl
 
 ---
 
+![FAQ block versus question cluster: a flat five-question FAQ covers the first thirty seconds of the buyer journey; a cluster surrounds the service page with substantial, interlinked answers to real decision questions.](/research-visuals/question-cluster.svg)
+
 ## Keywords, Topics, and Question Clusters: A Precise Vocabulary
 
 These terms appear together in most content marketing discussions and are used interchangeably in most of them. They should not be. Each describes a different level of abstraction, a different unit of strategy, and a different relationship to buyer intent.

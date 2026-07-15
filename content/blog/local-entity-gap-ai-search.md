@@ -116,6 +116,8 @@ When these components are present, accurate, and mutually reinforcing, the entit
 
 A business can have thirty years of experience, a licensed crew, a service area covering multiple counties, and a reputation built entirely on referral. If the web's representation of that business is thin, inconsistent, or structurally incomplete, AI systems have no confident basis for surfacing it.
 
+![How the local entity gap looks to a machine: website, Google Business Profile, and directories disagreeing on services, area, name, and phone — producing low entity confidence, so the answer names someone else.](/research-visuals/entity-gap.svg)
+
 The gap is not about quality. The businesses most damaged by entity gaps are often among the most competent in their market. The gap is about the infrastructure of machine-readable identity. Search engines and AI systems do not infer quality from reputation or read between the lines of a vague services page. They operate on explicit, consistent, multi-source signals—and assign recommendation confidence in proportion to how clearly those signals agree.
 
 A business with a severe Local Entity Gap is not penalized. It is simply invisible to a system that cannot verify it.

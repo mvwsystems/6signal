@@ -1,0 +1,69 @@
+<svg viewBox="0 0 1200 675" xmlns="http://www.w3.org/2000/svg" font-family="'JetBrains Mono', ui-monospace, monospace">
+  <rect width="1200" height="675" fill="#060606"/>
+  <text x="64" y="66" fill="#E6FF00" font-size="15" letter-spacing="5">6SIGNAL — THE SOURCE SELECTION GAP</text>
+  <text x="64" y="118" fill="#f5f5f3" font-size="38" font-weight="700" letter-spacing="1">RANKED ≠ SELECTED</text>
+  <text x="64" y="150" fill="#6a6a64" font-size="16">Illustrative pattern from logged client testing: cited sources only partially overlap top rankings.</text>
+
+  <!-- left: rankings -->
+  <text x="64" y="212" fill="#a8a8a3" font-size="14" letter-spacing="3">CLASSIC RANKINGS</text>
+  <g stroke="#2a2a26" stroke-width="1">
+    <rect x="64" y="232" width="380" height="52" fill="#0e0e0c"/>
+    <rect x="64" y="292" width="380" height="52" fill="#0e0e0c"/>
+    <rect x="64" y="352" width="380" height="52" fill="#0e0e0c"/>
+    <rect x="64" y="412" width="380" height="52" fill="#0e0e0c"/>
+    <rect x="64" y="472" width="380" height="52" fill="#0e0e0c"/>
+  </g>
+  <g fill="#6a6a64" font-size="14">
+    <text x="84" y="264">#1</text><text x="84" y="324">#2</text><text x="84" y="384">#3</text><text x="84" y="444">#4</text><text x="84" y="504">#5</text>
+  </g>
+  <g fill="#f5f5f3" font-size="15">
+    <text x="128" y="264">bigco-plumbing.com</text>
+    <text x="128" y="324">competitor-a.com</text>
+    <text x="128" y="384">directory-one.com</text>
+    <text x="128" y="444">competitor-b.com</text>
+    <text x="128" y="504">old-bloghub.com</text>
+  </g>
+
+  <!-- right: answer sources -->
+  <text x="756" y="212" fill="#a8a8a3" font-size="14" letter-spacing="3">CITED IN THE AI ANSWER</text>
+  <g stroke="#2a2a26" stroke-width="1">
+    <rect x="756" y="232" width="380" height="52" fill="#0e0e0c"/>
+    <rect x="756" y="292" width="380" height="52" fill="#0e0e0c" stroke="#E6FF00"/>
+    <rect x="756" y="352" width="380" height="52" fill="#0e0e0c" stroke="#E6FF00"/>
+    <rect x="756" y="412" width="380" height="52" fill="#0e0e0c" stroke="#E6FF00"/>
+  </g>
+  <g fill="#f5f5f3" font-size="15">
+    <text x="780" y="264">directory-one.com</text>
+    <text x="780" y="324">local-forum thread</text>
+    <text x="780" y="384">reviews platform</text>
+    <text x="780" y="444">a plain, specific local guide</text>
+  </g>
+  <g fill="#6a6a64" font-size="12">
+    <text x="780" y="278">ranked #3 — selected</text>
+    <text x="780" y="338">never ranked — selected</text>
+    <text x="780" y="398">never ranked — selected</text>
+    <text x="780" y="458">ranked #9 — selected</text>
+  </g>
+
+  <!-- connectors -->
+  <g stroke-width="1.5" fill="none">
+    <path d="M444,378 C600,378 600,258 756,258" stroke="#5a5a52"/>
+    <path d="M444,258 C560,258 560,586 64,586" stroke="#3a3a36" stroke-dasharray="4 5"/>
+  </g>
+  <text x="470" y="240" fill="#6a6a64" font-size="12">overlap: partial</text>
+
+  <!-- not selected -->
+  <g fill="#ef4444" font-size="13">
+    <text x="470" y="330">#1, #2, #4 — ranked,</text>
+    <text x="470" y="350">never cited:</text>
+  </g>
+  <g fill="#6a6a64" font-size="13">
+    <text x="470" y="374">impressive pages,</text>
+    <text x="470" y="392">unquotable prose</text>
+  </g>
+
+  <text x="64" y="586" fill="#0a0a0a" font-size="1">.</text>
+  <text x="64" y="592" fill="#f5f5f3" font-size="17" font-weight="700">THE GAP IN ONE SENTENCE:</text>
+  <text x="64" y="622" fill="#E6FF00" font-size="15">Persuasion-optimized content loses to extraction-optimized content inside generated answers.</text>
+  <text x="64" y="648" fill="#6a6a64" font-size="13">Domains illustrative. Selection criteria are unpublished — build for usefulness, which wins under every plausible mechanism.</text>
+</svg>
