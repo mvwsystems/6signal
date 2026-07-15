@@ -494,6 +494,8 @@ The goal is not to manipulate reviews.
 
 The goal is to collect clarity.
 
+Reviews are the trust layer of a bigger system — see how they connect to the profile, pages, and directories in the [Local AI Infrastructure Blueprint](/research/local-ai-infrastructure-blueprint).
+
 ## Want to know what your reviews are telling AI?
 
 Book a 6Signal Visibility Audit.

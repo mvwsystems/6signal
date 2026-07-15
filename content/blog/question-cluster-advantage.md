@@ -590,6 +590,8 @@ The migration from ranked lists to AI-generated answers is gradual and measurabl
 
 ---
 
+The buyer behavior driving all of this — full questions typed to machines that answer in full sentences — is examined in [Question-Form Search Is the AEO Opportunity](/research/question-form-search-aeo-opportunity), including how to find and prioritize the questions by trade.
+
 ## Book a 6Signal Visibility Audit
 
 If you are unclear on which buyer decisions your current content actually covers, where competitors are being cited across answer surfaces in your place, how your schema and entity data are being read by AI systems, or which clusters to build first — a 6Signal Visibility Audit produces that clarity.

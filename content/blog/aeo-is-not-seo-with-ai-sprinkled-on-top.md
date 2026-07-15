@@ -355,6 +355,8 @@ The distinction matters because buyers are no longer only searching. They are as
 
 They decide what is worth naming.
 
+Google's own AI-features documentation now makes the same argument from the other direction — [here's how it collapsed the hype](/research/googles-ai-search-guidance-changed-the-aeo-conversation).
+
 ## Want to know if your company is answer-ready?
 
 Book a 6Signal Visibility Audit.

@@ -445,6 +445,8 @@ Companies need to be optimized not only to rank, but to be understood and named.
 
 That is the work.
 
+Since this piece was written, Google published official guidance on AI features that settles part of the debate — we broke down [what Google's AI search guidance actually changed](/research/googles-ai-search-guidance-changed-the-aeo-conversation). And whichever term you use, the work only counts if it's measured: the [AI Search Measurement Playbook](/research/ai-search-measurement-playbook) is the full system.
+
 ## Want to know where your company stands?
 
 Book a 6Signal Visibility Audit.

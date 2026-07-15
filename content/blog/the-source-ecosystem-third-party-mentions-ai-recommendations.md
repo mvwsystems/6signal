@@ -458,6 +458,8 @@ If those sources are missing, inconsistent, or weaker than directories, AI syste
 
 That is why source ecosystem work matters.
 
+The source ecosystem is one layer of a larger build — the [Local AI Infrastructure Blueprint](/research/local-ai-infrastructure-blueprint) shows where corroboration sits in the full stack and what to build around it.
+
 ## Want to know where your source ecosystem is weak?
 
 Book a 6Signal Visibility Audit.

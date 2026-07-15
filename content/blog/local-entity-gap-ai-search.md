@@ -517,6 +517,8 @@ When an AI system is asked about contractors in this business's market, this bus
 
 ---
 
+Closing the gap starts at the entity hub — [Google Business Profile as local AI infrastructure](/research/google-business-profile-local-ai-infrastructure) — and extends through the full stack in the [Local AI Infrastructure Blueprint](/research/local-ai-infrastructure-blueprint).
+
 ## The 6Signal Point of View
 
 The structural shift from keyword rankings to entity-based AI recommendations will not reverse. AI systems will become more authoritative in local discovery, not less. The businesses that build clear, consistent, multi-source entity signals now are building a compounding position. The businesses that defer—treating citation maintenance as historical, schema as a developer problem, and reviews as self-managing—will find the gap widening with each AI product cycle.

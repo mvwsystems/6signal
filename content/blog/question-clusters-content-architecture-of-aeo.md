@@ -574,6 +574,8 @@ The goal is not more content.
 
 The goal is structured usefulness.
 
+For why the question format itself is winning — buyers asking machines full sentences, and engines rewarding content shaped like answers — read [Question-Form Search Is the AEO Opportunity](/research/question-form-search-aeo-opportunity).
+
 ## Want to know which question clusters your company is missing?
 
 Book a 6Signal Visibility Audit.

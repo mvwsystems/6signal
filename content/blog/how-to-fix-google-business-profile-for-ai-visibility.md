@@ -518,6 +518,8 @@ Fixing it is one of the fastest ways to improve local clarity.
 
 And local clarity is the foundation of [AI visibility](/research/aeo-field-manual-answer-engine-optimization).
 
+For the strategic case — why the profile stopped being a listing and became an entity record machines parse — read [Google Business Profile Is Becoming Local AI Infrastructure](/research/google-business-profile-local-ai-infrastructure).
+
 ## Want us to audit your Google Business Profile?
 
 Book a 6Signal Visibility Audit.

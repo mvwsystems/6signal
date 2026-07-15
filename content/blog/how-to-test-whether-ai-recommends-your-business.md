@@ -543,6 +543,8 @@ Then improve the signals and test again.
 
 That is how AI visibility becomes measurable.
 
+This test is the entry point. When you're ready to run it as a discipline — fixed prompt sets, five engines, logged verdicts, trendlines — the [AI Search Measurement Playbook](/research/ai-search-measurement-playbook) is the complete methodology.
+
 ## Want us to run the test for you?
 
 Book a 6Signal Visibility Audit.

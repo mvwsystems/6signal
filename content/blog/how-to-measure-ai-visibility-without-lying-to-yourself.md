@@ -93,6 +93,8 @@ The log is only useful if each gap maps to an action:
 
 If a month of measurement hasn't changed what you're working on, you're not measuring — you're decorating. The methodology we run for clients (and [how to test whether AI recommends your business](/research/how-to-test-whether-ai-recommends-your-business) if you want the DIY version) exists to feed the fix list, not to produce prettier charts.
 
+This is the field version. The complete methodology — scorecard, spreadsheet schema, variance rules, and the fix-routing table — is the [AI Search Measurement Playbook](/research/ai-search-measurement-playbook).
+
 ## Want the measurement done for you?
 
 We run this exact system — fixed prompt sets, six engines, logged verdicts, trendlines, and a prioritized fix list — as the foundation of every engagement.

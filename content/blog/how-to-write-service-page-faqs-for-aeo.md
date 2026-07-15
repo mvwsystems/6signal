@@ -459,6 +459,8 @@ A weak FAQ adds noise.
 
 A strong FAQ builds trust and creates answer-ready content.
 
+FAQs are the entry-level version of a bigger shift — buyers now ask machines complete questions, and [question-form search is where the opportunity actually is](/research/question-form-search-aeo-opportunity).
+
 ## Want us to find the FAQs your service pages are missing?
 
 Book a 6Signal Visibility Audit.

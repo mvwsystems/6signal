@@ -434,6 +434,8 @@ Companies that understand this will build review systems that do more than colle
 
 They will collect clarity.
 
+Reviews feed the profile they're attached to — and that profile is quietly becoming [local AI infrastructure in its own right](/research/google-business-profile-local-ai-infrastructure).
+
 ## Want to know what your reviews are telling AI?
 
 Book a 6Signal Visibility Audit.

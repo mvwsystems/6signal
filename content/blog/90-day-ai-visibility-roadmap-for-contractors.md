@@ -110,6 +110,8 @@ Three rules keep the roadmap honest:
 2. **Nothing counts until the retest says it counts.** Effort is not a metric.
 3. **Booked work is the north star.** Mention rates matter because answers produce calls. If visibility climbs and the phone doesn't, the audit moves to the conversion path — pages that win answers but bury the phone number are their own failure mode.
 
+The roadmap is the schedule; the system it builds is the [Local AI Infrastructure Blueprint](/research/local-ai-infrastructure-blueprint) — the full eight-layer stack with the audit checklist.
+
 ## Want the roadmap built from your actual baseline?
 
 That's what the audit is: your prompts, your engines, your market — and the 90-day sequence in priority order, built from where you're actually being skipped.

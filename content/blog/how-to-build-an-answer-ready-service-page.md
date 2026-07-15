@@ -644,6 +644,8 @@ It supports internal links, question clusters, local relevance, trust, and conve
 
 That is why service pages are one of the highest-leverage assets in modern contractor visibility.
 
+Service page rebuilds land in weeks 7–8 of the sequence we run for clients — see where they fit in the [90-Day AI Visibility Roadmap for Contractors](/research/90-day-ai-visibility-roadmap-for-contractors).
+
 ## Want to know which service pages are costing you visibility?
 
 Book a 6Signal Visibility Audit.
