@@ -5,8 +5,8 @@ import type { Metadata, Viewport } from "next";
 export const metadata: Metadata = {
   title: "6 Signal — Command Center",
   icons: {
-    apple: "/6SIGYellow.png",
-    icon: "/6SIGYellow.png",
+    apple: "/6signal-icon-01-primary-1024.png",
+    icon: "/6signal-icon-01-primary-1024.png",
   },
   appleWebApp: {
     capable: true,
