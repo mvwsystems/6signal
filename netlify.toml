@@ -5,7 +5,11 @@
   # The Supabase project URL is a public endpoint, not a secret. Exempt it from
   # Netlify's secret scanner so documenting it (e.g. in .env.example) can't fail
   # the build. Real secrets (service role key, Stripe/Resend keys) stay scanned.
-  SECRETS_SCAN_OMIT_KEYS = "SUPABASE_URL"
+  SECRETS_SCAN_OMIT_KEYS = "SUPABASE_URL,NEXT_PUBLIC_META_PIXEL_ID"
+  # Meta pixel ("Matt Walker's Pixel" on the personal ad account, reused while
+  # the 6 Signal ad account is restricted). Pixel IDs are public by design —
+  # they ship in the page source of every site that installs one.
+  NEXT_PUBLIC_META_PIXEL_ID = "489336884535822"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
