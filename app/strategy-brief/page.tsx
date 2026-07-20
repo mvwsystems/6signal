@@ -641,7 +641,7 @@ function StrategyBriefInner() {
                   <button
                     className="btn btn-primary sb-decision-btn"
                     onClick={() => {
-                      window.location.href = "https://buy.stripe.com/REPLACE_WITH_197_CALL_PAYMENT_LINK";
+                      window.location.href = "https://buy.stripe.com/3cI00kcVUdjB8P76bf3ks0x";
                     }}
                   >
                     Book the Strategy Call — $197 →

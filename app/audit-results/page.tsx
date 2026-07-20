@@ -395,7 +395,7 @@ function SlideClose({ a }: { a: AuditData }) {
                 className="btn btn-ghost ar-upgrade-btn"
                 onClick={() => {
                   localStorage.setItem("6sig_audit_result", JSON.stringify(a));
-                  window.location.href = "https://buy.stripe.com/REPLACE_WITH_197_CALL_PAYMENT_LINK";
+                  window.location.href = "https://buy.stripe.com/3cI00kcVUdjB8P76bf3ks0x";
                 }}
               >
                 Book the Call →
@@ -775,7 +775,7 @@ function AuditResultsInner() {
                   className="btn btn-ghost ar-upsell-cta"
                   onClick={() => {
                     if (audit) localStorage.setItem("6sig_audit_result", JSON.stringify(audit));
-                    window.location.href = "https://buy.stripe.com/REPLACE_WITH_197_CALL_PAYMENT_LINK";
+                    window.location.href = "https://buy.stripe.com/3cI00kcVUdjB8P76bf3ks0x";
                   }}
                 >
                   Book the Call →
