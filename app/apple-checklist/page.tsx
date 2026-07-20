@@ -155,7 +155,7 @@ export default function AppleChecklistPage() {
           </p>
           <div className="acl-cta-row">
             <a
-              href="https://calendly.com/mvw-mattvincentwalker/ai-audit"
+              href="https://calendly.com/mvw-mattvincentwalker/6-signal-free-15-min-consult"
               className="acl-btn-primary"
               target="_blank"
               rel="noopener noreferrer"
@@ -386,7 +386,7 @@ export default function AppleChecklistPage() {
           .acl-section-title { border-left-color: #E6FF00 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
           .acl-cta-row { display: none; }
           .acl-cta-block::after {
-            content: "Book a consult: calendly.com/mvw-mattvincentwalker/ai-audit  ·  See the setup: 6signal.co/apple";
+            content: "Book a consult: calendly.com/mvw-mattvincentwalker/6-signal-free-15-min-consult  ·  See the setup: 6signal.co/apple";
             display: block;
             font-family: "JetBrains Mono", ui-monospace, monospace;
             font-size: 10px;

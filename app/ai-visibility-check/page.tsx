@@ -489,7 +489,7 @@ export default function AIVisibilityCheckPage() {
                   </div>
                   <div className="avc-upsell-opt-wrap">
                     <a
-                      href="https://calendly.com/mvw-mattvincentwalker/ai-audit"
+                      href="https://calendly.com/mvw-mattvincentwalker/6-signal-free-15-min-consult"
                       className="btn btn-ghost btn-lg avc-upsell-btn"
                       target="_blank"
                       rel="noopener noreferrer"
