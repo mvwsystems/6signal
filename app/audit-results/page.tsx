@@ -391,18 +391,19 @@ function SlideClose({ a }: { a: AuditData }) {
             <div className="ar-upgrade-price ar-upgrade-price--lg">$197</div>
             <div className="ar-upgrade-price-sub ar-upgrade-price-sub--muted">Includes the Strategy Brief at no extra charge.</div>
             <div className="ar-upgrade-btn-wrap">
-              <a
-                href="https://calendly.com/mvw-mattvincentwalker/ai-audit"
+              <button
                 className="btn btn-ghost ar-upgrade-btn"
-                target="_blank"
-                rel="noopener noreferrer"
+                onClick={() => {
+                  localStorage.setItem("6sig_audit_result", JSON.stringify(a));
+                  window.location.href = "https://buy.stripe.com/REPLACE_WITH_197_CALL_PAYMENT_LINK";
+                }}
               >
                 Book the Call →
-              </a>
+              </button>
             </div>
             {/* PDF-only text link */}
             <div className="ar-upgrade-pdf-link">
-              Book the 1-Hour Call: calendly.com/mvw-mattvincentwalker/ai-audit
+              Book the 1-Hour Call — $197: 6signal.co/audit-results
             </div>
           </div>
 
@@ -482,7 +483,10 @@ function AuditResultsInner() {
     }, 2200);
 
     (async () => {
-      // Permalink: render a previously generated brief without regenerating
+      // Permalink: render a previously generated brief without regenerating.
+      // A permalink id names one specific report — if it fails to load, show
+      // an error. Never fall through to whatever business data happens to be
+      // cached locally from an unrelated earlier session on this browser.
       if (permalinkId) {
         setLoading(true);
         setAuditPermalinkId(permalinkId);
@@ -498,7 +502,11 @@ function AuditResultsInner() {
               return;
             }
           }
-        } catch { /* fall through to generation paths */ }
+        } catch { /* handled below */ }
+        clearInterval(interval);
+        setLoading(false);
+        setError("Couldn't load this report. Please contact hello@6signal.co.");
+        return;
       }
 
       // Form data: localStorage first, then server-side intake (recovery link
@@ -763,9 +771,15 @@ function AuditResultsInner() {
                 <h3 className="ar-upsell-title">1-Hour Strategy Call</h3>
                 <p className="ar-upsell-desc">Live call with Matt Vincent Walker. Walk through your brief together and leave with a clear action plan and the option to engage 6Signal directly.</p>
                 <div className="ar-upsell-price">$197</div>
-                <a href="https://calendly.com/mvw-mattvincentwalker/ai-audit" className="btn btn-ghost ar-upsell-cta" target="_blank" rel="noopener noreferrer">
+                <button
+                  className="btn btn-ghost ar-upsell-cta"
+                  onClick={() => {
+                    if (audit) localStorage.setItem("6sig_audit_result", JSON.stringify(audit));
+                    window.location.href = "https://buy.stripe.com/REPLACE_WITH_197_CALL_PAYMENT_LINK";
+                  }}
+                >
                   Book the Call →
-                </a>
+                </button>
               </div>
             </div>
 

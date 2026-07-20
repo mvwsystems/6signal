@@ -30,46 +30,46 @@ const SIGNALS = [
   {
     acro: "GEO",
     label: "Generative Engine Optimization",
-    desc: "How Google AI Overviews and Bing Copilot compose answers about your trade in your city — and whether your business appears.",
+    desc: "Whether Google's AI Overview names your business when someone searches your trade in your city — or skips straight to a competitor.",
   },
   {
     acro: "AEO",
     label: "Answer Engine Optimization",
-    desc: "Whether Perplexity and ChatGPT cite your business when homeowners ask for contractors in your market.",
+    desc: "Whether ChatGPT and Perplexity name your business when someone asks for a contractor in your market.",
   },
   {
     acro: "LEO",
     label: "Local Entity Optimization",
-    desc: "Your Google Business Profile strength and citation consistency across the platforms AI engines trust most.",
+    desc: "Whether your Google Business Profile and directory listings are strong and consistent enough for AI to trust what they say about you.",
   },
   {
     acro: "VEO",
     label: "Voice Engine Optimization",
-    desc: "What Siri, Alexa, and Google Assistant say when someone asks for your trade near your city.",
+    desc: "What Siri, Alexa, and Google Assistant recommend when someone asks for your trade near your city.",
   },
   {
     acro: "PEO",
     label: "Prompt Engine Optimization",
-    desc: "Whether AI systems trained on public data have enough about your business to recommend you by name.",
+    desc: "Whether AI has enough clear, public information about your business to recommend you by name instead of guessing.",
   },
   {
     acro: "IEO",
     label: "Index Engine Optimization",
-    desc: "Whether AI crawlers can access, parse, and extract your site's content as citable information.",
+    desc: "Whether AI crawlers can even read your site well enough to cite it at all.",
   },
 ];
 
 const PROOF = [
   {
-    title: "BUYER JOURNEY MAPPED",
+    title: "WHERE YOU DISAPPEAR",
     desc: "See exactly which AI-driven research stages your ideal customer goes through — and where you disappear from their consideration set.",
   },
   {
-    title: "CITATION LANDSCAPE",
+    title: "WHO'S TAKING YOUR CALLS",
     desc: "Know which platforms own the citations in your market and the threat level each one represents to your visibility right now.",
   },
   {
-    title: "90-DAY ROADMAP",
+    title: "WHAT TO FIX FIRST",
     desc: "A prioritized action sequence built for your specific gaps — not a generic checklist, a sequenced plan you can execute immediately.",
   },
 ];
@@ -84,6 +84,10 @@ const FAQS = [
     a: "Your brief generates in under 60 seconds after payment and appears immediately on screen. You can download a PDF and review it on your own time.",
   },
   {
+    q: "Why do you only work with one business per trade?",
+    a: "Exclusivity is part of how 6Signal works, not a sales tactic. We take one contractor per trade per market — one plumber, one HVAC company, one roofer per city. If your trade is already placed in your market, we'll tell you before you buy anything.",
+  },
+  {
     q: "What if I want help acting on the results?",
     a: "Your results page gives you two options: a Full Strategy Brief for $97 that turns your gaps into an exact implementation plan, or a 1-Hour Strategy Call for $197 where we walk through your brief live and you leave with a clear execution decision.",
   },
@@ -93,7 +97,7 @@ const FAQS = [
   },
   {
     q: "What if something goes wrong?",
-    a: "After payment you also receive an email with a permanent link to your brief, so you can reopen it on any device. If generation fails and we can't recover it, email hello@6signal.co and we'll regenerate it or refund the $27.",
+    a: "After payment you also receive an email with a permanent link to your brief, so you can reopen it on any device. If generation fails and we can't recover it, we regenerate it or refund the $27 — no back-and-forth, just email hello@6signal.co.",
   },
   {
     q: "Who is 6Signal?",
@@ -318,7 +322,7 @@ export default function VisibilityCheckPage() {
             </button>
             <span className="vc2-hero-trust">
               Results appear immediately after payment · PDF included · No
-              subscription
+              subscription · Refund if it fails
             </span>
           </div>
 
@@ -479,9 +483,9 @@ export default function VisibilityCheckPage() {
       <section className="vc2-signals-section rule">
         <div className="wrap">
           <div className="vc2-section-head reveal">
-            <span className="idx">Your intelligence brief covers</span>
+            <span className="idx">Where AI decides who gets the call</span>
             <h2 className="display vc2-section-headline">
-              Six signals. Every gap exposed.
+              Six signals. Miss one, a competitor gets the job.
             </h2>
           </div>
           <div className="vc2-signals-grid">
@@ -554,7 +558,7 @@ export default function VisibilityCheckPage() {
             <em>Find out if you are.</em>
           </h2>
           <p className="vc2-final-sub reveal">
-            $27 · Results in 60 seconds · PDF included
+            $27 · Results in 60 seconds · PDF included · Refund if it fails
           </p>
           <button
             className="btn btn-primary btn-lg reveal"

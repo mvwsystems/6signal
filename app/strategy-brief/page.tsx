@@ -638,17 +638,17 @@ function StrategyBriefInner() {
                   </p>
                   <div className="sb-decision-price">$197</div>
                   <div className="idx sb-decision-price-sub">Includes this Strategy Brief at no extra charge.</div>
-                  <a
-                    href="https://calendly.com/mvw-mattvincentwalker/ai-audit"
+                  <button
                     className="btn btn-primary sb-decision-btn"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    onClick={() => {
+                      window.location.href = "https://buy.stripe.com/REPLACE_WITH_197_CALL_PAYMENT_LINK";
+                    }}
                   >
                     Book the Strategy Call — $197 →
-                  </a>
+                  </button>
                   {/* PDF-only URL */}
                   <div className="sb-decision-pdf-url">
-                    Book the 1-Hour Strategy Call: calendly.com/mvw-mattvincentwalker/ai-audit
+                    Book the 1-Hour Strategy Call — $197: 6signal.co/strategy-brief
                   </div>
                 </div>
               </div>
