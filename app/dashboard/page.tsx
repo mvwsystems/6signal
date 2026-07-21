@@ -1274,6 +1274,29 @@ function OverviewTab({ data }: { data: Overview }) {
     return m;
   }, [data.signalScores]);
 
+  const bizNameById = useMemo(() => {
+    const m: Record<string, string> = {};
+    for (const b of data.businesses) m[b.id] = b.name;
+    return m;
+  }, [data.businesses]);
+
+  const LEAD_SOURCE_LABELS: Record<string, string> = {
+    free_check: "Free check",
+    visibility_check_partial: "Partial form fill",
+  };
+  const leadSourceLabel = (source: string) =>
+    LEAD_SOURCE_LABELS[source] ?? source.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+
+  const recentLeads = useMemo(
+    () => [...data.leads].sort((a, b) => +new Date(b.created_at) - +new Date(a.created_at)).slice(0, 20),
+    [data.leads]
+  );
+  const leadsBySource = useMemo(() => {
+    const m: Record<string, number> = {};
+    for (const l of data.leads) m[l.source] = (m[l.source] || 0) + 1;
+    return m;
+  }, [data.leads]);
+
   const revenue = data.purchases.reduce((sum, p) => sum + (p.amount_total || 0), 0);
   const scored = data.businesses.map((b) => latestByBiz[b.id]?.overall_score).filter((s): s is number => typeof s === "number");
   const avg = scored.length ? Math.round(scored.reduce((a, b) => a + b, 0) / scored.length) : 0;
@@ -1432,6 +1455,29 @@ function OverviewTab({ data }: { data: Overview }) {
             </div>
           </div>
         )}
+      </div>
+
+      <div style={card({ padding: 0, overflow: "hidden", marginTop: 20 })}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 18px", borderBottom: `1px solid ${T.border}` }}>
+          <span style={eyebrow}>Recent leads</span>
+          <span style={{ fontSize: 11, color: T.muted }}>
+            {Object.entries(leadsBySource).map(([src, n]) => `${leadSourceLabel(src)}: ${n}`).join(" · ") || "No leads yet"}
+          </span>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 0.9fr", padding: "12px 18px", borderBottom: `1px solid ${T.border}`, ...eyebrow }}>
+          <span>Email</span><span>Source</span><span>Business</span><span style={{ textAlign: "right" }}>When</span>
+        </div>
+        {recentLeads.length === 0 && (
+          <div style={{ padding: 40, textAlign: "center", color: T.muted, fontSize: 13 }}>No leads yet.</div>
+        )}
+        {recentLeads.map((l) => (
+          <div key={l.id} style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 0.9fr", padding: "10px 18px", borderBottom: `1px solid ${T.border}`, alignItems: "center" }}>
+            <span style={{ fontSize: 13, color: T.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{l.email}</span>
+            <span style={{ fontSize: 12, color: l.source === "visibility_check_partial" ? T.warn : T.textSub }}>{leadSourceLabel(l.source)}</span>
+            <span style={{ fontSize: 12, color: T.muted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{l.business_id ? bizNameById[l.business_id] ?? "—" : "—"}</span>
+            <span style={{ fontSize: 12, color: T.muted, textAlign: "right" }}>{fmtDate(l.created_at)}</span>
+          </div>
+        ))}
       </div>
 
       {openReport && sel && (
