@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { name, url, trade, city, competitors } = body ?? {};
+  const { name, email, url, trade, city, competitors } = body ?? {};
   if (!name || !trade || !city) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
   const businessId = await upsertBusiness({ name, url, trade, city });
   const id = await createIntake({
     businessId,
-    form: { name, url, trade, city, competitors: competitors ?? "" },
+    form: { name, email: email ?? "", url, trade, city, competitors: competitors ?? "" },
   });
 
   // id is null when persistence is unavailable — the client falls back to

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import MetaPixel from "./components/MetaPixel";
+import Clarity from "./components/Clarity";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://6signal.co"),
@@ -72,6 +73,7 @@ export default function RootLayout({
       </head>
       <body>
         <MetaPixel />
+        <Clarity />
         {children}
       </body>
     </html>

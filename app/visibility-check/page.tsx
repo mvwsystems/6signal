@@ -204,6 +204,7 @@ export default function VisibilityCheckPage() {
 
   const [form, setForm] = useState({
     name: "",
+    email: "",
     url: "",
     trade: "",
     city: "",
@@ -213,6 +214,7 @@ export default function VisibilityCheckPage() {
   const [submitting, setSubmitting] = useState(false);
   const [heroVisible, setHeroVisible] = useState(true);
   const heroRef = useRef<HTMLElement>(null);
+  const partialLeadSent = useRef(false);
 
   // Sticky bar visibility — appears when hero scrolls out of view
   useEffect(() => {
@@ -229,6 +231,7 @@ export default function VisibilityCheckPage() {
   const validate = () => {
     const e: Record<string, string> = {};
     if (!form.name.trim()) e.name = "Business name is required";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) e.email = "A valid email is required";
     if (!form.url.trim()) e.url = "Website URL is required";
     if (!form.trade) e.trade = "Please select your trade";
     if (!form.city.trim()) e.city = "City / market is required";
@@ -238,6 +241,21 @@ export default function VisibilityCheckPage() {
   const handleChange = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) setErrors((prev) => ({ ...prev, [field]: "" }));
+  };
+
+  // Fires once, when the visitor leaves the email field with something
+  // plausible in it — a signal that they're seriously filling this out even
+  // if they never hit submit. Best-effort: never blocks or shows errors.
+  const handleEmailBlur = () => {
+    if (partialLeadSent.current) return;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) return;
+    partialLeadSent.current = true;
+    fetch("/api/partial-lead", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+      keepalive: true,
+    }).catch(() => { /* best-effort */ });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -254,6 +272,7 @@ export default function VisibilityCheckPage() {
       "6sig_audit_data",
       JSON.stringify({
         name: form.name,
+        email: form.email,
         url: form.url,
         trade: form.trade,
         city: form.city,
@@ -362,6 +381,25 @@ export default function VisibilityCheckPage() {
                 />
                 {errors.name && (
                   <span className="vc2-error">{errors.name}</span>
+                )}
+              </div>
+
+              {/* Email */}
+              <div className={`vc2-field${errors.email ? " vc2-field--error" : ""}`}>
+                <label className="vc2-label">
+                  Email <span className="vc2-req">*</span>
+                </label>
+                <input
+                  className="vc2-input"
+                  type="email"
+                  placeholder="you@yourbusiness.com"
+                  value={form.email}
+                  onChange={(e) => handleChange("email", e.target.value)}
+                  onBlur={handleEmailBlur}
+                  autoComplete="email"
+                />
+                {errors.email && (
+                  <span className="vc2-error">{errors.email}</span>
                 )}
               </div>
 
