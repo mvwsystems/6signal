@@ -8996,6 +8996,31 @@ svg {
   .dash-print-area [data-keep] { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 
+/* ── Proposal print (client-facing PDF) ──────────────────────────────────────
+   Unlike .dash-print-area above, this keeps its own colors as-authored (dark
+   header bands, light page body) instead of stripping to black-on-white —
+   it's a client-facing document, not an internal ops printout. Each direct
+   child is one 8.5x11 "page" and breaks onto its own printed sheet. */
+@media print {
+  body:has(.proposal-print-area) { background: #f4f3ef !important; }
+  body:has(.proposal-print-area) * { visibility: hidden; }
+  body:has(.proposal-print-area) .proposal-print-area,
+  body:has(.proposal-print-area) .proposal-print-area * { visibility: visible; }
+  body:has(.proposal-print-area) .proposal-print-area {
+    position: absolute !important; left: 0; top: 0; width: 100% !important; margin: 0 !important;
+  }
+  .proposal-print-area, .proposal-print-area * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .proposal-print-area > div {
+    page-break-after: always;
+    width: 100% !important;
+    min-height: 100vh !important;
+    margin: 0 !important;
+  }
+}
+
 /* ── Dashboard mobile (inline styles are overridden via !important classes;
       the dashboard is styled inline, so responsive behavior lives here) ─── */
 .dash-root .xscroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }

@@ -810,6 +810,75 @@ export async function briefingRoster(): Promise<Array<{ id: string; name: string
   }
 }
 
+// ── Proposals (printable quotes) ─────────────────────────────────────────────
+
+export async function createProposal(args: {
+  businessId: string | null;
+  clientName: string;
+  payload: unknown;
+}): Promise<string | null> {
+  const s = db();
+  if (!s) return null;
+  try {
+    const { data, error } = await s
+      .from("proposals")
+      .insert({ business_id: args.businessId, client_name: args.clientName, payload: args.payload })
+      .select("id")
+      .single();
+    if (error) throw error;
+    return data.id as string;
+  } catch (e) {
+    console.error("[db] createProposal failed:", e);
+    return null;
+  }
+}
+
+export async function listProposals(): Promise<Record<string, unknown>[]> {
+  const s = db();
+  if (!s) return [];
+  try {
+    const { data, error } = await s
+      .from("proposals")
+      .select("id, business_id, client_name, payload, created_at, updated_at")
+      .order("updated_at", { ascending: false })
+      .limit(100);
+    if (error) throw error;
+    return data ?? [];
+  } catch (e) {
+    console.error("[db] listProposals failed:", e);
+    return [];
+  }
+}
+
+export async function getProposal(id: string): Promise<Record<string, unknown> | null> {
+  const s = db();
+  if (!s) return null;
+  try {
+    const { data, error } = await s.from("proposals").select("*").eq("id", id).maybeSingle();
+    if (error) throw error;
+    return data ?? null;
+  } catch (e) {
+    console.error("[db] getProposal failed:", e);
+    return null;
+  }
+}
+
+export async function updateProposal(id: string, args: { clientName?: string; payload?: unknown }): Promise<boolean> {
+  const s = db();
+  if (!s) return false;
+  try {
+    const fields: Record<string, unknown> = { updated_at: new Date().toISOString() };
+    if (args.clientName !== undefined) fields.client_name = args.clientName;
+    if (args.payload !== undefined) fields.payload = args.payload;
+    const { error } = await s.from("proposals").update(fields).eq("id", id);
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error("[db] updateProposal failed:", e);
+    return false;
+  }
+}
+
 export async function recordPurchase(args: {
   stripeSessionId: string;
   intakeId: string | null;

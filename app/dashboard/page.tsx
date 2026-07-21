@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Radar, Ring, SignalBars, LineChart, Donut, Sparkline, MapHeatGrid } from "../components/charts";
+import ProposalsTab from "./ProposalsTab";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 6 Signal — internal AI Visibility Command Center (/dashboard)
@@ -1739,7 +1740,7 @@ function ContentTab({ businesses }: { businesses: Biz[] }) {
 export default function DashboardPage() {
   const [state, setState] = useState<"loading" | "locked" | "in">("loading");
   const [configured, setConfigured] = useState(true);
-  const [tab, setTab] = useState<"overview" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "ads">("overview");
+  const [tab, setTab] = useState<"overview" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "proposals" | "ads">("overview");
   const [data, setData] = useState<Overview | null>(null);
   const [dataErr, setDataErr] = useState<string | null>(null);
 
@@ -1777,6 +1778,7 @@ export default function DashboardPage() {
     { id: "track", label: "Tracking" },
     { id: "content", label: "Content" },
     { id: "prospects", label: "Prospects" },
+    { id: "proposals", label: "Proposals" },
     { id: "ads", label: "Ads" },
   ];
 
@@ -1814,6 +1816,7 @@ export default function DashboardPage() {
         {tab === "track" && <TrackingTab businesses={data?.businesses ?? []} />}
         {tab === "content" && <ContentTab businesses={data?.businesses ?? []} />}
         {tab === "prospects" && <ProspectsTab />}
+        {tab === "proposals" && <ProposalsTab businesses={data?.businesses ?? []} />}
         {tab === "ads" && <AdsTab />}
         <div style={{ marginTop: 32, paddingTop: 20, borderTop: `1px solid ${T.border}`, textAlign: "center", ...eyebrow }}>
           6 Signal Command Center · Internal
