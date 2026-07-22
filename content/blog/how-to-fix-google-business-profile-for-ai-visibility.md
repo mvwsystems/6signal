@@ -522,7 +522,7 @@ For the strategic case — why the profile stopped being a listing and became an
 
 ## Want us to audit your Google Business Profile?
 
-Book a 6Signal Visibility Audit.
+Get the AI Visibility Audit.
 
 We'll show you whether your profile, website, reviews, directories, and AI search presence tell one clear story — or whether competitors are easier to understand and recommend.
 

@@ -109,7 +109,7 @@ export async function sendReportReadyEmail(args: {
           heading(
             Number.isFinite(args.score as number)
               ? `${name}: ${args.score}/100${args.grade ? ` · Grade ${args.grade}` : ""}`
-              : `Your brief is ready, ${name}.`
+              : `Your audit is ready, ${name}.`
           ),
           args.critical ? paragraph(`<strong style="color:#f5f5f3;">${args.critical}</strong>`) : "",
           paragraph(

@@ -462,7 +462,7 @@ The source ecosystem is one layer of a larger build — the [Local AI Infrastruc
 
 ## Want to know where your source ecosystem is weak?
 
-Book a 6Signal Visibility Audit.
+Get the AI Visibility Audit.
 
 We'll show you where your company is confirmed, where it is unclear, which directories or competitors are stronger, and which sources should be fixed or built first.
 

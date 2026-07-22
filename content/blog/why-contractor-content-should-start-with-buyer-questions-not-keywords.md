@@ -469,7 +469,7 @@ That is the better foundation.
 
 ## Want to know which buyer questions your company should own?
 
-Book a 6Signal Visibility Audit.
+Get the AI Visibility Audit.
 
 We'll show you where your content is thin, which buyer questions competitors are answering, and what question clusters should be built first.
 

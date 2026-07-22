@@ -476,7 +476,7 @@ That gap is where the work begins.
 
 ## Want to see what AI says about your brand?
 
-Book a 6Signal Visibility Audit.
+Get the AI Visibility Audit.
 
 We'll test your company across AI answers, Google, Maps, directories, and search to show what the web understands, what it gets wrong, and what signals should be fixed first.
 

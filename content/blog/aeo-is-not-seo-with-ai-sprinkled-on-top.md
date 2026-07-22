@@ -359,7 +359,7 @@ Google's own AI-features documentation now makes the same argument from the othe
 
 ## Want to know if your company is answer-ready?
 
-Book a 6Signal Visibility Audit.
+Get the AI Visibility Audit.
 
 We'll show you where your company appears, where it gets skipped, which competitors are easier to surface, and what signals need to be fixed first.
 

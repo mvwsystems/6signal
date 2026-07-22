@@ -517,7 +517,7 @@ export default function VisibilityCheckPage() {
                 )}
               </button>
               <p className="vc2-form-note">
-                Secure payment via Stripe. Brief generates immediately on-screen
+                Secure payment via Stripe. Your audit generates immediately on-screen
                 after checkout.
               </p>
             </div>
@@ -613,7 +613,7 @@ export default function VisibilityCheckPage() {
             <p className="vc2-docline-body">
               <strong>X-Act Plumbing — Red Oak, TX.</strong> Our tracking system ran 629
               automated checks of 12 real buyer questions across six AI engines, daily,
-              through July 2026. X-Act was named in <strong>92% of Gemini checks</strong>,{" "}
+              July 7&ndash;20, 2026. X-Act was named in <strong>92% of Gemini checks</strong>,{" "}
               <strong>71% of ChatGPT checks</strong>, and <strong>68% of Perplexity
               checks</strong> — and appeared at all 25 points of a market-wide Google
               Maps grid scan. Same tracking system, same buyer questions, your business:
@@ -687,7 +687,7 @@ export default function VisibilityCheckPage() {
       >
         <span className="idx vc2-sticky-label">AI Visibility Audit</span>
         <button className="btn btn-primary vc2-sticky-btn" onClick={scrollToForm}>
-          Get My Brief — $27
+          Get My Audit — $27
         </button>
       </div>
     </>

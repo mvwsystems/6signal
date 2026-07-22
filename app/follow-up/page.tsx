@@ -145,9 +145,9 @@ export default function FollowUpPage() {
                 </a>
               </p>
               <p className="italic" style={{ marginTop: "20px" }}>
-                Pricing for the follow-up layer is based on volume and configuration. Book a
-                call and we&rsquo;ll walk through exactly what the setup looks like for your
-                business and what it costs.
+                Pricing for the follow-up layer is based on volume and configuration.
+                It&rsquo;s scoped on the $197 Strategy Call, alongside the retainer
+                conversation — after you&rsquo;ve seen your audit.
               </p>
             </div>
             <div className="included">

@@ -23,7 +23,7 @@ tags:
 
 # The Question Cluster Advantage: How to Structure Content for the Shift from Search Rankings to AI Answers
 
-**A 6Signal Intelligence Brief**
+**A 6Signal White Paper**
 *Published May 2026*
 
 ---
@@ -592,13 +592,13 @@ The migration from ranked lists to AI-generated answers is gradual and measurabl
 
 The buyer behavior driving all of this — full questions typed to machines that answer in full sentences — is examined in [Question-Form Search Is the AEO Opportunity](/research/question-form-search-aeo-opportunity), including how to find and prioritize the questions by trade.
 
-## Book a 6Signal Visibility Audit
+## Get the AI Visibility Audit
 
 If you are unclear on which buyer decisions your current content actually covers, where competitors are being cited across answer surfaces in your place, how your schema and entity data are being read by AI systems, or which clusters to build first — a 6Signal Visibility Audit produces that clarity.
 
 The audit maps the buyer decisions most relevant to your revenue. It identifies the layers of your current question architecture — what you cover and where the gaps are. It evaluates your schema implementation and entity consistency across platforms. It delivers a prioritized roadmap for building or rebuilding your question cluster system.
 
-It is not a general content review. It is a visibility intelligence brief — specific to your market, your buyer decisions, and your competitive position across both traditional search and AI answer surfaces.
+It is not a general content review. It is a visibility intelligence report — specific to your market, your buyer decisions, and your competitive position across both traditional search and AI answer surfaces.
 
 **6signal.co/audit**
 

@@ -683,7 +683,7 @@ function AuditResultsInner() {
                     <div className="ar-brand-dot" />
                     <span className="ar-brand-name">6SIGNAL</span>
                   </div>
-                  <span className="ar-slide-top-title">AI VISIBILITY INTELLIGENCE BRIEF</span>
+                  <span className="ar-slide-top-title">AI VISIBILITY AUDIT</span>
                 </div>
                 <Comp a={audit} />
                 <div className="ar-slide-footer">
@@ -734,7 +734,7 @@ function AuditResultsInner() {
               <div className="left">
                 <span className="idx">Next steps</span>
                 <h2 className="display">
-                  What happens<br /><em>after the brief.</em>
+                  What happens<br /><em>after the audit.</em>
                 </h2>
               </div>
               <div className="right">
@@ -769,7 +769,7 @@ function AuditResultsInner() {
               <div className="ar-upsell-card">
                 <div className="ar-upsell-tag">Fastest Path</div>
                 <h3 className="ar-upsell-title">1-Hour Strategy Call</h3>
-                <p className="ar-upsell-desc">Live call with Matt Vincent Walker. Walk through your brief together and leave with a clear action plan and the option to engage 6Signal directly.</p>
+                <p className="ar-upsell-desc">Live call with Matt Vincent Walker. Walk through your audit together and leave with a clear action plan and the option to engage 6Signal directly.</p>
                 <div className="ar-upsell-price">$197</div>
                 <button
                   className="btn btn-ghost ar-upsell-cta"

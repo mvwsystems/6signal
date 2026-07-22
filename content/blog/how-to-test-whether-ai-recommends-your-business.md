@@ -547,7 +547,7 @@ This test is the entry point. When you're ready to run it as a discipline — fi
 
 ## Want us to run the test for you?
 
-Book a 6Signal Visibility Audit.
+Get the AI Visibility Audit.
 
 We'll test your company across AI answers, Maps, search, directories, and voice to show where you appear, where you get skipped, and what to fix first.
 

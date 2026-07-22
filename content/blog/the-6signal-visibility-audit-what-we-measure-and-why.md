@@ -481,7 +481,7 @@ It is:
 
 ## Want your visibility measured?
 
-Book a 6Signal Visibility Audit.
+Get the AI Visibility Audit.
 
 We'll show you where you appear, where you get skipped, which competitors or directories are winning, and what to fix first.
 

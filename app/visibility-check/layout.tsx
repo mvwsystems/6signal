@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "AI Visibility Audit — $27 | 6Signal",
-    description: "Find out if AI recommends your business or your competitor. Full brief in under 60 seconds.",
+    description: "Find out if AI recommends your business or your competitor. Your full audit in under 60 seconds.",
     images: ["/6SIG_SOCIAL_SHARE.png"],
   },
   alternates: { canonical: `${BASE}${ROUTE}` },

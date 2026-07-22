@@ -389,7 +389,7 @@ That is the work.
 
 ## Want to know if AI is skipping your company?
 
-Book a 6Signal Visibility Audit.
+Get the AI Visibility Audit.
 
 We'll show you where your company appears, where it gets skipped, which competitors are easier to surface, and what signals should be fixed first.
 

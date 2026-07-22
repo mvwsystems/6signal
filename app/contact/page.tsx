@@ -221,7 +221,7 @@ export default function ContactPage() {
                       </svg>
                     </button>
                     <p className="form-note">
-                      We respond same day — if it&rsquo;s urgent, book a call directly.
+                      We respond same day — usually within a few hours.
                     </p>
                   </form>
                 </>

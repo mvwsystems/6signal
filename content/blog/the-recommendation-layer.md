@@ -478,7 +478,7 @@ They will be the ones that get named.
 
 ## Want to know if your company makes the shortlist?
 
-Book a 6Signal Visibility Audit.
+Get the AI Visibility Audit.
 
 We'll test your company across search, AI answers, Maps, directories, and voice to show where you appear, where you get skipped, and what to fix first.
 

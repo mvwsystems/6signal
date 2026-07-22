@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description:
     "Homeowners ask ChatGPT, Maps, and AI Overviews before they call. 6 Signal gets residential contractors named across six visibility layers. Based in Dallas/Fort Worth, serving contractors in DFW and select markets beyond Texas.",
   openGraph: {
-    title: "SIXSIGNAL | AI Visibility + AI Infrastructure",
+    title: "SIXSIGNAL | AI Visibility & Infrastructure",
     description:
       "Homeowners ask ChatGPT, Maps, and AI Overviews before they call anyone. 6 Signal gets residential contractors onto that shortlist. Based in the Dallas/Fort Worth area.",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "SIXSIGNAL | AI Visibility + AI Infrastructure",
+    title: "SIXSIGNAL | AI Visibility & Infrastructure",
     images: ["/6SIG_SOCIAL_SHARE.png"],
   },
 };
@@ -45,7 +45,7 @@ const ORG_SCHEMA = {
     "url": "https://mattvincentwalker.com",
   },
   "description": "AI visibility practice for residential contractors. Six-layer framework: GEO, PEO, AEO, IEO, LEO, VEO.",
-  "areaServed": "Dallas-Fort Worth",
+  "areaServed": "Dallas-Fort Worth, TX and select markets beyond Texas",
 };
 
 export default function RootLayout({

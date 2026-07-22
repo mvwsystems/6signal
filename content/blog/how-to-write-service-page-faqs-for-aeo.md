@@ -463,7 +463,7 @@ FAQs are the entry-level version of a bigger shift — buyers now ask machines c
 
 ## Want us to find the FAQs your service pages are missing?
 
-Book a 6Signal Visibility Audit.
+Get the AI Visibility Audit.
 
 We'll show you which buyer questions are missing from your service pages, which competitors are answering them better, and how to structure your pages for stronger AI visibility.
 

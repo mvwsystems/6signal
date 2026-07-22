@@ -23,7 +23,7 @@ tags:
 
 # The Local Entity Gap: Why Better Companies Get Skipped by AI Search
 
-*A 6Signal Intelligence Brief | May 2026*
+*A 6Signal White Paper | May 2026*
 
 ---
 

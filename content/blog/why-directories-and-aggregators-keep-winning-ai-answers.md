@@ -529,7 +529,7 @@ That is how local businesses take back the [recommendation layer](/research/the-
 
 ## Want to know where directories are beating you?
 
-Book a 6Signal Visibility Audit.
+Get the AI Visibility Audit.
 
 We'll show you which directories and competitors appear when buyers ask AI who to call, where your company gets skipped, and what signals need to be fixed first.
 

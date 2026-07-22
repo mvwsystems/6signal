@@ -72,21 +72,19 @@ success URLs configured in the Stripe dashboard) → results generated client-in
 routes below. **There is no server-side record of purchases, audits, or leads.**
 
 **⚠️ Takeoff Copilot pricing ($197/job or $497/month founding rate, up to 8 jobs) is NOT in this
-repo.** Takeoff Copilot appears on /capabilities and /services as a Labs item ("Beta · Active")
-linking to TakeoffCopilot.com with no pricing. The second Labs product is named **"BidCore"** on
-/capabilities but **"BidForge"** on /services — a live naming inconsistency (BidForge→BidCore
-rename, commit `28cc6eb`, missed /services).
+repo.** Takeoff Copilot appears on /capabilities as a Labs item ("Beta · Active") linking to
+TakeoffCopilot.com with no pricing. The second Labs product is "BidCore" (the old BidForge
+naming is fully gone; /services was deleted 2026-07-22 and 301s to /capabilities).
 
 ## 4. Positioning
 
 - **Visibility first.** "Not a marketing agency — a specialized visibility practice." Not an SEO
   agency, not an ads agency, not a web design firm, not a software product.
-- Five service systems on /capabilities and /services (identical content): **Build** (foundation),
-  **Grow** (demand), **Capture** (response), **Automate** (operations), **Advise** (strategy).
+- Five service systems on /capabilities: **Build** (foundation), **Grow** (demand),
+  **Capture** (response), **Automate** (operations), **Advise** (strategy).
 - Voice: intelligence-briefing tone — direct, precise, economical, no hype, no exclamation points.
   See [6SIGNAL_BRAND_BRIEF.md](6SIGNAL_BRAND_BRIEF.md) §2 (still authoritative for voice).
-- Note: /services and /capabilities are duplicate pages. CODEBASE_CONTEXT says /services 301s to
-  /capabilities, but both page files exist with drifting content (the BidCore/BidForge split).
+- /services was deleted 2026-07-22 (was an unreachable duplicate of /capabilities behind a 301).
 
 ## 5. Proof
 

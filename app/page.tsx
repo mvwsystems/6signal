@@ -54,7 +54,7 @@ const layers = [
 const auditSteps = [
   {
     num: "01",
-    phase: "Pre-audit",
+    phase: "Scan",
     title: "Where you show up — and where you don't",
     body: "Your $27 audit runs your company through all six layers automatically — AI tools, Maps, voice, answer engines, directories, and local entity data. You see exactly where you appear and where you're invisible. No call required.",
   },

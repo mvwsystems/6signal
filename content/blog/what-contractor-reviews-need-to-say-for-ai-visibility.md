@@ -498,7 +498,7 @@ Reviews are the trust layer of a bigger system — see how they connect to the p
 
 ## Want to know what your reviews are telling AI?
 
-Book a 6Signal Visibility Audit.
+Get the AI Visibility Audit.
 
 We'll analyze your review profile, service signals, local relevance, and AI visibility to show where your company is clear — and where competitors are easier to understand.
 

@@ -264,9 +264,9 @@ function StrategyBriefInner() {
           {error === "no_audit" && (
             <div className="ar-error-block">
               <span className="idx">Missing Data</span>
-              <h1 className="display ar-error-h1">We couldn&rsquo;t find your audit brief.</h1>
+              <h1 className="display ar-error-h1">We couldn&rsquo;t find your audit.</h1>
               <p className="ar-error-body">Your audit is required to generate the strategy document. Start with the AI Visibility Audit first.</p>
-              <Link href="/visibility-check" className="btn btn-primary">Get the Audit Brief — $27 →</Link>
+              <Link href="/visibility-check" className="btn btn-primary">Get the AI Visibility Audit — $27 →</Link>
             </div>
           )}
           {typeof error === "string" && error !== "no_audit" && (

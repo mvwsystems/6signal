@@ -259,9 +259,9 @@ export default function ResearchIndexPage() {
               <em>stands right now.</em>
             </h2>
             <p className="blog-cta-deck">
-              The Visibility Audit runs your company through all six layers —
-              AI recommendations, Maps, answer engines, voice, indexing, and
-              directories. Thirty minutes. Yours to keep.
+              The AI Visibility Audit runs your company through all six layers —
+              AI recommendations, buyer prompts, answer engines, indexing, local
+              entity data, and voice. Instant. $27. Yours to keep.
             </p>
             <AuditPopupButton className="btn btn-primary btn-lg">
               Get the AI Visibility Audit

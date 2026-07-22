@@ -321,7 +321,7 @@ export default function MethodPage() {
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>
           </AuditPopupButton>
-          <div className="sub">Free · 30 minutes · One company per market</div>
+          <div className="sub">Instant results · $27 · One company per market</div>
         </div>
       </section>
 
@@ -404,8 +404,8 @@ export default function MethodPage() {
             </div>
             <div className="right">
               The work is sequential: understand the gap before building the fix.
-              Every engagement starts with a full six-layer read — live, on the first
-              call. Nothing gets signed before you&rsquo;ve seen the results.
+              Every engagement starts with the full six-layer read — instant,
+              self-serve, $27. Nothing gets signed before you&rsquo;ve seen the results.
             </div>
           </div>
 
@@ -447,11 +447,11 @@ export default function MethodPage() {
             <em>before your next caller does.</em>
           </h2>
           <p className="f-deck">
-            Thirty minutes on a video call. We run your company through all six
-            layers — live, on screen, with you watching. You see what AI tools,
-            Maps, answer engines, and voice search understand about your company
-            right now. You leave with a ranked priority list and a full six-layer
-            read — yours regardless of what you decide next.
+            Your $27 audit runs your company through all six layers — instantly,
+            no call required. You see what AI tools, Maps, answer engines, and
+            voice search understand about your company right now. You leave with
+            a ranked priority list and a full six-layer read — yours regardless
+            of what you decide next.
           </p>
           <div className="f-cta">
             <AuditPopupButton className="btn btn-primary btn-lg">

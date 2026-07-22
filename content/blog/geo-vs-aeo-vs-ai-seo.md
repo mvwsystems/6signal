@@ -449,7 +449,7 @@ Since this piece was written, Google published official guidance on AI features 
 
 ## Want to know where your company stands?
 
-Book a 6Signal Visibility Audit.
+Get the AI Visibility Audit.
 
 We'll show you where your company appears across search, AI answers, Maps, directories, and voice — and where competitors are easier to surface.
 

@@ -578,7 +578,7 @@ For why the question format itself is winning — buyers asking machines full se
 
 ## Want to know which question clusters your company is missing?
 
-Book a 6Signal Visibility Audit.
+Get the AI Visibility Audit.
 
 We'll show you which buyer questions competitors are answering, where your site is thin, and which question clusters should be built first.
 

@@ -259,7 +259,7 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const userPrompt = `Run a full 6Signal AI Visibility Intelligence Audit on this business:
+  const userPrompt = `Run a full 6Signal AI Visibility Audit on this business:
 
 Business Name: ${name}
 Website URL: ${url}

@@ -648,7 +648,7 @@ Service page rebuilds land in weeks 7–8 of the sequence we run for clients —
 
 ## Want to know which service pages are costing you visibility?
 
-Book a 6Signal Visibility Audit.
+Get the AI Visibility Audit.
 
 We'll show you which pages are thin, which buyer questions are unanswered, which service signals are unclear, and what should be fixed first.
 

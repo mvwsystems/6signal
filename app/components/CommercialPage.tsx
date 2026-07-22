@@ -422,7 +422,7 @@ export default function CommercialPage() {
               </span>
             </p>
             <p>
-              We run the same read for your top local competitors. Your brief
+              We run the same read for your top local competitors. Your audit
               shows exactly what buyers find about them —{" "}
               <span className="dim">
                 where they&rsquo;re better structured than you, and where the

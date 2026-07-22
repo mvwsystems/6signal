@@ -8,7 +8,7 @@ const LOADING_MSGS = [
   "Analyzing AI citation landscape...",
   "Scoring 6-signal framework...",
   "Identifying content gaps...",
-  "Building intelligence brief...",
+  "Building your audit...",
 ];
 
 type Step = "form" | "loading-audit" | "audit-ready" | "loading-strategy" | "strategy-ready" | "error";
@@ -253,7 +253,7 @@ export default function PreviewFunnelPage() {
                   onChange={e => setForm(p => ({ ...p, competitors: e.target.value }))}
                 />
               </div>
-              <button style={s.btn} type="submit">Generate Audit Brief →</button>
+              <button style={s.btn} type="submit">Generate Audit →</button>
             </form>
           </>
         )}
@@ -272,7 +272,7 @@ export default function PreviewFunnelPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
             <div style={s.center}>
               <div style={s.successIcon}>✓</div>
-              <h2 style={s.successTitle}>Audit Brief ready.</h2>
+              <h2 style={s.successTitle}>Audit ready.</h2>
               <p style={s.successSub}>This is what your customer sees after paying $27. Click below to view the full 8-slide deck — exactly as they would.</p>
               <div style={s.btnRow}>
                 <button style={s.btn} onClick={() => router.push("/audit-results")}>
