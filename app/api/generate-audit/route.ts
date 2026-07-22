@@ -269,7 +269,7 @@ ${competitors ? `Known Competitors: ${competitors}` : ""}
 
 ${evidence ? evidenceForPrompt(evidence) : ""}
 
-Produce the complete intelligence brief JSON now. Be specific, deep, and strategic. Reference this business by name throughout.`;
+Produce the complete audit JSON now. Be specific, deep, and strategic. Reference this business by name throughout.`;
 
   const enc = new TextEncoder();
 

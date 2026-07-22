@@ -96,21 +96,21 @@ const whyRows = [
 const howWeWork = [
   {
     num: "01",
-    phase: "Pre-audit",
-    title: "Six-layer read — before the call",
-    body: "We run your company through all six layers before the readout: AI tools, answer engines, Maps, voice, index structure, and local entity data. You don't need to attend this part. The 30 minutes with you is spent on findings.",
+    phase: "Audit",
+    title: "Six-layer read — instant, no call",
+    body: "Your $27 audit runs your company through all six layers automatically: AI tools, answer engines, Maps, voice, index structure, and local entity data. It generates in under 60 seconds — nothing for you to attend, nothing to schedule.",
   },
   {
     num: "02",
     phase: "Check",
     title: "Market conflict check",
-    body: "We verify that your trade and city are open. We do not work with direct competitors in the same market. If we're already working with a roofer in your city, you'll know in the first few minutes — and you still get the full read.",
+    body: "We verify that your trade and city are open. We do not work with direct competitors in the same market. If we're already working with a roofer in your city, we'll tell you — and you still get the full read.",
   },
   {
     num: "03",
     phase: "Compare",
     title: "Same read for your local competitors",
-    body: "The pre-audit covers your top local competitors too. During the readout, you see who's on the shortlist in your market, which layers they've worked, and where the widest gap is.",
+    body: "The audit covers your top local competitors too. You see who's on the shortlist in your market, which layers they've worked, and where the widest gap is.",
   },
   {
     num: "04",
@@ -157,7 +157,7 @@ export default function MethodPage() {
             </p>
             <div className="hero-cta-row reveal">
               <AuditPopupButton className="btn btn-primary btn-lg">
-                Get the AI Visibility Brief
+                Get the AI Visibility Audit
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
@@ -316,7 +316,7 @@ export default function MethodPage() {
             <em>The audit tells you whether your name is in it.</em>
           </h3>
           <AuditPopupButton className="btn btn-primary">
-            Get the AI Visibility Brief
+            Get the AI Visibility Audit
             <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>
@@ -385,7 +385,7 @@ export default function MethodPage() {
               practitioner focused exclusively on how AI and search systems form
               local shortlists for residential service businesses. One operator per
               account. No account managers, no junior staff on your work. The person
-              on the audit call is the person running your account.
+              on the Strategy Call is the person running your account.
             </p>
           </div>
         </div>
@@ -440,7 +440,7 @@ export default function MethodPage() {
       {/* FINAL CTA */}
       <section className="final" id="book">
         <div className="wrap">
-          <div className="f-eyebrow">Get the AI Visibility Brief</div>
+          <div className="f-eyebrow">Get the AI Visibility Audit</div>
           <h2 className="display">
             See what the machines<br />
             say about your company<br />
@@ -455,14 +455,14 @@ export default function MethodPage() {
           </p>
           <div className="f-cta">
             <AuditPopupButton className="btn btn-primary btn-lg">
-              Get the AI Visibility Brief
+              Get the AI Visibility Audit
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
             </AuditPopupButton>
           </div>
           <div className="f-notes">
-            <span>AI Visibility Brief — $27</span>
+            <span>AI Visibility Audit — $27</span>
             <span>Instant results</span>
             <span>No commitment required</span>
             <span>One company per market</span>

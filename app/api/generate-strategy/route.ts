@@ -8,7 +8,7 @@ export const maxDuration = 300;
 const MODEL = "claude-haiku-4-5-20251001";
 const PROMPT_VERSION = "2.0.0";
 
-const SYSTEM_PROMPT = `You are a senior AI visibility strategist at 6Signal. A contractor or local service business has just received their AI Visibility Intelligence Brief (a scored assessment across 6 signals: GEO, AEO, LEO, VEO, PEO, IEO). Now you are writing their Full Strategy Brief — the implementation document they will actually hand to a developer and a writer to execute.
+const SYSTEM_PROMPT = `You are a senior AI visibility strategist at 6Signal. A contractor or local service business has just received their AI Visibility Audit (a scored assessment across 6 signals: GEO, AEO, LEO, VEO, PEO, IEO). Now you are writing their Strategy Brief — the implementation document they will actually hand to a developer and a writer to execute.
 
 This is a paid deliverable. It must be specific, actionable, and detailed enough that someone could start executing it tomorrow without additional guidance.
 
@@ -151,12 +151,12 @@ export async function POST(req: NextRequest) {
     promptVersion: PROMPT_VERSION,
   });
 
-  const userPrompt = `Here is the full AI Visibility Intelligence Brief for this business. Use every detail in it to write their Full Strategy Brief now.
+  const userPrompt = `Here is the full AI Visibility Audit for this business. Use every detail in it to write their Strategy Brief now.
 
 AUDIT DATA:
 ${JSON.stringify(audit, null, 2)}
 
-Write the complete Full Strategy Brief JSON. Every recommendation must be specific to ${auditData.business?.name}, their ${auditData.business?.trade} trade, and the ${auditData.business?.city} market.`;
+Write the complete Strategy Brief JSON. Every recommendation must be specific to ${auditData.business?.name}, their ${auditData.business?.trade} trade, and the ${auditData.business?.city} market.`;
 
   const enc = new TextEncoder();
 

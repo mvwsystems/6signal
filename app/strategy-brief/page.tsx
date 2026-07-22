@@ -67,7 +67,7 @@ interface Strategy {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const LOADING_MSGS = [
-  "Reading your audit brief...",
+  "Reading your audit...",
   "Building content architecture...",
   "Writing signal action plans...",
   "Mapping schema requirements...",
@@ -265,7 +265,7 @@ function StrategyBriefInner() {
             <div className="ar-error-block">
               <span className="idx">Missing Data</span>
               <h1 className="display ar-error-h1">We couldn&rsquo;t find your audit brief.</h1>
-              <p className="ar-error-body">Your audit brief is required to generate the strategy document. Start with the AI Visibility Brief first.</p>
+              <p className="ar-error-body">Your audit is required to generate the strategy document. Start with the AI Visibility Audit first.</p>
               <Link href="/visibility-check" className="btn btn-primary">Get the Audit Brief — $27 →</Link>
             </div>
           )}
@@ -306,7 +306,7 @@ function StrategyBriefInner() {
           {/* ─── SECTION 1: HEADER ─────────────────────────────────── */}
           <header className="sb-cover rule">
             <div className="sb-cover-inner">
-              <span className="idx sb-cover-eyebrow">Full Strategy Brief</span>
+              <span className="idx sb-cover-eyebrow">Strategy Brief</span>
               <h1 className="display sb-cover-name">{strategy.business_name}</h1>
               <div className="sb-cover-meta">
                 <span>{strategy.trade}</span>
@@ -325,7 +325,7 @@ function StrategyBriefInner() {
           <div className="sb-positioning-block">
             <div className="sb-positioning-label idx">What This Is</div>
             <p className="sb-positioning-body">
-              Your Intelligence Brief showed you where the gaps are. This Strategy Brief shows you
+              Your AI Visibility Audit showed you where the gaps are. This Strategy Brief shows you
               exactly how to close them — signal by signal, week by week, with specific content specs,
               schema code, and review mechanics you can hand to a developer or execute yourself.
               This is the implementation manual.

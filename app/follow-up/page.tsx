@@ -46,7 +46,7 @@ export default function FollowUpPage() {
             </p>
             <div className="hero-cta-row reveal">
               <a href="/visibility-check" className="btn btn-primary btn-lg">
-                Get the AI Visibility Brief
+                Get the AI Visibility Audit
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
@@ -170,14 +170,13 @@ export default function FollowUpPage() {
             to slow response times.
           </h2>
           <p className="f-deck">
-            Start with the AI Visibility Brief. We run the six-layer analysis before
-            the retainer conversation — if the follow-up layer is a fit alongside the retainer,
-            we&rsquo;ll walk through what that looks like after you&rsquo;ve seen the
-            full read.
+            Start with the $27 AI Visibility Audit — instant, no call required. If the
+            follow-up layer is a fit alongside the retainer, that conversation happens
+            on the Strategy Call, after you&rsquo;ve seen the full read.
           </p>
           <div className="f-cta">
             <AuditPopupButton className="btn btn-primary btn-lg">
-              Get the AI Visibility Brief
+              Get the AI Visibility Audit
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>

@@ -105,7 +105,7 @@ export async function sendReportReadyEmail(args: {
   const inner =
     args.kind === "brief"
       ? [
-          monoLabel("AI Visibility Brief · Complete"),
+          monoLabel("AI Visibility Audit · Complete"),
           heading(
             Number.isFinite(args.score as number)
               ? `${name}: ${args.score}/100${args.grade ? ` · Grade ${args.grade}` : ""}`
@@ -113,18 +113,18 @@ export async function sendReportReadyEmail(args: {
           ),
           args.critical ? paragraph(`<strong style="color:#f5f5f3;">${args.critical}</strong>`) : "",
           paragraph(
-            "Your full intelligence brief — all six signals, buyer journey, citation landscape, content gaps, and your 90-day roadmap — is saved at the link below. Open it on any device or download the PDF for your records."
+            "Your full audit — all six signals, buyer journey, citation landscape, content gaps, and your 90-day roadmap — is saved at the link below. Open it on any device or download the PDF for your records."
           ),
-          button("View my brief", args.link),
+          button("View my audit", args.link),
           paragraph(
             `Questions, or want to go deeper? Reply to this email or write <a href="mailto:hello@6signal.co" style="color:#E6FF00;">hello@6signal.co</a>.`
           ),
         ].join("")
       : [
-          monoLabel("Full Strategy Brief · Complete"),
+          monoLabel("Strategy Brief · Complete"),
           heading(`Your 90-day strategy is ready, ${name}.`),
           paragraph(
-            "Signal-by-signal action plans, content architecture with page specs and H1s, copy-paste schema, review mechanics, and a week-by-week 90-day calendar — all built from your brief and saved at the link below."
+            "Signal-by-signal action plans, content architecture with page specs and H1s, copy-paste schema, review mechanics, and a week-by-week 90-day calendar — all built from your audit and saved at the link below."
           ),
           button("Open my strategy brief", args.link),
           paragraph(
@@ -134,7 +134,7 @@ export async function sendReportReadyEmail(args: {
 
   const subject =
     args.kind === "brief"
-      ? `Your 6 Signal brief is ready — ${name}`
+      ? `Your 6 Signal audit is ready — ${name}`
       : `Your 6 Signal strategy brief is ready — ${name}`;
 
   return sendEmail({ to: args.to, subject, html: emailShell(inner) });

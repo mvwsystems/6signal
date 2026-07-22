@@ -211,7 +211,7 @@ export default function CommercialPage() {
 
           <div className="hero-cta-row reveal">
             <AuditPopupButton className="btn btn-primary btn-lg">
-              Get the AI Visibility Brief
+              Get the AI Visibility Audit
               <svg
                 className="arrow"
                 viewBox="0 0 16 10"
@@ -227,7 +227,7 @@ export default function CommercialPage() {
             </a>
           </div>
           <div className="hero-sig reveal">
-            Instant AI Visibility Brief — $27 · No call required · Priority list yours to keep
+            Instant AI Visibility Audit — $27 · No call required · Priority list yours to keep
           </div>
         </div>
       </header>
@@ -318,7 +318,7 @@ export default function CommercialPage() {
             <em>The audit shows whether your company is in those conversations.</em>
           </h3>
           <AuditPopupButton className="btn btn-primary">
-            Get the AI Visibility Brief
+            Get the AI Visibility Audit
             <svg
               className="arrow"
               viewBox="0 0 16 10"
@@ -412,7 +412,7 @@ export default function CommercialPage() {
           <div className="diff-story">
             <div className="caption">What the audit covers</div>
             <p>
-              Your $27 brief runs your company name and primary scope terms
+              Your $27 audit runs your company name and primary scope terms
               through AI tools, search engines, Maps, and commercial
               databases, automatically —{" "}
               <span className="dim">
@@ -664,7 +664,7 @@ export default function CommercialPage() {
             <em>Make sure the systems tell the right story.</em>
           </h2>
           <p className="f-deck">
-            Your $27 brief runs your company through the same research path a
+            Your $27 audit runs your company through the same research path a
             GC, procurement team, or project owner uses when vetting a
             contractor — instantly, no call required. Credibility gaps,
             competitor positioning, and what it would take to fix both. Full
@@ -674,7 +674,7 @@ export default function CommercialPage() {
             <AuditPopupButton
               className="btn btn-primary btn-lg"
             >
-              Get the AI Visibility Brief
+              Get the AI Visibility Audit
               <svg
                 className="arrow"
                 viewBox="0 0 16 10"
@@ -687,7 +687,7 @@ export default function CommercialPage() {
             </AuditPopupButton>
           </div>
           <div className="f-notes">
-            <span>AI Visibility Brief — $27</span>
+            <span>AI Visibility Audit — $27</span>
             <span>Instant results</span>
             <span>No commitment required</span>
             <span>One contractor per market</span>

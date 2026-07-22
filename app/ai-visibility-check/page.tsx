@@ -274,7 +274,7 @@ export default function AIVisibilityCheckPage() {
   const Zone2CTA = () => (
     <div className="lp-cta-pair">
       <Link href="/visibility-check" className="btn btn-primary btn-lg" onClick={handleGoToPaid}>
-        Get My AI Visibility Brief — $27 {ARROW}
+        Get My AI Visibility Audit — $27 {ARROW}
       </Link>
       <a href="#free-check-form" className="btn btn-ghost" onClick={scrollToForm}>
         Check My Business Free →
@@ -443,7 +443,7 @@ export default function AIVisibilityCheckPage() {
                       : `${form.name} does not appear in this answer set.`}
                   </p>
                   <p className="idx avc-ai-disclaimer">
-                    Projection based on current AI recommendation patterns for your trade and market. Engines vary by user and day — the full brief maps where you stand across all of them.
+                    Projection based on current AI recommendation patterns for your trade and market. Engines vary by user and day — the full audit maps where you stand across all of them.
                   </p>
                 </div>
               </div>
@@ -469,7 +469,7 @@ export default function AIVisibilityCheckPage() {
                     : "You're invisible. Here's how to fix it."}
                 </h3>
                 <p className="avc-upsell-body">
-                  This check shows the surface. Your AI Visibility Intelligence Brief goes six
+                  This check shows the surface. Your AI Visibility Audit goes six
                   layers deep — buyer journey mapping, citation landscape, content gap analysis,
                   and a prioritized 90-day roadmap specific to {form.trade} businesses in {form.city}.
                 </p>
@@ -481,7 +481,7 @@ export default function AIVisibilityCheckPage() {
                       className="btn btn-primary btn-lg avc-upsell-btn"
                       onClick={handleGoToPaid}
                     >
-                      Get My Full AI Visibility Brief — $27 {ARROW}
+                      Get My AI Visibility Audit — $27 {ARROW}
                     </Link>
                     <p className="idx avc-upsell-opt-note">
                       Your business details carry forward — no re-entry needed.

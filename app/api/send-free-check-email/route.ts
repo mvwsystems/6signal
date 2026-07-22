@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
       findings ? monoLabel("What we observed") : "",
       findings,
       paragraph(
-        "The full AI Visibility Brief maps your buyer's journey, scores all six signals, and gives you a prioritized 90-day roadmap — specific to your business, trade, and market."
+        "The full AI Visibility Audit maps your buyer's journey, scores all six signals, and gives you a prioritized 90-day roadmap — specific to your business, trade, and market."
       ),
       button("Get the full brief — $27", "https://6signal.co/visibility-check"),
     ].join("")

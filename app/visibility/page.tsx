@@ -76,12 +76,13 @@ export default function VisibilityPage() {
             </h1>
             <p className="hero-deck reveal">
               Most contractors are invisible in at least three of the six channels
-              homeowners now check before they call anyone. The audit shows you exactly
-              where — live, across all six layers, before anything gets signed.
+              homeowners now check before they call anyone. The $27 audit shows you
+              exactly where — instantly, across all six layers, before you spend a
+              dollar more.
             </p>
             <div className="hero-cta-row reveal">
               <a href="/visibility-check" className="btn btn-primary btn-lg">
-                Get the AI Visibility Brief
+                Get the AI Visibility Audit
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
@@ -89,7 +90,7 @@ export default function VisibilityPage() {
               <a href="/#framework" className="btn btn-ghost btn-lg">See the framework</a>
             </div>
             <div className="hero-sig reveal">
-              Six-layer pre-audit · 30-minute readout · Market conflict check · Priority list yours to keep
+              Instant AI Visibility Audit — $27 · No call required · Priority list yours to keep
             </div>
           </div>
         </div>
@@ -141,7 +142,7 @@ export default function VisibilityPage() {
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>
           </a>
-          <div className="sub">Pre-audit included · 30-minute readout · One company per market</div>
+          <div className="sub">Instant results · No call required · One company per market</div>
         </div>
       </section>
 
@@ -186,11 +187,11 @@ export default function VisibilityPage() {
             <em>Find out if one of them is yours.</em>
           </h2>
           <p className="f-deck">
-            Thirty-minute call. We run your company through all six layers — live. You see
-            what a homeowner sees when they search for a contractor in your trade and city.
-            We show you where competitors are filling your gap, and what it would take to
-            close it. One contractor per market. If yours is already taken, you&rsquo;ll
-            know in thirty seconds — and you keep the full read either way.
+            Your $27 audit runs your company through all six layers — instantly, no call
+            required. You see what a homeowner sees when they search for a contractor in
+            your trade and city, where competitors are filling your gap, and what it would
+            take to close it. One contractor per market. If yours is already taken,
+            we&rsquo;ll tell you — and you keep the full read either way.
           </p>
           <div className="f-cta">
             <AuditPopupButton className="btn btn-primary btn-lg">
@@ -201,7 +202,7 @@ export default function VisibilityPage() {
             </AuditPopupButton>
           </div>
           <div className="f-notes">
-            <span>AI Visibility Brief — $27</span>
+            <span>AI Visibility Audit — $27</span>
             <span>Instant results</span>
             <span>No commitment required</span>
             <span>One client per market</span>

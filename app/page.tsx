@@ -56,13 +56,13 @@ const auditSteps = [
     num: "01",
     phase: "Pre-audit",
     title: "Where you show up — and where you don't",
-    body: "Your $27 brief runs your company through all six layers automatically — AI tools, Maps, voice, answer engines, directories, and local entity data. You see exactly where you appear and where you're invisible. No call required.",
+    body: "Your $27 audit runs your company through all six layers automatically — AI tools, Maps, voice, answer engines, directories, and local entity data. You see exactly where you appear and where you're invisible. No call required.",
   },
   {
     num: "02",
     phase: "Compete",
     title: "Where competitors show up instead",
-    body: "We run the same six-layer read for your top local competitors. Your brief shows who occupies the shortlist in your market, which layers they've covered, and where the gap is widest.",
+    body: "We run the same six-layer read for your top local competitors. Your audit shows who occupies the shortlist in your market, which layers they've covered, and where the gap is widest.",
   },
   {
     num: "03",
@@ -118,7 +118,7 @@ const faqs = [
   },
   {
     q: "Do you work with every trade?",
-    a: "We work with residential service contractors — roofers, plumbers, HVAC companies, electricians, remodelers, garage door companies, landscapers, pest control, foundation contractors, and others. If your business serves homeowners locally and the phone call is the goal, the six-layer framework applies. If it's not a fit, your brief will make that clear.",
+    a: "We work with residential service contractors — roofers, plumbers, HVAC companies, electricians, remodelers, garage door companies, landscapers, pest control, foundation contractors, and others. If your business serves homeowners locally and the phone call is the goal, the six-layer framework applies. If it's not a fit, your audit will make that clear.",
   },
   {
     q: "What if I already have an SEO company?",
@@ -171,14 +171,14 @@ export default function Home() {
 
           <div className="hero-cta-row reveal">
             <AuditPopupButton className="btn btn-primary btn-lg">
-              Get the AI Visibility Brief
+              Get the AI Visibility Audit
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
             </AuditPopupButton>
             <a href="#framework" className="btn btn-ghost btn-lg">See how it works</a>
           </div>
-          <div className="hero-sig reveal">Instant AI Visibility Brief — $27 · No call required · Priority list yours to keep</div>
+          <div className="hero-sig reveal">Instant AI Visibility Audit — $27 · No call required · Priority list yours to keep</div>
 
           <div className="trust-strip reveal">
             <div className="label">We work inside —</div>
@@ -372,7 +372,7 @@ export default function Home() {
               </h2>
             </div>
             <div className="right">
-              Your $27 AI Visibility Brief runs the six-layer read automatically — your
+              Your $27 AI Visibility Audit runs the six-layer read automatically — your
               company, your competitors, your market, layer by layer. No slides, no call,
               no waiting on a calendar. The full findings are yours the moment you buy it.
             </div>
@@ -462,7 +462,7 @@ export default function Home() {
             <em>Find out if your name is on it.</em>
           </h3>
           <AuditPopupButton className="btn btn-primary">
-            Get the AI Visibility Brief
+            Get the AI Visibility Audit
             <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>
@@ -602,7 +602,7 @@ export default function Home() {
             </div>
             <div className="p-cta">
               <AuditPopupButton className="btn btn-primary btn-lg">
-                Get My AI Visibility Brief — $27
+                Get My AI Visibility Audit — $27
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
@@ -630,11 +630,11 @@ export default function Home() {
                 undo the work. The exclusivity makes the engagement meaningful.
               </p>
               <p className="italic" style={{ marginTop: "20px" }}>
-                Start with the $27 AI Visibility Brief — instant, no call required. If your
+                Start with the $27 AI Visibility Audit — instant, no call required. If your
                 market&rsquo;s open and the Sprint looks like a fit once you&rsquo;ve seen
                 your results, it gets discussed on the paid Strategy Call, not before. If
                 your market&rsquo;s already taken, we&rsquo;ll tell you — and you keep the
-                full brief either way.
+                full audit either way.
               </p>
             </div>
 
@@ -707,8 +707,8 @@ export default function Home() {
           <div className="process-steps">
             <div className="process-step">
               <span className="process-step-num">01 — Instant</span>
-              <h3>Get your $27 AI Visibility Brief</h3>
-              <p>Answer a few questions about your business — trade, service area, website, competitors. Your six-layer brief generates in under 60 seconds. No call, no waiting.</p>
+              <h3>Get your $27 AI Visibility Audit</h3>
+              <p>Answer a few questions about your business — trade, service area, website, competitors. Your six-layer audit generates in under 60 seconds. No call, no waiting.</p>
             </div>
             <div className="process-step">
               <span className="process-step-num">02 — Optional</span>
@@ -736,7 +736,7 @@ export default function Home() {
       {/* §11 FINAL CTA */}
       <section className="final" id="book">
         <div className="wrap">
-          <div className="f-eyebrow">Get the AI Visibility Brief</div>
+          <div className="f-eyebrow">Get the AI Visibility Audit</div>
           <h2 className="display">
             See what AI says<br />
             about your company<br />
@@ -744,20 +744,20 @@ export default function Home() {
           </h2>
           <p className="f-deck">
             Answer a few questions, pay $27, get your six-layer AI Visibility
-            Brief instantly — specific to your company, your competitors, and
+            Audit instantly — specific to your company, your competitors, and
             your market. No call, no waiting on a calendar. The findings and
             priority list are yours to keep.
           </p>
           <div className="f-cta">
             <AuditPopupButton className="btn btn-primary btn-lg">
-              Get the AI Visibility Brief
+              Get the AI Visibility Audit
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
             </AuditPopupButton>
           </div>
           <div className="f-notes">
-            <span>AI Visibility Brief — $27</span>
+            <span>AI Visibility Audit — $27</span>
             <span>Six-layer analysis</span>
             <span>Instant results</span>
             <span>Priority list yours to keep</span>

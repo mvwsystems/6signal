@@ -87,7 +87,7 @@ export default function TradePage({ data }: TradePageProps) {
 
           <div className="hero-cta-row reveal">
             <AuditPopupButton className="btn btn-primary btn-lg">
-              Get the AI Visibility Brief
+              Get the AI Visibility Audit
               <svg
                 className="arrow"
                 viewBox="0 0 16 10"
@@ -103,7 +103,7 @@ export default function TradePage({ data }: TradePageProps) {
             </a>
           </div>
           <div className="hero-sig reveal">
-            Instant AI Visibility Brief — $27 · No call required · Priority list yours to keep
+            Instant AI Visibility Audit — $27 · No call required · Priority list yours to keep
           </div>
         </div>
       </header>
@@ -252,7 +252,7 @@ export default function TradePage({ data }: TradePageProps) {
               Get the audit
             </div>
             <div className="e-body">
-              Your $27 brief runs the six-layer read automatically — gap by gap,
+              Your $27 audit runs the six-layer read automatically — gap by gap,
               layer by layer — so you see exactly what exists before you spend a
               dollar more. No call, no waiting. Full findings are yours to keep
               whether or not you continue.
@@ -261,8 +261,8 @@ export default function TradePage({ data }: TradePageProps) {
           <div className="safety-note" style={{ marginTop: "40px" }}>
             <span className="safety-note-label">How the audit works</span>
             <p>
-              <strong>Your <Link href="/audit" className="dim" style={{ textDecoration: "underline" }}>six-layer read</Link> runs instantly, no call required.</strong> If
-              you want to go further, a $97 brief turns it into an action plan,
+              <strong>Your <Link href="/visibility-check" className="dim" style={{ textDecoration: "underline" }}>six-layer read</Link> runs instantly, no call required.</strong> If
+              you want to go further, a $97 Strategy Brief turns it into an action plan,
               and a paid $197 call with Matt Vincent Walker walks through it live.
               If there&rsquo;s a fit for the retainer, we&rsquo;ll say so once. If
               it&rsquo;s not a fit, we&rsquo;ll say that first.{" "}
@@ -312,7 +312,7 @@ export default function TradePage({ data }: TradePageProps) {
               <AuditPopupButton
                 className="btn btn-primary btn-lg"
               >
-                Get My AI Visibility Brief — $27
+                Get My AI Visibility Audit — $27
                 <svg
                   className="arrow"
                   viewBox="0 0 16 10"
@@ -340,7 +340,7 @@ export default function TradePage({ data }: TradePageProps) {
                 second client in your market.
               </p>
               <p className="italic" style={{ marginTop: "20px" }}>
-                Start with the $27 AI Visibility Brief — instant, no call
+                Start with the $27 AI Visibility Audit — instant, no call
                 required. If your market&rsquo;s open and the Sprint looks like
                 a fit, it gets discussed on the paid Strategy Call, not before.
                 If it&rsquo;s already taken, we&rsquo;ll tell you — and you keep
@@ -412,7 +412,7 @@ export default function TradePage({ data }: TradePageProps) {
             )}
           </h2>
           <p className="f-deck">
-            Your $27 brief runs the six-layer read instantly — where{" "}
+            Your $27 audit runs the six-layer read instantly — where{" "}
             {data.tradePlural.toLowerCase()} in your market appear, where you
             get skipped, and what your competitors look like in the same read.
             No call, no waiting. If your market is already taken, we&rsquo;ll
@@ -435,7 +435,7 @@ export default function TradePage({ data }: TradePageProps) {
             </AuditPopupButton>
           </div>
           <div className="f-notes">
-            <span>AI Visibility Brief — $27</span>
+            <span>AI Visibility Audit — $27</span>
             <span>Instant results</span>
             <span>No commitment required</span>
             <span>One client per market</span>

@@ -20,6 +20,13 @@ const nextConfig = {
         destination: "/capabilities",
         permanent: true,
       },
+      {
+        // The old audit explainer described a free-call flow that no longer
+        // exists; the $27 self-serve page is the real front door now.
+        source: "/audit",
+        destination: "/visibility-check",
+        permanent: true,
+      },
     ];
   },
 };

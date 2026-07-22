@@ -57,9 +57,9 @@ sections remain authoritative; its six-signal list and "free 30-minute audit" en
 
 ```
 Free check (/ai-visibility-check)  — simulated AI answer + email capture (email send: TODO, not built)
-  → $27  AI Visibility Brief       (/visibility-check → Stripe → /audit-results)
-  → $97  Full Strategy Brief       (upsell on /audit-results → Stripe → /strategy-brief)
-  → $197 1-Hour Strategy Call      (Calendly; includes the Strategy Brief free)
+  → $27  AI Visibility Audit       (/visibility-check → Stripe → /audit-results)
+  → $97  Strategy Brief            (upsell on /audit-results → Stripe → /strategy-brief)
+  → $197 Strategy Call             (Stripe → Calendly; includes the Strategy Brief free)
   → $1,250/month retainer          (90-day minimum, one contractor per market per trade)
 ```
 
@@ -151,7 +151,11 @@ regenerates the brief on any device. Completed briefs also get a permalink
   `TradePage`. Blog post = `content/blog/[slug].mdx` with frontmatter (see
   [CODEBASE_CONTEXT.md](CODEBASE_CONTEXT.md) for fields); MDX heading anchors must use
   `<h2 id="...">` HTML, not `{#anchor}`.
-- CTA copy for the funnel era: "Get the audit" / "Get My AI Visibility Brief — $27". (The brand
+- CTA copy for the funnel era: "Get the audit" / "Get My AI Visibility Audit — $27". Canonical
+  tier names (locked 2026-07-21): $27 = "AI Visibility Audit", $97 = "Strategy Brief",
+  $197 = "Strategy Call". Never call the $27 product a "brief" — the two-brief naming collision
+  was deliberately eliminated. The funnel is fully self-serve until the paid $197 call; never
+  write copy promising a free call, intake→readout flow, or "priced on your call". (The brand
   brief's "Book the Visibility Audit" rules predate the $27 self-serve funnel.)
 - JSON-LD: Person + Organization in root layout; trade pages add BreadcrumbList/Service/FAQPage.
 - Author byline: always "Matt Vincent Walker".

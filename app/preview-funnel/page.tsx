@@ -263,7 +263,7 @@ export default function PreviewFunnelPage() {
           <div style={s.center}>
             <div style={s.loadDot} />
             <p style={s.loadMsg}>{loadingMsg}</p>
-            <p style={{ fontSize: 12, color: "#3a3a3a" }}>Generating the $27 AI Visibility Brief...</p>
+            <p style={{ fontSize: 12, color: "#3a3a3a" }}>Generating the $27 AI Visibility Audit...</p>
           </div>
         )}
 
@@ -276,7 +276,7 @@ export default function PreviewFunnelPage() {
               <p style={s.successSub}>This is what your customer sees after paying $27. Click below to view the full 8-slide deck — exactly as they would.</p>
               <div style={s.btnRow}>
                 <button style={s.btn} onClick={() => router.push("/audit-results")}>
-                  View the $27 Brief →
+                  View the $27 Audit →
                 </button>
                 <button style={{ ...s.btnGhost }} onClick={() => window.open("/audit-results", "_blank")}>
                   Open in new tab
@@ -324,7 +324,7 @@ export default function PreviewFunnelPage() {
             <div style={{ ...s.upsellBox, borderTopColor: "#6b6b78" }}>
               <span style={{ ...s.upsellTag, color: "#555553" }}>Final step in funnel</span>
               <h3 style={s.upsellTitle}>$197 Strategy Call</h3>
-              <p style={s.upsellDesc}>Customers are prompted to book a 30-minute call with you via Calendly. That's the only step that requires your time.</p>
+              <p style={s.upsellDesc}>Customers pay $197 via Stripe, then book the 1-hour Strategy Call via Calendly. That's the only step that requires your time.</p>
               <div style={s.btnRow}>
                 <button style={s.btn} onClick={() => setStep("form")}>Preview a different business →</button>
               </div>

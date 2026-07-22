@@ -47,7 +47,7 @@ export default function ContactPage() {
               <em>your market.</em>
             </h1>
             <p className="hero-deck reveal">
-              Get the AI Visibility Brief or send a message. Straight answers — no pitch,
+              Get the AI Visibility Audit or send a message. Straight answers — no pitch,
               no pressure, no follow-up chase if it&rsquo;s not the right fit.
             </p>
           </div>
@@ -62,16 +62,16 @@ export default function ContactPage() {
             <div className="contact-left">
               <h2 className="display">
                 The fastest way<br />
-                <em>is a call.</em>
+                <em>is the audit.</em>
               </h2>
               <p className="contact-deck">
-                Thirty minutes on a call does more than a week of email back-and-forth.
-                We run the pre-audit before the call, then walk through the findings with
-                you live — layer by layer. You leave with the full read regardless of
-                what you decide.
+                The $27 AI Visibility Audit answers more than a week of email
+                back-and-forth. It runs your company through all six layers instantly —
+                no call, no waiting on a calendar. The full read and priority list are
+                yours regardless of what you decide next.
               </p>
               <AuditPopupButton className="btn btn-primary btn-lg" style={{ marginBottom: "48px" }}>
-                Get the AI Visibility Brief
+                Get the AI Visibility Audit
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
@@ -100,22 +100,22 @@ export default function ContactPage() {
                 <div className="contact-step">
                   <div className="contact-step-num">01</div>
                   <div className="contact-step-body">
-                    <strong>Complete the intake</strong>
-                    Tell us your trade, service area, and top competitors. Takes a few minutes — the scheduling link appears right after.
+                    <strong>Get the $27 AI Visibility Audit</strong>
+                    Tell us your trade, service area, and top competitors. Your six-layer audit generates instantly — no call, no waiting.
                   </div>
                 </div>
                 <div className="contact-step">
                   <div className="contact-step-num">02</div>
                   <div className="contact-step-body">
-                    <strong>Pre-audit</strong>
-                    Before the call, we run your company through all six visibility layers. Your top competitors get the same read.
+                    <strong>Go deeper with the $97 Strategy Brief</strong>
+                    Optional. Turns your gaps into a specific implementation plan — still instant, still self-serve.
                   </div>
                 </div>
                 <div className="contact-step">
                   <div className="contact-step-num">03</div>
                   <div className="contact-step-body">
-                    <strong>Readout</strong>
-                    30 minutes on video. We walk through the findings — layer by layer, gap by gap. Full priority list is yours to keep regardless of what you decide.
+                    <strong>Book the $197 Strategy Call</strong>
+                    For serious buyers: one hour live with Matt Vincent Walker, walking through your results in detail.
                   </div>
                 </div>
               </div>
@@ -128,10 +128,10 @@ export default function ContactPage() {
                   <h3>Got it. We&rsquo;ll be in touch.</h3>
                   <p>
                     Expect a response within a few hours. In the meantime, you can also{" "}
-                    <a href="/audit" style={{ color: "#f5f5f3" }}>
-                      complete the intake
+                    <a href="/visibility-check" style={{ color: "#f5f5f3" }}>
+                      get your $27 AI Visibility Audit
                     </a>
-                    {" "}and schedule your readout.
+                    {" "}— it generates instantly.
                   </p>
                 </div>
               ) : (

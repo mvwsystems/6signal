@@ -73,7 +73,7 @@ const LOADING_MSGS = [
   "Analyzing AI citation landscape...",
   "Scoring 6-signal framework...",
   "Identifying content gaps...",
-  "Building your intelligence brief...",
+  "Building your audit...",
 ];
 
 const gradeColor = (g: string) =>
@@ -97,7 +97,7 @@ function SlideCover({ a }: { a: AuditData }) {
 
   return (
     <div className="ar-slide-inner">
-      <span className="ar-slide-label">Visibility Intelligence Brief</span>
+      <span className="ar-slide-label">AI Visibility Audit</span>
       <h2 className="ar-cover-name">{a.business.name}</h2>
       <div className="ar-cover-rule" />
       <p className="ar-cover-context">{a.business.market_context}</p>
@@ -341,9 +341,9 @@ function SlideClose({ a }: { a: AuditData }) {
           {/* Card 1 — What you have */}
           <div className="ar-upgrade-card ar-upgrade-card--subdued">
             <div className="ar-upgrade-tag">What You Have</div>
-            <div className="ar-upgrade-title">AI Visibility Brief</div>
+            <div className="ar-upgrade-title">AI Visibility Audit</div>
             <p className="ar-upgrade-body ar-upgrade-body--muted">
-              The complete intelligence brief you&rsquo;re reading now — all 6 signals diagnosed,
+              The complete audit you&rsquo;re reading now — all 6 signals diagnosed,
               buyer journey mapped, citation landscape and content gaps identified.
             </p>
             <div className="ar-upgrade-price ar-upgrade-price--muted">$27 — complete</div>
@@ -353,9 +353,9 @@ function SlideClose({ a }: { a: AuditData }) {
           {/* Card 2 — Strategy Brief (featured) */}
           <div className="ar-upgrade-card ar-upgrade-card--featured">
             <div className="ar-upgrade-tag ar-upgrade-tag--accent">Recommended Next Step</div>
-            <div className="ar-upgrade-title ar-upgrade-title--lg">Full Strategy Brief</div>
+            <div className="ar-upgrade-title ar-upgrade-title--lg">Strategy Brief</div>
             <p className="ar-upgrade-body">
-              Every gap in your brief becomes an exact implementation plan. Signal-by-signal
+              Every gap in your audit becomes an exact implementation plan. Signal-by-signal
               action plans with weekly tasks, content architecture with specific page specs and
               H1s, schema code ready to deploy, review velocity strategy, and a week-by-week
               90-day calendar.
@@ -384,7 +384,7 @@ function SlideClose({ a }: { a: AuditData }) {
             <div className="ar-upgrade-tag">Fastest Path to Results</div>
             <div className="ar-upgrade-title">1-Hour Strategy Call</div>
             <p className="ar-upgrade-body ar-upgrade-body--muted">
-              Walk through your brief live with Matt Vincent Walker. Pressure-test the roadmap.
+              Walk through your audit live with Matt Vincent Walker. Pressure-test the roadmap.
               Leave with a clear execution decision — and the option to engage 6Signal&rsquo;s
               retainer directly.
             </p>
@@ -561,7 +561,7 @@ function AuditResultsInner() {
         setAudit(auditData);
         localStorage.setItem("6sig_audit_result", JSON.stringify(auditData));
       } catch {
-        setError("Something went wrong generating your brief. Please contact hello@6signal.co.");
+        setError("Something went wrong generating your audit. Please contact hello@6signal.co.");
       } finally {
         clearInterval(interval);
         setLoading(false);
@@ -607,7 +607,7 @@ function AuditResultsInner() {
           <div className="ar-loading-block">
             <div className="ar-loading-dot" />
             <p className="ar-loading-msg">{loadingMsg}</p>
-            <p className="ar-loading-sub">Generating your AI Visibility Intelligence Brief...</p>
+            <p className="ar-loading-sub">Generating your AI Visibility Audit...</p>
           </div>
         </div>
       </div>
@@ -646,7 +646,7 @@ function AuditResultsInner() {
           {/* ── Deck header ── */}
           <div className="ar-deck-header">
             <div>
-              <span className="idx">Intelligence Brief</span>
+              <span className="idx">AI Visibility Audit</span>
               <h1 className="ar-deck-name">{audit.business.name}</h1>
             </div>
             <div className="ar-deck-meta">
@@ -703,8 +703,8 @@ function AuditResultsInner() {
               <div className="ar-pdf-back-email">hello@6signal.co</div>
               <div className="ar-pdf-back-next">
                 {auditPermalinkId
-                  ? `Next step: Upgrade to the Full Strategy Brief — $97. Available anytime on your results page: 6signal.co/audit-results?id=${auditPermalinkId}`
-                  : "Next step: Upgrade to the Full Strategy Brief — $97. Available anytime on your results page at 6signal.co"}
+                  ? `Next step: Upgrade to the Strategy Brief — $97. Available anytime on your results page: 6signal.co/audit-results?id=${auditPermalinkId}`
+                  : "Next step: Upgrade to the Strategy Brief — $97. Available anytime on your results page at 6signal.co"}
               </div>
             </div>
           </div>
@@ -745,15 +745,15 @@ function AuditResultsInner() {
             <div className="ar-upsell-grid">
               <div className="ar-upsell-card">
                 <div className="ar-upsell-tag">What You Have</div>
-                <h3 className="ar-upsell-title">AI Visibility Brief</h3>
-                <p className="ar-upsell-desc">The 8-slide intelligence brief you just received — buyer journey, signal scores, citation gaps, content gaps, and 90-day roadmap.</p>
+                <h3 className="ar-upsell-title">AI Visibility Audit</h3>
+                <p className="ar-upsell-desc">The 8-slide audit you just received — buyer journey, signal scores, citation gaps, content gaps, and 90-day roadmap.</p>
                 <div className="ar-upsell-price">$27 — complete</div>
               </div>
 
               <div className="ar-upsell-card ar-upsell-card--featured">
                 <div className="ar-upsell-tag ar-upsell-tag--featured">Recommended Next Step</div>
-                <h3 className="ar-upsell-title">Full Strategy Brief</h3>
-                <p className="ar-upsell-desc">Written strategy document with prioritized action plan, content architecture recommendations, and schema implementation guide — built from your brief.</p>
+                <h3 className="ar-upsell-title">Strategy Brief</h3>
+                <p className="ar-upsell-desc">Written strategy document with prioritized action plan, content architecture recommendations, and schema implementation guide — built from your audit.</p>
                 <div className="ar-upsell-price">$97</div>
                 <button
                   className="btn btn-primary ar-upsell-cta"

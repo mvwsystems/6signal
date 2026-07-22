@@ -145,7 +145,7 @@ export default function AIVisibilityToolsPage() {
             </div>
             <div className="tindex-cta-row">
               <AuditPopupButton className="btn btn-primary">
-                Get the AI Visibility Brief
+                Get the AI Visibility Audit
                 {ARROW}
               </AuditPopupButton>
               <Link href="/contact" className="btn btn-ghost">
@@ -629,7 +629,7 @@ export default function AIVisibilityToolsPage() {
               named instead, which sources AI uses, and what signals need to be fixed first.
             </p>
             <AuditPopupButton className="btn btn-primary btn-lg">
-              Get the AI Visibility Brief
+              Get the AI Visibility Audit
               {ARROW}
             </AuditPopupButton>
           </div>

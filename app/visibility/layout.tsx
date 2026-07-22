@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Six systems decide who gets the call. Are you in all six?",
     description:
-      "6 Signal audits contractor visibility across all six layers — AI recommendations, Maps, answer engines, voice, and directories — live on a 30-minute call. Free. Yours to keep.",
+      "6 Signal audits contractor visibility across all six layers — AI recommendations, Maps, answer engines, voice, and directories — instantly, for $27. No call required. Yours to keep.",
     type: "website",
     images: [{ url: "/og-social.jpg" }],
   },

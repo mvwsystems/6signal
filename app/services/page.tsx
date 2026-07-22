@@ -269,7 +269,7 @@ export default function ServicesPage() {
             </p>
             <div className="svc-cta-btns">
               <AuditPopupButton className="btn btn-primary btn-lg">
-                Get the AI Visibility Brief
+                Get the AI Visibility Audit
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>

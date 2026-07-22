@@ -134,7 +134,7 @@ export default function WorkPage() {
             </div>
             <div className="coming-meta">
               If you&rsquo;d like to speak with someone who&rsquo;s been through the process,
-              ask on the audit call and we&rsquo;ll facilitate the introduction.
+              email hello@6signal.co and we&rsquo;ll facilitate the introduction.
             </div>
           </div>
         </div>
@@ -243,27 +243,27 @@ export default function WorkPage() {
       {/* FINAL CTA */}
       <section className="final" id="book">
         <div className="wrap">
-          <div className="f-eyebrow">Get the AI Visibility Brief</div>
+          <div className="f-eyebrow">Get the AI Visibility Audit</div>
           <h2 className="display">
             See the read.<br />
             <em>Yours to keep either way.</em>
           </h2>
           <p className="f-deck">
-            The AI Visibility Intelligence Brief runs your company through all six layers
+            The AI Visibility Audit runs your company through all six layers
             and delivers instant results — what buyers and AI tools see when they look for
             a contractor like you, where competitors are filling your gap, and what to fix
             first. $27. No commitment required.
           </p>
           <div className="f-cta">
             <AuditPopupButton className="btn btn-primary btn-lg">
-              Get the AI Visibility Brief
+              Get the AI Visibility Audit
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
             </AuditPopupButton>
           </div>
           <div className="f-notes">
-            <span>AI Visibility Brief — $27</span>
+            <span>AI Visibility Audit — $27</span>
             <span>Instant results</span>
             <span>No commitment required</span>
             <span>Yours to keep</span>
