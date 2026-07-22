@@ -50,3 +50,6 @@ ds-bundle/
 .design-sync/.cache/
 .design-sync/learnings/
 .design-sync/node_modules
+
+# Finder-duplicate artifact, local only
+app/dashboard/page 2.tsx
