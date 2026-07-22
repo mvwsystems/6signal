@@ -46,14 +46,16 @@ export default function CarePage() {
       <header className="inner-hero">
         <div className="wrap">
           <div className="inner-hero-inner">
-            <span className="idx reveal">Website Care Plan</span>
+            <span className="idx reveal">Website Care Plan · After the rebuild</span>
             <h1 className="display reveal">
               Your website, handled.<br />
               <em>Every month.</em>
             </h1>
             <p className="hero-deck reveal">
-              $97/month. Hosting, monitoring, small updates, and support. You run your
-              business — we make sure your site stays working and looking right.
+              $97/month. Hosting, monitoring, small updates, and support — the ongoing
+              half of your <Link href="/websites" style={{ color: "#f5f5f3", textDecoration: "underline" }}>website rebuild</Link>.
+              The rebuild gets you live; this keeps you that way. You run your business —
+              we make sure your site stays working and looking right.
             </p>
             <div className="hero-cta-row reveal">
               <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">

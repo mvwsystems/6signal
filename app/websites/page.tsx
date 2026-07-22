@@ -6,6 +6,44 @@ import { useMicroInteractions } from "../hooks/useMicroInteractions";
 
 const CALENDLY = "https://calendly.com/mvw-mattvincentwalker/business-growth-audit";
 
+const recentBuilds = [
+  {
+    name: "Fire Line Services",
+    trade: "Underground Utilities",
+    region: "Sewer, water, storm, and fire lines · DFW Metroplex",
+    url: "https://firelineservices.com",
+    domain: "firelineservices.com",
+  },
+  {
+    name: "C&C Roofing",
+    trade: "Commercial Roofing",
+    region: "Commercial & multi-family roofing · Rockwall, serving Texas",
+    url: "https://candcroofers.com",
+    domain: "candcroofers.com",
+  },
+  {
+    name: "X-Act Plumbing",
+    trade: "Plumbing",
+    region: "Residential, commercial & industrial · Red Oak / DFW",
+    url: "https://x-actplumbing.com",
+    domain: "x-actplumbing.com",
+  },
+  {
+    name: "C & S Brick, Stucco, and Stone",
+    trade: "Commercial Masonry",
+    region: "Brick, stone, stucco & EIFS · Rockwall, serving DFW and Texas",
+    url: "https://candsbrick.com",
+    domain: "candsbrick.com",
+  },
+  {
+    name: "OEM Contracting",
+    trade: "Custom Homes & Commercial",
+    region: "Full-scope builder · Godley / DFW Metroplex",
+    url: "https://oemcontracting.com",
+    domain: "oemcontracting.com",
+  },
+];
+
 const included = [
   "Custom contractor website designed for your company and trade",
   "Copy written for you — no templates, no Lorem Ipsum",
@@ -181,6 +219,65 @@ export default function WebsitesPage() {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* RECENT BUILDS */}
+      <section className="rule" id="work" style={{ paddingBottom: "100px" }}>
+        <div className="wrap">
+          <div className="sec-head reveal">
+            <div className="left">
+              <span className="idx">Recent builds</span>
+              <h2 className="display">
+                Live sites.<br />
+                <em>Click through and judge for yourself.</em>
+              </h2>
+            </div>
+            <div className="right">
+              No mockups, no portfolio screenshots staged in a design tool. These are
+              real contractor websites we built, live right now, doing their job.
+              Open any of them.
+            </div>
+          </div>
+          <div className="work-grid">
+            {recentBuilds.map((b) => (
+              <a
+                className="work-card reveal"
+                key={b.domain}
+                href={b.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div className="work-card-trade">{b.trade}</div>
+                <div className="work-card-name">{b.name}</div>
+                <div className="work-card-region">{b.region}</div>
+                <div className="work-card-link">{b.domain} →</div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* AFTER LAUNCH — CARE PLAN HANDOFF */}
+      <section className="mid-cta">
+        <div className="wrap">
+          <h3>
+            The rebuild gets you live.
+            <br />
+            <em>The Care Plan keeps you that way.</em>
+          </h3>
+          <p style={{ maxWidth: "560px", margin: "0 auto 28px", fontSize: "15px", lineHeight: 1.7, color: "#9a9a98" }}>
+            Once your site launches, the $97/month Website Care Plan takes over —
+            hosting, uptime monitoring, small updates, and one point of contact for
+            anything website-related. Optional, but it&rsquo;s why our clients&rsquo;
+            sites don&rsquo;t go stale.
+          </p>
+          <Link href="/care" className="btn btn-primary">
+            See the Care Plan — $97/mo
+            <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
+              <path d="M0 5h14M10 1l4 4-4 4" />
+            </svg>
+          </Link>
         </div>
       </section>
 
