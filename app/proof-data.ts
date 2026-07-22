@@ -256,38 +256,35 @@ export const CLIENT_LOGOS: ClientLogo[] = [
 // ─────────────────────────────────────────────────────────────────────────────
 export const CASE_STUDIES: CaseStudy[] = [
   {
-    // STATUS: pending-assets — results are real and stated by owner.
-    // BEFORE ENABLING: obtain client permission to publish by name, collect
-    // screenshots from client device (ChatGPT/Perplexity recommendation response
-    // before & after, Google AI Overview citation, Map Pack position before & after,
-    // organic ranking before & after). Change status to "real" when all assets confirmed.
+    // STATUS: real — published with client permission (Daniel Clayburn / X-Act
+    // Plumbing, relayed by owner 2026-07-21; recommend confirming in writing).
+    //
+    // EVIDENCE: every number below comes from 6 Signal's own tracking system
+    // (Supabase probe_results + maps_grid_scans, business 2ddd7f9c…) — 629
+    // automated checks of 12 real buyer prompts across six engines, run daily
+    // 2026-07-07 → 2026-07-20, plus 25-point Maps grid scans (2026-07-13/16).
+    //
+    // NOT PUBLISHED (owner-reported but not supported by tracking data — do not
+    // re-add without direct evidence):
+    //   - "Google AI Overview citations" — tracked at 0/72 checks in this window
+    //   - "Map Pack top 3" — grid scans show avg position ~5.5, top-3 at ≤1/25 points
+    //   - "Organic page 2 → top 3" — no ranking data collected
+    //   - "in 3 weeks" — tracking began 2026-07-07; no before-baseline exists
     id: "cs-xact-plumbing",
     trade: "Plumbing",
-    market: "DFW, TX",
-    headline: "X-Act Plumbing: AI visibility across ChatGPT, Perplexity, and Google AI Overview in 3 weeks",
+    market: "Red Oak / DFW, TX",
+    headline: "X-Act Plumbing: named in the answers when Red Oak asks AI for a plumber",
     summary:
-      "Starting position: not appearing in any AI recommendation for plumbing queries in market. After 3 weeks of 6 Signal work: named in Google AI Overview, ChatGPT recommendations, and Perplexity answers for target trade+city queries. Map Pack moved to top 3. Organic ranking improved from page 2 to top 3.",
+      "6 Signal's tracking system ran 629 automated checks of 12 real buyer questions ('Who is the best plumber in Red Oak, TX?', 'I have a burst pipe — who can come out fast?') across six AI engines, daily, July 7–20, 2026. X-Act Plumbing was named in 92% of Gemini checks, 71% of ChatGPT checks, and 68% of Perplexity checks — and appeared in Google Maps results at all 25 points of a market-wide grid scan for 'best plumber red oak tx'. Published with client permission.",
     results: [
-      "Appeared in Google AI Overview for target plumbing queries — within 3 weeks",
-      "Named in ChatGPT recommendations for '[trade] in [city]' queries — within 3 weeks",
-      "Named in Perplexity recommendations for target queries — within 3 weeks",
-      "Map Pack: entered top 3 positions",
-      "Organic search: moved from page 2 to top 3",
-      "Timeframe: 3 weeks from engagement start",
+      "Gemini: named in 92% of tracked recommendation checks (103 of 112)",
+      "ChatGPT: named in 71% of tracked recommendation checks (60 of 84)",
+      "Perplexity: named in 68% of tracked recommendation checks (87 of 128)",
+      "Google Maps: present at 25 of 25 grid points across the Red Oak market for 'best plumber red oak tx', average position ~5.5",
+      "Method: 12 real buyer prompts, checked daily across six engines — 629 checks, July 7–20, 2026",
     ],
     slug: null,
-    status: "pending-assets",
-    // screenshotPaths: {
-    //   chatgptBefore: null,       // Screenshot: ChatGPT "[trade] in [city]" — before
-    //   chatgptAfter: null,        // Screenshot: ChatGPT "[trade] in [city]" — after
-    //   perplexityBefore: null,    // Screenshot: Perplexity same query — before
-    //   perplexityAfter: null,     // Screenshot: Perplexity same query — after
-    //   googleAIOBefore: null,     // Screenshot: Google AI Overview — before
-    //   googleAIOAfter: null,      // Screenshot: Google AI Overview — after
-    //   mapPackBefore: null,       // Screenshot: Maps position — before
-    //   mapPackAfter: null,        // Screenshot: Maps position — after
-    // },
-    // clientPermissionNote: "Pending — obtain written or recorded confirmation from X-Act Plumbing before publishing.",
+    status: "real",
   },
   {
     id: "cs-001",

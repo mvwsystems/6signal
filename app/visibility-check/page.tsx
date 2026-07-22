@@ -608,6 +608,18 @@ export default function VisibilityCheckPage() {
               </div>
             ))}
           </div>
+          <div className="vc2-docline reveal">
+            <div className="vc2-docline-label">Documented client · published with permission</div>
+            <p className="vc2-docline-body">
+              <strong>X-Act Plumbing — Red Oak, TX.</strong> Our tracking system ran 629
+              automated checks of 12 real buyer questions across six AI engines, daily,
+              through July 2026. X-Act was named in <strong>92% of Gemini checks</strong>,{" "}
+              <strong>71% of ChatGPT checks</strong>, and <strong>68% of Perplexity
+              checks</strong> — and appeared at all 25 points of a market-wide Google
+              Maps grid scan. Same tracking system, same buyer questions, your business:
+              that&rsquo;s what the audit measures.
+            </p>
+          </div>
         </div>
       </section>
 

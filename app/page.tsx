@@ -429,16 +429,18 @@ export default function Home() {
         <div className="wrap">
           <div className="results-inner">
             <div className="results-statement">
-              <strong>6 Signal is a new practice.</strong> Audits are running. Retainers are
-              active. We&rsquo;re documenting outcomes as they develop — call volume changes,
-              citation wins, AI recommendation improvements.{" "}
+              <strong>We don&rsquo;t publish outcomes we can&rsquo;t verify.</strong> Every
+              number below comes from our own tracking system — automated daily checks of
+              real buyer questions — and is published with the client&rsquo;s permission.
+              The first documented client:{" "}
               <em>
-                We don&rsquo;t publish outcomes we can&rsquo;t verify, attribute accurately,
-                or share with a client&rsquo;s permission.
+                X-Act Plumbing (Red Oak, TX) — named in 92% of tracked Gemini
+                recommendation checks, 71% of ChatGPT checks, and 68% of Perplexity
+                checks, across 629 automated checks of 12 real buyer questions in
+                July 2026.
               </em>{" "}
-              That&rsquo;s a deliberate choice, not a gap. If you want to speak with someone
-              who&rsquo;s been through the process, email hello@6signal.co and we&rsquo;ll
-              facilitate the introduction.
+              Want to speak with someone who&rsquo;s been through the process? Email
+              hello@6signal.co and we&rsquo;ll facilitate the introduction.
             </div>
             <div className="results-right-label">On outcomes</div>
           </div>

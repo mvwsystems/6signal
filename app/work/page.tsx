@@ -147,17 +147,32 @@ export default function WorkPage() {
             <div className="left">
               <span className="idx">Case studies</span>
               <h2 className="display">
-                In progress.<br />
-                <em>Requires 90 days.</em>
+                First documentation live.<br />
+                <em>Full studies at 90 days.</em>
               </h2>
             </div>
             <div className="right">
-              A case study requires 90 days of retainer work to document honestly.
-              We document: starting position from the audit, specific work completed
-              in each of the six layers, and measurable outcomes the client can verify
-              directly — not extrapolated or assumed.
+              A full case study requires 90 days of retainer work to document honestly.
+              The first tracked results are already published — everything below comes
+              from our own tracking system and is shared with client permission.
             </div>
           </div>
+
+          <div className="coming-card" style={{ marginTop: "56px", borderColor: "rgba(230,255,0,0.35)" }}>
+            <span className="coming-label" style={{ color: "#e6ff00" }}>Documented · July 2026 · published with permission</span>
+            <div className="coming-headline">X-Act Plumbing — Red Oak, TX</div>
+            <div className="coming-body">
+              629 automated checks of 12 real buyer questions (&ldquo;Who is the best
+              plumber in Red Oak, TX?&rdquo;, &ldquo;I have a burst pipe — who can come
+              out fast?&rdquo;) across six AI engines, run daily July 7–20, 2026. X-Act
+              was named in 92% of Gemini recommendation checks (103 of 112), 71% of
+              ChatGPT checks (60 of 84), and 68% of Perplexity checks (87 of 128) — and
+              appeared at all 25 points of a market-wide Google Maps grid scan for
+              &ldquo;best plumber red oak tx.&rdquo; The full 90-day case study publishes
+              after the first quarter of retainer work.
+            </div>
+          </div>
+
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2px", marginTop: "56px" }}>
             <div className="coming-card">
               <span className="coming-label">What a case study will contain</span>
