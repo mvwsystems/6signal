@@ -487,16 +487,6 @@ export default function AIVisibilityCheckPage() {
                       Your business details carry forward — no re-entry needed.
                     </p>
                   </div>
-                  <div className="avc-upsell-opt-wrap">
-                    <a
-                      href="https://calendly.com/mvw-mattvincentwalker/6-signal-free-15-min-consult"
-                      className="btn btn-ghost btn-lg avc-upsell-btn"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Book a Free 15-Min Call →
-                    </a>
-                  </div>
                 </div>
                 <p className="idx avc-upsell-footer">
                   $27 · Full 6-signal analysis · PDF included · Results in 60 seconds
