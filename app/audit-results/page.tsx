@@ -403,7 +403,7 @@ function SlideClose({ a }: { a: AuditData }) {
             </div>
             {/* PDF-only text link */}
             <div className="ar-upgrade-pdf-link">
-              Book the 1-Hour Call — $197: 6signal.co/audit-results
+              Book the 1-Hour Call — $197: 6signal.co/strategy-call
             </div>
           </div>
 

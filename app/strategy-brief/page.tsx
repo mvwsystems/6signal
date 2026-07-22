@@ -648,7 +648,7 @@ function StrategyBriefInner() {
                   </button>
                   {/* PDF-only URL */}
                   <div className="sb-decision-pdf-url">
-                    Book the 1-Hour Strategy Call — $197: 6signal.co/strategy-brief
+                    Book the 1-Hour Strategy Call — $197: 6signal.co/strategy-call
                   </div>
                 </div>
               </div>
