@@ -9,7 +9,7 @@ import { useMicroInteractions } from "../hooks/useMicroInteractions";
   ────────────────────────────────────────────────────────────────────────────
   BOOKING / CTA WIRING
   ────────────────────────────────────────────────────────────────────────────
-  The primary CTA ("Buy Apple Business Setup") uses the site's
+  The primary CTA ("Start Apple Business Setup — $500") uses the site's
   existing booking flow — the Typeform popup rendered by <AuditPopupButton/>.
 
   To point this page at a DIFFERENT booking link (e.g. a dedicated Apple Maps
@@ -172,7 +172,7 @@ function AppleMapsJsonLd() {
     serviceType: "Apple Maps / Apple Business Connect optimization",
     offers: {
       "@type": "Offer",
-      price: "750",
+      price: "500",
       priceCurrency: "USD",
       description: "Apple Maps Readiness Setup — one-time setup",
     },
@@ -223,7 +223,7 @@ export default function AppleMapsReadinessPage() {
             </p>
             <div className="hero-cta-row reveal">
               <Link href="/contact" className="btn btn-primary btn-lg">
-                Buy Apple Business Setup
+                Start Apple Business Setup — $500
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
@@ -406,7 +406,7 @@ export default function AppleMapsReadinessPage() {
         <div className="wrap" style={{ textAlign: "center" }}>
           <div className="hero-cta-row reveal" style={{ justifyContent: "center" }}>
             <Link href="/contact" className="btn btn-primary btn-lg">
-              Buy Apple Business Setup
+              Start Apple Business Setup — $500
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
@@ -476,11 +476,11 @@ export default function AppleMapsReadinessPage() {
             </div>
           </div>
 
-          {/* Primary offer — fast start ($750). Same pattern as the home retainer block. */}
+          {/* Primary offer — fast start ($500). Same pattern as the home retainer block. */}
           <div className="pricing-core">
             <div className="p-eyebrow">Apple Maps Readiness Setup — fast start</div>
             <div className="p-number">
-              <span className="dollar">$</span>750
+              <span className="dollar">$</span>500
               <span className="mo">/ one-time</span>
             </div>
             <div className="p-sub">
@@ -490,7 +490,7 @@ export default function AppleMapsReadinessPage() {
             </div>
             <div className="p-cta">
               <Link href="/contact" className="btn btn-primary btn-lg">
-                Buy Apple Business Setup
+                Start Apple Business Setup — $500
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
@@ -501,27 +501,26 @@ export default function AppleMapsReadinessPage() {
             </div>
           </div>
 
-          {/* Comprehensive offer — the full system ($2,500+). Uses the home pricing-detail grid. */}
+          {/* Comprehensive path — routes into the main visibility funnel. */}
           <div className="pricing-detail">
             <div className="pricing-note">
               <p>
                 <span className="highlight">
-                  AI + Local Visibility System — starting at $2,500 setup + monthly
-                  optimization.
+                  Want the full visibility system — beyond Apple Maps?
                 </span>{" "}
-                The comprehensive option: Apple Maps plus Google Business Profile, AI search
-                visibility, citation alignment, review strategy, service-page alignment, and
-                ongoing reporting.
+                Apple Maps is one of six layers. The full system covers Google Business
+                Profile, AI search visibility, citation alignment, review strategy,
+                service-page alignment, and ongoing reporting.
               </p>
               <p className="italic" style={{ marginTop: "20px" }}>
-                The Apple Maps Readiness Setup is the fast start. The full system is the
-                ongoing visibility engine — custom-scoped to your market and current
-                footprint.
+                It starts the same way for everyone: the $27 AI Visibility Audit — an
+                instant six-layer read of your company, your competitors, and your
+                market. Scope and pricing for the full system come after you&rsquo;ve
+                seen where you stand.
               </p>
               <div style={{ marginTop: "28px" }}>
-                {/* SECONDARY CTA — links to existing /contact route; replace href if needed */}
-                <Link href="/contact" className="btn btn-ghost btn-lg">
-                  Ask About Full Visibility System
+                <Link href="/visibility-check" className="btn btn-ghost btn-lg">
+                  Get the AI Visibility Audit — $27
                   <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                     <path d="M0 5h14M10 1l4 4-4 4" />
                   </svg>
@@ -588,7 +587,7 @@ export default function AppleMapsReadinessPage() {
           </p>
           <div className="f-cta">
             <Link href="/contact" className="btn btn-primary btn-lg">
-              Buy Apple Business Setup
+              Start Apple Business Setup — $500
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
@@ -598,7 +597,7 @@ export default function AppleMapsReadinessPage() {
             <span>Apple Business Connect claim</span>
             <span>Profile optimized</span>
             <span>Ads-ready checklist</span>
-            <span>$750 one-time</span>
+            <span>$500 one-time</span>
           </div>
         </div>
       </section>
@@ -607,7 +606,7 @@ export default function AppleMapsReadinessPage() {
 
       <div className="mobile-cta">
         <Link href="/contact">
-          Buy Apple Business Setup
+          Start Apple Business Setup — $500
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>

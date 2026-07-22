@@ -80,10 +80,10 @@ export default function ContactPage() {
                 <div className="contact-way">
                   <span className="contact-way-label">Email</span>
                   <a
-                    href="mailto:mvw@mattvincentwalker.com?subject=%F0%9F%94%A5%206%20Signal%20%F0%9F%94%A5"
+                    href="mailto:hello@6signal.co?subject=%F0%9F%94%A5%206%20Signal%20%F0%9F%94%A5"
                     className="contact-way-val"
                   >
-                    mvw@mattvincentwalker.com
+                    hello@6signal.co
                   </a>
                 </div>
                 <div className="contact-way">

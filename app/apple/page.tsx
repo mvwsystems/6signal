@@ -6,7 +6,7 @@ const canonical = "https://6signal.co/apple";
 export const metadata: Metadata = {
   title: "Apple Maps Readiness Setup for Contractors | 6Signal",
   description:
-    "Apple Maps is becoming a local ad platform. 6Signal claims, cleans up, and optimizes your Apple Business Connect profile so contractors and local service businesses are ready before Apple Maps Ads get crowded. $750 one-time setup.",
+    "Apple Maps is becoming a local ad platform. 6Signal claims, cleans up, and optimizes your Apple Business Connect profile so contractors and local service businesses are ready before Apple Maps Ads get crowded. $500 one-time setup.",
   alternates: { canonical },
   openGraph: {
     title: "Apple Maps is becoming a local ad platform. Get found before it gets crowded.",
