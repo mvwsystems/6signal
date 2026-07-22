@@ -56,13 +56,13 @@ const auditSteps = [
     num: "01",
     phase: "Pre-audit",
     title: "Where you show up — and where you don't",
-    body: "Before the readout call, we run your company through all six layers — AI tools, Maps, voice, answer engines, directories, and local entity data. You see exactly where you appear and where you're invisible, without needing to be on a call for any of it.",
+    body: "Your $27 brief runs your company through all six layers automatically — AI tools, Maps, voice, answer engines, directories, and local entity data. You see exactly where you appear and where you're invisible. No call required.",
   },
   {
     num: "02",
     phase: "Compete",
     title: "Where competitors show up instead",
-    body: "We run the same six-layer pre-audit for your top local competitors. During the readout, you see who occupies the shortlist in your market, which layers they've covered, and where the gap is widest.",
+    body: "We run the same six-layer read for your top local competitors. Your brief shows who occupies the shortlist in your market, which layers they've covered, and where the gap is widest.",
   },
   {
     num: "03",
@@ -118,7 +118,7 @@ const faqs = [
   },
   {
     q: "Do you work with every trade?",
-    a: "We work with residential service contractors — roofers, plumbers, HVAC companies, electricians, remodelers, garage door companies, landscapers, pest control, foundation contractors, and others. If your business serves homeowners locally and the phone call is the goal, the six-layer framework applies. We'll tell you on the audit call if it's not a fit.",
+    a: "We work with residential service contractors — roofers, plumbers, HVAC companies, electricians, remodelers, garage door companies, landscapers, pest control, foundation contractors, and others. If your business serves homeowners locally and the phone call is the goal, the six-layer framework applies. If it's not a fit, your brief will make that clear.",
   },
   {
     q: "What if I already have an SEO company?",
@@ -178,7 +178,7 @@ export default function Home() {
             </AuditPopupButton>
             <a href="#framework" className="btn btn-ghost btn-lg">See how it works</a>
           </div>
-          <div className="hero-sig reveal">Complete the intake · Schedule your readout · Priority list yours to keep</div>
+          <div className="hero-sig reveal">Instant AI Visibility Brief — $27 · No call required · Priority list yours to keep</div>
 
           <div className="trust-strip reveal">
             <div className="label">We work inside —</div>
@@ -274,7 +274,7 @@ export default function Home() {
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>
           </a>
-          <div className="sub">Pre-audit included · 30-minute readout · No commitment</div>
+          <div className="sub">Instant results · No call required · No commitment</div>
         </div>
       </section>
 
@@ -367,15 +367,14 @@ export default function Home() {
             <div className="left">
               <span className="idx">§ 05 — The visibility audit</span>
               <h2 className="display">
-                Pre-audit first.<br />
-                <em>Priority gaps on the call.</em>
+                Instant read.<br />
+                <em>No call required.</em>
               </h2>
             </div>
             <div className="right">
-              We run the six-layer pre-audit before the call. On the readout, we walk
-              through the findings — your company, your competitors, your market, layer by
-              layer. No slides, no deck. The full findings are yours regardless of what
-              you decide.
+              Your $27 AI Visibility Brief runs the six-layer read automatically — your
+              company, your competitors, your market, layer by layer. No slides, no call,
+              no waiting on a calendar. The full findings are yours the moment you buy it.
             </div>
           </div>
 
@@ -438,7 +437,7 @@ export default function Home() {
                 or share with a client&rsquo;s permission.
               </em>{" "}
               That&rsquo;s a deliberate choice, not a gap. If you want to speak with someone
-              who&rsquo;s been through the process, ask on the audit call and we&rsquo;ll
+              who&rsquo;s been through the process, email hello@6signal.co and we&rsquo;ll
               facilitate the introduction.
             </div>
             <div className="results-right-label">On outcomes</div>
@@ -523,7 +522,7 @@ export default function Home() {
               <strong>6 Signal is run by Matt Vincent Walker</strong> — a visibility practitioner
               who works exclusively on how AI and search systems form local shortlists for
               residential service businesses. One operator per account. No account managers,
-              no junior staff on your work. When you&rsquo;re on the audit call, you&rsquo;re
+              no junior staff on your work. If you get on the Strategy Call, you&rsquo;re
               talking to the person doing the work.
             </p>
           </div>
@@ -595,7 +594,7 @@ export default function Home() {
           <div className="pricing-core">
             <div className="p-eyebrow">The 90-Day Visibility Sprint</div>
             <div className="p-number" style={{ fontSize: "clamp(22px, 3vw, 32px)", letterSpacing: "-0.01em" }}>
-              Priced on your audit call
+              Discussed on the Strategy Call
             </div>
             <div className="p-sub">
               One contractor per market, per trade.{" "}
@@ -603,7 +602,7 @@ export default function Home() {
             </div>
             <div className="p-cta">
               <AuditPopupButton className="btn btn-primary btn-lg">
-                Claim your market
+                Get My AI Visibility Brief — $27
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
@@ -631,9 +630,11 @@ export default function Home() {
                 undo the work. The exclusivity makes the engagement meaningful.
               </p>
               <p className="italic" style={{ marginTop: "20px" }}>
-                The audit includes a market conflict check. If your market is open and you
-                want it, book the call. If it&rsquo;s already taken, you&rsquo;ll know in
-                the first thirty seconds — and you still keep the full visibility read.
+                Start with the $27 AI Visibility Brief — instant, no call required. If your
+                market&rsquo;s open and the Sprint looks like a fit once you&rsquo;ve seen
+                your results, it gets discussed on the paid Strategy Call, not before. If
+                your market&rsquo;s already taken, we&rsquo;ll tell you — and you keep the
+                full brief either way.
               </p>
             </div>
 
@@ -693,40 +694,40 @@ export default function Home() {
             <div className="left">
               <span className="idx">How the audit works</span>
               <h2 className="display">
-                Pre-audit first.<br />
-                <em>Readout on the call.</em>
+                Self-serve first.<br />
+                <em>Talk to a human only if you want to.</em>
               </h2>
             </div>
             <div className="right">
-              We do the diagnostic work before the call — so the 30 minutes with you is
-              spent on findings, not discovery. A short intake tells us what to look for.
-              Then the pre-audit runs. Then we walk through what we found.
+              Every report is instant and automated — no call, no sales pitch, no waiting
+              on a calendar. If you want to go deeper with a live conversation, that&rsquo;s
+              a separate, paid step reserved for people who are serious about it.
             </div>
           </div>
           <div className="process-steps">
             <div className="process-step">
-              <span className="process-step-num">01 — Intake</span>
-              <h3>Complete the short intake</h3>
-              <p>Tell us your trade, service area, website, top services, and top competitors. Takes a few minutes. The scheduling link appears right after — pick a time for your readout while you&rsquo;re there.</p>
+              <span className="process-step-num">01 — Instant</span>
+              <h3>Get your $27 AI Visibility Brief</h3>
+              <p>Answer a few questions about your business — trade, service area, website, competitors. Your six-layer brief generates in under 60 seconds. No call, no waiting.</p>
             </div>
             <div className="process-step">
-              <span className="process-step-num">02 — Pre-audit</span>
-              <h3>We run the six-layer read</h3>
-              <p>Before the call, we run your company through all six visibility layers — AI tools, Maps, voice, answer engines, directories, and local entity data. Your top competitors get the same read.</p>
+              <span className="process-step-num">02 — Optional</span>
+              <h3>Go deeper with the $97 Strategy Brief</h3>
+              <p>Turns your gaps into a specific, prioritized implementation plan — schema, content, structure. Still instant, still self-serve.</p>
             </div>
             <div className="process-step">
-              <span className="process-step-num">03 — Readout</span>
-              <h3>We walk through the findings</h3>
-              <p>30 minutes on video. We walk through what we found — layer by layer, gap by gap, against your competitors. Full findings and priority list are yours regardless of what you decide.</p>
+              <span className="process-step-num">03 — For serious buyers</span>
+              <h3>Book the $197 Strategy Call</h3>
+              <p>One hour with Matt Vincent Walker, live, walking through your results in detail. If the 90-Day Visibility Sprint makes sense for your business, it comes up here.</p>
             </div>
           </div>
           <div className="safety-note">
-            <span className="safety-note-label">On the sprint conversation</span>
+            <span className="safety-note-label">On the Strategy Call</span>
             <p>
-              <strong>We show you the findings first.</strong> If the sprint is a fit,
-              we&rsquo;ll say so once — clearly, without pressure. If it&rsquo;s
-              not a fit, we&rsquo;ll say that instead. <em>The full findings are yours either
-              way. No follow-up if the answer is no.</em>
+              <strong>We show you the findings first.</strong> If the Sprint is a fit,
+              it&rsquo;s mentioned once — clearly, without pressure. If it&rsquo;s
+              not a fit, we&rsquo;ll say that instead. <em>You paid for an hour of straight
+              answers, not a sales pitch.</em>
             </p>
           </div>
         </div>
@@ -742,11 +743,10 @@ export default function Home() {
             <em>before your next call does.</em>
           </h2>
           <p className="f-deck">
-            Complete the short pre-audit intake, then schedule your 30-minute
-            visibility readout. We run the six-layer pre-audit before the call —
-            so your readout is specific to your company, your competitors, and your
-            market. The findings and priority list are yours regardless of what
-            you decide.
+            Answer a few questions, pay $27, get your six-layer AI Visibility
+            Brief instantly — specific to your company, your competitors, and
+            your market. No call, no waiting on a calendar. The findings and
+            priority list are yours to keep.
           </p>
           <div className="f-cta">
             <AuditPopupButton className="btn btn-primary btn-lg">

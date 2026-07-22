@@ -103,7 +103,7 @@ export default function TradePage({ data }: TradePageProps) {
             </a>
           </div>
           <div className="hero-sig reveal">
-            Six-layer pre-audit · 30-minute readout · Market conflict check · Priority list yours to keep
+            Instant AI Visibility Brief — $27 · No call required · Priority list yours to keep
           </div>
         </div>
       </header>
@@ -252,20 +252,20 @@ export default function TradePage({ data }: TradePageProps) {
               Get the audit
             </div>
             <div className="e-body">
-              We run the six-layer pre-audit before the call. On the readout, we
-              walk through the findings — gap by gap, layer by layer — so you see
-              exactly what exists before anything gets signed. Full findings are
-              yours to keep whether or not you continue.
+              Your $27 brief runs the six-layer read automatically — gap by gap,
+              layer by layer — so you see exactly what exists before you spend a
+              dollar more. No call, no waiting. Full findings are yours to keep
+              whether or not you continue.
             </div>
           </div>
           <div className="safety-note" style={{ marginTop: "40px" }}>
             <span className="safety-note-label">How the audit works</span>
             <p>
-              <strong>We run the <Link href="/audit" className="dim" style={{ textDecoration: "underline" }}>six-layer pre-audit</Link> before the call.</strong> When
-              we get on the video, we walk through the findings — gap by gap, layer
-              by layer, against your top competitors. No slides. If there&rsquo;s a
-              fit for the retainer, we&rsquo;ll say so once. If it&rsquo;s not a fit,
-              we&rsquo;ll say that first.{" "}
+              <strong>Your <Link href="/audit" className="dim" style={{ textDecoration: "underline" }}>six-layer read</Link> runs instantly, no call required.</strong> If
+              you want to go further, a $97 brief turns it into an action plan,
+              and a paid $197 call with Matt Vincent Walker walks through it live.
+              If there&rsquo;s a fit for the retainer, we&rsquo;ll say so once. If
+              it&rsquo;s not a fit, we&rsquo;ll say that first.{" "}
               <em>The full findings are yours either way.</em>
             </p>
           </div>
@@ -302,7 +302,7 @@ export default function TradePage({ data }: TradePageProps) {
           <div className="pricing-core">
             <div className="p-eyebrow">The 90-Day Visibility Sprint</div>
             <div className="p-number" style={{ fontSize: "clamp(22px, 3vw, 32px)", letterSpacing: "-0.01em" }}>
-              Priced on your audit call
+              Discussed on the Strategy Call
             </div>
             <div className="p-sub">
               One {sing(data.tradePlural)} per local market.{" "}
@@ -312,7 +312,7 @@ export default function TradePage({ data }: TradePageProps) {
               <AuditPopupButton
                 className="btn btn-primary btn-lg"
               >
-                Claim your market
+                Get My AI Visibility Brief — $27
                 <svg
                   className="arrow"
                   viewBox="0 0 16 10"
@@ -340,9 +340,11 @@ export default function TradePage({ data }: TradePageProps) {
                 second client in your market.
               </p>
               <p className="italic" style={{ marginTop: "20px" }}>
-                If your market is open and you want it, book the audit. If
-                it&rsquo;s already taken, you&rsquo;ll know in the first thirty
-                seconds — and you still get the full visibility read regardless.
+                Start with the $27 AI Visibility Brief — instant, no call
+                required. If your market&rsquo;s open and the Sprint looks like
+                a fit, it gets discussed on the paid Strategy Call, not before.
+                If it&rsquo;s already taken, we&rsquo;ll tell you — and you keep
+                the full read regardless.
               </p>
             </div>
 
@@ -410,12 +412,11 @@ export default function TradePage({ data }: TradePageProps) {
             )}
           </h2>
           <p className="f-deck">
-            We run the six-layer pre-audit before the call. On the readout, we
-            walk through what we found — where{" "}
+            Your $27 brief runs the six-layer read instantly — where{" "}
             {data.tradePlural.toLowerCase()} in your market appear, where you
             get skipped, and what your competitors look like in the same read.
-            If your market is already taken, you&rsquo;ll know within the first
-            five minutes. You keep the full findings either way.
+            No call, no waiting. If your market is already taken, we&rsquo;ll
+            tell you. You keep the full findings either way.
           </p>
           <div className="f-cta">
             <AuditPopupButton

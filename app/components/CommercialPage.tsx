@@ -227,7 +227,7 @@ export default function CommercialPage() {
             </a>
           </div>
           <div className="hero-sig reveal">
-            Six-layer pre-audit · 30-minute readout · Market conflict check · Priority list yours to keep
+            Instant AI Visibility Brief — $27 · No call required · Priority list yours to keep
           </div>
         </div>
       </header>
@@ -412,18 +412,18 @@ export default function CommercialPage() {
           <div className="diff-story">
             <div className="caption">What the audit covers</div>
             <p>
-              Before the readout call, we run your company name and primary scope
-              terms through AI tools, search engines, Maps, and commercial
-              databases —{" "}
+              Your $27 brief runs your company name and primary scope terms
+              through AI tools, search engines, Maps, and commercial
+              databases, automatically —{" "}
               <span className="dim">
                 the same research path a GC, project owner, or procurement team
-                takes when evaluating a contractor before outreach. You don&rsquo;t
-                need to be on a call for this part.
+                takes when evaluating a contractor before outreach. No call
+                required for any of it.
               </span>
             </p>
             <p>
-              We run the same pre-audit for your top local competitors. On the
-              readout call, you see exactly what buyers find about them —{" "}
+              We run the same read for your top local competitors. Your brief
+              shows exactly what buyers find about them —{" "}
               <span className="dim">
                 where they&rsquo;re better structured than you, and where the
                 widest gaps are.
@@ -587,7 +587,7 @@ export default function CommercialPage() {
           <div className="pricing-core">
             <div className="p-eyebrow">The 90-Day Visibility Sprint</div>
             <div className="p-number" style={{ fontSize: "clamp(22px, 3vw, 32px)", letterSpacing: "-0.01em" }}>
-              Priced on your audit call
+              Discussed on the Strategy Call
             </div>
             <div className="p-sub">
               One commercial contractor per local market.{" "}
@@ -664,11 +664,11 @@ export default function CommercialPage() {
             <em>Make sure the systems tell the right story.</em>
           </h2>
           <p className="f-deck">
-            Before the call, we run your company through the same research path
-            a GC, procurement team, or project owner uses when vetting a
-            contractor. On the 30-minute readout, we walk through what they find
-            — credibility gaps, competitor positioning, and what it would take
-            to fix both. Full findings are yours regardless of what you decide.
+            Your $27 brief runs your company through the same research path a
+            GC, procurement team, or project owner uses when vetting a
+            contractor — instantly, no call required. Credibility gaps,
+            competitor positioning, and what it would take to fix both. Full
+            findings are yours regardless of what you decide.
           </p>
           <div className="f-cta">
             <AuditPopupButton

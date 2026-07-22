@@ -126,7 +126,7 @@ export const tradesBySlug: Record<string, TradeData> = {
       "No structured data (schema) for your services, license, or service area",
       "Reviews mention 'great work' without location or service-type signals that AI can read",
     ],
-    auditNote: "For roofing contractors, we specifically prompt ChatGPT, Gemini, and Perplexity for roofers in your city — live, on the call — and show you the exact output. You see what a homeowner sees when they ask AI to recommend a roofer after a storm.",
+    auditNote: "For roofing contractors, we specifically prompt ChatGPT, Gemini, and Perplexity for roofers in your city and show you the exact output in your brief — instantly, no call required. You see what a homeowner sees when they ask AI to recommend a roofer after a storm.",
     finalLine1: "Three roofers get named",
     finalLine2Em: "after every storm in your market.",
     finalLine3Dim: "Make sure you're one of them.",
