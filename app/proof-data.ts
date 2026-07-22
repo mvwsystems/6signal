@@ -264,12 +264,17 @@ export const CASE_STUDIES: CaseStudy[] = [
     // automated checks of 12 real buyer prompts across six engines, run daily
     // 2026-07-07 → 2026-07-20, plus 25-point Maps grid scans (2026-07-13/16).
     //
-    // NOT PUBLISHED (owner-reported but not supported by tracking data — do not
-    // re-add without direct evidence):
+    // NOT PUBLISHED — and why. The before-state came from the owner's manual
+    // checks ~3 weeks before automated tracking began (multiple Google accounts
+    // to control for personalization — sound method, but nothing was recorded:
+    // no screenshots, no dates, no query list). Honest observations, not
+    // publishable evidence. Do not re-add without direct evidence:
     //   - "Google AI Overview citations" — tracked at 0/72 checks in this window
     //   - "Map Pack top 3" — grid scans show avg position ~5.5, top-3 at ≤1/25 points
     //   - "Organic page 2 → top 3" — no ranking data collected
-    //   - "in 3 weeks" — tracking began 2026-07-07; no before-baseline exists
+    //   - "in 3 weeks" — the baseline was manual and unrecorded
+    // If any screenshots from those manual checks exist (phone, email, anywhere),
+    // they unlock the before/after story — dated screenshots are the protocol.
     id: "cs-xact-plumbing",
     trade: "Plumbing",
     market: "Red Oak / DFW, TX",
