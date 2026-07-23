@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isAuthed } from "../../../../../lib/dashboard-auth";
-import { getProposal, updateProposal } from "../../../../../lib/db";
+import { isAuthed } from "../../../../lib/dashboard-auth";
+import { getProposal, updateProposal } from "../../../../lib/db";
 
 export const dynamic = "force-dynamic";
 
