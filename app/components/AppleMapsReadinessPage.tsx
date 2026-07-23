@@ -6,24 +6,12 @@ import Footer from "./Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
 
 /*
-  ────────────────────────────────────────────────────────────────────────────
-  BOOKING / CTA WIRING
-  ────────────────────────────────────────────────────────────────────────────
-  The primary CTA ("Start Apple Business Setup — $500") uses the site's
-  existing booking flow — the Typeform popup rendered by <AuditPopupButton/>.
-
-  To point this page at a DIFFERENT booking link (e.g. a dedicated Apple Maps
-  Readiness intake form), do ONE of the following:
-
-    1. Change the shared Typeform ID in:  app/lib/links.ts  (TYPEFORM_ID)
-       — this affects every CTA across the whole site, OR
-    2. Replace each <AuditPopupButton> below with a plain anchor pointing at
-       your booking URL, e.g.:
-         <a href="https://YOUR-BOOKING-URL" className="btn btn-primary btn-lg">…</a>
-
-  The secondary CTA ("Ask About Full Visibility System") links to /contact.
-  Replace that href if you want it to point somewhere else.
-  ────────────────────────────────────────────────────────────────────────────
+  CTA WIRING: every "Start Apple Business Setup — $500" button goes to the
+  live $500 Stripe Payment Link; Stripe's after-payment redirect must point
+  at the Calendly kickoff event
+  (calendly.com/mvw-mattvincentwalker/6-signal-apple-business-setup-kickoff)
+  so buyers schedule immediately after paying. The secondary CTA routes into
+  the $27 audit funnel at /visibility-check.
 */
 
 const BASE_URL = "https://6signal.co";
@@ -222,12 +210,12 @@ export default function AppleMapsReadinessPage() {
               of local search before competitors notice it&rsquo;s happening.
             </p>
             <div className="hero-cta-row reveal">
-              <Link href="/contact" className="btn btn-primary btn-lg">
+              <a href="https://buy.stripe.com/6oUbJ2cVU4N5ghzfLP3ks0y" className="btn btn-primary btn-lg">
                 Start Apple Business Setup — $500
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
-              </Link>
+              </a>
               <a href="#what-we-set-up" className="btn btn-ghost btn-lg">
                 See what we set up
               </a>
@@ -405,12 +393,12 @@ export default function AppleMapsReadinessPage() {
       <section className="rule" style={{ paddingTop: "0", paddingBottom: "100px" }}>
         <div className="wrap" style={{ textAlign: "center" }}>
           <div className="hero-cta-row reveal" style={{ justifyContent: "center" }}>
-            <Link href="/contact" className="btn btn-primary btn-lg">
+            <a href="https://buy.stripe.com/6oUbJ2cVU4N5ghzfLP3ks0y" className="btn btn-primary btn-lg">
               Start Apple Business Setup — $500
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
-            </Link>
+            </a>
           </div>
           <div className="hero-sig reveal" style={{ marginTop: "20px" }}>
             One profile per business · Claimed, cleaned, and ready before the auction heats up
@@ -489,12 +477,12 @@ export default function AppleMapsReadinessPage() {
               <em>Can also be bundled into a full AI + Local Visibility package.</em>
             </div>
             <div className="p-cta">
-              <Link href="/contact" className="btn btn-primary btn-lg">
+              <a href="https://buy.stripe.com/6oUbJ2cVU4N5ghzfLP3ks0y" className="btn btn-primary btn-lg">
                 Start Apple Business Setup — $500
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
-              </Link>
+              </a>
             </div>
             <div className="p-guarantee">
               Apple Business Connect claim · Profile optimized · NAP review · Ads-ready checklist
@@ -586,12 +574,12 @@ export default function AppleMapsReadinessPage() {
             catch-up. No hype. No lead guarantees. Just a clean Apple Maps foundation.
           </p>
           <div className="f-cta">
-            <Link href="/contact" className="btn btn-primary btn-lg">
+            <a href="https://buy.stripe.com/6oUbJ2cVU4N5ghzfLP3ks0y" className="btn btn-primary btn-lg">
               Start Apple Business Setup — $500
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
-            </Link>
+            </a>
           </div>
           <div className="f-notes">
             <span>Apple Business Connect claim</span>
@@ -605,12 +593,12 @@ export default function AppleMapsReadinessPage() {
       <Footer />
 
       <div className="mobile-cta">
-        <Link href="/contact">
+        <a href="https://buy.stripe.com/6oUbJ2cVU4N5ghzfLP3ks0y">
           Start Apple Business Setup — $500
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>
-        </Link>
+        </a>
       </div>
       <div id="cursor-dot" aria-hidden="true" />
       <div id="cursor-ring" aria-hidden="true" />

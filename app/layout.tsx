@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     description:
       "Homeowners ask ChatGPT, Maps, and AI Overviews before they call anyone. 6 Signal gets residential contractors onto that shortlist. Based in the Dallas/Fort Worth area.",
     type: "website",
-    images: [{ url: "/6SIG_SOCIAL_SHARE.png", width: 1200, height: 630, alt: "Get More HVAC, Plumbing, Roofing Leads — 6 Signal" }],
+    images: [{ url: "/6SIG_SOCIAL_SHARE.png", width: 1200, height: 630, alt: "Be the contractor AI recommends — 6 Signal" }],
   },
   twitter: {
     card: "summary_large_image",

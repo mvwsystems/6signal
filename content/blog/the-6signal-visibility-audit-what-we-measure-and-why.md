@@ -1,7 +1,7 @@
 ---
 title: "The 6Signal Visibility Audit: What We Measure and Why"
 slug: "the-6signal-visibility-audit-what-we-measure-and-why"
-description: "A real AI visibility audit measures more than rankings. Learn how 6Signal evaluates search, AI answers, Maps, reviews, directories, schema, and conversion."
+description: "A real AI visibility audit measures more than rankings. How 6Signal scores the six signals — GEO, AEO, LEO, VEO, PEO, IEO — and why each one decides who gets called."
 date: "2026-04-13"
 category: "Field Note"
 contentType: "Field Note"
@@ -47,7 +47,7 @@ That is why the Visibility Audit exists.
 
 ## Short answer
 
-The 6Signal Visibility Audit measures whether a company is easy to find, understand, verify, and recommend across modern search surfaces: Google, Maps, AI answers, directories, reviews, service pages, structured data, question clusters, voice assistants, and conversion paths.
+The 6Signal Visibility Audit scores six signals — GEO, AEO, LEO, VEO, PEO, and IEO — that together determine whether a company is easy to find, understand, verify, and recommend across modern search: AI assistants, Google's AI answers, Maps, directories, voice assistants, and the indexed web underneath all of them.
 
 It is not just an SEO audit.
 
@@ -71,208 +71,100 @@ A company can appear in Maps and still be skipped when a buyer asks:
 
 A company can have traffic and still lose buyers because the service page is vague, the reviews are generic, and the CTA is weak.
 
-The audit needs to measure the whole path:
+The audit needs to measure the whole path — six distinct systems, each of which independently forms the buyer's shortlist.
 
-- Search visibility
-- Answer visibility
-- Local visibility
-- Entity clarity
-- Source trust
-- Page usefulness
-- Buyer action
+## The six signals we measure
 
-That is the difference.
+### 1. GEO — Generative Engine Optimization
 
-## What we measure
+The recommendation layer.
 
-The audit looks at six major layers.
-
-### 1. Search visibility
-
-This is the traditional foundation.
-
-We look at:
-
-- Indexed pages
-- Page titles
-- Meta descriptions
-- H1 structure
-- Internal links
-- Service pages
-- Blog/research content
-- Sitemap
-- Canonicals
-- Technical crawlability
-- Mobile experience
-- Page usefulness
-- Keyword alignment
-- Topic coverage
-
-Search fundamentals still matter because AI features in Google Search are built on Google's broader Search systems and indexed content.
-
-If the site is not crawlable, useful, and technically sound, everything else gets weaker.
-
-### 2. AI answer visibility
-
-This is the answer layer.
-
-We test [buyer-style prompts](/research/how-to-test-whether-ai-recommends-your-business) across relevant surfaces.
-
-Depending on the business, that may include:
-
-- Google AI features
-- Perplexity
-- ChatGPT
-- Gemini
-- Bing/Copilot
-- Voice assistants
-- Search summaries
-- AI-assisted local results
-
-We track:
+We test [buyer-style prompts](/research/how-to-test-whether-ai-recommends-your-business) against generative AI — ChatGPT, Gemini, Perplexity, Claude — and track:
 
 - Whether the company is named
-- Whether it is cited
-- Whether it is recommended
-- Whether competitors appear
-- Whether directories replace local companies
-- Which sources are cited
-- Which prompts trigger visibility
-- Which prompts skip the company
+- Whether it is recommended, or merely mentioned
+- Which competitors appear instead
+- Whether directories replace local companies entirely
+- Which prompts trigger visibility, and which skip the company
 
-This is not perfect science.
+This is not perfect science. AI output varies. But repeated testing reveals patterns — and patterns are what the audit scores.
 
-AI output varies.
+### 2. AEO — Answer Engine Optimization
 
-But repeated testing reveals patterns.
+The citation layer.
 
-### 3. Local entity clarity
+Google's AI features answer questions directly, above the results. We measure:
 
-This is the foundation for local businesses.
+- Whether the company is cited in AI-generated answers for its trade and market
+- Which sources those answers cite instead — and why
+- Whether the company's pages are answer-ready: direct questions, direct answers, in formats engines can quote
+- FAQ, comparison, and cost-explanation coverage
+
+AI features in Google Search are built on Google's broader Search systems and indexed content — which is why this layer sits on top of fundamentals, not beside them.
+
+### 3. LEO — Local Entity Optimization
+
+The trust-data layer, and for local companies, the foundation.
 
 We ask:
 
-- Is the business name consistent?
-- Is the phone number consistent?
-- Is the address or service area clear?
-- Are categories accurate?
-- Are services defined?
-- Is the Google Business Profile complete?
-- Are directories consistent?
-- Are social profiles aligned?
-- Do third-party sources confirm the same entity?
+- Is the business name, phone, and service area consistent everywhere?
+- Is the Google Business Profile complete — categories, services, hours, photos, description?
+- Do the directories that AI systems read — Yelp, BBB, Angi, trade associations, local publications — confirm the same entity, or leave a vacuum for aggregators to fill?
+- Do reviews carry machine-usable specificity?
 
 If the web does not agree on who the business is, answer engines have less confidence.
 
 That is the [Local Entity Gap](/research/local-entity-gap-ai-search).
 
-### 4. Service and question clarity
+### 4. VEO — Voice Engine Optimization
 
-We measure whether the company clearly explains what it does.
+The hands-free layer.
 
-This includes:
+Voice queries are urgent, local, and return one or two names — not ten. We measure:
 
-- Dedicated service pages
-- Emergency/same-day service clarity
-- Location relevance
-- Question clusters
-- FAQs
-- Comparison content
-- Cost-variable explanations
-- Process content
-- Buyer education
-- Internal links
+- What Siri, Alexa, and Google Assistant return for the trade near the city
+- Whether the Apple Maps / Apple Business Connect presence is claimed and accurate
+- Whether the local data voice assistants read resolves cleanly to the company
 
-For contractors, this matters because the buyer usually asks problem-first questions.
+Voice mostly inherits from the local entity layer — which is exactly why entity cleanup pays twice.
 
-They do not ask:
+### 5. PEO — Prompt Engine Optimization
 
-> Tell me about your company.
+The query-language layer.
 
-They ask:
+Buyers ask problem-first questions:
 
 > What should I do when this breaks, leaks, fails, cracks, backs up, or stops working?
 
-A company that answers those questions clearly becomes easier to surface.
+We measure whether the company surfaces inside the real language buyers type and speak:
 
-### 5. Proof and trust signals
+- Emergency and same-day queries
+- Cost and comparison questions
+- The full question cluster a buyer walks through before choosing — and which of those questions the company answers versus leaves to a competitor or a directory
 
-Visibility without trust is fragile.
+### 6. IEO — Index Engine Optimization
 
-We look at:
+The machine-readability layer.
 
-- Review count
-- Review recency
-- Review specificity
-- Service-specific reviews
-- Location mentions
-- Credentials
-- Licenses
-- Certifications
-- Associations
-- Project examples
-- Photos
-- Videos
-- Case studies
-- Owner/operator expertise
-- Third-party mentions
+Every other signal depends on machines being able to read the company at all. We check:
 
-AEO and GEO are not just content games.
+- Indexing, crawlability, sitemap, canonicals
+- Page titles, headings, internal links, and mobile experience
+- Schema — present, valid, and honest: Organization, LocalBusiness, Service, FAQPage, BreadcrumbList
+- Whether service pages are structured so systems can extract what the company does and where
 
-They are trust games.
-
-Recommendation requires proof.
-
-### 6. Conversion path
-
-Visibility is not the final goal.
-
-Booked work is.
-
-We measure:
-
-- CTA clarity
-- Phone visibility
-- Form friction
-- Booking path
-- Mobile UX
-- Emergency call path
-- Trust placement
-- Service-page CTA alignment
-- Audit/estimate flow
-- Follow-up risk
-- Missed-call risk
-
-If AI search sends a buyer to a page that does not convert, visibility was wasted.
+The rule for markup is simple: it should clarify visible truth, not invent authority.
 
 ## Why we measure Google Business Profile
 
-For local companies, Google Business Profile is one of the strongest entity surfaces.
+For local companies, Google Business Profile is one of the strongest entity surfaces — the local entity hub, not just a listing.
 
 Google's local ranking guidance describes relevance, distance, and prominence as key local ranking factors and recommends complete, accurate business information.
 
-That makes Google Business Profile more than a listing.
+We check primary and secondary categories, services, service area, hours, phone, website, description, photos, reviews, review responses, and consistency with the website and directories.
 
-It is the local entity hub.
-
-We check:
-
-- Primary category
-- Secondary categories
-- Services
-- Service area
-- Hours
-- Phone
-- Website
-- Business description
-- Photos
-- Reviews
-- Review responses
-- Questions and answers
-- Updates where appropriate
-- Consistency with the website and directories
-
-If the profile is incomplete, inaccurate, or too broad, the business is harder to match to high-intent local queries.
+If the profile is incomplete, inaccurate, or too broad, the business is harder to match to high-intent local queries — in Maps and in every AI system that grounds on Maps data.
 
 ## Why we measure reviews differently
 
@@ -286,14 +178,13 @@ We ask:
 - Do they mention locations?
 - Do they mention urgency?
 - Do they mention outcomes?
-- Do they mention team members?
 - Are they recent?
 - Are they distributed across platforms?
 - Are they used on relevant service pages?
 
 A review that says "great service" is not as useful as one that says "they repaired our sewer line in Fort Worth the same day."
 
-Specific reviews create stronger human and machine signals.
+Specific reviews create stronger human and machine signals. That makes reviews entity data — part of LEO — not just social proof.
 
 ## Why we measure directories and aggregators
 
@@ -301,48 +192,11 @@ Directories are not dead.
 
 They often appear in AI answers because they are structured, category-specific, location-aware, and review-rich.
 
-We look at:
-
-- Yelp
-- BBB
-- Angi
-- HomeAdvisor
-- Thumbtack
-- Houzz where relevant
-- Manufacturer directories
-- Trade association directories
-- Local chambers
-- Industry directories
-- Local publications
+We look at Yelp, BBB, Angi, HomeAdvisor, Thumbtack, Houzz where relevant, manufacturer and trade association directories, local chambers, and local publications.
 
 The question is not whether every directory matters equally.
 
 The question is whether the source ecosystem confirms the business or leaves a vacuum for aggregators to fill.
-
-## Why we measure schema
-
-Structured data helps search engines understand page content.
-
-But schema is not magic.
-
-We check whether it is present, valid, and honest.
-
-Useful schema may include:
-
-- Organization
-- LocalBusiness where appropriate
-- Service
-- FAQPage
-- BreadcrumbList
-- Article
-- VideoObject
-- Review where appropriate
-
-The rule is simple:
-
-Markup should clarify visible truth.
-
-It should not invent authority.
 
 ## Why we measure question clusters
 
@@ -360,7 +214,7 @@ For emergency plumbing, that path might include:
 
 If the company does not answer these questions, another source will.
 
-The audit identifies which clusters are missing and which should be built first.
+The audit identifies which clusters are missing and which should be built first. This is where PEO and AEO meet: prompt coverage decides which questions matter, answer-ready content decides who gets cited for them.
 
 ## Why we measure competitor and aggregator visibility
 
@@ -373,47 +227,34 @@ We compare:
 - Are directories replacing local businesses?
 - Are competitors getting cited?
 - Are they winning because of reviews?
-- Do they have better service pages?
-- Do they have better Google Business Profiles?
+- Do they have better service pages or Google Business Profiles?
 - Do they have better question coverage?
-- Do they have stronger third-party proof?
 
 This helps separate opinion from priority.
 
-## What the audit output should show
+## The seventh check — which is not a signal
 
-A useful audit should not bury the owner in 80 random tasks.
+Visibility is not the final goal.
 
-It should show:
+Booked work is.
 
-- Where the company appears
-- Where it gets skipped
-- Which competitors appear instead
-- Which directories control the answer layer
-- Which signals are unclear
-- Which services are under-structured
-- Which reviews are weak
-- Which pages need work
-- Which technical issues matter
-- Which fixes should happen first
+So the audit also reads the conversion path: CTA clarity, phone visibility, form friction, the emergency call path, mobile UX, and follow-up risk.
 
-The output should create focus.
-
-Not confusion.
+Conversion is not one of the six signals, because it is not visibility — it is what visibility is worth. A company that wins every signal and misses its calls has bought traffic for its voicemail. When conversion is the real bottleneck, the audit's roadmap says so, plainly, before recommending any visibility work at all.
 
 ## What good prioritization looks like
 
-Not all fixes are equal.
+Not all fixes are equal, and the leverage usually runs in a consistent order:
 
-A company with no emergency plumbing page should not start with a blog post about plumbing history.
+1. **LEO** — entity cleanup, Google Business Profile, reviews. It moves Maps and AI recommendations at the same time, because AI grounds its local answers in exactly this data.
+2. **IEO** — schema and structure. Cheap, one-time, and everything else depends on it.
+3. **AEO** — answer-ready service pages and question coverage. This is what earns citations.
+4. **GEO and PEO** — third-party presence and prompt coverage. These compound over months on top of the first three.
+5. **VEO** — mostly inherited from clean local data.
 
-A roofer with inconsistent service areas should not start with a new logo.
+A company with no emergency plumbing page should not start with a blog post about plumbing history. A roofer with inconsistent service areas should not start with a new logo.
 
-An HVAC company with no same-day AC repair content should not start with a generic "about us" rewrite.
-
-Prioritization depends on bottleneck.
-
-The audit should identify the highest-leverage signal gaps first.
+Prioritization depends on bottleneck. The audit identifies the highest-leverage signal gaps first.
 
 ## What the audit is not
 
@@ -437,27 +278,7 @@ It shows what is blocking the outcome.
 
 Modern visibility is not one channel.
 
-It is a system of signals.
-
-Search.
-
-Maps.
-
-AI answers.
-
-Directories.
-
-Reviews.
-
-Schema.
-
-Service pages.
-
-Question clusters.
-
-Voice.
-
-Conversion.
+It is six signals, working as one system: GEO, AEO, LEO, VEO, PEO, IEO.
 
 The companies that win will not necessarily be the loudest.
 
@@ -467,7 +288,7 @@ That is what the Visibility Audit measures.
 
 ## Final answer
 
-The 6Signal Visibility Audit measures whether your company is findable, understandable, verifiable, recommendable, and conversion-ready across the surfaces where buyers now ask who to call.
+The 6Signal Visibility Audit scores six signals — GEO, AEO, LEO, VEO, PEO, and IEO — to measure whether your company is findable, understandable, verifiable, and recommendable across the surfaces where buyers now ask who to call.
 
 It measures more than rankings because the buyer journey now includes more than rankings.
 
@@ -481,9 +302,7 @@ It is:
 
 ## Want your visibility measured?
 
-Get the AI Visibility Audit.
-
-We'll show you where you appear, where you get skipped, which competitors or directories are winning, and what to fix first.
+[Get the AI Visibility Audit — $27](/visibility-check). It generates instantly — all six signals scored, your competitors mapped, and a ranked priority list that is yours to keep.
 
 ## Sources and further reading
 
