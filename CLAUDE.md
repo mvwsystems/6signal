@@ -1,7 +1,7 @@
 # CLAUDE.md — 6 Signal
 
 Business + technical context for every Claude Code session in this repo. Verified against the
-codebase on 2026-06-11. Where stated business facts conflict with the repo, the conflict is
+codebase on 2026-07-23. Where stated business facts conflict with the repo, the conflict is
 flagged inline — do not silently resolve them.
 
 ---
@@ -39,16 +39,12 @@ Canonical definitions live in [app/page.tsx](app/page.tsx) (~lines 12–50, dupl
 [app/method/page.tsx](app/method/page.tsx), [app/visibility/page.tsx](app/visibility/page.tsx))
 and in the audit prompt in [app/api/generate-audit/route.ts](app/api/generate-audit/route.ts).
 
-**⚠️ Inconsistent definitions exist across the repo — flag, don't propagate:**
-- [6SIGNAL_BRAND_BRIEF.md](6SIGNAL_BRAND_BRIEF.md) §1 defines a *different* six: Search / AI /
-  Local / Trust / Content / Conversion signals. The free-check page
-  [app/ai-visibility-check/page.tsx](app/ai-visibility-check/page.tsx) also uses this older set.
-- [content/blog/the-6signal-audit-what-we-check.mdx](content/blog/the-6signal-audit-what-we-check.mdx)
-  defines yet another six: Website clarity / Local SEO / AI visibility / Conversion flow /
-  Reputation / Revenue leakage.
-- [content/blog/the-6signal-visibility-audit-what-we-measure-and-why.md](content/blog/the-6signal-visibility-audit-what-we-measure-and-why.md)
-  uses a fourth variant (Search visibility / AI answer / Local entity / Service clarity / Proof /
-  Conversion path).
+**Taxonomy status (updated 2026-07-23):** the two blog posts that previously taught alternative
+six-signal sets were rewritten onto the canonical spine on 2026-07-22/23. The only remaining
+stale definition is [6SIGNAL_BRAND_BRIEF.md](6SIGNAL_BRAND_BRIEF.md) §1 (Search / AI / Local /
+Trust / Content / Conversion) — flag, don't propagate. Canonical priority ordering (published in
+both audit articles): LEO → IEO → AEO → GEO/PEO → VEO, with conversion framed as a revenue
+multiplier, not a signal.
 
 When writing new content or code, use **GEO/AEO/LEO/VEO/PEO/IEO**. The brand brief's voice/design
 sections remain authoritative; its six-signal list and "free 30-minute audit" entry offer are stale.
@@ -56,7 +52,7 @@ sections remain authoritative; its six-signal list and "free 30-minute audit" en
 ## 3. Funnel & pricing (verified in code)
 
 ```
-Free check (/ai-visibility-check)  — simulated AI answer + email capture (email send: TODO, not built)
+Free check (/ai-visibility-check)  — simulated AI answer + email capture (result emailed via /api/send-free-check-email)
   → $27  AI Visibility Audit       (/visibility-check → Stripe → /audit-results)
   → $97  Strategy Brief            (upsell on /audit-results → Stripe → /strategy-brief)
   → $197 Strategy Call             (Stripe → Calendly; includes the Strategy Brief free)
@@ -88,15 +84,15 @@ naming is fully gone; /services was deleted 2026-07-22 and 301s to /capabilities
 
 ## 5. Proof
 
-**⚠️ The X-Act Plumbing case study (page 2 → top 3 organic, Map Pack, Google AI Overview, ChatGPT,
-Perplexity visibility in 3 weeks) is NOT in the repo.** "X-Act Plumbing" appears only as a form
-placeholder in [app/ai-visibility-check/page.tsx](app/ai-visibility-check/page.tsx).
-[app/proof-data.ts](app/proof-data.ts) contains **only placeholders**: 0 real testimonials, 0 real
-case studies (cs-001/cs-002 marked "PLACEHOLDER — Document after 90 days"), 6 illustrative audit
-examples marked "example". The homepage explicitly says "We don't publish outcomes we can't
-verify." If the X-Act results are real, documenting them in proof-data.ts (with screenshots and
-client permission per the protocol already defined there) is the single highest-leverage content
-task in the repo.
+**X-Act Plumbing is documented and published (2026-07-22, client permission via owner).**
+[app/proof-data.ts](app/proof-data.ts) `cs-xact-plumbing` is status `"real"`, with every number
+pulled from the internal tracking system (629 probes, July 7–20 2026): Gemini 92%, ChatGPT 71%,
+Perplexity 68% mention rates; Maps present at 25/25 grid points. Surfaced on the homepage
+outcomes note, /visibility-check (docline strip), and /work. **Deliberately unpublished** (owner's
+manual pre-tracking baseline, unrecorded): AI Overview citations, "Map Pack top 3", "page 2 →
+top 3 organic", "in 3 weeks" — see the provenance comment in proof-data.ts; dated screenshots
+would unlock them. Five real client website builds are featured on /websites. Still placeholders:
+testimonials, client logos, before/after screenshots, and the full 90-day case study.
 
 ## 6. Design system
 
