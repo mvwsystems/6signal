@@ -213,7 +213,7 @@ buyer who takes the $97 brief and *then* wants the call pays $294 for what the n
 for $197 — and they'll notice, on the very page where you ask for the retainer. Either credit
 the $97 toward the call or don't bundle the brief into the call on the same screen.
 
-**Leak 4 — the chasm between $197 and $1,250/month.** The retainer is priced only on the
+**Leak 4 — the chasm between $197 and $1,500/month.** The retainer is priced only on the
 homepage; the strategy-brief page links vaguely to "the 6Signal retainer" (and to
 `6signal.co/retainer`, which isn't a route — it's `/#pricing`). There's no intermediate offer:
 no "we implement the 90-day plan for $X one-time," no monitoring tier (see §4). A contractor who
@@ -259,7 +259,7 @@ fall.
 4. **No education/nurture layer wired in.** 28 quality blog posts exist, but no email list, no
    course, no sequence connects content → funnel. (CONTENT_ARCHITECTURE.md documents internal
    link gaps and 3 orphaned posts; that work is specced and unexecuted.)
-5. **No client reporting.** Retainer clients ($1,250/mo) presumably get… something manual. No
+5. **No client reporting.** Retainer clients ($1,500/mo) presumably get… something manual. No
    report generator, no dashboard (§5). At 10 clients this is an ops bottleneck; at 30 it caps
    the business.
 6. **Labs are unpriced and inconsistently named.** Takeoff Copilot has no pricing in the repo
@@ -322,7 +322,7 @@ Decisions and rationale:
 - **Probe runner in Supabase Edge Functions on pg_cron**, not Netlify functions — keeps compute
   next to the data, avoids the Netlify timeout that already shaped the audit prompt, and writes
   evidence rows transactionally. Weekly cadence per client (≈ 25 probes × 3 engines ≈ dollars/
-  month per client at API prices — rounding error against $1,250/mo).
+  month per client at API prices — rounding error against $1,500/mo).
 - **Scores computed in SQL/TypeScript from evidence, not by an LLM** (per §1). LLM generates the
   monthly narrative paragraph only.
 - **RLS from day one**: `client_org_id` on every row; clients authenticated by magic link (no
@@ -346,7 +346,7 @@ and §2 (persistence) exist — a dashboard over hallucinated one-shot scores wo
 |---|---|---|---|
 | 1 | **Persist everything + close the broken promises.** Supabase schema (§2), Stripe webhook → `audits.stripe_session_id`, build `/api/send-free-check-email` (Resend), email every paid brief with a permalink (`/audit-results?id=`), publish a refund policy. | Stops paying-customer data loss (Leak 1/2), stops dropping leads (Leak 0), and starts the moat — every audit from that day forward compounds. Highest (revenue×credibility)/effort in the document. | ~3–4 days |
 | 2 | **Ground the engine in real evidence — minimum viable rigor.** v1: fetch the site (IEO checklist, deterministic), Google Places pull (LEO, deterministic), 5 real probes against ChatGPT + Perplexity APIs (GEO/AEO evidence), temperature 0, prompt_version stamped; Haiku writes narrative *from the evidence*, scores computed in code. Fix the free check to use one real probe and honest copy. | Converts the product from plausible fiction to defensible measurement; kills the screenshot-takedown risk (§1); makes the 0–100 score mean something. The entire category claim rests on this. | ~1–2 weeks |
-| 3 | **Ship the monitoring tier (e.g., $197–$297/mo "Signal Monitor").** Scheduled re-runs of the §2 pipeline + monthly emailed delta report. No dashboard UI yet — email is the v1 dashboard. Bridges the $197 → $1,250 chasm (Leak 4) and creates recurring revenue + time-series data simultaneously. | Recurring revenue at funnel-native price; the dataset's time dimension; the natural retainer feeder. | ~1 week after #2 |
+| 3 | **Ship the monitoring tier (e.g., $197–$297/mo "Signal Monitor").** Scheduled re-runs of the §2 pipeline + monthly emailed delta report. No dashboard UI yet — email is the v1 dashboard. Bridges the $197 → $1,500 chasm (Leak 4) and creates recurring revenue + time-series data simultaneously. | Recurring revenue at funnel-native price; the dataset's time dimension; the natural retainer feeder. | ~1 week after #2 |
 | 4 | **Document the proof.** Get the X-Act Plumbing results into [app/proof-data.ts](app/proof-data.ts) per the repo's own protocol (screenshots, identical prompts, client permission) — it is currently the only real outcome and it lives outside the repo. Fix the empty /work decision point (Leak 6). | Zero-to-one on external evidence; unblocks the retainer ask; cheap. | ~1 day + client sign-off |
 | 5 | **Client dashboard (§5) + first benchmark report.** Build `/dashboard` over the accumulated monitor data; simultaneously publish the first data white paper from `ai_probes` aggregates ("Who AI recommends for home services in DFW: N=___"). | The category-defining artifacts — but only valuable after #1–#3 have generated real data. | ~3–4 weeks |
 

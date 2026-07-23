@@ -60,7 +60,7 @@ Free check (/ai-visibility-check)  — simulated AI answer + email capture (emai
   → $27  AI Visibility Audit       (/visibility-check → Stripe → /audit-results)
   → $97  Strategy Brief            (upsell on /audit-results → Stripe → /strategy-brief)
   → $197 Strategy Call             (Stripe → Calendly; includes the Strategy Brief free)
-  → $1,250/month retainer          (90-day minimum, one contractor per market per trade)
+  → $1,500/month retainer          (90-day minimum, one contractor per market per trade)
 ```
 
 Other priced offers: website rebuild **$1,500 flat** ([app/websites/page.tsx](app/websites/page.tsx)),
