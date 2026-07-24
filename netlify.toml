@@ -17,3 +17,15 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
   pinned_version = "5.15.11"
+
+# Brand kit — share-by-link resource, keep out of search indexes.
+# (next.config headers() don't reach public/ files on Netlify's CDN.)
+[[headers]]
+  for = "/brand"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/brand.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"
