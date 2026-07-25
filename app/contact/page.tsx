@@ -202,6 +202,10 @@ export default function ContactPage() {
                           name="phone"
                           placeholder="(555) 000-0000"
                         />
+                        <span style={{ display: "block", marginTop: "6px", fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "10px", letterSpacing: "0.04em", color: "#7a7a78" }}>
+                          Providing a number = consent to calls/texts about your request.
+                          Reply STOP to opt out. <a href="/privacy" style={{ color: "inherit", textDecoration: "underline" }}>Privacy</a>
+                        </span>
                       </div>
                     </div>
 

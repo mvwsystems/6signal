@@ -51,7 +51,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <div>© 6 Signal · All rights reserved</div>
+          <div>© 6 Signal · All rights reserved · <Link href="/privacy" style={{ color: "inherit" }}>Privacy</Link></div>
           <div>Based in DFW · Signal · Repetition · Reach</div>
         </div>
       </div>

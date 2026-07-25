@@ -221,6 +221,11 @@ export default function StartPage() {
                   <label className="vc2-label">Phone <span className="vc2-optional">(optional)</span></label>
                   <input className="vc2-input" type="tel" placeholder="(817) 555-0100" value={contact.phone}
                     onChange={(e) => setC("phone", e.target.value)} autoComplete="tel" />
+                  <span className="idx avc-email-note">
+                    By providing your number you agree to receive calls and texts from
+                    6 Signal about your project. Msg &amp; data rates may apply; reply
+                    STOP to opt out. <a href="/privacy" style={{ color: "inherit", textDecoration: "underline" }}>Privacy</a>
+                  </span>
                 </div>
                 <div className={`vc2-field${errors.trade ? " vc2-field--error" : ""}`}>
                   <label className="vc2-label">Your Trade <span className="vc2-req">*</span></label>

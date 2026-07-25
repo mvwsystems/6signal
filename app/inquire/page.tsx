@@ -188,6 +188,11 @@ export default function InquirePage() {
                     onChange={(e) => handleChange("phone", e.target.value)}
                     autoComplete="tel"
                   />
+                  <span className="idx avc-email-note">
+                    By providing your number you agree to receive calls and texts from
+                    6 Signal about your request. Msg &amp; data rates may apply; reply
+                    STOP to opt out. <a href="/privacy" style={{ color: "inherit", textDecoration: "underline" }}>Privacy</a>
+                  </span>
                 </div>
 
                 {/* URL */}
