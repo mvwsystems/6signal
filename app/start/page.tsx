@@ -8,7 +8,7 @@ import { useMicroInteractions } from "../hooks/useMicroInteractions";
 // answers persisted server-side -> 50% deposit. When the $750 Stripe link
 // exists, set STRIPE_DEPOSIT and submission redirects straight to checkout;
 // until then the success screen promises the deposit link by email.
-const STRIPE_DEPOSIT: string | null = null;
+const STRIPE_DEPOSIT: string | null = "https://buy.stripe.com/fZudRaaNM7Zhc1j7fj3ks0z";
 
 const TRADES = [
   "Plumbing", "HVAC", "Roofing", "Electrical", "General Contracting",
