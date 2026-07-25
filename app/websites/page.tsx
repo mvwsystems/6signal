@@ -105,12 +105,12 @@ export default function WebsitesPage() {
               six-month timeline.
             </p>
             <div className="hero-cta-row reveal">
-              <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
+              <Link href="/start" className="btn btn-primary btn-lg">
                 Get My Website Rebuilt
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
-              </a>
+              </Link>
               <Link href="/contact" className="btn btn-ghost btn-lg">Ask a Question</Link>
             </div>
           </div>
@@ -146,12 +146,12 @@ export default function WebsitesPage() {
               <em>Built to make you look credible before the first call.</em>
             </div>
             <div className="p-cta">
-              <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
+              <Link href="/start" className="btn btn-primary btn-lg">
                 Get My Website Rebuilt
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
                 </svg>
-              </a>
+              </Link>
             </div>
             <div className="p-guarantee">Fast turnaround · Mobile-first · Copy written for you</div>
           </div>
@@ -345,16 +345,21 @@ export default function WebsitesPage() {
             undersell your work.
           </h2>
           <p className="f-deck">
-            Book a free 30-minute call. We&rsquo;ll look at your current site, tell you exactly
-            what needs to change, and give you a straight answer on whether we&rsquo;re the right
-            fit. No pitch. No pressure.
+            Answer the questionnaire built for your trade, and the build starts —
+            most sites are live in 2&ndash;3 weeks. Rather talk it through first?
+            Book a free 30-minute call and we&rsquo;ll look at your current site
+            together, tell you exactly what needs to change, and give you a straight
+            answer on whether we&rsquo;re the right fit. No pitch. No pressure.
           </p>
           <div className="f-cta">
-            <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
-              Book a Free Call
+            <Link href="/start" className="btn btn-primary btn-lg">
+              Ready to Get Started?
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
+            </Link>
+            <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-lg">
+              Book a Free Call First
             </a>
             <a
               href="mailto:hello@6signal.co?subject=%F0%9F%94%A5%206%20Signal%20%F0%9F%94%A5"
@@ -375,12 +380,12 @@ export default function WebsitesPage() {
       <Footer />
 
       <div className="mobile-cta">
-        <a href={CALENDLY} target="_blank" rel="noopener noreferrer">
+        <Link href="/start">
           Get My Website Rebuilt
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />
           </svg>
-        </a>
+        </Link>
       </div>
       <div id="cursor-dot" aria-hidden="true" />
       <div id="cursor-ring" aria-hidden="true" />
