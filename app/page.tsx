@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import AuditExamplesSection from "./components/proof/AuditExamplesSection";
@@ -424,6 +425,77 @@ export default function Home() {
         </div>
       </section>
 
+      {/* THE CLIMB — practice map */}
+      <section className="engagement rule" id="climb">
+        <div className="wrap">
+          <div className="sec-head">
+            <div className="left">
+              <span className="idx">The practice</span>
+              <h2 className="display">
+                One climb.<br />
+                <em>Four rungs.</em>
+              </h2>
+            </div>
+            <div className="right">
+              Visibility is the front door — but it&rsquo;s one rung of a climb every
+              contractor business is on. One operator works all four. No account
+              managers, no hand-offs, a limited number of engagements at a time.
+            </div>
+          </div>
+          <div className="engage-table">
+            <div className="engage-row reveal">
+              <div className="e-idx">01</div>
+              <div className="e-title">
+                <span className="phase">Foundation</span>
+                Start
+              </div>
+              <div className="e-body">
+                Brand and website that make you credible before the first call —
+                $1,500 flat rebuild, $97/month care.{" "}
+                <Link href="/websites" className="dim" style={{ textDecoration: "underline" }}>See the rebuild →</Link>
+              </div>
+            </div>
+            <div className="engage-row reveal">
+              <div className="e-idx">02</div>
+              <div className="e-title">
+                <span className="phase">Front office</span>
+                Stabilize
+              </div>
+              <div className="e-body">
+                Front-end AI that answers, books, sorts, and follows up — so the calls
+                you earn become jobs you booked.{" "}
+                <Link href="/stabilize" className="dim" style={{ textDecoration: "underline" }}>See Stabilize →</Link>
+              </div>
+            </div>
+            <div className="engage-row reveal">
+              <div className="e-idx">03</div>
+              <div className="e-title">
+                <span className="phase">Growth</span>
+                Scale
+              </div>
+              <div className="e-body">
+                Visibility-led growth: the six-signal system across AI, Maps, and
+                voice — with SEO and paid ads as amplifiers. This is the rung this
+                site is built around.{" "}
+                <Link href="/visibility-check" className="dim" style={{ textDecoration: "underline" }}>Start with the $27 audit →</Link>
+              </div>
+            </div>
+            <div className="engage-row reveal">
+              <div className="e-idx">04</div>
+              <div className="e-title">
+                <span className="phase">Internal ops</span>
+                Systemize
+              </div>
+              <div className="e-body">
+                AI infrastructure for the operation itself — bookkeeping,
+                field-to-office communication, fleet and job tracking, estimating.{" "}
+                <Link href="/systemize" className="dim" style={{ textDecoration: "underline" }}>See Systemize →</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* RESULTS NOTE */}
       <section className="results-section">
         <div className="wrap">
@@ -525,7 +597,7 @@ export default function Home() {
               who works exclusively on how AI and search systems form local shortlists for
               residential service businesses. One operator per account. No account managers,
               no junior staff on your work. If you get on the Strategy Call, you&rsquo;re
-              talking to the person doing the work.
+              talking to the person doing the work — at every rung of the climb.
             </p>
           </div>
         </div>

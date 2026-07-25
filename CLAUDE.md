@@ -74,10 +74,22 @@ naming is fully gone; /services was deleted 2026-07-22 and 301s to /capabilities
 
 ## 4. Positioning
 
-- **Visibility first.** "Not a marketing agency — a specialized visibility practice." Not an SEO
-  agency, not an ads agency, not a web design firm, not a software product.
-- Five service systems on /capabilities: **Build** (foundation), **Grow** (demand),
-  **Capture** (response), **Automate** (operations), **Advise** (strategy).
+- **Visibility-led, not visibility-only (restructured 2026-07-24).** The public practice map is
+  **The Climb** — four rungs: **Start** (brand + web → /websites, /care), **Stabilize**
+  (front-office AI: receptionist, booking, email triage → /stabilize), **Scale** (visibility-led
+  growth; the six signals live here, SEO/ads are amplifiers → the funnel), **Systemize** (AI
+  infrastructure for internal ops → /systemize). /capabilities is the ladder overview ("The
+  Climb"); the old five-bucket framing (Build/Grow/Capture/Automate/Advise) is retired. Two
+  further rungs (Segment, Sell/M&A) were deliberately dropped — outside operator competence.
+- **Premium anti-agency framing:** "6 Signal is not an agency — a specialized practice run by
+  one operator; the person you talk to is the person who does the work, at every rung." Never
+  "agency," "packages," or account-manager language. Homepage hero stays visibility-led — the
+  Climb is a progression, never a menu.
+- **Stabilize/Systemize entry (paid-gate philosophy extended):** free on-site AI **team
+  training** (60–90 min) as door-opener, qualified only (existing clients, referrals, ~$1M+
+  revenue) → paid **scoping**: $500 remote / $1,000 on-site (DFW), 100% credited toward the
+  build within 30 days → fixed-scope proposal from the dashboard proposal builder. Every rung
+  prices as **build fee + monthly run fee**; project pricing never published.
 - Voice: intelligence-briefing tone — direct, precise, economical, no hype, no exclamation points.
   See [6SIGNAL_BRAND_BRIEF.md](6SIGNAL_BRAND_BRIEF.md) §2 (still authoritative for voice).
 - /services was deleted 2026-07-22 (was an unreachable duplicate of /capabilities behind a 301).

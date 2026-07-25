@@ -5,7 +5,7 @@ import AuditPopupButton from "./AuditPopupButton";
 
 const NAV_LINKS = [
   { href: "/#framework", label: "The Six" },
-  { href: "/#engagement", label: "The Work" },
+  { href: "/capabilities", label: "The Climb" },
   { href: "/#pricing", label: "The Sprint" },
   { href: "/#faq", label: "FAQ" },
   { href: "/research", label: "Research" },
@@ -14,7 +14,7 @@ const NAV_LINKS = [
 const OVERLAY_LINKS = [
   ...NAV_LINKS,
   { href: "/research/ai-visibility-tools", label: "AI Visibility Tools" },
-  { href: "/capabilities", label: "Capabilities" },
+  { href: "/capabilities", label: "The Climb" },
 ];
 
 export default function Nav() {

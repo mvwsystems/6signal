@@ -5,76 +5,74 @@ import { useMicroInteractions } from "../hooks/useMicroInteractions";
 import AuditPopupButton from "../components/AuditPopupButton";
 import Link from "next/link";
 
-const buckets = [
+// The Climb — the four-rung practice map. Every rung: a build fee and a run
+// fee. Scale is the front door (the visibility funnel); Stabilize and
+// Systemize are entered through the qualified team training -> paid scoping
+// path. Segment/Sell rungs were deliberately dropped (out of competence).
+const rungs = [
   {
     num: "01",
-    title: "Build",
+    title: "Start",
     tag: "Foundation",
-    pos: "For contractors whose website, landing page, or digital foundation is making the company harder to trust, understand, or contact.",
-    lead: "Visibility-ready websites for contractors whose current site is holding the signal back.",
+    pos: "For contractors whose website and brand are underselling the company — making them harder to trust, understand, or contact.",
+    lead: "A credible foundation: brand, website, and the structure machines and buyers both read.",
     items: [
-      "AI-built contractor websites",
-      "Landing pages optimized for conversion",
+      "Contractor website rebuild — $1,500 flat, copy written for you",
+      "Brand and media kit",
       "Visibility-ready site structure and schema",
       "Conversion copy and service page architecture",
-      "Basic tracking and analytics setup",
+      "Website Care Plan — $97/month to keep it live and current",
     ],
+    ctaLabel: "See the rebuild →",
+    ctaHref: "/websites",
   },
   {
     num: "02",
-    title: "Grow",
-    tag: "Demand",
-    pos: "For contractors who need more of the right buyers to find, verify, and choose them.",
-    lead: "Organic and AI visibility compounds over time. Paid demand accelerates it when the timeline requires.",
+    title: "Stabilize",
+    tag: "Front office",
+    pos: "For contractors losing opportunities between the ring and the booked job — missed calls, slow follow-up, unsorted inboxes.",
+    lead: "Front-end AI systems that answer, book, sort, and follow up — so the phone your visibility rings actually converts.",
     items: [
-      "AI visibility / GEO / SEO implementation",
-      "Google Business Profile optimization",
-      "Review and trust engine",
-      "Paid ads and lead generation",
-      "Local search and service-area visibility",
+      "AI receptionist and voice agents",
+      "Missed-call text-back and booking flows",
+      "Email sorting and drafted responses",
+      "Lead routing, qualification, and follow-up sequences",
+      "CRM pipeline setup",
     ],
+    ctaLabel: "See Stabilize →",
+    ctaHref: "/stabilize",
   },
   {
     num: "03",
-    title: "Capture",
-    tag: "Response",
-    pos: "For contractors who are getting interest but losing opportunities through missed calls, slow response, weak routing, or poor follow-up.",
-    lead: "The lead already found you. These systems make sure you actually capture it.",
+    title: "Scale",
+    tag: "Growth",
+    pos: "For contractors who need more of the right buyers to find, verify, and choose them.",
+    lead: "Visibility-led growth: the six-signal system across AI, Maps, answer engines, and voice — with SEO and paid ads as amplifiers, not the strategy.",
     items: [
-      "Missed-call text-back",
-      "AI receptionist",
-      "Lead routing and qualification",
-      "Form follow-up sequences",
-      "CRM pipeline setup",
+      "The six-signal visibility system — GEO, AEO, LEO, VEO, PEO, IEO",
+      "Google Business Profile and local entity work",
+      "Review and trust engine",
+      "SEO and paid ads as amplifiers inside the system",
+      "Monthly signal tracking and reporting",
     ],
+    ctaLabel: "Start with the $27 audit →",
+    ctaHref: "/visibility-check",
   },
   {
     num: "04",
-    title: "Automate",
-    tag: "Operations",
-    pos: "For contractors whose admin, communication, reporting, or internal workflows are consuming too much owner and team time.",
-    lead: "Reclaim owner time through systems that run without constant intervention.",
+    title: "Systemize",
+    tag: "Internal ops",
+    pos: "For contractors whose back office is consuming the margin the front office earns — manual bookkeeping, scattered fleet and field communication, estimating bottlenecks.",
+    lead: "AI infrastructure for the operation itself — built custom, integrated with the tools you already run.",
     items: [
-      "AI follow-up and nurture systems",
-      "Email triage and inbox management",
-      "Operations and dispatch workflows",
-      "Reporting dashboards",
-      "RAG and internal knowledge assistants",
+      "Bookkeeping and back-office automation",
+      "Field-to-office communication systems",
+      "Fleet and job tracking dashboards",
+      "Estimating and bid support systems",
+      "Internal knowledge assistants on your own data",
     ],
-  },
-  {
-    num: "05",
-    title: "Advise",
-    tag: "Strategy",
-    pos: "For contractor owners who want strategic help deciding where AI, automation, marketing, and systems should actually fit in the business.",
-    lead: "Not a deck. A working session with someone who has actually built these systems for contractors.",
-    items: [
-      "AI strategy for contractor businesses",
-      "Owner-level advisory engagements",
-      "AI workshops and team training",
-      "Systems consulting",
-      "Custom implementation planning",
-    ],
+    ctaLabel: "See Systemize →",
+    ctaHref: "/systemize",
   },
 ];
 
@@ -89,52 +87,55 @@ export default function CapabilitiesPage() {
       <header className="inner-hero">
         <div className="wrap">
           <div className="inner-hero-inner">
-            <span className="idx reveal">Capabilities</span>
+            <span className="idx reveal">The Climb</span>
             <h1 className="display reveal">
-              More ways 6 Signal helps<br />
-              <em>contractors get found,<br />booked, and systemized.</em>
+              One practice.<br />
+              <em>Four rungs.</em>
             </h1>
             <p className="hero-deck reveal">
-              AI and search visibility is the front door. These are the supporting services
-              we use when a contractor needs the foundation built, the demand captured,
-              the follow-up automated, or the operation tightened.
+              Every contractor business is somewhere on the same climb: get credible,
+              stop losing what you earn, get found, then run the operation on systems
+              instead of willpower. 6 Signal works all four rungs — one operator,
+              hands-on, a limited number of engagements at a time.
             </p>
           </div>
         </div>
       </header>
 
-      {/* FRAMING */}
+      {/* FRAMING — the positioning statement */}
       <section className="svc-framing rule">
         <div className="wrap">
           <div className="svc-framing-inner reveal">
-            <span className="idx">The approach</span>
+            <span className="idx">Not an agency</span>
             <p className="svc-framing-text">
-              6 Signal is intentionally focused: <strong>visibility first.</strong> But
-              visibility often exposes deeper gaps — weak websites, missed calls, poor
-              follow-up, scattered tools, or manual operations. When that happens, these
-              are the systems we can build or coordinate.
+              <strong>6 Signal is not an agency.</strong> It&rsquo;s a specialized practice
+              run by one operator. No account managers, no sales reps, no junior team
+              learning on your business — the person you talk to is the person who does
+              the work, at every rung. One contractor per trade, per market. Every rung
+              has a build fee and a run fee, priced for the work — not for a pitch deck.
             </p>
           </div>
         </div>
       </section>
 
-      {/* SERVICE BUCKETS */}
+      {/* THE RUNGS */}
       <section className="svc-buckets rule">
         <div className="wrap">
           <div className="sec-head">
             <div className="left">
-              <span className="idx">What we build</span>
+              <span className="idx">The practice map</span>
               <h2 className="display">
-                Five service<br /><em>systems.</em>
+                Start. Stabilize.<br /><em>Scale. Systemize.</em>
               </h2>
             </div>
             <div className="right">
-              Each bucket addresses a different layer of the contractor growth problem.
-              They can be engaged separately or coordinated as a connected system.
+              The rungs are sequential for a reason — visibility wasted on a weak
+              foundation leaks, and automation built on a chaotic operation automates
+              the chaos. We meet you at your rung and climb from there.
             </div>
           </div>
           <div className="svc-list">
-            {buckets.map((b) => (
+            {rungs.map((b) => (
               <div className="svc-row reveal" key={b.num}>
                 <div className="svc-num">{b.num}</div>
                 <div className="svc-title-col">
@@ -149,9 +150,38 @@ export default function CapabilitiesPage() {
                       <li key={item}>{item}</li>
                     ))}
                   </ul>
+                  <p style={{ marginTop: "18px" }}>
+                    <Link href={b.ctaHref} className="idx" style={{ color: "#E6FF00", textDecoration: "none" }}>
+                      {b.ctaLabel}
+                    </Link>
+                  </p>
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* TRAINING — the door-opener */}
+      <section className="svc-framing rule">
+        <div className="wrap">
+          <div className="svc-framing-inner reveal">
+            <span className="idx">For teams · by invitation</span>
+            <p className="svc-framing-text">
+              <strong>The AI team training.</strong> For established contractors — existing
+              clients, referrals, and businesses at roughly $1M+ revenue — we run a free,
+              on-site AI training for your team: what AI changes for your trade, what it
+              doesn&rsquo;t, and what&rsquo;s worth automating first. No charge, no pitch
+              during the session. If there&rsquo;s a fit for Stabilize or Systemize work,
+              the conversation continues from there.{" "}
+              <a
+                href="mailto:hello@6signal.co?subject=%F0%9F%94%A5%20Team%20Training%20%F0%9F%94%A5"
+                style={{ color: "#f5f5f3", textDecoration: "underline" }}
+              >
+                Request the training
+              </a>
+              .
+            </p>
           </div>
         </div>
       </section>
@@ -218,7 +248,7 @@ export default function CapabilitiesPage() {
             <div className="left">
               <span className="idx">Right fit</span>
               <h2 className="display">
-                When these services<br /><em>make sense.</em>
+                When the climb<br /><em>makes sense.</em>
               </h2>
             </div>
             <div className="right">
@@ -231,8 +261,8 @@ export default function CapabilitiesPage() {
                 <span className="sym">+</span> Good fit
               </div>
               <ul>
-                <li>You already booked or completed a Visibility Audit.</li>
-                <li>Your visibility gaps point to a deeper foundation problem.</li>
+                <li>You already ran the $27 audit — or you&rsquo;re ready to.</li>
+                <li>Your gaps point to a deeper foundation or operations problem.</li>
                 <li>You need implementation, not just advice.</li>
                 <li>You want AI and automation tied to revenue, response time, or operational leverage.</li>
                 <li>You want a connected system — not disconnected tactics.</li>
@@ -258,14 +288,14 @@ export default function CapabilitiesPage() {
       <section className="svc-cta-section rule">
         <div className="wrap">
           <div className="svc-cta-inner reveal">
-            <span className="idx svc-cta-eyebrow">First step</span>
+            <span className="idx svc-cta-eyebrow">First step — whatever your rung</span>
             <h2 className="display svc-cta-h2">
-              Start with the<br /><em>Visibility Audit.</em>
+              Start with the<br /><em>$27 audit.</em>
             </h2>
             <p className="svc-cta-deck">
               The audit shows what is actually broken first — visibility, trust,
               follow-up, website structure, local data, or operations. Then we decide
-              which system is worth building.
+              which rung is worth climbing, and in what order.
             </p>
             <div className="svc-cta-btns">
               <AuditPopupButton className="btn btn-primary btn-lg">
