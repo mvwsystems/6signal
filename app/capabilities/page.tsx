@@ -175,7 +175,7 @@ export default function CapabilitiesPage() {
               during the session. If there&rsquo;s a fit for Stabilize or Systemize work,
               the conversation continues from there.{" "}
               <a
-                href="mailto:hello@6signal.co?subject=%F0%9F%94%A5%20Team%20Training%20%F0%9F%94%A5"
+                href="/inquire?about=training"
                 style={{ color: "#f5f5f3", textDecoration: "underline" }}
               >
                 Request the training

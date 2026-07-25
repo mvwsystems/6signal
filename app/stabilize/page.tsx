@@ -4,8 +4,8 @@ import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
 
-const TRAINING_MAILTO = "mailto:hello@6signal.co?subject=%F0%9F%94%A5%20Team%20Training%20%F0%9F%94%A5";
-const SCOPING_MAILTO = "mailto:hello@6signal.co?subject=%F0%9F%94%A5%20Stabilize%20Scoping%20%F0%9F%94%A5";
+const TRAINING_MAILTO = "/inquire?about=training";
+const SCOPING_MAILTO = "/inquire?about=stabilize";
 
 const systems = [
   {

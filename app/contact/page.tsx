@@ -11,19 +11,39 @@ export default function ContactPage() {
   useMicroInteractions();
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const get = (id: string) => (form.elements.namedItem(id) as HTMLInputElement | null)?.value ?? "";
     const name = get("name");
     const company = get("company");
+    const email = get("email");
     const phone = get("phone");
     const trade = get("trade");
     const message = get("message");
 
+    // Server-side send (works without a configured mail client). The old
+    // mailto composer stays as the fallback if the API is unreachable.
+    try {
+      const r = await fetch("/api/inquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          company,
+          email,
+          phone,
+          regarding: "general",
+          message: [trade ? `Trade: ${trade}` : "", message].filter(Boolean).join("\n\n"),
+        }),
+      });
+      if (r.ok) { setSubmitted(true); return; }
+    } catch { /* fall through to mailto */ }
+
     const body = [
       name ? `Name: ${name}` : "",
       company ? `Company: ${company}` : "",
+      email ? `Email: ${email}` : "",
       phone ? `Phone: ${phone}` : "",
       trade ? `Trade: ${trade}` : "",
       message ? `\nMessage:\n${message}` : "",
@@ -138,7 +158,7 @@ export default function ContactPage() {
                 <>
                   <h3>Or send a message</h3>
                   <p className="form-note" style={{ marginTop: "8px", marginBottom: "24px" }}>
-                    Clicking Send opens your email client with these details pre-filled — the message sends from your address.
+                    Sends directly to Matt — no email client needed. Same-day reply, usually within a few hours.
                   </p>
                   <form onSubmit={handleSubmit}>
                     <div className="form-row">
