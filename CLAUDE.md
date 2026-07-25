@@ -168,6 +168,9 @@ regenerates the brief on any device. Completed briefs also get a permalink
 
 ## 9. Companion docs
 
+- [WEBSITE_BUILD_PLAYBOOK.md](WEBSITE_BUILD_PLAYBOOK.md) — template CLAUDE.md for client website
+  builds: copy into each new build folder as `CLAUDE.md`; the owner pastes the 🔥 intake email as
+  the kickoff. Client builds NEVER happen in this repo.
 - [CODEBASE_CONTEXT.md](CODEBASE_CONTEXT.md) — most current structural reference (routes, funnel, conventions)
 - [6SIGNAL_BRAND_BRIEF.md](6SIGNAL_BRAND_BRIEF.md) — voice + design (authoritative); offer/signals sections stale
 - [CONTENT_ARCHITECTURE.md](CONTENT_ARCHITECTURE.md) — blog pillar map, internal-link gaps, content roadmap
