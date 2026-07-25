@@ -38,6 +38,7 @@ function productFromAmount(amountTotal: number | null): string {
     case 2700: return "brief_27";
     case 9700: return "strategy_97";
     case 19700: return "call_197";
+    case 50000: return "apple_setup_500";
     case 75000: return "website_deposit_750";
     default: return "unknown";
   }
@@ -99,9 +100,10 @@ export async function POST(req: Request) {
       brief_27: "AI Visibility Audit",
       strategy_97: "Strategy Brief",
       call_197: "Strategy Call",
+      apple_setup_500: "APPLE BUSINESS SETUP",
       website_deposit_750: "WEBSITE BUILD DEPOSIT",
     };
-    const urgent = product === "website_deposit_750" || product === "call_197";
+    const urgent = product === "website_deposit_750" || product === "call_197" || product === "apple_setup_500";
     await pushAlert({
       title: `${labels[product] ?? "Purchase"} — ${amount}`,
       message:
