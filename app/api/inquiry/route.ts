@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { insertLead } from "../../lib/db";
 import { sendEmail, emailShell, heading, paragraph, monoLabel } from "../../lib/email";
+import { pushAlert } from "../../lib/notify";
 
 // Structured inquiry form (/inquire + /contact). Replaces the old mailto:
 // links, which silently fail for anyone without a configured mail client.
@@ -68,6 +69,13 @@ export async function POST(req: NextRequest) {
 
   // Best-effort lead record — funnel unaffected if persistence is off.
   await insertLead({ businessId: null, email, source: `inquiry_${about}` });
+
+  await pushAlert({
+    title: `Inquiry — ${LABELS[about]}`,
+    message: `${name}${company?.trim() ? ` (${company})` : ""} · ${email}`,
+    priority: "default",
+    tags: "inbox_tray",
+  });
 
   if (!sent) {
     return NextResponse.json({ error: "Send failed — email hello@6signal.co directly." }, { status: 502 });

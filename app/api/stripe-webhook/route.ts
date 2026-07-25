@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { markIntakePaid, recordPurchase } from "../../lib/db";
 import { sendEmail, emailShell, heading, paragraph, button, monoLabel } from "../../lib/email";
+import { pushAlert } from "../../lib/notify";
 
 // Stripe webhook: records every checkout.session.completed so purchases are
 // linked to intakes server-side, and emails the buyer a recovery link to
@@ -89,6 +90,28 @@ export async function POST(req: Request) {
   });
 
   if (intakeId) await markIntakePaid(intakeId);
+
+  // Instant phone push for every sale. Website deposits and Strategy Calls
+  // are urgent — both mean the owner picks up the phone.
+  if (isNew) {
+    const amount = amountTotal != null ? `$${(amountTotal / 100).toFixed(0)}` : "$?";
+    const labels: Record<string, string> = {
+      brief_27: "AI Visibility Audit",
+      strategy_97: "Strategy Brief",
+      call_197: "Strategy Call",
+      website_deposit_750: "WEBSITE BUILD DEPOSIT",
+    };
+    const urgent = product === "website_deposit_750" || product === "call_197";
+    await pushAlert({
+      title: `${labels[product] ?? "Purchase"} — ${amount}`,
+      message:
+        product === "website_deposit_750"
+          ? `${email ?? "unknown buyer"} paid the deposit. Call them to lock direction — they're expecting it.`
+          : `${email ?? "unknown buyer"} · ${product}`,
+      priority: urgent ? "urgent" : "default",
+      tags: urgent ? "rotating_light,moneybag" : "moneybag",
+    });
+  }
 
   // Recovery email: even if localStorage dies on the way back from Stripe,
   // the buyer has a durable link to their results.
