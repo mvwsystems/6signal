@@ -60,7 +60,7 @@ const FALLBACK: Section[] = [
 ];
 
 export async function POST(req: NextRequest) {
-  let body: { trade?: string; company?: string } | null = null;
+  let body: { trade?: string; company?: string; currentSite?: string } | null = null;
   try {
     body = await req.json();
   } catch {
@@ -68,6 +68,7 @@ export async function POST(req: NextRequest) {
   }
   const trade = body?.trade?.trim() || "general contracting";
   const company = body?.company?.trim() || "the company";
+  const currentSite = body?.currentSite?.trim() || "";
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (apiKey) {
@@ -96,7 +97,7 @@ Rules:
           messages: [
             {
               role: "user",
-              content: `Trade: ${trade}\nCompany: ${company}\n\nGenerate the questionnaire JSON now.`,
+              content: `Trade: ${trade}\nCompany: ${company}\n${currentSite ? `Current website: ${currentSite} — already collected, do NOT ask for it. They have an existing site, so ask what they want kept, changed, or killed from it instead.` : "No current website provided."}\n\nGenerate the questionnaire JSON now.`,
             },
           ],
         }),

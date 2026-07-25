@@ -41,7 +41,7 @@ export default function StartPage() {
   useMicroInteractions();
 
   const [step, setStep] = useState<"contact" | "generating" | "questions" | "submitting" | "done">("contact");
-  const [contact, setContact] = useState({ name: "", email: "", phone: "", company: "", trade: "", tradeOther: "", hp: "" });
+  const [contact, setContact] = useState({ name: "", email: "", phone: "", company: "", trade: "", tradeOther: "", currentSite: "", hp: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sections, setSections] = useState<Section[]>([]);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -101,10 +101,17 @@ export default function StartPage() {
       const r = await fetch("/api/website-questions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ trade, company: contact.company }),
+        body: JSON.stringify({ trade, company: contact.company, currentSite: contact.currentSite }),
       });
       const data = await r.json();
-      setSections(Array.isArray(data?.sections) && data.sections.length ? data.sections : []);
+      let secs: Section[] = Array.isArray(data?.sections) && data.sections.length ? data.sections : [];
+      // Current site already collected up front — drop any duplicate ask.
+      if (contact.currentSite.trim()) {
+        secs = secs
+          .map((s) => ({ ...s, questions: s.questions.filter((q) => !/current.*(web)?site|existing site/i.test(q.label) && q.id !== "current_site") }))
+          .filter((s) => s.questions.length > 0);
+      }
+      setSections(secs);
       setStep("questions");
       window.scrollTo({ top: 0 });
     } catch {
@@ -131,6 +138,7 @@ export default function StartPage() {
         phone: contact.phone,
         company: contact.company,
         trade,
+        currentSite: contact.currentSite,
         hp: contact.hp,
         answers: sections.flatMap((s) =>
           s.questions
@@ -235,6 +243,11 @@ export default function StartPage() {
                     {errors.tradeOther && <span className="vc2-error">{errors.tradeOther}</span>}
                   </div>
                 )}
+                <div className="vc2-field vc2-field--full">
+                  <label className="vc2-label">Current Website URL <span className="vc2-optional">(optional)</span></label>
+                  <input className="vc2-input" type="text" placeholder="https://yourbusiness.com — we'll pull what's worth keeping from it" value={contact.currentSite}
+                    onChange={(e) => setC("currentSite", e.target.value)} autoComplete="url" />
+                </div>
                 <input type="text" value={contact.hp} onChange={(e) => setC("hp", e.target.value)} tabIndex={-1}
                   autoComplete="off" aria-hidden="true"
                   style={{ position: "absolute", left: "-9999px", height: 0, width: 0, opacity: 0 }} />

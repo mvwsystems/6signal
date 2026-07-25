@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
     phone?: string;
     company?: string;
     trade?: string;
+    currentSite?: string;
     answers?: { section: string; label: string; answer: string }[];
     hp?: string;
   } | null = null;
@@ -26,7 +27,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const { name, email, phone, company, trade, answers, hp } = body ?? {};
+  const { name, email, phone, company, trade, currentSite, answers, hp } = body ?? {};
   if (hp) return NextResponse.json({ ok: true, id: null });
 
   if (!name?.trim() || !company?.trim() || !trade?.trim() || !email?.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -36,7 +37,7 @@ export async function POST(req: NextRequest) {
 
   // Persist first — the funnel works even if email fails.
   const serviceArea = answered.find((a) => /service area|cities|where/i.test(a.label))?.answer ?? "TBD";
-  const businessId = await upsertBusiness({ name: company, url: "", trade, city: serviceArea.slice(0, 80) });
+  const businessId = await upsertBusiness({ name: company, url: currentSite ?? "", trade, city: serviceArea.slice(0, 80) });
   const intakeId = await createIntake({
     businessId,
     form: {
@@ -46,6 +47,7 @@ export async function POST(req: NextRequest) {
       phone: phone ?? "",
       company,
       trade,
+      currentSite: currentSite ?? "",
       answers: answered,
     },
   });
@@ -80,6 +82,7 @@ export async function POST(req: NextRequest) {
         heading(`${esc(company)} — ${esc(trade)}`),
         paragraph(
           `<strong style="color:#f5f5f3;">Contact:</strong> ${esc(name)} · ${esc(email)}${phone?.trim() ? ` · ${esc(phone)}` : ""}<br/>` +
+          (currentSite?.trim() ? `<strong style="color:#f5f5f3;">Current website:</strong> ${esc(currentSite)} — crawl it for seed material at build time<br/>` : "") +
           `<strong style="color:#f5f5f3;">Intake ID:</strong> ${intakeId ?? "not persisted"}<br/>` +
           `<strong style="color:#f5f5f3;">Deposit:</strong> sent to Stripe next — a second 🔥 email confirms payment.`
         ),

@@ -30,6 +30,13 @@ Intake below. Start Phase 1.
 [paste of the 🔥 Website Build Intake email body]
 ```
 
+**If the intake includes a current website URL:** fetch and read it before
+Phase 1. Mine it for seed material — real service lists, service areas, photos
+worth keeping, license numbers, review quotes, phone/address. Treat it as a
+source to verify against the intake, not a template to copy: the client is
+paying to replace it. Where the old site and the intake conflict, the intake
+(and the Phase 0 call) win.
+
 **Truth rules (non-negotiable, same ethic as 6signal.co):**
 - Never invent facts: no fabricated reviews, testimonials, years in business,
   license numbers, certifications, project claims, or service areas.
