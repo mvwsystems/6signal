@@ -92,6 +92,14 @@ static is the default for a reason (speed, simplicity, $97/mo care margin).
 
 ## 5. Process — three phases with review gates
 
+**Phase 0 — The direction call (owner ↔ client, before any design work).**
+Happens after the deposit clears; the client has been told at checkout and in
+the confirmation email to expect it. The owner reads the full intake before
+dialing — the call locks direction, resolves open questions, and adds anything
+the questionnaire couldn't capture. Notes from this call get pasted into the
+kickoff prompt alongside the intake; where call notes and intake answers
+conflict, the call wins.
+
 **Phase 1 — Design system + homepage.** Build the full homepage and the shared
 design system (colors, type, components). Then STOP and serve it for the
 owner's visual review — `npx serve` (static) or `npm run dev` (Next). This is

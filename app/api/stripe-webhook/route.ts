@@ -128,7 +128,7 @@ export async function POST(req: Request) {
           paragraph(
             `<strong style="color:#f5f5f3;">Buyer:</strong> ${email ?? "unknown"}<br/>` +
             `<strong style="color:#f5f5f3;">Intake:</strong> ${intakeId ?? "no intake linked — check the 🔥 Website Build Intake email for the questionnaire"}<br/>` +
-            `<strong style="color:#f5f5f3;">Next:</strong> open Claude Code and start the build from the intake answers.`
+            `<strong style="color:#f5f5f3;">Next:</strong> call the client to lock direction (they've been told to expect it), then open Claude Code and start the build from the intake answers.`
           ),
         ].join("")
       ),
@@ -142,10 +142,13 @@ export async function POST(req: Request) {
             monoLabel("6 Signal · Website build"),
             heading("We're on it."),
             paragraph(
-              "Your $750 deposit is confirmed and your build is in the queue. You'll hear from Matt Vincent Walker directly with a first preview — most sites are live within 2–3 weeks of this email. The remaining $750 is due at launch, once you've approved the site."
+              "Your $750 deposit is confirmed and your build is in the queue. First: expect a call from Matt Vincent Walker. He'll have already been through every answer in your questionnaire before he dials — the call is where the direction gets locked, and where you get his read on what actually moves buyers in your market. It's short, and it's why one-operator builds come out right the first time."
             ),
             paragraph(
-              `Questions or something to add? Reply to this email — it goes straight to the operator building your site.`
+              "After that call, the build starts. You'll see a first preview before the full site is built, and most sites are live within 2–3 weeks of this email. The remaining $750 is due at launch, once you've approved the site."
+            ),
+            paragraph(
+              `Something to add before the call? Reply to this email — it goes straight to the operator building your site.`
             ),
           ].join("")
         ),

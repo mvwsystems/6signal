@@ -307,7 +307,7 @@ export default function StartPage() {
                 </button>
                 <p className="vc2-form-note">
                   {submitError ?? (STRIPE_DEPOSIT
-                    ? "Secure payment via Stripe. $750 now, $750 at launch. Build starts on deposit."
+                    ? "Secure payment via Stripe. $750 now, $750 at launch. After your deposit clears, expect a direction call from the operator — then the build starts."
                     : "$1,500 flat — half up front, half at launch. Your deposit link follows by email.")}
                 </p>
               </div>
@@ -320,8 +320,11 @@ export default function StartPage() {
               <p>
                 Your answers just landed with Matt Vincent Walker directly. Next: your
                 $750 deposit link arrives by email (half of the $1,500 flat price —
-                the rest is due at launch). The build starts the moment the deposit
-                clears, and most sites are live within 2–3 weeks.
+                the rest is due at launch). Once the deposit clears, expect a call
+                from Matt before any design work begins — he&rsquo;ll have already been
+                through every answer you gave, and the call is where the direction
+                gets locked. One operator, no project managers, no ticket numbers.
+                Most sites are live within 2–3 weeks.
               </p>
             </div>
           )}
