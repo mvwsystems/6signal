@@ -168,6 +168,9 @@ regenerates the brief on any device. Completed briefs also get a permalink
 
 ## 9. Companion docs
 
+- [OFFER_TRUTH.md](OFFER_TRUTH.md) — the locked source of truth for the $27 AI Visibility Audit
+  (name, price framing, deliverables, refund/exclusivity language, ladder position, canonical
+  objection answers). Copy that contradicts it is wrong; change the doc first, then the copy.
 - [WEBSITE_BUILD_PLAYBOOK.md](WEBSITE_BUILD_PLAYBOOK.md) — template CLAUDE.md for client website
   builds: copy into each new build folder as `CLAUDE.md`; the owner pastes the 🔥 intake email as
   the kickoff. Client builds NEVER happen in this repo.

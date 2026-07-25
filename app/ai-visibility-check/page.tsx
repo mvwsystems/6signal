@@ -273,7 +273,11 @@ export default function AIVisibilityCheckPage() {
   // Two-option CTA block (used in Zone 2)
   const Zone2CTA = () => (
     <div className="lp-cta-pair">
-      <Link href="/visibility-check" className="btn btn-primary btn-lg" onClick={handleGoToPaid}>
+      <Link
+        href={`/visibility-check${form.trade ? `?trade=${encodeURIComponent(form.trade)}` : ""}`}
+        className="btn btn-primary btn-lg"
+        onClick={handleGoToPaid}
+      >
         Get My AI Visibility Audit — $27 {ARROW}
       </Link>
       <a href="#free-check-form" className="btn btn-ghost" onClick={scrollToForm}>
@@ -477,7 +481,7 @@ export default function AIVisibilityCheckPage() {
                 <div className="avc-upsell-opts">
                   <div className="avc-upsell-opt-wrap">
                     <Link
-                      href="/visibility-check"
+                      href={`/visibility-check${form.trade ? `?trade=${encodeURIComponent(form.trade)}` : ""}`}
                       className="btn btn-primary btn-lg avc-upsell-btn"
                       onClick={handleGoToPaid}
                     >

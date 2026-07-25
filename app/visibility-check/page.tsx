@@ -7,9 +7,38 @@ import { trackEvent } from "../lib/fbq";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const AI_RESPONSE =
-  "Based on reviews and online presence, top-rated plumbers in Fort Worth include Rescue Rooter, Milestone Electric & Plumbing, and Benjamin Franklin Plumbing.";
-const AI_WORDS = AI_RESPONSE.split(" ");
+// Demo matches the visitor's trade (?trade= from ads or the free check).
+// Names mirror the ad creative's illustrative convention — never real companies.
+const TRADE_DEMOS: Record<string, { q: string; a: string }> = {
+  hvac: {
+    q: "Who's the best HVAC contractor in Dallas–Fort Worth?",
+    a: "Based on reviews and online presence, top-rated HVAC companies in Dallas–Fort Worth include Competitor A Mechanical, Competitor B Services, and Competitor C HVAC.",
+  },
+  plumbing: {
+    q: "Who's the best plumber in Fort Worth TX?",
+    a: "Based on reviews and online presence, top-rated plumbers in Fort Worth include Competitor A Plumbing, Competitor B Rooter, and Competitor C Plumbing Co.",
+  },
+  roofing: {
+    q: "Who should I call for roof repair in Dallas–Fort Worth?",
+    a: "Based on reviews and online presence, top-rated roofers in Dallas–Fort Worth include Competitor A Roofing, Competitor B Exteriors, and Competitor C Roofing Co.",
+  },
+  electrical: {
+    q: "Who's the best electrician near Fort Worth?",
+    a: "Based on reviews and online presence, top-rated electricians in Fort Worth include Competitor A Electric, Competitor B Services, and Competitor C Electrical.",
+  },
+};
+
+// Default mirrors the live ad creative (HVAC / Dallas–Fort Worth).
+const DEFAULT_DEMO = "hvac";
+
+function normalizeTrade(raw: string | null): string {
+  const t = (raw ?? "").toLowerCase();
+  if (t.includes("plumb")) return "plumbing";
+  if (t.includes("hvac") || t.includes("air")) return "hvac";
+  if (t.includes("roof")) return "roofing";
+  if (t.includes("electric")) return "electrical";
+  return DEFAULT_DEMO;
+}
 
 const TRADES = [
   "Plumbing",
@@ -115,19 +144,20 @@ const FAQS = [
 
 // ─── Mock Chat Animation ──────────────────────────────────────────────────────
 
-function MockChat() {
+function MockChat({ demo }: { demo: { q: string; a: string } }) {
   const [showUser, setShowUser] = useState(false);
   const [showTyping, setShowTyping] = useState(false);
   const [wordCount, setWordCount] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [faded, setFaded] = useState(false);
+  const AI_WORDS = demo.a.split(" ");
 
   useEffect(() => {
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
 
     if (isMobile) {
       setShowUser(true);
-      setWordCount(AI_WORDS.length);
+      setWordCount(demo.a.split(" ").length);
       setShowResult(true);
       return;
     }
@@ -158,7 +188,8 @@ function MockChat() {
 
     runSequence();
     return () => allTimers.forEach(clearTimeout);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [demo]);
 
   return (
     <div className={`vc2-mock${faded ? " vc2-mock--faded" : ""}`}>
@@ -172,7 +203,7 @@ function MockChat() {
         {showUser && (
           <div className="vc2-mock-row vc2-mock-row--user">
             <span className="vc2-mock-bubble">
-              Who&rsquo;s the best plumber in Fort Worth TX?
+              {demo.q}
             </span>
           </div>
         )}
@@ -223,6 +254,12 @@ export default function VisibilityCheckPage() {
   const [heroVisible, setHeroVisible] = useState(true);
   const heroRef = useRef<HTMLElement>(null);
   const partialLeadSent = useRef(false);
+  const [demoKey, setDemoKey] = useState(DEFAULT_DEMO);
+
+  // Match the hero demo to the visitor's trade (?trade= from ads / free check).
+  useEffect(() => {
+    setDemoKey(normalizeTrade(new URLSearchParams(window.location.search).get("trade")));
+  }, []);
 
   // Sticky bar visibility — appears when hero scrolls out of view
   useEffect(() => {
@@ -326,14 +363,16 @@ export default function VisibilityCheckPage() {
           <div className="vc2-hero-left reveal">
             <span className="idx vc2-hero-eyebrow">AI Visibility Audit</span>
             <h1 className="display vc2-hero-headline">
-              Find out if AI recommends
+              AI is already recommending
               <br />
-              your business —{" "}
-              <em>or your competitor.</em>
+              someone.{" "}
+              <em>Find out if it&rsquo;s you.</em>
             </h1>
             <p className="vc2-hero-sub">
-              Contractors losing work to AI invisibility don&rsquo;t know it
-              yet. In 60 seconds, you will.
+              When a homeowner asks ChatGPT or Google who to call, three names
+              come back — and the rest of the market doesn&rsquo;t exist. In 60
+              seconds you&rsquo;ll know if you&rsquo;re one of the three, and
+              exactly what to fix if you&rsquo;re not.
             </p>
             <button className="btn btn-primary btn-lg" onClick={scrollToForm}>
               Get My AI Visibility Audit — $27
@@ -348,13 +387,13 @@ export default function VisibilityCheckPage() {
               </svg>
             </button>
             <span className="vc2-hero-trust">
-              Results appear immediately after payment · PDF included · No
-              subscription · Refund if it fails
+              60-second results · PDF included · Refund if it fails · One
+              contractor per market
             </span>
           </div>
 
           <div className="vc2-hero-right reveal">
-            <MockChat />
+            <MockChat demo={TRADE_DEMOS[demoKey]} />
           </div>
         </div>
       </header>
@@ -518,7 +557,7 @@ export default function VisibilityCheckPage() {
               </button>
               <p className="vc2-form-note">
                 Secure payment via Stripe. Your audit generates immediately on-screen
-                after checkout.
+                after checkout. $27 — less than your own service-call fee.
               </p>
             </div>
           </form>
@@ -658,7 +697,7 @@ export default function VisibilityCheckPage() {
             <em>Find out if you are.</em>
           </h2>
           <p className="vc2-final-sub reveal">
-            $27 · Results in 60 seconds · PDF included · Refund if it fails
+            $27 · 60-second results · Refund if it fails · One contractor per market
           </p>
           <button
             className="btn btn-primary btn-lg reveal"
