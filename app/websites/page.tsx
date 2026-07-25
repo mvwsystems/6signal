@@ -258,6 +258,28 @@ export default function WebsitesPage() {
         </div>
       </section>
 
+      {/* READY TO START — self-serve intake */}
+      <section className="mid-cta">
+        <div className="wrap">
+          <h3>
+            Ready to get started?
+            <br />
+            <em>Skip the call — start the build now.</em>
+          </h3>
+          <p style={{ maxWidth: "560px", margin: "0 auto 28px", fontSize: "15px", lineHeight: 1.7, color: "#9a9a98" }}>
+            Answer a questionnaire built for your specific trade (about ten minutes),
+            pay half of the $1,500 up front, and the build begins. Most sites are
+            live within 2&ndash;3 weeks.
+          </p>
+          <Link href="/start" className="btn btn-primary btn-lg">
+            Ready to Get Started?
+            <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
+              <path d="M0 5h14M10 1l4 4-4 4" />
+            </svg>
+          </Link>
+        </div>
+      </section>
+
       {/* AFTER LAUNCH — CARE PLAN HANDOFF */}
       <section className="mid-cta">
         <div className="wrap">

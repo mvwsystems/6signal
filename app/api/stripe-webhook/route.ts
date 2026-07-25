@@ -37,6 +37,7 @@ function productFromAmount(amountTotal: number | null): string {
     case 2700: return "brief_27";
     case 9700: return "strategy_97";
     case 19700: return "call_197";
+    case 75000: return "website_deposit_750";
     default: return "unknown";
   }
 }
@@ -92,24 +93,64 @@ export async function POST(req: Request) {
   // Recovery email: even if localStorage dies on the way back from Stripe,
   // the buyer has a durable link to their results.
   if (isNew && email && intakeId && (product === "brief_27" || product === "strategy_97")) {
+    const doc = product === "brief_27" ? "audit" : "Strategy Brief";
     const link = `${SITE}/audit-results?intake=${intakeId}`;
     await sendEmail({
       to: email,
-      subject: "Your 6 Signal brief — permanent access link",
+      subject: `Your 6 Signal ${doc} — permanent access link`,
       html: emailShell(
         [
           monoLabel("Order confirmed"),
-          heading("Your brief is ready when you are."),
+          heading(`Your ${doc} is ready when you are.`),
           paragraph(
-            "Your results should already be on screen. If you closed the tab, switched devices, or anything interrupted the page, this link regenerates your brief from the details you submitted — any time, any device."
+            `Your results should already be on screen. If you closed the tab, switched devices, or anything interrupted the page, this link regenerates your ${doc} from the details you submitted — any time, any device.`
           ),
-          button("Open my brief", link),
+          button(`Open my ${doc}`, link),
           paragraph(
             `If anything looks wrong, reply to this email or write <a href="mailto:hello@6signal.co" style="color:#E6FF00;">hello@6signal.co</a> and we'll fix it or refund you. No forms, no friction.`
           ),
         ].join("")
       ),
     });
+  }
+
+  // Website build deposit: alert the owner (build is greenlit) and confirm
+  // to the buyer what happens next.
+  if (isNew && product === "website_deposit_750") {
+    await sendEmail({
+      to: process.env.LEAD_ALERT_TO || "hello@6signal.co",
+      ...(email ? { replyTo: email } : {}),
+      subject: "🔥 Website Build PAID — deposit received 🔥",
+      html: emailShell(
+        [
+          monoLabel("Website build · $750 deposit received"),
+          heading("A website build is greenlit."),
+          paragraph(
+            `<strong style="color:#f5f5f3;">Buyer:</strong> ${email ?? "unknown"}<br/>` +
+            `<strong style="color:#f5f5f3;">Intake:</strong> ${intakeId ?? "no intake linked — check the 🔥 Website Build Intake email for the questionnaire"}<br/>` +
+            `<strong style="color:#f5f5f3;">Next:</strong> open Claude Code and start the build from the intake answers.`
+          ),
+        ].join("")
+      ),
+    });
+    if (email) {
+      await sendEmail({
+        to: email,
+        subject: "Deposit received — your website build has started",
+        html: emailShell(
+          [
+            monoLabel("6 Signal · Website build"),
+            heading("We're on it."),
+            paragraph(
+              "Your $750 deposit is confirmed and your build is in the queue. You'll hear from Matt Vincent Walker directly with a first preview — most sites are live within 2–3 weeks of this email. The remaining $750 is due at launch, once you've approved the site."
+            ),
+            paragraph(
+              `Questions or something to add? Reply to this email — it goes straight to the operator building your site.`
+            ),
+          ].join("")
+        ),
+      });
+    }
   }
 
   return NextResponse.json({ received: true });
