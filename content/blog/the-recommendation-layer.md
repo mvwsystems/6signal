@@ -476,6 +476,8 @@ And in that environment, the most valuable companies will not only be the ones t
 
 They will be the ones that get named.
 
+One more thing about shortlists: they cut both ways. When AI hands a buyer three names and yours is first but unreachable, the second name is already on their screen. Making the shortlist is half the transaction — the other half is [who answers the call it produces](/research/visibility-gets-you-the-call-who-answers-it).
+
 ## Want to know if your company makes the shortlist?
 
 Get the AI Visibility Audit.

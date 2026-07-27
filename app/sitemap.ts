@@ -39,8 +39,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/ai-visibility-check`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/visibility-check`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.85 },
     { url: `${BASE}/strategy-brief`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE}/operator`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/research`, lastModified: UPDATED, changeFrequency: "weekly", priority: 0.85 },
     { url: `${BASE}/research/ai-visibility-tools`, lastModified: UPDATED, changeFrequency: "weekly", priority: 0.82 },
+    { url: `${BASE}/research/intelligent-contractor`, lastModified: UPDATED, changeFrequency: "weekly", priority: 0.82 },
     ...posts.map((post) => ({
       url: `${BASE}/research/${post.slug}`,
       lastModified: post.date,

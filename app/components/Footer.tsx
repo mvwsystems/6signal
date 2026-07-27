@@ -24,6 +24,7 @@ export default function Footer() {
               <Link href="/#pricing">Retainer</Link>
               <Link href="/#faq">FAQ</Link>
               <Link href="/visibility">Visibility</Link>
+              <Link href="/operator">The Operator</Link>
               <Link href="/contact">Contact</Link>
             </div>
             <div className="footer-col">
@@ -46,6 +47,7 @@ export default function Footer() {
               <Link href="/contact">Get in touch</Link>
               <Link href="/research">Research</Link>
               <Link href="/research/ai-visibility-tools">AI Visibility Tools</Link>
+              <Link href="/research/intelligent-contractor">The Intelligent Contractor</Link>
               <Link href="/capabilities">Capabilities</Link>
             </div>
           </div>

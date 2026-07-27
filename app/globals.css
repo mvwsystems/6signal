@@ -9186,3 +9186,215 @@ svg {
 .legal-page p strong { color: #f5f5f3; }
 .legal-page a { color: #e6ff00; text-decoration: none; }
 .legal-page a:hover { text-decoration: underline; }
+
+/* ── Operator page ───────────────────────────────────────── */
+.op-hero {
+  padding: 100px 0 72px;
+}
+.op-kicker {
+  margin-bottom: 28px;
+}
+.op-hero h1 {
+  font-size: clamp(40px, 5.5vw, 82px);
+  margin-bottom: 0;
+}
+.op-hero h1 em {
+  font-style: italic;
+  font-weight: 200;
+  color: #b8b8b5;
+}
+.op-deck {
+  font-family: "Chakra Petch", monospace;
+  font-weight: 300;
+  font-size: clamp(17px, 1.55vw, 21px);
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  color: #b8b8b5;
+  max-width: 680px;
+  margin-top: 28px;
+}
+.op-section {
+  padding: 64px 0;
+}
+.op-grid {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+.op-label .idx {
+  color: #555553;
+}
+.op-body {
+  max-width: 640px;
+}
+.op-body p {
+  color: #b8b8b5;
+  line-height: 1.75;
+  margin-bottom: 18px;
+}
+.op-body p:last-child {
+  margin-bottom: 0;
+}
+.op-body a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(230, 255, 0, 0.25);
+}
+.op-rules {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.op-rules li {
+  color: #b8b8b5;
+  line-height: 1.7;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.op-rules li:first-child {
+  padding-top: 0;
+}
+.op-rules li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.op-rules strong {
+  color: #f5f5f3;
+  display: block;
+  margin-bottom: 4px;
+}
+@media (max-width: 760px) {
+  .op-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* ── Intelligent Contractor series page ──────────────────── */
+.tic-hero {
+  padding: 100px 0 56px;
+}
+.tic-kicker {
+  margin-bottom: 28px;
+}
+.tic-hero h1 {
+  font-size: clamp(40px, 5.5vw, 82px);
+  margin-bottom: 0;
+}
+.tic-hero h1 em {
+  font-style: italic;
+  font-weight: 200;
+  color: #b8b8b5;
+}
+.tic-deck {
+  font-family: "Chakra Petch", monospace;
+  font-weight: 300;
+  font-size: clamp(17px, 1.55vw, 21px);
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  color: #b8b8b5;
+  max-width: 700px;
+  margin-top: 28px;
+}
+.tic-meta {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.tic-list-section {
+  padding: 56px 0 72px;
+}
+.tic-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.tic-item {
+  display: grid;
+  grid-template-columns: 48px 1fr 200px;
+  gap: 24px;
+  align-items: baseline;
+  padding: 22px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.tic-item:hover .tic-item-title {
+  color: var(--accent);
+}
+.tic-num {
+  color: #555553;
+}
+.tic-item-main {
+  display: block;
+}
+.tic-item-title {
+  display: block;
+  font-family: "Chakra Petch", sans-serif;
+  font-size: clamp(17px, 1.6vw, 21px);
+  color: #f5f5f3;
+  margin-bottom: 6px;
+  transition: color 0.2s;
+}
+.tic-item-desc {
+  display: block;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #a8a8a3;
+  max-width: 620px;
+}
+.tic-item-meta {
+  color: #555553;
+  text-align: right;
+  white-space: nowrap;
+}
+@media (max-width: 760px) {
+  .tic-item {
+    grid-template-columns: 36px 1fr;
+  }
+  .tic-item-meta {
+    grid-column: 2;
+    text-align: left;
+    margin-top: 6px;
+  }
+}
+
+/* Series subscribe */
+.tic-sub-section {
+  padding: 80px 0;
+}
+.tic-sub-inner {
+  max-width: 680px;
+}
+.tic-sub-form {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.tic-sub-input {
+  flex: 1 1 260px;
+  max-width: 360px;
+}
+.tic-sub-done {
+  margin-top: 28px;
+  color: var(--accent);
+}
+.tic-sub-err {
+  color: #f97316;
+  flex-basis: 100%;
+}
+.tic-sub-alt {
+  margin-top: 26px;
+  font-size: 14px;
+  color: #a8a8a3;
+  line-height: 1.7;
+}
+.tic-sub-alt a {
+  color: var(--accent);
+  text-decoration: none;
+}

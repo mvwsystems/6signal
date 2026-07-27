@@ -245,6 +245,49 @@ export default function ResearchIndexPage() {
         </div>
       </section>
 
+      {/* ── INTELLIGENT CONTRACTOR SERIES CARD ────────────────── */}
+      <section className="tindex-research-section rule">
+        <div className="wrap">
+          <div className="tindex-research-eyebrow">
+            <span className="idx">Series</span>
+          </div>
+          <Link href="/research/intelligent-contractor" className="tindex-research-card">
+            <div>
+              <div className="tindex-research-card-meta">
+                <span className="tindex-map-badge">Operations Track</span>
+                <span className="blog-meta-sep">·</span>
+                <span className="idx">15-part series</span>
+                <span className="blog-meta-sep">·</span>
+                <span className="idx">Apr – Jul 2026</span>
+              </div>
+              <h2 className="tindex-research-card-title">
+                The Intelligent Contractor
+              </h2>
+              <p className="tindex-research-card-desc">
+                AI as the connective infrastructure of a construction company:
+                four systems, the control layer — financial, safety,
+                jurisdictional, contract — and the 90-day build order. Sourced,
+                bounded, written for owners.
+              </p>
+              <span className="blog-read-more">
+                Start the series
+                <svg viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
+                  <path d="M0 5h14M10 1l4 4-4 4" />
+                </svg>
+              </span>
+            </div>
+            <div className="tindex-research-card-right">
+              <p className="tindex-research-card-tools">
+                15 essays
+              </p>
+              <p className="tindex-research-card-tools" style={{ color: "#222220" }}>
+                Revenue · Operations · Control · Learning
+              </p>
+            </div>
+          </Link>
+        </div>
+      </section>
+
       {/* ── CATEGORY TABS + CATALOG ────────────────────────────── */}
       <ResearchContent posts={posts} />
 

@@ -551,6 +551,8 @@ Get the AI Visibility Audit.
 
 We'll test your company across AI answers, Maps, search, directories, and voice to show where you appear, where you get skipped, and what to fix first.
 
+One caution as you run these tests: if the answers already name your company, your bottleneck has moved. The next thing to test is what happens when the recommended buyer calls — [Visibility Gets You the Call. Who Answers It?](/research/visibility-gets-you-the-call-who-answers-it) covers that side.
+
 ## Sources and further reading
 
 - Google Search Central: AI features and your website

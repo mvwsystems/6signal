@@ -108,7 +108,7 @@ Three rules keep the roadmap honest:
 
 1. **Nothing enters the plan without a baseline gap it addresses.** "We should do video" is a tactic in search of a reason until the measurement says otherwise.
 2. **Nothing counts until the retest says it counts.** Effort is not a metric.
-3. **Booked work is the north star.** Mention rates matter because answers produce calls. If visibility climbs and the phone doesn't, the audit moves to the conversion path — pages that win answers but bury the phone number are their own failure mode.
+3. **Booked work is the north star.** Mention rates matter because answers produce calls. If visibility climbs and the phone doesn't, the audit moves to the conversion path — pages that win answers but bury the phone number are their own failure mode. So is a phone that rings unanswered: that half of the problem has its own playbook in [The Front Office Is the First AI Hire](/research/the-front-office-is-the-first-ai-hire).
 
 The roadmap is the schedule; the system it builds is the [Local AI Infrastructure Blueprint](/research/local-ai-infrastructure-blueprint) — the full eight-layer stack with the audit checklist.
 
