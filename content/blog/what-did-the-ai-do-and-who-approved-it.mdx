@@ -1,0 +1,56 @@
+---
+title: "What Did the AI Do, and Who Approved It?"
+slug: "what-did-the-ai-do-and-who-approved-it"
+description: "The last piece of the control layer: access, approval, and audit trails. Who can see what, who can approve what, what the system did on its own, which source it used — and how you'd prove all of it a year later."
+date: "2026-07-02"
+category: "AI Infrastructure"
+contentType: "Insight"
+track: "operations"
+author: "Matt Vincent Walker"
+readTime: "9 min read"
+featured: false
+tags:
+  - AI Infrastructure
+  - AI Governance
+  - Audit Trails
+  - Access Control
+faq:
+  - q: "What governance does a contractor need before deploying AI?"
+    a: "Four registers, kept simple: access (who and what can see which information), approval (which actions require which named human — payments, invoices, notices, safety answers), activity (what the system did, when, from which source), and change (who altered a prompt, a source library, or a permission). None require enterprise software; all require being written down before the first system goes live, not after the first incident."
+  - q: "Should field crews have access to company AI tools?"
+    a: "Yes — scoped. The value of retrieval systems is highest at 6:50 a.m. in the field. Scoping means crews see approved procedures and their own job's documents, not company financials or other jobs' contracts; and actions with consequences — sending notices, generating invoices — stay behind named approvers regardless of who asked."
+  - q: "Why do AI audit trails matter for small contractors?"
+    a: "Because the questions that follow an incident, an audit, or a dispute are identical at every company size: who knew, when, and on what basis was the decision made? A contractor whose systems log retrievals, drafts, approvals, and sources answers with a record. One whose systems don't answers with recollections — against opposing counsel armed with subpoenaed text messages."
+---
+
+# What Did the AI Do, and Who Approved It?
+
+This series has now put AI to work across the control layer: [preparing financials](/research/from-bookkeeping-to-financial-intelligence), [supporting safety](/research/the-ai-assisted-safety-system), [retrieving specifications](/research/which-spec-governs), [tracking contract clocks](/research/contract-and-risk-intelligence). Every one of those systems acts — it retrieves, drafts, flags, chases, and sends. Which forces the closing question of the control layer, the one an insurer, an auditor, an inspector, or opposing counsel will eventually ask in some form:
+
+**What did the system do, who told it to, who approved the result, and how do you know?**
+
+Companies that can answer from a log have governance. Companies that answer from memory have exposure with good intentions.
+
+<h2 id="the-four-registers">The four registers</h2>
+
+Governance for a contractor-scale AI deployment is not an enterprise compliance program. It is four lists, written down before go-live:
+
+**1. Access — who sees what.** Information in a contracting company has natural boundaries: crews need procedures and their job's documents; PMs need their jobs' costs and contracts; bookkeeping needs financials; the owner sees across. An AI layer dissolves those boundaries by default — a system that has ingested everything will answer anyone about anything. Scoping is therefore a design decision, not a feature: the foreman's assistant answers safety and job questions; it does not know what the company's margin is, and neither does whoever borrows his phone.
+
+**2. Approval — who owns which consequences.** [The series boundary](/research/what-ai-should-never-decide-on-a-construction-site) says humans decide; this register names them. Invoices: who approves. Payments: who. Outbound notices under a contract: who. Safety answers that leave the controlled library: escalation to whom. The register is boring by design — its whole function is that no consequential action has an ambiguous owner, which is precisely the property most companies discover they lack during the post-incident reconstruction.
+
+**3. Activity — what happened.** Every retrieval, draft, flag, and send, timestamped, with [the source behind it](/research/an-answer-without-a-source-is-a-liability). This is cheap to keep and impossible to reconstruct. It also quietly improves the systems themselves: the log of what crews ask and where the assistant escalated is a map of what your documentation fails to answer.
+
+**4. Change — who altered the machinery.** Prompts, source libraries, permissions, and approval rules will all be edited over time. Unlogged edits to the safety library or the billing rules are how a well-governed system decays into an ungoverned one with a governance binder.
+
+<h2 id="why-this-is-worth-a-post">Why this deserves its own post</h2>
+
+Because the industry's failure pattern is already visible in miniature. Construction disputes have always turned on documentation — and the companies that lose them are rarely the ones that did the work wrong, but the ones that [cannot produce the record](/research/contract-and-risk-intelligence). AI multiplies the volume of company actions per day; it either multiplies the record with it, or multiplies the gap.
+
+There is also a nearer-term, unglamorous payoff: **insurability and auditability are becoming procurement questions.** GCs vet subs' safety documentation today; owner and insurer questionnaires about data handling and decision controls are the same instinct moving upstream. A four-register answer — here is who can access, who approves, what ran, and what changed — is the kind of answer that wins prequalification paperwork, not just lawsuits.
+
+<h2 id="the-closing-of-the-control-layer">The control layer, complete</h2>
+
+With governance in place, the control layer this series set out to build is whole: financial intelligence watching the money, safety systems that retrieve and escalate, jurisdictional intelligence with provenance, contract clocks that never sleep, and an audit spine under all of it. None of it decides. All of it prepares, records, and reports to accountable humans — faster than any staffing plan could.
+
+What remains of the [four-system frame](/research/the-four-system-contractor) is the system that makes the other three compound: the one that learns. Next week: turning every closed job into the company's memory — before the people who *are* that memory retire.

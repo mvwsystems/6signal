@@ -1,0 +1,60 @@
+---
+title: "Which Spec Governs?"
+slug: "which-spec-governs"
+description: "The hard problem in public and commercial work is not finding the city spec — it is determining which jurisdiction controls, which version applies, what is incorporated by reference, and which of twelve documents wins a conflict. The case for jurisdictional intelligence."
+date: "2026-06-11"
+category: "AI Infrastructure"
+contentType: "Insight"
+track: "operations"
+author: "Matt Vincent Walker"
+readTime: "11 min read"
+featured: false
+tags:
+  - AI Infrastructure
+  - Specifications
+  - Jurisdictional Intelligence
+  - Civil Construction
+faq:
+  - q: "Why is finding construction specifications so hard?"
+    a: "Because 'the spec' is rarely one document. A single water-line installation can be governed by city standard specifications, standard details, adopted codes, public-works requirements, utility-department standards, DOT specs, the project plans and manual, geotechnical reports, addenda, and owner requirements — and they do not always agree. The real work is determining which jurisdiction controls, which version applies, what is incorporated by reference, and which document wins a conflict."
+  - q: "What is a jurisdictional intelligence system?"
+    a: "A controlled library of the specifications, details, codes, and project documents that actually apply to your work — version-tracked and tagged by jurisdiction — with an AI retrieval layer that answers questions only from that library and always with provenance: jurisdiction, document, revision, section, known conflicts, and whether human review is required."
+  - q: "Can AI just answer spec questions directly?"
+    a: "A general-purpose model will answer fluently from whatever mixture of jurisdictions and vintages it absorbed in training — which in regulated construction is worse than no answer. The safe pattern restricts answers to your approved project document set and requires citations, so an estimator or engineer can verify in seconds and an ambiguity becomes an RFI instead of a guess."
+---
+
+# Which Spec Governs?
+
+Every estimator in public or commercial work knows the moment: a bid requires knowing the embedment, bedding, testing, and backfill requirements for a water-line installation, and the answer is somewhere in — city standard specifications, the city's standard details, the adopted plumbing code, public-works requirements, the water utility's own standards, possibly DOT specs, the project plans, the project manual, the geotech report, two addenda, and whatever the owner's requirements PDF says.
+
+Twelve documents. Written by different authors, in different decades, revised on different schedules. They overlap, and where they overlap, they disagree.
+
+The naive framing of this problem is "finding city specs," as if it were a search problem. The actual problem is a *governance* problem, and it has five layers:
+
+- **Which jurisdiction controls** — city, county, utility district, state DOT, or several at once.
+- **Which version applies** — the spec current today, or the one in force at bid date.
+- **What is incorporated by reference** — the innocuous sentence that imports an entire ASTM or AWWA standard.
+- **Whether the plans override or supplement** the standard specifications — and whether an addendum quietly changed the answer.
+- **Which document wins a conflict** — the order-of-precedence clause everyone reads for the first time during a dispute.
+
+<h2 id="what-getting-it-wrong-costs">What getting it wrong costs</h2>
+
+Wrong answers here do not fail loudly at bid time. They fail as rejected submittals, failed inspections, redone work, and back-charges — the [rework that already averages around 5 percent of project cost industry-wide](https://www.planradar.com/us/cost-of-rework-construction/), concentrated exactly where documentation is ambiguous. FMI and Autodesk's research on bad data — inaccurate, incomplete, or untimely information — [priced the global damage at $1.85 trillion in a single year](https://www.autodesk.com/blogs/construction/autodesk-fmi-study-global-construction-industry-data-strategies/). Specification ambiguity is bad data with a stamp on it.
+
+And the institutional defense is thinning. The estimator who "just knows" that this city always requires the stricter bedding detail is [part of the same retiring cohort](https://constructioncitizen.com/blog/41-percent-construction-workforce-retiring-2031-industry-needs-get-moving-c3/1802011) carrying the safety folklore out the door.
+
+<h2 id="the-system">Jurisdictional intelligence</h2>
+
+The architecture is the one this series [built for safety last week](/research/your-safety-program-lives-in-nine-places), pointed at a domain with more documents and sharper edges — a controlled library plus a retrieval layer that must show its work:
+
+**The library:** the specifications, standard details, adopted codes, utility standards, and DOT sections that actually govern your markets — plus, per project, the plans, manual, geotech report, addenda, and owner requirements. Every document tagged: jurisdiction, effective date, revision, what it applies to. Version tracking is not a feature here; it is the point. When a city revises its standard details, the system should know — and say — which of your active projects bid under the old ones.
+
+**The retrieval contract:** every answer arrives with jurisdiction, document, revision, exact section or detail number, a concise statement of the requirement, any known conflicting documents, whether the source is direct or inferred — and whether engineer, inspector, PM, or estimator review is required before anyone acts.
+
+**The workflows that pay for it:** extracting requirements during bid review; comparing project plans against standard details; building submittal and mobilization checklists from the governing set; surfacing testing and inspection requirements before the inspector does; alerting when a source document changes; and — the quiet one — drafting the RFI when the controlling requirement is genuinely ambiguous, with the conflicting sections cited side by side. Ambiguity found at bid time is a question; ambiguity found at inspection time is an invoice.
+
+<h2 id="the-example">The water-line question, answered properly</h2>
+
+Run the opening example through the system. The estimator asks about embedment, bedding, testing, and backfill. A safe system does not return a paragraph of confident prose. It identifies the project's jurisdiction; searches the approved document set; locates the applicable spec sections and details; identifies the incorporated standards; notes the conflict between the city detail and the utility standard; cites every source; and prepares a summary for the estimator's review — with a drafted RFI attached, because in this case the two documents genuinely disagree.
+
+That last behavior is the whole philosophy in miniature, and it gets next week's post to itself: in regulated construction, an answer without a source is not an answer. It is a liability.

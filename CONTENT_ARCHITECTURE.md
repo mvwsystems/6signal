@@ -309,7 +309,36 @@ multiplies every visibility gain. Links: Recommendation Layer, the how-to-test T
 Both posts: `category: "AI Infrastructure"` (so getRelatedPosts cross-links them), `contentType: "Insight"`,
 `track: "operations"`, FAQ frontmatter for FAQPage schema.
 
-**Planned supports (publish before any Systemize content):**
+### The Intelligent Contractor series (15 posts, dated weekly Thursdays 2026-04-16 → 2026-07-23)
+
+A sequenced curriculum on AI infrastructure for construction, mirroring the four-system model
+(Revenue / Operations / Control / Learning). All: `category: "AI Infrastructure"`, `track: "operations"`,
+Insights except the finale (Training). **Link discipline: each post links only to posts dated before it**
+(the series was published as a set on 2026-07-27 with editorial backdates — keep that discipline when
+editing so the archive stays internally consistent). Every statistic is real and cited inline; all sources
+pre-date April 2026 (McKinsey 2017, FMI 2018/2021, PlanGrid/FMI 2018, Rabbet 2024, AGC/NCCER Aug 2025,
+BLS/OSHA 2023 CFOI, NCCER retirement projections, RICS 2025, CMiC/Dodge Dec 2025). Fabricating stats is
+forbidden in this track — it argues that unsourced answers are liabilities.
+
+| Date | Post | Role |
+|---|---|---|
+| Apr 16 | the-four-system-contractor | Series thesis: Revenue/Operations/Control/Learning + leaks live in handoffs |
+| Apr 23 | construction-data-thrown-away | Data layer: FMI 95.5% unused; five-number test |
+| Apr 30 | what-ai-should-never-decide-on-a-construction-site | Governance doctrine: AI prepares, humans decide |
+| May 7 | from-bookkeeping-to-financial-intelligence | Control: the field→estimate financial pipeline |
+| May 14 | margin-gone-before-the-job-closed | Control: weekly estimate-vs-actual |
+| May 21 | work-you-did-but-never-billed | Control: change orders, progress billing, retainage |
+| May 28 | the-ai-assisted-safety-system | Control: safety scope + "can't smell the gas" line |
+| Jun 4 | your-safety-program-lives-in-nine-places | Control: controlled library build |
+| Jun 11 | which-spec-governs | Control: jurisdictional intelligence |
+| Jun 18 | an-answer-without-a-source-is-a-liability | Signature doctrine post: the provenance contract |
+| Jun 25 | contract-and-risk-intelligence | Control: notices, insurance, liens, deadlines |
+| Jul 2 | what-did-the-ai-do-and-who-approved-it | Governance: four registers (access/approval/activity/change) |
+| Jul 9 | the-company-that-learns-from-every-job | Learning system; retirement-wave urgency |
+| Jul 16 | equipment-and-rental-control-tower | Operations: rental reconciliation |
+| Jul 23 | the-first-system-90-day-build-order | Training capstone: selection test + 90-day cadence; links /systemize |
+
+**Still-planned supports:**
 1. **The Missed-Call Ledger** — Training. The measurement companion: pull the phone log, price the leak.
 2. **What Our AI Receptionist Hears** — Field Note. First-hand notes from the 6 Signal Retell agent;
    the proof-of-practice piece (no client data, own-line only).

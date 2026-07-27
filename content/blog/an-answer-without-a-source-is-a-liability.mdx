@@ -1,0 +1,62 @@
+---
+title: "An Answer Without a Source Is a Liability"
+slug: "an-answer-without-a-source-is-a-liability"
+description: "The doctrine that separates AI a contractor can defend from AI a contractor will regret: every answer that touches money, safety, or compliance carries provenance — jurisdiction, document, revision, section, conflicts, confidence, and who must review it."
+date: "2026-06-18"
+category: "AI Infrastructure"
+contentType: "Insight"
+track: "operations"
+author: "Matt Vincent Walker"
+readTime: "10 min read"
+featured: false
+tags:
+  - AI Infrastructure
+  - AI Governance
+  - Provenance
+  - Compliance
+faq:
+  - q: "What is provenance in an AI answer?"
+    a: "The paperwork behind the answer: which jurisdiction it applies to, which document it came from, which revision and effective date, the exact section or detail number, any documents that conflict, whether the source is direct or inferred, and whether a human — engineer, PM, estimator, competent person — must review before anyone acts. An answer carrying all of that can be verified in seconds and defended later. An answer carrying none of it is a fluent guess."
+  - q: "Why do fluent AI answers create risk in construction?"
+    a: "Because construction runs on documents with legal force, and general-purpose AI delivers folklore and fact in the same confident voice. In casual domains a wrong answer costs a correction; in a regulated bid, submittal, or hazard question it becomes rework, a dispute exhibit, or an incident. The risk is not that AI is often wrong — it is that unsourced answers are unauditable, so nobody discovers which ones were wrong until the failure surfaces."
+  - q: "How should a contractor evaluate AI tools for compliance-adjacent work?"
+    a: "One question filters the field: 'Show me where every answer's source, version, and section appear — and show me what the system does when it doesn't have a source.' A tool that answers from controlled documents and escalates when it can't is infrastructure. A tool that always has an answer is a liability with good UX."
+---
+
+# An Answer Without a Source Is a Liability
+
+Every post in this series has circled one design rule from a different side: [AI prepares, humans decide](/research/what-ai-should-never-decide-on-a-construction-site); [safety assistants retrieve or escalate, never improvise](/research/the-ai-assisted-safety-system); [spec systems answer with jurisdiction, revision, and section attached](/research/which-spec-governs). This post states the rule underneath them all, because it is the one that will separate contractors who benefit from AI from contractors who get hurt by it:
+
+**In regulated construction, an answer without a source is not an answer. It is a liability.**
+
+<h2 id="why-fluency-is-the-hazard">Why fluency is the hazard</h2>
+
+Construction has always run on unsourced answers — the estimator who "knows" the bedding requirement, the super who "remembers" the setback. The industry survived because folklore was slow, local, and delivered with human hedging. You could hear the uncertainty.
+
+Modern AI removes the hedging and keeps the folklore. A general-purpose model asked a spec question produces a paragraph that reads like the answer of someone who has read everything — because it has, including superseded revisions, other jurisdictions, marketing copy, and forum guesses, all blended and delivered in one confident voice. [FMI and Autodesk priced "bad data" — inaccurate, incomplete, untimely information — at $1.85 trillion globally in a single year](https://www.autodesk.com/blogs/construction/autodesk-fmi-study-global-construction-industry-data-strategies/). An uncontrolled AI layer does not fix that problem. It industrializes it.
+
+The failure mode is not "the AI is usually wrong." Modern models are right often enough to earn trust. The failure mode is that **unsourced answers are unauditable** — nobody can tell which of the confident paragraphs was the wrong one until it surfaces as a rejected submittal, a failed inspection, or an exhibit.
+
+<h2 id="the-provenance-contract">The provenance contract</h2>
+
+The fix is a contract every consequential answer must honor. Seven fields, none optional:
+
+| Field | What it answers |
+|---|---|
+| Jurisdiction | Whose rule is this? |
+| Document | Which document, exactly? |
+| Revision | Which version, effective when? |
+| Section | Where, precisely — section, page, detail number? |
+| Conflicts | What other governing document disagrees? |
+| Confidence | Is this direct from the source, or inferred? |
+| Human review | Who must approve before anyone acts — engineer, inspector, PM, estimator, competent person? |
+
+The contract does three jobs at once. It makes verification cheap — a cited section is checkable in thirty seconds, which is the difference between review and rubber-stamping. It makes disagreement visible — the conflicts field turns "which spec governs?" from a jobsite argument into a drafted RFI. And it makes the system honest about its edges — because the only legitimate response when provenance can't be produced is *"not in the controlled sources; escalating,"* which is exactly [what a trustworthy assistant refuses to improvise](/research/your-safety-program-lives-in-nine-places).
+
+<h2 id="the-audit-trail-dividend">The dividend nobody prices in</h2>
+
+Here is the part that pays off years later. A company whose AI layer honors the provenance contract is accidentally building something contractors almost never have: **a decision record.** Why did we bid it that way? — the estimate cites the spec sections it relied on. Why did we build it that way? — the submittal package carries its sources. When the dispute arrives — and in this industry it arrives — the contractor with cited answers is in a different negotiating position than the contractor with recollections.
+
+Provenance also quietly solves the trust problem inside the company. Crews and PMs do not resist tools because they hate technology; they resist tools that cannot be checked. An answer that shows its papers earns the same trust a careful colleague does, and for the same reason.
+
+One rule, then, for every AI purchase and build decision that touches money, compliance, or safety: ask to see the sources behind the answers, and ask what happens when there are none. The next post applies this same contract to the documents contractors sign rather than build from — contracts, insurance, notices, and liens — where the deadlines are unforgiving and the sources are non-negotiable.

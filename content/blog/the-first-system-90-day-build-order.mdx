@@ -1,0 +1,61 @@
+---
+title: "The First System: A 90-Day Build Order"
+slug: "the-first-system-90-day-build-order"
+description: "Fifteen weeks of systems, one honest constraint: you can build one thing well in a quarter. How to choose the first system, the selection test, the build cadence, and the failure modes that kill contractor AI projects in month two."
+date: "2026-07-23"
+category: "AI Infrastructure"
+contentType: "Training"
+track: "operations"
+author: "Matt Vincent Walker"
+readTime: "11 min read"
+featured: false
+tags:
+  - AI Infrastructure
+  - Implementation
+  - 90-Day Plan
+  - Contractor Operations
+faq:
+  - q: "Which AI system should a contractor build first?"
+    a: "The one that passes four tests: the leak is measured (you know what it costs you), the documents involved are few and already exist, the win is visible inside one billing cycle, and no decision authority moves to software. For most companies that points to one of three: missed-call and lead follow-up, rental and invoice reconciliation, or weekly estimate-versus-actual on active jobs."
+  - q: "How long should a contractor's first AI implementation take?"
+    a: "Ninety days is the honest unit: thirty to measure the leak and build the controlled source of documents, thirty to run the system in shadow mode alongside the current process, thirty to cut over with a named owner and a weekly review. Anything promising transformation in two weeks is selling a demo; anything needing a year is selling consulting."
+  - q: "Why do contractor AI projects fail?"
+    a: "Four repeating causes: starting with the hardest system instead of the most measurable one; skipping the baseline so nobody can prove the win; letting the tool decide things instead of prepare things, which triggers rational resistance; and having no named owner, so the system decays the first week it misfires. All four are choices, not technology failures."
+---
+
+# The First System: A 90-Day Build Order
+
+This series has spent fifteen weeks laying out what an intelligent contracting company looks like: [four systems](/research/the-four-system-contractor) connected by information that stops dying in handoffs — [financial intelligence](/research/from-bookkeeping-to-financial-intelligence), [margin tracking](/research/margin-gone-before-the-job-closed), [billing recovery](/research/work-you-did-but-never-billed), [safety support](/research/the-ai-assisted-safety-system) built on a [controlled library](/research/your-safety-program-lives-in-nine-places), [jurisdictional](/research/which-spec-governs) and [contract](/research/contract-and-risk-intelligence) intelligence under a [provenance rule](/research/an-answer-without-a-source-is-a-liability), an [audit spine](/research/what-did-the-ai-do-and-who-approved-it), a [learning loop](/research/the-company-that-learns-from-every-job), and an [equipment control tower](/research/equipment-and-rental-control-tower).
+
+Read as a to-do list, that is a recipe for paralysis. So the series ends with its most practical claim: **you can build one system well in ninety days, and the company that builds one well ends the year further ahead than the company that pilots five.**
+
+<h2 id="the-selection-test">Choosing: the four-part test</h2>
+
+Score every candidate system against four questions. Be ruthless; most candidates fail two.
+
+1. **Is the leak measured?" If you cannot state what the problem costs — missed calls per week times average ticket, rental overcharges found in a one-month audit, unbilled changes on the last three closed jobs — measure first, build second. The baseline is not bureaucracy; it is the only thing that will later prove the system works, [and the discipline of measuring is itself half the fix](/research/construction-data-thrown-away).
+2. **Are the documents few and existing?** First systems should reconcile records you already receive — invoices, delivery tickets, timecards, call logs — not require new field behavior. Systems that begin "first, get every foreman to fill out..." are second-year projects.
+3. **Is the win visible within one billing cycle?** Credibility inside the company is a resource you spend once. [Equipment reconciliation shows its savings in thirty days](/research/equipment-and-rental-control-tower); estimate calibration takes a season. Start where proof is fast.
+4. **Does decision authority stay put?** [The boundary](/research/what-ai-should-never-decide-on-a-construction-site), applied as a filter: if the pitch requires software approving, sending, or certifying anything on its own, it is not a first system — or any system.
+
+For most contractors, three candidates survive: **lead and missed-call follow-up** (the revenue system's front door), **rental and invoice reconciliation**, or **weekly estimate-versus-actual** on active jobs. All three are document-light, fast to prove, and boundary-clean.
+
+<h2 id="the-cadence">The 90-day cadence</h2>
+
+**Days 1–30: Baseline and library.** Measure the leak honestly. Assemble the controlled sources the system will work from — the rate quotes, the estimate lines, the call logs — [current versions only, tagged and owned](/research/your-safety-program-lives-in-nine-places). Name the owner: one person whose Monday includes this system, or it belongs to nobody. Write the four registers — [access, approval, activity, change](/research/what-did-the-ai-do-and-who-approved-it) — on one page. This month feels slow and determines everything.
+
+**Days 31–60: Shadow mode.** The system runs alongside the current process, producing its weekly page — flags, matches, drafts — while the company keeps working the old way. Every false flag gets fixed; every real catch gets logged with a dollar figure. Shadow mode is where trust is built at zero risk, and where the [92 percent of firms that cannot hire their way out](https://www.nccer.org/research/2025-workforce-survey-agc-nccer/) discover the capacity was recoverable all along.
+
+**Days 61–90: Cutover and rhythm.** The old process retires; the weekly review becomes standing; the running total of caught dollars goes where the owner sees it. Success at day 90 is boring: a one-page brief someone reads every Monday, a number that justifies the next build.
+
+<h2 id="the-failure-modes">The four ways month two kills it</h2>
+
+The post-mortems repeat: **the ambitious start** (jurisdictional intelligence is a magnificent third system and a fatal first one); **the missing baseline** (a working system nobody can prove is working gets cut in the next busy season); **the boundary breach** (one auto-sent invoice draft that should not have gone out, and the field's trust — rationally — never returns); **the orphan system** (no named owner, so the first misfire becomes the last time anyone looked). Every one is a choice made in week one, visible only in week six.
+
+<h2 id="the-close">Where this leaves you</h2>
+
+The industry math has not changed since [this series opened](/research/the-four-system-contractor): productivity flat for two decades, [the retirement wave arriving](/research/the-company-that-learns-from-every-job), hiring not coming to the rescue. What changed is that the information work — the leaking seams between finding work, doing it, protecting it, and learning from it — finally became automatable at contractor scale, under human authority, one system per quarter.
+
+Ninety days from now you can have a measured leak sealed, a weekly page someone trusts, and a company that has learned how to build. That competence — not any single tool — is the asset. How 6 Signal runs these builds for client companies is at [/systemize](/systemize); the sequence above works the same whether you build it with us or without us.
+
+Pick the leak. Measure it. Build the boring thing first.

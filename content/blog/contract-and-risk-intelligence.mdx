@@ -1,0 +1,57 @@
+---
+title: "Contract and Risk Intelligence"
+slug: "contract-and-risk-intelligence"
+description: "Contractors sign documents full of deadlines that quietly convert earned money into forfeited money: notice windows, insurance requirements, lien deadlines, documentation duties. The AI layer that reads what you signed and keeps the clock."
+date: "2026-06-25"
+category: "AI Infrastructure"
+contentType: "Insight"
+track: "operations"
+author: "Matt Vincent Walker"
+readTime: "10 min read"
+featured: false
+tags:
+  - AI Infrastructure
+  - Contracts
+  - Risk Management
+  - Liens
+  - Insurance
+faq:
+  - q: "What contract terms cost contractors the most money?"
+    a: "The quiet procedural ones: notice provisions requiring written notice of changes or delays within a fixed number of days, pay-if-paid and pay-when-paid clauses, lien deadline requirements, insurance and additional-insured obligations, documentation duties, and exclusions everyone forgot. The work is rarely lost on the merits — it is lost on a missed window that converted a valid claim into a free change order."
+  - q: "Can AI review construction contracts?"
+    a: "AI can extract and organize what a contract says — every deadline, notice requirement, insurance obligation, retainage term, and exclusion — into a tracked checklist with dates, and flag unusual terms for human attention before signing. It is preparation, not legal advice: interpretation of ambiguous terms and negotiation decisions belong to humans, with counsel where stakes warrant."
+  - q: "What is a certificate of insurance tracking problem?"
+    a: "Contractors must both maintain their own required coverages per contract and collect valid certificates from every subcontractor — with correct limits, endorsements, and additional-insured language — and keep them current as policies renew mid-project. It is pure deadline-and-document work, chronically dropped, and among the first things audited when something goes wrong."
+---
+
+# Contract and Risk Intelligence
+
+The control layer of a contracting company has been this series' subject for weeks — [money](/research/from-bookkeeping-to-financial-intelligence), [safety](/research/the-ai-assisted-safety-system), [specifications](/research/which-spec-governs). One control surface remains, and it is the one contractors handle with the least system and the most hope: the documents they sign.
+
+A construction contract is two things at once. The part everyone reads: scope and price. And the part that determines whether you keep the price: a lattice of procedural obligations with clocks attached. Notice of changed conditions within so many days — in writing, to a named address. Notice of delay. Certificates of insurance with specific endorsements, from you and from every sub, current at all times. Lien and bond-claim deadlines that vary by state and by public/private work. Documentation duties. Exclusions. Retainage terms.
+
+None of this is exotic. What makes it dangerous is its shape: **dozens of small, absolute deadlines, distributed across every active job, tracked — in most companies — by memory.**
+
+<h2 id="how-earned-money-gets-forfeited">How earned money gets forfeited</h2>
+
+The pattern is always procedural, almost never substantive. The differing site condition was real; the notice went in on day twelve of a ten-day window. The delay claim was legitimate; it was made verbally, and the contract said written. The sub's certificate lapsed at renewal in month four; the incident happened in month five. The lien rights were valid; the preliminary notice was never sent.
+
+This is [the unbilled-work problem's](/research/work-you-did-but-never-billed) meaner sibling. Unbilled work is money you forgot to ask for and can usually still collect. A blown notice window is money you asked for and *already forfeited* — the claim died before the argument started. [Slow payment culture](https://rabbet.com/reports/construction-payments-2024) already taxes the industry hundreds of billions a year; procedural forfeitures are the part of the tax you can actually decline to pay.
+
+<h2 id="the-system">What the intelligence layer does</h2>
+
+The architecture will be familiar by now — controlled documents, extraction, deadlines, flags, [provenance on every answer](/research/an-answer-without-a-source-is-a-liability) — pointed at what you signed:
+
+**At signing (or better, before):** extract every obligation with a clock — notice provisions, insurance requirements, lien-relevant dates, documentation duties, retainage and payment terms, exclusions — into a structured register, each entry citing its section. Flag the unusual: the three-day notice window where ten is customary, the pay-if-paid clause, the missing mutual-delay provision. A human decides whether to sign, negotiate, or walk; the human decides *knowing*.
+
+**During the job:** the register runs as a clock, not a filing. Site condition logged in the daily report that smells like a differing condition? The system connects it to the notice provision and its deadline, drafts the written notice, and puts it in front of the PM — today, not day twelve. Sub's insurance renews next month? Chased now. Milestone triggers a lien-notice consideration in this state? Surfaced with the date.
+
+**Across the company:** one view of every live obligation on every job — which windows are open, which certificates expire within thirty days, which notices went out and when. When the dispute comes, the record of what was sent, when, and under which clause is the difference between a claim and a story.
+
+The boundary, as always, and here with a lawyer's edge: this is extraction, tracking, drafting, and flagging — not legal advice. Interpreting ambiguous terms, deciding whether to fight, and anything that ends in a courtroom belongs to humans with counsel. The system's job is to make sure the humans are never surprised by a date.
+
+<h2 id="the-asymmetry">The asymmetry worth noticing</h2>
+
+Contract discipline has an unusual return profile: the downside it prevents is large, and the effort it requires is almost entirely clerical — reading, extracting, calendaring, chasing. Which is to say it was always worth doing and never got done, because the clerical hours lost to the daily fire. That excuse is [the one this whole series keeps retiring](/research/the-four-system-contractor).
+
+Next week closes the control layer where every control question eventually lands: when the AI did something — retrieved, drafted, flagged, sent — who saw it, who approved it, and how would you prove it?
