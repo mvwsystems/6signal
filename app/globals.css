@@ -3970,6 +3970,20 @@
   color: inherit;
   opacity: 0.55;
 }
+.track-nav {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.track-nav .cat-nav-btn {
+  padding: 13px 20px;
+}
+.track-nav-label {
+  color: #555553;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+.blog-track-label {
+  color: var(--accent);
+}
 
 /* White Papers section */
 .wp-section {

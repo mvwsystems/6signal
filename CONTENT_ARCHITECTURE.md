@@ -1,7 +1,7 @@
 # 6Signal Research — Content Architecture
 
-**Last updated:** 2026-05-18
-**Total posts:** 23 (3 White Papers, 15 Insights, 3 Field Notes, 2 Trainings)
+**Last updated:** 2026-07-27
+**Total posts:** 23 at the 2026-05-18 audit below (3 White Papers, 15 Insights, 3 Field Notes, 2 Trainings). Posts published since are catalogued in the Operations Track section at the end; the pillar tables cover the original audit set.
 
 ---
 
@@ -279,3 +279,43 @@ Posts that would strengthen the pillar structure or fill visible gaps in buyer q
 | contractor-content-should-start-with-questions-not-keywords | Insight | Insights | 0 | 0 | Isolated (overlap) |
 | the-6signal-audit-what-we-check | Field Note | Field Notes | 0 | 0 | Isolated (overlap) |
 | why-your-contractor-website-is-not-converting | Field Note | Field Notes | 0 | 0 | Isolated |
+
+---
+
+## Operations Track (added 2026-07-27)
+
+/research now carries two tracks, mirroring the Climb: **Visibility** (everything above — the Scale rung)
+and **Operations** (AI infrastructure — the Stabilize/Systemize rungs). Mechanics: posts opt in with
+`track: "operations"` in frontmatter; everything else defaults to `visibility`. The /research index shows a
+Track filter row (only when operations posts exist) and an accent "Operations" label on cards. Existing
+posts were deliberately untouched — the visibility library keeps its pillars, hero, and interlinks.
+
+Rule carried over from the positioning docs: the /research hero features the newest **White Paper**, so
+operations anchors are published as long-form **Insights**, not White Papers, to keep the hero visibility-led.
+
+### Pillar 6: Front Office / AI Infrastructure (Operations)
+
+**Anchor:** [The Front Office Is the First AI Hire](/research/the-front-office-is-the-first-ai-hire) — Insight, 12 min
+Covers the three front-office systems in installation order (missed-call text-back → form follow-up →
+AI receptionist), build-vs-buy, and the measure-the-leak method. Links to /stabilize, /follow-up, the
+bridge post, and two visibility posts.
+
+**Bridge:** [Visibility Gets You the Call. Who Answers It?](/research/visibility-gets-you-the-call-who-answers-it) — Insight, 7 min
+The narrative connector between tracks: AI answers hand buyers a pre-loaded fallback list, so answer-rate
+multiplies every visibility gain. Links: Recommendation Layer, the how-to-test Training, /capabilities,
+/stabilize, and the anchor. This is the designated entry point FROM visibility content — when adding
+"who answers it?" outbound links to visibility posts, point them here, not at the anchor.
+
+Both posts: `category: "AI Infrastructure"` (so getRelatedPosts cross-links them), `contentType: "Insight"`,
+`track: "operations"`, FAQ frontmatter for FAQPage schema.
+
+**Planned supports (publish before any Systemize content):**
+1. **The Missed-Call Ledger** — Training. The measurement companion: pull the phone log, price the leak.
+2. **What Our AI Receptionist Hears** — Field Note. First-hand notes from the 6 Signal Retell agent;
+   the proof-of-practice piece (no client data, own-line only).
+3. **Speed to Lead for Contractors** — Insight. The form follow-up deep-dive.
+
+**Link gaps to close in the visibility library (one edit each, when next touched):**
+- `the-recommendation-layer` → add outbound to the bridge post (natural "so what" next step).
+- `how-to-test-whether-ai-recommends-your-business` → add outbound to the bridge post.
+- `90-day-ai-visibility-roadmap-for-contractors` → the roadmap's intake/conversion step should cite the anchor.

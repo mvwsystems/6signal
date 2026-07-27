@@ -58,16 +58,28 @@ function formatDate(dateStr: string): string {
   });
 }
 
+const TRACKS = ["All", "Visibility", "Operations"] as const;
+
+function filterByTrack(posts: PostMeta[], track: string): PostMeta[] {
+  if (track === "Visibility") return posts.filter((p) => p.track === "visibility");
+  if (track === "Operations") return posts.filter((p) => p.track === "operations");
+  return posts;
+}
+
 export default function ResearchContent({ posts }: { posts: PostMeta[] }) {
   const [activeTab, setActiveTab] = useState("All");
+  const [activeTrack, setActiveTrack] = useState<string>("All");
 
-  const whitePapers = posts.filter(
+  const hasOperations = posts.some((p) => p.track === "operations");
+  const trackPosts = filterByTrack(posts, activeTrack);
+
+  const whitePapers = trackPosts.filter(
     (p) => p.category === "White Paper" || p.contentType === "White Paper"
   );
-  const nonWpPosts = posts.filter(
+  const nonWpPosts = trackPosts.filter(
     (p) => p.category !== "White Paper" && p.contentType !== "White Paper"
   );
-  const filtered = filterByTab(posts, activeTab);
+  const filtered = filterByTab(trackPosts, activeTab);
   const gridPosts = activeTab === "All" ? nonWpPosts : filtered;
 
   return (
@@ -75,10 +87,29 @@ export default function ResearchContent({ posts }: { posts: PostMeta[] }) {
       {/* Category Navigation */}
       <section className="cat-nav-section">
         <div className="wrap">
+          {hasOperations && (
+            <nav className="cat-nav track-nav" aria-label="Research tracks">
+              <span className="idx track-nav-label">Track</span>
+              {TRACKS.map((track) => {
+                const count = filterByTrack(posts, track).length;
+                return (
+                  <button
+                    key={track}
+                    className={`cat-nav-btn${activeTrack === track ? " active" : ""}`}
+                    onClick={() => setActiveTrack(track)}
+                    aria-pressed={activeTrack === track}
+                  >
+                    {track}
+                    <span className="cat-nav-count">{count}</span>
+                  </button>
+                );
+              })}
+            </nav>
+          )}
           <nav className="cat-nav" aria-label="Research categories">
             {TABS.map((tab) => {
               const count =
-                tab === "All" ? posts.length : filterByTab(posts, tab).length;
+                tab === "All" ? trackPosts.length : filterByTab(trackPosts, tab).length;
               return (
                 <button
                   key={tab}
@@ -200,6 +231,12 @@ function ResearchCard({
   return (
     <Link href={`/research/${post.slug}`} className="blog-card reveal">
       <div className="blog-card-meta">
+        {post.track === "operations" && (
+          <>
+            <span className="idx blog-track-label">Operations</span>
+            <span className="blog-meta-sep">·</span>
+          </>
+        )}
         <span className="idx blog-category-label">{displayType}</span>
         <span className="blog-meta-sep">·</span>
         <span className="idx">{post.readTime}</span>

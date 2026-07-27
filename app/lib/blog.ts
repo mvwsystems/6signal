@@ -20,6 +20,9 @@ export interface PostMeta {
   featured: boolean;
   tags: string[];
   contentType?: string;
+  // Content track: "visibility" (the six-signal library, default) or
+  // "operations" (AI infrastructure — Stabilize/Systemize rungs).
+  track: "visibility" | "operations";
   faq?: FaqItem[];
 }
 
@@ -46,6 +49,7 @@ function parsePost(file: string): Post {
     featured: Boolean(data.featured),
     tags: Array.isArray(data.tags) ? data.tags : [],
     contentType: data.contentType ?? undefined,
+    track: data.track === "operations" ? "operations" : "visibility",
     faq: Array.isArray(data.faq) ? data.faq : undefined,
     content,
   };
