@@ -4,6 +4,7 @@ import type { Metadata, Viewport } from "next";
 // yellow chevron mark and opens standalone (full-screen, no Safari chrome).
 export const metadata: Metadata = {
   title: "6 Signal — Command Center",
+  robots: { index: false, follow: false, noarchive: true },
   icons: {
     apple: "/6signal-icon-01-primary-1024.png",
     icon: "/6signal-icon-01-primary-1024.png",

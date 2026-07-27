@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { getAllPosts } from "./lib/blog";
 
 const BASE = "https://6signal.co";
-const UPDATED = "2026-05-18";
+const UPDATED = "2026-07-27";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts();
@@ -22,8 +22,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/commercial-contractors`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/method`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.85 },
     { url: `${BASE}/apple`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${BASE}/audit`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.95 },
+    { url: `${BASE}/apple-checklist`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.6 },
     { url: `${BASE}/work`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/websites`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.85 },
+    { url: `${BASE}/care`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE}/stabilize`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/systemize`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/follow-up`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE}/start`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/inquire`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE}/strategy-call`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/privacy`, lastModified: UPDATED, changeFrequency: "yearly", priority: 0.3 },
     { url: `${BASE}/visibility`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/contact`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/capabilities`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.7 },
