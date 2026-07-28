@@ -348,3 +348,13 @@ forbidden in this track — it argues that unsourced answers are liabilities.
 - `the-recommendation-layer` → add outbound to the bridge post (natural "so what" next step).
 - `how-to-test-whether-ai-recommends-your-business` → add outbound to the bridge post.
 - `90-day-ai-visibility-roadmap-for-contractors` → the roadmap's intake/conversion step should cite the anchor.
+
+### White Paper: The Connective Layer (published 2026-08-01, 7am CDT via scheduled GH Action)
+
+`the-connective-layer-ai-infrastructure-construction` — the operations track's flagship. Takes the
+/research hero (newest White Paper wins it — deliberate decision, owner-approved). The four-system
+model + infrastructure stack + control layer + adoption/capital data + 2026–2030 direction theses.
+Seven inline SVG visuals (JSX-attribute syntax — MDX requires camelCase; charts use the one-accent
+emphasis pattern: #E6FF00 subject series, neutral grays for context, every series direct-labeled).
+Companion positioning: cross-links the AEO Field Manual as "the revenue system's white paper."
+All statistics real and cited; sources section at the end is part of the authority play.
