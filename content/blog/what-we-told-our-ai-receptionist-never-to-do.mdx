@@ -1,0 +1,70 @@
+---
+title: "What We Told Our AI Receptionist Never to Do"
+slug: "what-we-told-our-ai-receptionist-never-to-do"
+description: "6 Signal's phone line is answered by an AI receptionist we built ourselves. Field notes from writing her instructions — and why the most important lines in the spec are the refusals: never pretend to be human, never quote unpublished prices, never book free time, never guess."
+date: "2026-08-03"
+category: "AI Infrastructure"
+contentType: "Field Note"
+track: "operations"
+author: "Matt Vincent Walker"
+readTime: "9 min read"
+featured: false
+tags:
+  - AI Infrastructure
+  - AI Receptionist
+  - Field Note
+  - Front Office
+faq:
+  - q: "Should an AI receptionist admit it's an AI?"
+    a: "Yes, plainly and without embarrassment — ours is instructed to answer the are-you-human question directly and turn it into proof of competence. Pretending to be human is a trust debt that comes due at the worst moment, disclosure regulation is only moving one direction, and callers with a real problem care whether the call was handled, not who handled it."
+  - q: "What rules should an AI phone agent have about pricing?"
+    a: "The same rule a company should have about money everywhere: retrieve published facts, never generate answers. Ours may state only the prices published on the website; asked about anything scoped or custom, it says pricing comes after the business has been seen, and routes accordingly. An agent that estimates prices is an agent inventing commitments nobody approved."
+  - q: "What happens when an AI receptionist doesn't know the answer?"
+    a: "The only acceptable behavior is a confident refusal to guess, plus escalation: capture the question, promise the callback, notify the human. An improvised answer at the front desk is the provenance problem in miniature — fluent, unaccountable, and attached to your company's name."
+---
+
+# What We Told Our AI Receptionist Never to Do
+
+Call 6 Signal's main line and an AI receptionist named Harper answers. She is not a vendor demo — she is one of the systems this practice builds for contractors, answering the practice's own phone. Running your own product on your own front line is the cheapest honesty test available: every design decision gets audited by real callers, daily.
+
+These are field notes from writing her instructions. The surprise, looking at the finished spec, is where the substance concentrated. The lines that make her *work* — the voice, the knowledge, the routing — took a fraction of the effort. The lines that make her *safe to employ* are almost all refusals. A production AI agent turns out to be defined less by what it can do than by what it is forbidden to do, which makes a receptionist prompt the smallest complete example of the governance argument this track has been building — [the boundary](/research/what-ai-should-never-decide-on-a-construction-site), applied one phone call at a time.
+
+<h2 id="never-pretend">Never pretend to be human</h2>
+
+The first refusal in the spec: asked whether she's human or AI, Harper answers plainly — she's the AI receptionist, one of the systems the practice builds, *"you're hearing the product right now."* Never pretend. Never be embarrassed.
+
+The reasoning is colder than transparency-as-virtue. Impersonation is a trust debt that compounds silently and comes due at the worst possible moment — mid-complaint, mid-negotiation, mid-referral. Disclosure regulation moves in only one direction. And the operating discovery: callers with a burst pipe do not care who answers; they care that someone competent picked up on the first ring. For a practice that sells these systems, the honesty rule also converts a gotcha question into the best sales moment of the call — but that only works because it's true.
+
+<h2 id="never-quote">Never generate a number</h2>
+
+Harper may state exactly the prices published on the website — the audit, the website build, the scoping fees — and nothing else. Asked about retainers or custom work, she gives the same answer every time: pricing gets scoped after the business has been seen, not before. She is instructed never to estimate, never to guess, and never to apologize for the structure.
+
+This is the [money boundary](/research/from-bookkeeping-to-financial-intelligence) shrunk to front-desk size. An agent that "helpfully" ballparks a price is an agent generating commitments nobody approved — the conversational cousin of unsupported billing. The rule that makes her trustworthy is the same rule that makes a financial pipeline trustworthy: **retrieve published facts; never generate money.**
+
+<h2 id="never-book">Never book free time</h2>
+
+The strictest rule in the document, and the one that earns its keep: Harper never schedules free time with the operator. No free consultations, no "quick calls," no exceptions for persistence. Paid, scheduled time is bookable; everyone else gets a genuine callback promise.
+
+Here is what writing that rule taught us: **an agent is business-model enforcement that cannot be worn down.** Every operator has given away a free hour to a persistent caller at 4:30 on a Friday. The agent doesn't have Fridays. Encoding the paid-gate policy into the front line means the policy finally exists somewhere other than the owner's willpower — which is, quietly, a governance property: the [approval register](/research/what-did-the-ai-do-and-who-approved-it) with a phone voice.
+
+<h2 id="never-guess">Never guess</h2>
+
+Asked something outside her knowledge, Harper has one permitted move: *"I don't want to guess on that — Matt will give you a straight answer on the callback."* Capture the question, escalate, done.
+
+Readers of this track will recognize the shape: it is [the provenance rule](/research/an-answer-without-a-source-is-a-liability) at the smallest possible scale. An improvised answer at the front desk is fluent, unaccountable, and attached to your company's name — the same failure mode as an uncontrolled spec assistant, just faster. The refusal is not a limitation we tolerated. It is the feature that makes the rest of her answers worth trusting.
+
+<h2 id="always-capture">The one "always": capture before the call ends</h2>
+
+Alongside the refusals sits a single positive obligation: no call ends without the caller's name, company, trade, city, callback number confirmed by read-back, and what prompted the call — gathered conversationally, never as an interrogation.
+
+That rule is the [data layer](/research/the-connective-layer-ai-infrastructure-construction) growing itself. Every call becomes a structured record instead of a memory; urgent messages route with priority; existing clients get escalation and, if needed, a live transfer attempt. The receptionist is not just answering the phone — she is the intake node of the connective layer, and the transcript is the audit trail.
+
+<h2 id="the-unglamorous-fifth">The unglamorous fifth of the spec</h2>
+
+The remainder of the document is edge cases nobody puts in a demo: the angry caller (never defend, never argue — capture everything, mark urgent, promise the same-day call), the vendor pitch (polite, brief, ended), the automated verification call that reads a code (stay silent, capture the digits precisely). Production readiness lives in exactly this residue. If a vendor shows you an agent and can't show you its angry-caller behavior, you have seen a demo, not a system.
+
+<h2 id="what-the-exercise-teaches">What writing the spec actually teaches</h2>
+
+The lasting value wasn't the agent. It was that writing her instructions forced the practice to write down policies it thought it already had. What may be said about money. Who gets free time. What happens when we don't know. What an urgent message is. Most companies run on unwritten versions of these answers, enforced by mood; an agent can't run on mood, so the policies finally hit paper — where they turned out to be improvable.
+
+That is the repeatable lesson for any contractor heading down this path, and it costs nothing to start: **write the refusals first.** If you can't write down what your front line must never say, you aren't ready to automate it — and once you can, you've improved the human version of the job too. The measurement that tells you whether the phone is worth automating at all is [last week's call log](/research/the-missed-call-ledger); the order in which to build is in [the 90-day guide](/research/the-first-system-90-day-build-order). The refusals are where to start writing.
