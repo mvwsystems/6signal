@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
+import BlogPageClient from "../components/BlogPageClient";
 import AuditPopupButton from "../components/AuditPopupButton";
 
 const BASE = "https://6signal.co";
@@ -245,6 +246,7 @@ export default function OperatorPage() {
       </section>
 
       <Footer />
+      <BlogPageClient />
     </>
   );
 }

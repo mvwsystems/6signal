@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "../../components/Nav";
 import Footer from "../../components/Footer";
+import BlogPageClient from "../../components/BlogPageClient";
 import SeriesSubscribe from "../../components/SeriesSubscribe";
 import { getAllPosts, formatDate } from "../../lib/blog";
 
@@ -156,6 +157,7 @@ export default function IntelligentContractorPage() {
       </section>
 
       <Footer />
+      <BlogPageClient />
     </>
   );
 }
