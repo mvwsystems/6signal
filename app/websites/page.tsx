@@ -42,6 +42,13 @@ const recentBuilds = [
     url: "https://oemcontracting.com",
     domain: "oemcontracting.com",
   },
+  {
+    name: "Bennett Steel Supply",
+    trade: "Steel Supply",
+    region: "Sheet piling & structural steel · Malabar, FL, serving all 50 states",
+    url: "https://reelsteelusa.com",
+    domain: "reelsteelusa.com",
+  },
 ];
 
 const included = [

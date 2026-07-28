@@ -103,7 +103,7 @@ Perplexity 68% mention rates; Maps present at 25/25 grid points. Surfaced on the
 outcomes note, /visibility-check (docline strip), and /work. **Deliberately unpublished** (owner's
 manual pre-tracking baseline, unrecorded): AI Overview citations, "Map Pack top 3", "page 2 →
 top 3 organic", "in 3 weeks" — see the provenance comment in proof-data.ts; dated screenshots
-would unlock them. Five real client website builds are featured on /websites. Still placeholders:
+would unlock them. Six real client website builds are featured on /websites (incl. Bennett Steel Supply at reelsteelusa.com — steel supplier, the one non-contractor build). Still placeholders:
 testimonials, client logos, before/after screenshots, and the full 90-day case study.
 
 ## 6. Design system
