@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { PostMeta } from "../lib/blog";
 
@@ -23,30 +23,23 @@ function getDisplayType(post: PostMeta): string {
   return "Field Note";
 }
 
+// Tab label → the display type it shows. Filtering uses getDisplayType so the
+// tab a post appears under always matches the label printed on its card.
+const TAB_TYPE: Record<string, string> = {
+  "White Papers": "White Paper",
+  Insights: "Insight",
+  "Field Notes": "Field Note",
+  "Case Studies": "Case Study",
+  Teardowns: "Teardown",
+  "Market Reports": "Market Report",
+  Trainings: "Training",
+};
+
 function filterByTab(posts: PostMeta[], tab: string): PostMeta[] {
   if (tab === "All") return posts;
-  if (tab === "White Papers")
-    return posts.filter(
-      (p) => p.category === "White Paper" || p.contentType === "White Paper"
-    );
-  if (tab === "Insights")
-    return posts.filter(
-      (p) => INSIGHT_CATS.has(p.category) && p.category !== "White Paper"
-    );
-  if (tab === "Trainings")
-    return posts.filter(
-      (p) => p.category === "Training" || p.contentType === "Training"
-    );
-  if (tab === "Field Notes")
-    return posts.filter(
-      (p) =>
-        !INSIGHT_CATS.has(p.category) &&
-        p.category !== "White Paper" &&
-        p.contentType !== "White Paper" &&
-        p.category !== "Training" &&
-        p.contentType !== "Training"
-    );
-  return [];
+  const type = TAB_TYPE[tab];
+  if (!type) return [];
+  return posts.filter((p) => getDisplayType(p) === type);
 }
 
 function formatDate(dateStr: string): string {
@@ -69,6 +62,22 @@ function filterByTrack(posts: PostMeta[], track: string): PostMeta[] {
 export default function ResearchContent({ posts }: { posts: PostMeta[] }) {
   const [activeTab, setActiveTab] = useState("All");
   const [activeTrack, setActiveTrack] = useState<string>("All");
+
+  // The page-level reveal observer only sees elements present at mount.
+  // Cards (re)mounted by a tab/track switch would otherwise stay invisible
+  // at full height — reveal them immediately after every filter change.
+  const mounted = useRef(false);
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
+    document
+      .querySelectorAll<HTMLElement>(
+        ".wp-section .reveal, .research-grid-section .reveal"
+      )
+      .forEach((el) => el.classList.add("in"));
+  }, [activeTab, activeTrack]);
 
   const hasOperations = posts.some((p) => p.track === "operations");
   const trackPosts = filterByTrack(posts, activeTrack);
