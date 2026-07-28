@@ -152,6 +152,11 @@ regenerates the brief on any device. Completed briefs also get a permalink
 ## 8. Conventions
 
 - App Router only; server components by default, `"use client"` only when needed.
+- **Every full page renders three shell components: `Nav`, `Footer`, and `BlogPageClient`** (after
+  Footer). BlogPageClient provides the custom cursor and the reveal/micro-interaction hook — omit it
+  and the page has no cursor and every `.reveal` element stays invisible at full height. Also: the
+  reveal observer runs once at mount, so client components that re-mount `.reveal` elements after a
+  state change must reveal them manually (see ResearchContent's filter-change effect).
 - All CSS goes in `app/globals.css` — no new CSS files, no CSS modules, no Tailwind utilities.
 - New trade page = add data to [app/trades/data.ts](app/trades/data.ts) + thin page importing
   `TradePage`. Blog post = `content/blog/[slug].mdx` with frontmatter (see
