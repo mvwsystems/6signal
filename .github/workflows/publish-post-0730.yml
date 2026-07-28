@@ -1,0 +1,35 @@
+name: Publish post (2026-07-30)
+
+# One-shot scheduled publish: merges post-2026-07-30 into main at 12:00 UTC
+# July 30 (7:00 a.m. CDT). Year guard + branch check make later runs no-ops.
+on:
+  schedule:
+    - cron: "0 12 30 7 *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Merge post branch into main
+        run: |
+          if [ "$(date -u +%Y)" != "2026" ]; then
+            echo "Year guard: not 2026."
+            exit 0
+          fi
+          if ! git ls-remote --exit-code --heads origin post-2026-07-30 >/dev/null 2>&1; then
+            echo "Branch gone; nothing to publish."
+            exit 0
+          fi
+          git config user.name "6signal-publisher"
+          git config user.email "hello@6signal.co"
+          git fetch origin post-2026-07-30
+          git merge --no-edit origin/post-2026-07-30
+          git push origin main
+          echo "Post published."
