@@ -38,27 +38,76 @@ export interface BusinessInput {
   city: string;
 }
 
+const STATE_ABBR: Record<string, string> = {
+  alabama: "AL", alaska: "AK", arizona: "AZ", arkansas: "AR", california: "CA",
+  colorado: "CO", connecticut: "CT", delaware: "DE", florida: "FL", georgia: "GA",
+  hawaii: "HI", idaho: "ID", illinois: "IL", indiana: "IN", iowa: "IA",
+  kansas: "KS", kentucky: "KY", louisiana: "LA", maine: "ME", maryland: "MD",
+  massachusetts: "MA", michigan: "MI", minnesota: "MN", mississippi: "MS", missouri: "MO",
+  montana: "MT", nebraska: "NE", nevada: "NV", "new hampshire": "NH", "new jersey": "NJ",
+  "new mexico": "NM", "new york": "NY", "north carolina": "NC", "north dakota": "ND", ohio: "OH",
+  oklahoma: "OK", oregon: "OR", pennsylvania: "PA", "rhode island": "RI", "south carolina": "SC",
+  "south dakota": "SD", tennessee: "TN", texas: "TX", utah: "UT", vermont: "VT",
+  virginia: "VA", washington: "WA", "west virginia": "WV", wisconsin: "WI", wyoming: "WY",
+};
+
+// "Red Oak, Texas" / "red oak, tx" → "Red Oak, TX" so spelling variants of the
+// same city can't mint duplicate businesses.
+function canonicalCity(city: string): string {
+  const parts = city.trim().replace(/\s+/g, " ").split(",").map((p) => p.trim()).filter(Boolean);
+  if (parts.length >= 2) {
+    const last = parts[parts.length - 1].toLowerCase().replace(/\./g, "");
+    if (STATE_ABBR[last]) parts[parts.length - 1] = STATE_ABBR[last];
+    else if (/^[a-z]{2}$/.test(last)) parts[parts.length - 1] = last.toUpperCase();
+  }
+  return parts.join(", ");
+}
+
+// "X-actplumbing.com/about" / "HTTPS://WWW.X-ActPlumbing.com" → "x-actplumbing.com"
+function urlDomain(url?: string | null): string | null {
+  if (!url) return null;
+  const d = url.trim().toLowerCase()
+    .replace(/^https?:\/\//, "")
+    .replace(/^www\./, "")
+    .replace(/[/?#].*$/, "")
+    .replace(/\/+$/, "");
+  return d || null;
+}
+
 export async function upsertBusiness(b: BusinessInput): Promise<string | null> {
   const s = db();
   if (!s) return null;
   try {
-    // Reuse an existing business on a case-insensitive match first — the exact
-    // (name,city,trade) unique constraint treats "Plumbing"/"plumber" or
-    // "TX"/"tx" as different businesses, which created duplicates. ilike with
-    // no wildcards = case-insensitive equality.
+    const city = canonicalCity(b.city);
+    const domain = urlDomain(b.url);
+
+    // Strongest identity first: same website domain = same business, regardless
+    // of how the name or city was typed this time.
+    if (domain) {
+      const { data: byDomain } = await s
+        .from("businesses")
+        .select("id")
+        .ilike("url", `%${domain}%`)
+        .limit(1)
+        .maybeSingle();
+      if (byDomain?.id) return byDomain.id as string;
+    }
+
+    // Fallback: case-insensitive (name,trade,city) match with the city
+    // canonicalized — "TX" and "Texas" are the same place.
     const { data: existing } = await s
       .from("businesses")
       .select("id, url")
       .ilike("name", b.name.trim())
       .ilike("trade", b.trade.trim())
-      .ilike("city", b.city.trim())
+      .ilike("city", city)
       .limit(1)
       .maybeSingle();
     if (existing?.id) {
       // Heal a missing website: free-check rows are created without one, which
       // leaves url null forever and breaks form autofill.
-      if (b.url && !existing.url) {
-        void s.from("businesses").update({ url: b.url }).eq("id", existing.id).then(({ error }) => {
+      if (domain && !existing.url) {
+        void s.from("businesses").update({ url: `https://${domain}` }).eq("id", existing.id).then(({ error }) => {
           if (error) console.error("[db] url heal failed:", error);
         });
       }
@@ -68,7 +117,12 @@ export async function upsertBusiness(b: BusinessInput): Promise<string | null> {
     const { data, error } = await s
       .from("businesses")
       .upsert(
-        { name: b.name.trim(), url: b.url ?? null, trade: b.trade.trim(), city: b.city.trim() },
+        {
+          name: b.name.trim(),
+          url: domain ? `https://${domain}` : null,
+          trade: b.trade.trim(),
+          city,
+        },
         { onConflict: "name,city,trade" }
       )
       .select("id")
