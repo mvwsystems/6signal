@@ -27,7 +27,7 @@ export async function runProbeSweep(opts: { businessId?: string; cap?: number })
   for (const p of slice) {
     if (!p.business) continue;
     try {
-      const answers = await probeAllEngines(p.prompt);
+      const answers = await probeAllEngines(p.prompt, undefined, { city: p.business.city });
       const verdicts = await analyzePrompt(p.business, p.prompt, answers);
       const rows: Array<{ business_id: string; prompt_id: string; engine: string; mentioned: boolean; position: number | null; sentiment: string | null; competitors: unknown; sources: unknown; answer: string | null; measured: boolean }> = [];
       for (const e of ENGINES) {

@@ -138,10 +138,21 @@ async function probeGoogleAI(prompt: string, key: string, signal?: AbortSignal):
 
 // Google Maps ranking via the existing Places key: the ranked local results a
 // buyer sees for this query. The judge reads the ordered list for position.
-async function probeMaps(prompt: string, signal?: AbortSignal): Promise<EngineAnswer> {
+async function probeMaps(prompt: string, signal?: AbortSignal, ctx?: ProbeContext): Promise<EngineAnswer> {
   void signal;
   const { placesTextSearch } = await import("./places");
-  const results = await placesTextSearch(prompt, 10);
+  // Scope the query to the client's market so a conversational prompt ("a good
+  // plumber near me") isn't run as a nationwide search that returns the wrong
+  // city. Drop "near me" and append the city when the prompt doesn't name it.
+  let query = prompt;
+  const city = ctx?.city?.trim();
+  if (city) {
+    const cityToken = city.split(",")[0].trim().toLowerCase();
+    if (cityToken && !prompt.toLowerCase().includes(cityToken)) {
+      query = `${prompt.replace(/\bnear me\b/gi, "").trim()} in ${city}`.replace(/\s+/g, " ").trim();
+    }
+  }
+  const results = await placesTextSearch(query, 10);
   if (!results.length) return { engine: "maps", ok: true, measured: false, text: "No Google Maps results for this query.", sources: [] };
   const lines = results.map((p, i) => {
     const name = p.displayName?.text ?? "?";
@@ -190,7 +201,10 @@ async function probeGemini(prompt: string, key: string, signal?: AbortSignal): P
 
 function dedupe(a: string[]): string[] { return Array.from(new Set(a)); }
 
-export async function probeEngine(engine: Engine, prompt: string, signal?: AbortSignal): Promise<EngineAnswer> {
+// Optional per-run context. `city` scopes the Maps probe to the client's market.
+export interface ProbeContext { city?: string }
+
+export async function probeEngine(engine: Engine, prompt: string, signal?: AbortSignal, ctx?: ProbeContext): Promise<EngineAnswer> {
   const key = keyFor(engine);
   if (!key) return { engine, ok: false, text: "", sources: [], error: "no API key" };
   try {
@@ -199,15 +213,15 @@ export async function probeEngine(engine: Engine, prompt: string, signal?: Abort
     if (engine === "perplexity") return await probePerplexity(prompt, key, signal);
     if (engine === "gemini") return await probeGemini(prompt, key, signal);
     if (engine === "google-ai") return await probeGoogleAI(prompt, key, signal);
-    return await probeMaps(prompt, signal);
+    return await probeMaps(prompt, signal, ctx);
   } catch (e) {
     console.error(`[engines] ${engine} probe failed:`, e);
     return { engine, ok: false, text: "", sources: [], error: String(e).slice(0, 300) };
   }
 }
 
-export async function probeAllEngines(prompt: string, signal?: AbortSignal): Promise<EngineAnswer[]> {
-  return Promise.all(ENGINES.map((e) => probeEngine(e, prompt, signal)));
+export async function probeAllEngines(prompt: string, signal?: AbortSignal, ctx?: ProbeContext): Promise<EngineAnswer[]> {
+  return Promise.all(ENGINES.map((e) => probeEngine(e, prompt, signal, ctx)));
 }
 
 // ── Claude-based judgment of each engine's answer ────────────────────────────
