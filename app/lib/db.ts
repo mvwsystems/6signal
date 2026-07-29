@@ -755,7 +755,7 @@ export async function getLastProbeTimes(): Promise<Record<string, string>> {
   }
 }
 
-export async function saveProbeResults(rows: Array<{ business_id: string; prompt_id: string; engine: string; mentioned: boolean; position: number | null; sentiment: string | null; competitors: unknown; sources: unknown; answer: string | null }>): Promise<void> {
+export async function saveProbeResults(rows: Array<{ business_id: string; prompt_id: string; engine: string; mentioned: boolean; position: number | null; sentiment: string | null; competitors: unknown; sources: unknown; answer: string | null; measured?: boolean }>): Promise<void> {
   const s = db();
   if (!s || !rows.length) return;
   try {
@@ -773,7 +773,7 @@ export async function getProbeResults(businessId: string, sinceDays = 90): Promi
     const since = new Date(Date.now() - sinceDays * 86400000).toISOString();
     const { data, error } = await s
       .from("probe_results")
-      .select("prompt_id, engine, mentioned, position, sentiment, competitors, sources, run_at")
+      .select("prompt_id, engine, mentioned, position, sentiment, competitors, sources, run_at, measured")
       .eq("business_id", businessId)
       .gte("run_at", since)
       .order("run_at", { ascending: true });

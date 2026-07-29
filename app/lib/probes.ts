@@ -29,15 +29,21 @@ export async function runProbeSweep(opts: { businessId?: string; cap?: number })
     try {
       const answers = await probeAllEngines(p.prompt);
       const verdicts = await analyzePrompt(p.business, p.prompt, answers);
-      const rows: Array<{ business_id: string; prompt_id: string; engine: string; mentioned: boolean; position: number | null; sentiment: string | null; competitors: unknown; sources: unknown; answer: string | null }> = [];
+      const rows: Array<{ business_id: string; prompt_id: string; engine: string; mentioned: boolean; position: number | null; sentiment: string | null; competitors: unknown; sources: unknown; answer: string | null; measured: boolean }> = [];
       for (const e of ENGINES) {
         const a = answers.find((x) => x.engine === e);
         if (!a || !a.ok) continue;
         const v = verdicts[e];
+        // measured=false when the engine ran but had nothing to measure (empty
+        // AI Overview / no Maps results) or the judge never actually ran — so
+        // the UI shows "—" and it's excluded from mention-rate denominators,
+        // instead of a misleading 0%.
+        const measured = a.measured !== false && v?.judged !== false;
         rows.push({
           business_id: p.business_id, prompt_id: p.id, engine: e,
           mentioned: v.mentioned, position: v.position, sentiment: v.sentiment,
           competitors: v.competitors, sources: a.sources, answer: a.text.slice(0, 8000),
+          measured,
         });
       }
       await saveProbeResults(rows); // incremental — survives interruption

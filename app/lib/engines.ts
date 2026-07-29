@@ -16,6 +16,11 @@ export interface EngineAnswer {
   sources: string[];
   error?: string;
   note?: string; // non-fatal degradation worth surfacing (e.g. model fallback)
+  // false = the engine ran but there was NOTHING to measure (no AI Overview
+  // block, no Maps results). Distinct from "answered but you weren't named"
+  // (measured, mentioned:false). Absent = measured. Prevents an empty source
+  // from being scored as a real 0%.
+  measured?: boolean;
 }
 
 export interface Verdict {
@@ -23,6 +28,7 @@ export interface Verdict {
   position: number | null; // rank in the answer when mentioned (1 = first)
   sentiment: "positive" | "neutral" | "negative" | null;
   competitors: string[];
+  judged?: boolean; // false = the judge did not actually run (missing key / parse fail) — do not treat as a real "not mentioned"
 }
 
 function keyFor(engine: Engine): string | undefined {
@@ -111,7 +117,9 @@ async function probeGoogleAI(prompt: string, key: string, signal?: AbortSignal):
   const data = await res.json();
   const ai = data.ai_overview;
   if (!ai || (!ai.text_blocks && !ai.answer)) {
-    return { engine: "google-ai", ok: true, text: "No AI Overview appeared for this query.", sources: [] };
+    // Google showed no AI Overview at all — nothing to measure (renders "—",
+    // not 0%). An overview that appears but omits the business is a real 0.
+    return { engine: "google-ai", ok: true, measured: false, text: "No AI Overview appeared for this query.", sources: [] };
   }
   const parts: string[] = [];
   const walk = (node: unknown): void => {
@@ -134,7 +142,7 @@ async function probeMaps(prompt: string, signal?: AbortSignal): Promise<EngineAn
   void signal;
   const { placesTextSearch } = await import("./places");
   const results = await placesTextSearch(prompt, 10);
-  if (!results.length) return { engine: "maps", ok: true, text: "No Google Maps results for this query.", sources: [] };
+  if (!results.length) return { engine: "maps", ok: true, measured: false, text: "No Google Maps results for this query.", sources: [] };
   const lines = results.map((p, i) => {
     const name = p.displayName?.text ?? "?";
     const rating = typeof p.rating === "number" ? `${p.rating}★` : "no rating";
@@ -215,12 +223,13 @@ export async function analyzePrompt(
 ): Promise<Record<Engine, Verdict>> {
   const fallback = (): Record<Engine, Verdict> => {
     const o = {} as Record<Engine, Verdict>;
-    for (const e of ENGINES) o[e] = { mentioned: false, position: null, sentiment: null, competitors: [] };
+    for (const e of ENGINES) o[e] = { mentioned: false, position: null, sentiment: null, competitors: [], judged: false };
     return o;
   };
   const apiKey = process.env.ANTHROPIC_API_KEY;
   const usable = answers.filter((a) => a.ok && a.text);
   if (!apiKey || usable.length === 0) return fallback();
+  const usableEngines = new Set(usable.map((a) => a.engine));
 
   const block = usable.map((a) => `### ${a.engine} answer:\n${a.text.slice(0, 4000)}`).join("\n\n");
   const user = `Business: ${business.name} (${business.trade} in ${business.city})
@@ -252,7 +261,11 @@ For each engine answer above, judge whether ${business.name} is named. Return th
         position: Number.isFinite(Number(r.position)) ? Number(r.position) : null,
         sentiment: ["positive", "neutral", "negative"].includes(r.sentiment) ? r.sentiment : null,
         competitors: Array.isArray(r.competitors) ? r.competitors.map(String).slice(0, 8) : [],
+        judged: true,
       };
+      // The judge ran on this engine's answer even if it returned no verdict
+      // object for it — a genuine "not named", not a judge failure.
+      else if (usableEngines.has(e)) out[e].judged = true;
     }
     return out;
   } catch (e) {
