@@ -270,16 +270,19 @@ For each engine answer above, judge whether ${business.name} is named. Return th
     const out = fallback();
     for (const e of ENGINES) {
       const r = results[e];
-      if (r) out[e] = {
-        mentioned: r.mentioned === true,
-        position: Number.isFinite(Number(r.position)) ? Number(r.position) : null,
-        sentiment: ["positive", "neutral", "negative"].includes(r.sentiment) ? r.sentiment : null,
-        competitors: Array.isArray(r.competitors) ? r.competitors.map(String).slice(0, 8) : [],
-        judged: true,
-      };
-      // The judge ran on this engine's answer even if it returned no verdict
-      // object for it — a genuine "not named", not a judge failure.
-      else if (usableEngines.has(e)) out[e].judged = true;
+      if (r) {
+        out[e] = {
+          mentioned: r.mentioned === true,
+          position: Number.isFinite(Number(r.position)) ? Number(r.position) : null,
+          sentiment: ["positive", "neutral", "negative"].includes(r.sentiment) ? r.sentiment : null,
+          competitors: Array.isArray(r.competitors) ? r.competitors.map(String).slice(0, 8) : [],
+          judged: true,
+        };
+      } else if (usableEngines.has(e)) {
+        // The judge ran on this engine's answer even if it returned no verdict
+        // object for it — a genuine "not named", not a judge failure.
+        out[e].judged = true;
+      }
     }
     return out;
   } catch (e) {
