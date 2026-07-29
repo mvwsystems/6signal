@@ -705,7 +705,10 @@ function MapGridCard({ bizId, trade }: { bizId: string; trade: string }) {
   };
 
   const scan = scans[viewing] ?? null;
-  const prior = scans[viewing + 1] ?? null;
+  // Compare against the nearest OLDER scan of the SAME keyword — comparing a
+  // "plumbing" scan to a prior "drain cleaning" scan produced a meaningless
+  // "vs prior" delta. (scans are newest-first.)
+  const prior = scan ? (scans.slice(viewing + 1).find((s) => s.keyword === scan.keyword) ?? null) : null;
   const delta = scan && prior ? scan.stats.coverage - prior.stats.coverage : null;
   const LEGEND = [
     { c: T.ok, l: "Top 3" }, { c: "#eab308", l: "4–10" }, { c: T.warn, l: "11–20" }, { c: T.danger, l: "Not found" },
