@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { insertLead } from "../../lib/db";
+import { insertLead, businessIdByDomain } from "../../lib/db";
 import { sendEmail, emailShell, heading, paragraph, monoLabel } from "../../lib/email";
 import { pushAlert } from "../../lib/notify";
 
@@ -68,7 +68,9 @@ export async function POST(req: NextRequest) {
   });
 
   // Best-effort lead record — funnel unaffected if persistence is off.
-  await insertLead({ businessId: null, email, source: `inquiry_${about}` });
+  // Attribute to an existing business by website domain when we can.
+  const inquiryBusinessId = await businessIdByDomain(url);
+  await insertLead({ businessId: inquiryBusinessId, email, source: `inquiry_${about}` });
 
   await pushAlert({
     title: `Inquiry — ${LABELS[about]}`,

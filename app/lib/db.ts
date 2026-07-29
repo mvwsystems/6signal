@@ -135,6 +135,44 @@ export async function upsertBusiness(b: BusinessInput): Promise<string | null> {
   }
 }
 
+// Normalize an email for dedupe/blocklisting: lowercase, drop "+tags", and for
+// Gmail also strip the dots the provider ignores — so "M.Walker+test@gmail.com"
+// and "mwalker@gmail.com" resolve to one address.
+export function normalizeEmail(email: string): string {
+  const e = (email || "").trim().toLowerCase();
+  const at = e.lastIndexOf("@");
+  if (at < 1) return e;
+  let local = e.slice(0, at);
+  const domain = e.slice(at + 1);
+  local = local.split("+")[0];
+  if (domain === "gmail.com" || domain === "googlemail.com") local = local.replace(/\./g, "");
+  return `${local}@${domain}`;
+}
+
+// Internal/test addresses that should never count as leads: the company domain,
+// the operator's own address, plus anything in LEAD_TEST_EMAILS (comma-list).
+const DEFAULT_TEST_EMAILS = ["mattvincentwalker@gmail.com"];
+export function isTestEmail(normalized: string): boolean {
+  if (!normalized) return true;
+  if (normalized.endsWith("@6signal.co")) return true;
+  const extra = (process.env.LEAD_TEST_EMAILS || "").split(",").map((x) => normalizeEmail(x)).filter(Boolean);
+  return new Set([...DEFAULT_TEST_EMAILS.map(normalizeEmail), ...extra]).has(normalized);
+}
+
+// Best-effort business attribution by website domain, without creating one.
+export async function businessIdByDomain(url?: string | null): Promise<string | null> {
+  const s = db();
+  if (!s) return null;
+  const domain = urlDomain(url);
+  if (!domain) return null;
+  try {
+    const { data } = await s.from("businesses").select("id").ilike("url", `%${domain}%`).limit(1).maybeSingle();
+    return (data?.id as string) ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export async function insertLead(args: {
   businessId: string | null;
   email: string;
@@ -142,10 +180,17 @@ export async function insertLead(args: {
 }): Promise<void> {
   const s = db();
   if (!s) return;
+  const email = normalizeEmail(args.email);
+  // Drop internal/test submissions so they never inflate the lead count.
+  if (isTestEmail(email)) return;
   try {
+    // Skip exact duplicates (same normalized email + source) — bots resubmit,
+    // and there is no unique constraint on the table.
+    const { data: dup } = await s.from("leads").select("id").eq("email", email).eq("source", args.source).limit(1).maybeSingle();
+    if (dup?.id) return;
     const { error } = await s.from("leads").insert({
       business_id: args.businessId,
-      email: args.email,
+      email,
       source: args.source,
     });
     if (error) throw error;
@@ -475,11 +520,22 @@ export async function getDashboardOverview(): Promise<{
       s.from("leads").select("id, business_id, email, source, created_at").order("created_at", { ascending: false }).limit(200),
       s.from("purchases").select("amount_total, product, email, created_at").order("created_at", { ascending: false }).limit(500),
     ]);
+    // Clean the leads feed (also heals legacy rows written before hygiene):
+    // drop internal/test addresses and de-duplicate by normalized email+source.
+    const seen = new Set<string>();
+    const cleanLeads = (leads.data ?? []).filter((l: Record<string, unknown>) => {
+      const em = normalizeEmail(String(l.email ?? ""));
+      if (isTestEmail(em)) return false;
+      const k = `${em}|${String(l.source ?? "")}`;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
     return {
       businesses: biz.data ?? [],
       audits: audits.data ?? [],
       signalScores: scores.data ?? [],
-      leads: leads.data ?? [],
+      leads: cleanLeads,
       purchases: purchases.data ?? [],
     };
   } catch (e) {
