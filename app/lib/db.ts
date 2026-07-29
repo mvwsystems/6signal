@@ -789,6 +789,8 @@ export async function getProbeResults(businessId: string, sinceDays = 90): Promi
 export interface PlanTaskInput {
   business_id: string;
   plan_audit_id: string | null;
+  task_key?: string | null;        // stable playbook key (enables idempotent upsert)
+  playbook_version?: string | null;
   phase: string | null;
   task: string;
   detail: string | null;
@@ -797,12 +799,45 @@ export interface PlanTaskInput {
   due_date: string | null; // YYYY-MM-DD
 }
 
+// Idempotent task sync for one business. Keyed rows (from the deterministic
+// playbook) upsert on (business_id, task_key) so regenerating a plan updates the
+// same tasks instead of appending duplicates. Tasks the client already advanced
+// (done / in_progress) are preserved. Open tasks that are no longer selected —
+// including legacy free-form rows with no task_key — are marked "skipped" so
+// history is kept but the checklist reflects the current correct set.
 export async function createPlanTasks(rows: PlanTaskInput[]): Promise<number> {
   const s = db();
   if (!s || !rows.length) return 0;
   try {
-    const { error } = await s.from("plan_tasks").insert(rows);
-    if (error) throw error;
+    const businessId = rows[0].business_id;
+    const keyed = rows.filter((r) => r.task_key);
+    const unkeyed = rows.filter((r) => !r.task_key);
+    const keys = keyed.map((r) => r.task_key as string);
+
+    if (keyed.length) {
+      const { error } = await s.from("plan_tasks").upsert(keyed, { onConflict: "business_id,task_key" });
+      if (error) throw error;
+      // Reopen any of these keys that were previously superseded but now apply
+      // again — without disturbing tasks the client marked done / in_progress.
+      if (keys.length) {
+        await s.from("plan_tasks").update({ status: "open" })
+          .eq("business_id", businessId).eq("status", "skipped").in("task_key", keys);
+      }
+    }
+    if (unkeyed.length) {
+      const { error } = await s.from("plan_tasks").insert(unkeyed);
+      if (error) throw error;
+    }
+
+    // Supersede open tasks that are no longer in the selected set. Two passes
+    // because `task_key not in (...)` does not match NULL (legacy free-form rows).
+    if (keys.length) {
+      const list = `(${keys.join(",")})`;
+      await s.from("plan_tasks").update({ status: "skipped" })
+        .eq("business_id", businessId).eq("status", "open").not("task_key", "in", list);
+      await s.from("plan_tasks").update({ status: "skipped" })
+        .eq("business_id", businessId).eq("status", "open").is("task_key", null);
+    }
     return rows.length;
   } catch (e) {
     console.error("[db] createPlanTasks failed:", e);

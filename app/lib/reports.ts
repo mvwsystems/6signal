@@ -7,8 +7,9 @@
 import { collectSiteEvidence, evidenceForPrompt } from "./evidence";
 import { localLandscape, localForPrompt } from "./places";
 import { runWebGroundedJSON, clampScore } from "./aiScan";
-import { completeAudit, failAudit, saveSignalScores, saveSiteSnapshot, createPlanTasks, PlanTaskInput, getAudit } from "./db";
+import { completeAudit, failAudit, saveSignalScores, saveSiteSnapshot, createPlanTasks, getAudit } from "./db";
 import { seedTrackingPrompts } from "./autoOnboard";
+import { buildClientState, selectPlaybookTasks } from "./playbook";
 
 const SIGNAL_KEYS = ["geo", "aeo", "leo", "veo", "peo", "ieo"] as const;
 
@@ -179,39 +180,6 @@ Return ONLY valid JSON, no prose or fences, exactly this shape (respect array si
 }
 Limits: each phase deliverables 3-4 items; content_plan exactly 3; schema_plan exactly 2; gbp_plan.actions exactly 3; quick_wins exactly 3.`;
 
-function dueFromPhase(phase: string): string {
-  const m = phase.match(/(\d+)\s*[-–]\s*(\d+)/);
-  const days = m ? Number(m[2]) : 30;
-  return new Date(Date.now() + days * 86400000).toISOString().slice(0, 10);
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function tasksFromPlan(plan: any, businessId: string, auditId: string): PlanTaskInput[] {
-  const rows: PlanTaskInput[] = [];
-  for (const ph of plan.phases ?? []) {
-    for (const d of ph.deliverables ?? []) {
-      if (!d?.task) continue;
-      rows.push({
-        business_id: businessId, plan_audit_id: auditId, phase: String(ph.phase ?? ""),
-        task: String(d.task), detail: d.detail ? String(d.detail) : null,
-        owner: /client/i.test(String(d.owner)) ? "Client" : "6Signal",
-        signal: d.signal ? String(d.signal).toUpperCase() : null,
-        due_date: dueFromPhase(String(ph.phase ?? "")),
-      });
-    }
-  }
-  for (const w of plan.quick_wins ?? []) {
-    if (!w?.win) continue;
-    rows.push({
-      business_id: businessId, plan_audit_id: auditId, phase: "Quick wins",
-      task: String(w.win), detail: w.impact ? String(w.impact) : null,
-      owner: "6Signal", signal: null,
-      due_date: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10),
-    });
-  }
-  return rows;
-}
-
 export async function runExecutionPlanReport(p: ReportParams): Promise<Record<string, unknown>> {
   try {
     let prior: unknown = null;
@@ -239,7 +207,12 @@ Search the web as needed, then return the execution plan JSON.`;
     const target = Number(plan.target_overall_90d);
     await completeAudit({ id: p.auditId, payload: plan, overallScore: Number.isFinite(target) ? Math.max(0, Math.min(100, Math.round(target))) : null });
     const trackingSeeded = p.businessId ? await seedTrackingPrompts(p.businessId, { name: p.name, trade: p.trade, city: p.city }) : 0;
-    const tasksCreated = p.businessId ? await createPlanTasks(tasksFromPlan(plan, p.businessId, p.auditId)) : 0;
+    // Tasks are selected deterministically from the versioned playbook against
+    // the real current state (site crawl + Google Places) — NOT from the LLM
+    // plan text — so regeneration is idempotent and never invents obsolete work.
+    const tasksCreated = p.businessId
+      ? await createPlanTasks(selectPlaybookTasks(buildClientState(evidence, local), p.businessId, p.auditId))
+      : 0;
     return { id: p.auditId, tracking_seeded: trackingSeeded, tasks_created: tasksCreated, ...plan };
   } catch (e) {
     console.error("[reports] execution plan failed:", e);
