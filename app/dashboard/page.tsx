@@ -1131,8 +1131,14 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
 }
 
 // ─── Overview tab ────────────────────────────────────────────────────────────────
+interface PayClient { name: string; email: string | null; total_paid: number; open_amount: number; open_count: number; past_due: boolean; delinquent: boolean; oldest_due: string | null }
+
 function OverviewTab({ data }: { data: Overview }) {
   const [selected, setSelected] = useState<string | null>(null);
+  const [pay, setPay] = useState<{ configured: boolean; clients: PayClient[] } | null>(null);
+  useEffect(() => {
+    fetch("/api/dashboard/payments").then((r) => (r.ok ? r.json() : null)).then(setPay).catch(() => setPay(null));
+  }, []);
   const [tasks, setTasks] = useState<any[]>([]);
 
   useEffect(() => {
@@ -1455,6 +1461,46 @@ function OverviewTab({ data }: { data: Overview }) {
               {emailState && emailState !== "sent" && emailState !== "sending" && <p style={{ fontSize: 12, color: T.danger, marginTop: 8 }}>{emailState}</p>}
             </div>
           </div>
+        )}
+      </div>
+
+      <div style={card({ padding: 0, overflow: "hidden", marginTop: 20 })}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 18px", borderBottom: `1px solid ${T.border}` }}>
+          <span style={eyebrow}>Client payments — live from Stripe</span>
+          {pay?.configured && <span style={{ fontSize: 11, color: T.muted }}>{pay.clients.filter((c) => c.past_due || c.delinquent).length} past due / delinquent</span>}
+        </div>
+        {!pay && <div style={{ padding: 24, textAlign: "center", color: T.muted, fontSize: 13 }}>Loading payments…</div>}
+        {pay && !pay.configured && (
+          <div style={{ padding: 24, textAlign: "center", color: T.muted, fontSize: 13 }}>
+            Not connected — add <span style={{ fontFamily: MONO }}>STRIPE_SECRET_KEY</span> (a restricted read-only key works) in Netlify env vars to see invoices, totals, and missed payments here.
+          </div>
+        )}
+        {pay?.configured && pay.clients.length === 0 && <div style={{ padding: 24, textAlign: "center", color: T.muted, fontSize: 13 }}>No client invoices found in Stripe.</div>}
+        {pay?.configured && pay.clients.length > 0 && (
+          <>
+            <div style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr 1fr 1fr", padding: "12px 18px", borderBottom: `1px solid ${T.border}`, ...eyebrow }}>
+              <span>Client</span><span style={{ textAlign: "right" }}>Paid (lifetime)</span><span style={{ textAlign: "right" }}>Open</span><span style={{ textAlign: "right" }}>Status</span>
+            </div>
+            {pay.clients.map((c) => (
+              <div key={c.email ?? c.name} style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr 1fr 1fr", padding: "13px 18px", borderBottom: `1px solid ${T.border}`, alignItems: "center" }}>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontWeight: 600, fontSize: 14, color: T.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{c.name}</div>
+                  <div style={{ fontSize: 11, color: T.muted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{c.email ?? ""}</div>
+                </div>
+                <div style={{ textAlign: "right", fontFamily: MONO, fontWeight: 700, fontSize: 14, color: T.text }}>{fmtMoney(c.total_paid)}</div>
+                <div style={{ textAlign: "right", fontFamily: MONO, fontSize: 13, color: c.open_amount > 0 ? T.warn : T.muted }}>{c.open_amount > 0 ? `${fmtMoney(c.open_amount)} (${c.open_count})` : "—"}</div>
+                <div style={{ textAlign: "right" }}>
+                  {c.past_due || c.delinquent ? (
+                    <span style={{ background: `${T.danger}1f`, color: T.danger, fontWeight: 700, fontSize: 11, padding: "3px 10px", borderRadius: 20, fontFamily: MONO }}>
+                      {c.past_due ? `PAST DUE${c.oldest_due ? ` · ${fmtDate(c.oldest_due)}` : ""}` : "DELINQUENT"}
+                    </span>
+                  ) : (
+                    <span style={{ color: T.ok, fontFamily: MONO, fontSize: 12, fontWeight: 700 }}>CURRENT</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </>
         )}
       </div>
 
