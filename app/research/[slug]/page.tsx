@@ -11,6 +11,16 @@ import BlogCTA from "../../components/BlogCTA";
 
 const BASE = "https://6signal.co";
 
+// White papers with a downloadable PDF edition. The cover renders only in
+// print (page 1 of the PDF); the button renders only on screen.
+const WP_PDFS: Record<string, { cover: string; pdf: string }> = {
+  "question-cluster-advantage": { cover: "/papers/covers/question-cluster-advantage.png", pdf: "/papers/question-cluster-advantage.pdf" },
+  "local-entity-gap-ai-search": { cover: "/papers/covers/local-entity-gap-ai-search.png", pdf: "/papers/local-entity-gap-ai-search.pdf" },
+  "aeo-field-manual-answer-engine-optimization": { cover: "/papers/covers/aeo-field-manual-answer-engine-optimization.png", pdf: "/papers/aeo-field-manual-answer-engine-optimization.pdf" },
+  "ai-search-measurement-playbook": { cover: "/papers/covers/ai-search-measurement-playbook.png", pdf: "/papers/ai-search-measurement-playbook.pdf" },
+  "the-connective-layer-ai-infrastructure-construction": { cover: "/papers/covers/the-connective-layer-ai-infrastructure-construction.png", pdf: "/papers/the-connective-layer-ai-infrastructure-construction.pdf" },
+};
+
 export function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
 }
@@ -108,6 +118,13 @@ export default async function BlogPostPage({
 
       <Nav />
 
+      {/* PDF cover — print only; becomes page 1 of the downloadable PDF */}
+      {WP_PDFS[post.slug] && (
+        <div className="wp-print-cover" aria-hidden="true">
+          <img src={WP_PDFS[post.slug].cover} alt="" />
+        </div>
+      )}
+
       {/* POST HERO */}
       <header className="inner-hero post-hero">
         <div className="wrap">
@@ -130,6 +147,16 @@ export default async function BlogPostPage({
             <span className="post-meta-sep">·</span>
             <span className="idx">6 Signal</span>
           </div>
+          {WP_PDFS[post.slug] && (
+            <div className="post-download reveal">
+              <a href={WP_PDFS[post.slug].pdf} download className="btn btn-primary">
+                Download the white paper (PDF)
+                <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
+                  <path d="M0 5h14M10 1l4 4-4 4" />
+                </svg>
+              </a>
+            </div>
+          )}
         </div>
       </header>
 

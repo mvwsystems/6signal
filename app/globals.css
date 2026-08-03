@@ -9398,3 +9398,72 @@ svg {
   color: var(--accent);
   text-decoration: none;
 }
+
+/* ── White paper PDF edition (print) ─────────────────────── */
+.wp-print-cover {
+  display: none;
+}
+.post-download {
+  margin-top: 24px;
+}
+
+@media print {
+  @page {
+    size: letter;
+    margin: 0;
+  }
+  html,
+  body {
+    background: #060606 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    cursor: auto !important;
+  }
+  /* Chrome-only shell: navigation, cursor, CTAs, related posts */
+  .nav,
+  footer,
+  .mobile-cta,
+  #cursor-dot,
+  #cursor-ring,
+  .post-breadcrumb,
+  .post-download,
+  .post-cta-mid,
+  .blog-cta-section,
+  .post-related {
+    display: none !important;
+  }
+  /* Reveal animations never fire in headless print — force visible */
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .wp-print-cover {
+    display: block;
+    break-after: page;
+  }
+  .wp-print-cover img {
+    display: block;
+    width: 100%;
+    height: 11in;
+    object-fit: cover;
+  }
+  .post-hero {
+    padding: 0.9in 0.85in 0.35in;
+  }
+  .post-body-section {
+    padding: 0.15in 0.85in 0.9in;
+  }
+  .wrap {
+    max-width: 100%;
+    padding: 0;
+  }
+  .post-body svg,
+  .post-body table,
+  .post-body img,
+  .post-body blockquote {
+    break-inside: avoid;
+  }
+  h2, h3 {
+    break-after: avoid;
+  }
+}
