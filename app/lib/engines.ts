@@ -83,28 +83,53 @@ async function probeOpenAI(prompt: string, key: string, signal?: AbortSignal): P
 
 async function probeClaude(prompt: string, key: string, signal?: AbortSignal): Promise<EngineAnswer> {
   const model = process.env.CLAUDE_ENGINE_MODEL?.trim() || "claude-sonnet-4-6";
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01" },
-    body: JSON.stringify({
-      model,
-      max_tokens: 1024,
-      tools: [{ type: "web_search_20260209", name: "web_search", max_uses: 3 }],
-      messages: [{ role: "user", content: prompt }],
-    }),
-    signal,
-  });
-  if (!res.ok) throw new Error(`Claude ${res.status}: ${(await res.text().catch(() => "")).slice(0, 200)}`);
-  const data = await res.json();
+  // Transient 429/5xx/529s were dropping ~1 probe per run and tripping the
+  // watchdog; retry those. 400s stay fatal — they mean the request is wrong.
+  const RETRYABLE = new Set([429, 500, 502, 503, 529]);
+  const messages: { role: string; content: unknown }[] = [{ role: "user", content: prompt }];
   let text = "";
   const sources: string[] = [];
-  for (const block of data.content ?? []) {
-    if (block.type === "text" && block.text) text += block.text;
-    if (block.type === "web_search_tool_result") {
-      for (const r of block.content ?? []) if (r.url) sources.push(r.url);
+
+  for (let attempt = 0, continuations = 0; ; ) {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01" },
+      body: JSON.stringify({
+        model,
+        max_tokens: 1024,
+        tools: [{ type: "web_search_20260209", name: "web_search", max_uses: 3 }],
+        messages,
+      }),
+      signal,
+    });
+    if (!res.ok) {
+      const errText = (await res.text().catch(() => "")).slice(0, 200);
+      if (RETRYABLE.has(res.status) && attempt < 2) {
+        attempt++;
+        await new Promise((r) => setTimeout(r, attempt * 4000));
+        continue;
+      }
+      throw new Error(`Claude ${res.status}: ${errText}`);
     }
+    const data = await res.json();
+    for (const block of data.content ?? []) {
+      if (block.type === "text" && block.text) text += block.text;
+      if (block.type === "web_search_tool_result") {
+        for (const r of block.content ?? []) if (r.url) sources.push(r.url);
+      }
+    }
+    // Server-side web search can pause its loop; re-send with the assistant
+    // turn appended and the server resumes where it left off.
+    if (data.stop_reason === "pause_turn" && continuations < 2) {
+      continuations++;
+      messages.push({ role: "assistant", content: data.content });
+      continue;
+    }
+    if (data.stop_reason === "refusal") {
+      return { engine: "claude", ok: false, text: "", sources: [], error: "Claude declined the prompt (refusal)" };
+    }
+    return { engine: "claude", ok: true, text, sources: dedupe(sources) };
   }
-  return { engine: "claude", ok: true, text, sources: dedupe(sources) };
 }
 
 // Google AI Overviews via SerpAPI: the actual AI Overview block Google shows
