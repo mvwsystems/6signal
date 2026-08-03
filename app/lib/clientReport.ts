@@ -7,6 +7,7 @@
 import { getBusiness, getProbeResults, listTrackedPrompts, listTasks, saveClientReport, listClientReports, briefingRoster, getLatestMapsGrid, getLatestTownScan } from "./db";
 import { citationIntel } from "./citations";
 import { ENGINES } from "./engines";
+import { canonicalCompetitor } from "./text";
 import { sendEmail, emailShell, heading, paragraph, monoLabel } from "./email";
 
 export interface ClientReportPayload {
@@ -55,8 +56,16 @@ export async function buildClientReport(businessId: string): Promise<{ id: strin
   const days31 = 31 * 86400000;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const inWin = (r: any, from: number, to: number) => { const t = new Date(String(r.run_at)).getTime(); return t >= from && t < to; };
-  const cur = results.filter((r) => inWin(r, now - days31, now + 1));
-  const prev = results.filter((r) => inWin(r, now - 2 * days31, now - days31));
+  // Only measured, non-branded rows count toward metrics: unmeasured probes
+  // (empty AI Overview / no Maps results) and prompts that name the client would
+  // otherwise inflate every rate and the share of voice.
+  const nameNorm = business.name.toLowerCase().replace(/\b(llc|inc|co|corp|company)\b/g, " ").replace(/[^a-z0-9]+/g, " ").trim();
+  const nameTokens = nameNorm.split(" ").filter((w) => w.length > 2);
+  const brandedIds = new Set(prompts.filter((p) => nameTokens.length > 0 && nameTokens.every((w) => p.prompt.toLowerCase().includes(w))).map((p) => p.id));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const counts = (r: any) => r.measured !== false && !brandedIds.has(r.prompt_id);
+  const cur = results.filter((r) => inWin(r, now - days31, now + 1) && counts(r));
+  const prev = results.filter((r) => inWin(r, now - 2 * days31, now - days31) && counts(r));
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const rate = (rows: any[]) => (rows.length ? Math.round((100 * rows.filter((r) => r.mentioned).length) / rows.length) : null);
 
@@ -71,15 +80,15 @@ export async function buildClientReport(businessId: string): Promise<{ id: strin
   for (const r of cur) latest[`${r.prompt_id}|${r.engine}`] = r;
   const latestRows = Object.values(latest);
   let mentions = 0;
-  const compCounts: Record<string, number> = {};
+  const compCounts: Record<string, { label: string; count: number }> = {};
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   for (const r of latestRows as any[]) {
     if (r.mentioned) mentions++;
-    if (Array.isArray(r.competitors)) for (const c of r.competitors) { const k = String(c).trim(); if (k) compCounts[k] = (compCounts[k] || 0) + 1; }
+    if (Array.isArray(r.competitors)) for (const c of r.competitors) { const raw = String(c).trim(); if (!raw) continue; const key = canonicalCompetitor(raw) || raw.toLowerCase(); (compCounts[key] ||= { label: raw, count: 0 }).count++; }
   }
-  const compTotal = Object.values(compCounts).reduce((a, b) => a + b, 0);
+  const compTotal = Object.values(compCounts).reduce((a, b) => a + b.count, 0);
   const sov = mentions + compTotal > 0 ? Math.round((100 * mentions) / (mentions + compTotal)) : null;
-  const topCompetitors = Object.entries(compCounts).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([name, count]) => ({ name, count }));
+  const topCompetitors = Object.values(compCounts).sort((a, b) => b.count - a.count).slice(0, 5).map((x) => ({ name: x.label, count: x.count }));
 
   // Wins: prompt×engine flips ✗→✓ vs the previous window.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

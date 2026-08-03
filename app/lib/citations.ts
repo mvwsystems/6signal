@@ -20,10 +20,29 @@ const JUNK = [
   "gstatic.com", "googleusercontent.com", "bing.com",
 ];
 
+// Non-actionable sources for a local-services citation work order: academic /
+// research, developer, encyclopedic, and finance/tax/records government sites.
+// The panel's whole point is "get the client listed on these" — arxiv.org or a
+// state comptroller domain being cited (observed, ChatGPT-only) is noise that
+// misleads the work order, so it's filtered out of the leaderboard entirely.
+const NOISE_PATTERNS: RegExp[] = [
+  /(^|\.)arxiv\.org$/, /(^|\.)researchgate\.net$/, /(^|\.)jstor\.org$/,
+  /(^|\.)ssrn\.com$/, /(^|\.)semanticscholar\.org$/, /(^|\.)ncbi\.nlm\.nih\.gov$/, /pubmed/,
+  /\.edu$/, /\.mil$/,
+  /(^|\.)github\.com$/, /(^|\.)stackoverflow\.com$/, /(^|\.)w3\.org$/,
+  /(^|\.)wikipedia\.org$/, /(^|\.)wikimedia\.org$/,
+  /(^|\.)cpa\.(state\.)?[a-z]{2}\.us$/, /comptroller/, /(^|\.)irs\.gov$/,
+];
+
+function isNoiseDomain(d: string): boolean {
+  return NOISE_PATTERNS.some((re) => re.test(d));
+}
+
 function domainOf(url: string): string | null {
   try {
     const h = new URL(url).hostname.toLowerCase().replace(/^www\./, "");
     if (!h || JUNK.some((j) => h === j.replace(/^www\./, "") || h.endsWith(`.${j.replace(/^www\./, "")}`))) return null;
+    if (isNoiseDomain(h)) return null;
     return h;
   } catch { return null; }
 }

@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Radar, Ring, SignalBars, LineChart, Donut, Sparkline, MapHeatGrid } from "../components/charts";
 import ProposalsTab from "./ProposalsTab";
+import { canonicalCompetitor } from "../lib/text";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 6 Signal — internal AI Visibility Command Center (/dashboard)
@@ -704,7 +705,10 @@ function MapGridCard({ bizId, trade }: { bizId: string; trade: string }) {
   };
 
   const scan = scans[viewing] ?? null;
-  const prior = scans[viewing + 1] ?? null;
+  // Compare against the nearest OLDER scan of the SAME keyword — comparing a
+  // "plumbing" scan to a prior "drain cleaning" scan produced a meaningless
+  // "vs prior" delta. (scans are newest-first.)
+  const prior = scan ? (scans.slice(viewing + 1).find((s) => s.keyword === scan.keyword) ?? null) : null;
   const delta = scan && prior ? scan.stats.coverage - prior.stats.coverage : null;
   const LEGEND = [
     { c: T.ok, l: "Top 3" }, { c: "#eab308", l: "4–10" }, { c: T.warn, l: "11–20" }, { c: T.danger, l: "Not found" },
@@ -957,28 +961,43 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
   const latest: Record<string, any> = {};
   for (const r of results) latest[`${r.prompt_id}|${r.engine}`] = r;
   const latestRows = Object.values(latest) as any[];
+
+  // Branded prompts literally name the client, so they are near-guaranteed
+  // "mentioned" and would inflate the headline rates + share of voice. Keep them
+  // visible in the per-prompt table, but exclude them from the metrics.
+  const nameNorm = (biz?.name || "").toLowerCase().replace(/\b(llc|inc|co|corp|company)\b/g, " ").replace(/[^a-z0-9]+/g, " ").trim();
+  const nameTokens = nameNorm.split(" ").filter((w) => w.length > 2);
+  const isBranded = (txt: string) => nameTokens.length > 0 && nameTokens.every((w) => txt.toLowerCase().includes(w));
+  const brandedIds = new Set(prompts.filter((p) => isBranded(p.prompt)).map((p) => p.id));
+
+  // A probe row counts toward metrics only if it was actually measured
+  // (measured !== false) and is not a branded prompt.
+  const counts = (r: any) => r.measured !== false && !brandedIds.has(r.prompt_id);
   const eng: Record<string, { answered: number; mentioned: number }> = {};
   for (const e of ENGINE_KEYS) eng[e] = { answered: 0, mentioned: 0 };
   let bizMentions = 0;
-  for (const r of latestRows) { if (eng[r.engine]) { eng[r.engine].answered++; if (r.mentioned) eng[r.engine].mentioned++; } if (r.mentioned) bizMentions++; }
-  const totMen = latestRows.filter((r) => r.mentioned).length;
-  const overall = latestRows.length ? Math.round((100 * totMen) / latestRows.length) : 0;
+  for (const r of latestRows) { if (!counts(r)) continue; if (eng[r.engine]) { eng[r.engine].answered++; if (r.mentioned) eng[r.engine].mentioned++; } if (r.mentioned) bizMentions++; }
+  const discoveryRows = latestRows.filter(counts);
+  const totMen = discoveryRows.filter((r) => r.mentioned).length;
+  const overall = discoveryRows.length ? Math.round((100 * totMen) / discoveryRows.length) : 0;
   const byDay: Record<string, { a: number; m: number }> = {};
-  for (const r of results) { const d = String(r.run_at).slice(0, 10); (byDay[d] ||= { a: 0, m: 0 }); byDay[d].a++; if (r.mentioned) byDay[d].m++; }
+  for (const r of results) { if (!counts(r)) continue; const d = String(r.run_at).slice(0, 10); (byDay[d] ||= { a: 0, m: 0 }); byDay[d].a++; if (r.mentioned) byDay[d].m++; }
   const days = Object.keys(byDay).sort();
 
   const engDay: Record<string, Record<string, { a: number; m: number }>> = {};
   for (const e of ENGINE_KEYS) engDay[e] = {};
-  for (const r of results) { if (!engDay[r.engine]) continue; const d = String(r.run_at).slice(0, 10); (engDay[r.engine][d] ||= { a: 0, m: 0 }); engDay[r.engine][d].a++; if (r.mentioned) engDay[r.engine][d].m++; }
+  for (const r of results) { if (!engDay[r.engine] || !counts(r)) continue; const d = String(r.run_at).slice(0, 10); (engDay[r.engine][d] ||= { a: 0, m: 0 }); engDay[r.engine][d].a++; if (r.mentioned) engDay[r.engine][d].m++; }
   const rateSeries = (pd: Record<string, { a: number; m: number }>) => days.map((d) => (pd[d] ? Math.round((100 * pd[d].m) / pd[d].a) : null));
   const trendSeries = [
     ...ENGINE_KEYS.map((e) => ({ label: ENGINE_LABELS[e], color: ENGINE_COLORS[e], values: rateSeries(engDay[e]) })),
     { label: "Overall", color: T.accent, values: days.map((d) => (byDay[d] ? Math.round((100 * byDay[d].m) / byDay[d].a) : null)) },
   ];
   const overallSeries = trendSeries[trendSeries.length - 1];
-  const compCounts: Record<string, number> = {};
-  for (const r of latestRows) if (Array.isArray(r.competitors)) for (const c of r.competitors) { const k = String(c).trim(); if (k) compCounts[k] = (compCounts[k] || 0) + 1; }
-  const topComps = Object.entries(compCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  // Canonicalize competitor names so "Options Plumbing" and "Options Plumbing
+  // LLC" count as one entity; keep the first-seen spelling as the display label.
+  const compCounts: Record<string, { label: string; count: number }> = {};
+  for (const r of discoveryRows) if (Array.isArray(r.competitors)) for (const c of r.competitors) { const raw = String(c).trim(); if (!raw) continue; const key = canonicalCompetitor(raw) || raw.toLowerCase(); (compCounts[key] ||= { label: raw, count: 0 }).count++; }
+  const topComps = Object.values(compCounts).sort((a, b) => b.count - a.count).slice(0, 5).map((x) => [x.label, x.count] as [string, number]);
   const donutSegments = [{ label: biz?.name || "You", value: bizMentions, color: T.accent }, ...topComps.map(([name, count], i) => ({ label: name, value: count, color: COMP_COLORS[i % COMP_COLORS.length] }))];
 
   const selectStyle: React.CSSProperties = { ...inputStyle, width: "auto", minWidth: 260 };
@@ -1114,10 +1133,10 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
               </div>
               {prompts.map((p) => (
                 <div key={p.id} className="trow" style={{ display: "grid", gridTemplateColumns: `1fr repeat(${ENGINE_KEYS.length}, 84px)`, padding: "12px 18px", borderBottom: `1px solid ${T.border}`, alignItems: "center" }}>
-                  <span style={{ fontSize: 13, color: T.text, paddingRight: 12 }}>{p.prompt}</span>
-                  {ENGINE_KEYS.map((e) => { const r = latest[`${p.id}|${e}`]; return (
-                    <span key={e} style={{ textAlign: "center", fontFamily: MONO, fontSize: 13, color: !r ? T.muted : r.mentioned ? T.ok : T.danger }}>
-                      {!r ? "—" : r.mentioned ? (r.position ? `#${r.position}` : "✓") : "✗"}
+                  <span style={{ fontSize: 13, color: T.text, paddingRight: 12 }}>{p.prompt}{brandedIds.has(p.id) && <span style={{ fontFamily: MONO, fontSize: 10, color: T.muted, marginLeft: 8 }}>· branded</span>}</span>
+                  {ENGINE_KEYS.map((e) => { const r = latest[`${p.id}|${e}`]; const unmeasured = !!r && r.measured === false; return (
+                    <span key={e} style={{ textAlign: "center", fontFamily: MONO, fontSize: 13, color: !r || unmeasured ? T.muted : r.mentioned ? T.ok : T.danger }}>
+                      {!r || unmeasured ? "—" : r.mentioned ? (r.position ? `#${r.position}` : "✓") : "✗"}
                     </span>
                   ); })}
                 </div>

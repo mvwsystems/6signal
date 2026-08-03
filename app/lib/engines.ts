@@ -16,6 +16,11 @@ export interface EngineAnswer {
   sources: string[];
   error?: string;
   note?: string; // non-fatal degradation worth surfacing (e.g. model fallback)
+  // false = the engine ran but there was NOTHING to measure (no AI Overview
+  // block, no Maps results). Distinct from "answered but you weren't named"
+  // (measured, mentioned:false). Absent = measured. Prevents an empty source
+  // from being scored as a real 0%.
+  measured?: boolean;
 }
 
 export interface Verdict {
@@ -23,6 +28,7 @@ export interface Verdict {
   position: number | null; // rank in the answer when mentioned (1 = first)
   sentiment: "positive" | "neutral" | "negative" | null;
   competitors: string[];
+  judged?: boolean; // false = the judge did not actually run (missing key / parse fail) — do not treat as a real "not mentioned"
 }
 
 function keyFor(engine: Engine): string | undefined {
@@ -77,28 +83,53 @@ async function probeOpenAI(prompt: string, key: string, signal?: AbortSignal): P
 
 async function probeClaude(prompt: string, key: string, signal?: AbortSignal): Promise<EngineAnswer> {
   const model = process.env.CLAUDE_ENGINE_MODEL?.trim() || "claude-sonnet-4-6";
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01" },
-    body: JSON.stringify({
-      model,
-      max_tokens: 1024,
-      tools: [{ type: "web_search_20260209", name: "web_search", max_uses: 3 }],
-      messages: [{ role: "user", content: prompt }],
-    }),
-    signal,
-  });
-  if (!res.ok) throw new Error(`Claude ${res.status}: ${(await res.text().catch(() => "")).slice(0, 200)}`);
-  const data = await res.json();
+  // Transient 429/5xx/529s were dropping ~1 probe per run and tripping the
+  // watchdog; retry those. 400s stay fatal — they mean the request is wrong.
+  const RETRYABLE = new Set([429, 500, 502, 503, 529]);
+  const messages: { role: string; content: unknown }[] = [{ role: "user", content: prompt }];
   let text = "";
   const sources: string[] = [];
-  for (const block of data.content ?? []) {
-    if (block.type === "text" && block.text) text += block.text;
-    if (block.type === "web_search_tool_result") {
-      for (const r of block.content ?? []) if (r.url) sources.push(r.url);
+
+  for (let attempt = 0, continuations = 0; ; ) {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01" },
+      body: JSON.stringify({
+        model,
+        max_tokens: 1024,
+        tools: [{ type: "web_search_20260209", name: "web_search", max_uses: 3 }],
+        messages,
+      }),
+      signal,
+    });
+    if (!res.ok) {
+      const errText = (await res.text().catch(() => "")).slice(0, 200);
+      if (RETRYABLE.has(res.status) && attempt < 2) {
+        attempt++;
+        await new Promise((r) => setTimeout(r, attempt * 4000));
+        continue;
+      }
+      throw new Error(`Claude ${res.status}: ${errText}`);
     }
+    const data = await res.json();
+    for (const block of data.content ?? []) {
+      if (block.type === "text" && block.text) text += block.text;
+      if (block.type === "web_search_tool_result") {
+        for (const r of block.content ?? []) if (r.url) sources.push(r.url);
+      }
+    }
+    // Server-side web search can pause its loop; re-send with the assistant
+    // turn appended and the server resumes where it left off.
+    if (data.stop_reason === "pause_turn" && continuations < 2) {
+      continuations++;
+      messages.push({ role: "assistant", content: data.content });
+      continue;
+    }
+    if (data.stop_reason === "refusal") {
+      return { engine: "claude", ok: false, text: "", sources: [], error: "Claude declined the prompt (refusal)" };
+    }
+    return { engine: "claude", ok: true, text, sources: dedupe(sources) };
   }
-  return { engine: "claude", ok: true, text, sources: dedupe(sources) };
 }
 
 // Google AI Overviews via SerpAPI: the actual AI Overview block Google shows
@@ -111,7 +142,9 @@ async function probeGoogleAI(prompt: string, key: string, signal?: AbortSignal):
   const data = await res.json();
   const ai = data.ai_overview;
   if (!ai || (!ai.text_blocks && !ai.answer)) {
-    return { engine: "google-ai", ok: true, text: "No AI Overview appeared for this query.", sources: [] };
+    // Google showed no AI Overview at all — nothing to measure (renders "—",
+    // not 0%). An overview that appears but omits the business is a real 0.
+    return { engine: "google-ai", ok: true, measured: false, text: "No AI Overview appeared for this query.", sources: [] };
   }
   const parts: string[] = [];
   const walk = (node: unknown): void => {
@@ -130,11 +163,22 @@ async function probeGoogleAI(prompt: string, key: string, signal?: AbortSignal):
 
 // Google Maps ranking via the existing Places key: the ranked local results a
 // buyer sees for this query. The judge reads the ordered list for position.
-async function probeMaps(prompt: string, signal?: AbortSignal): Promise<EngineAnswer> {
+async function probeMaps(prompt: string, signal?: AbortSignal, ctx?: ProbeContext): Promise<EngineAnswer> {
   void signal;
   const { placesTextSearch } = await import("./places");
-  const results = await placesTextSearch(prompt, 10);
-  if (!results.length) return { engine: "maps", ok: true, text: "No Google Maps results for this query.", sources: [] };
+  // Scope the query to the client's market so a conversational prompt ("a good
+  // plumber near me") isn't run as a nationwide search that returns the wrong
+  // city. Drop "near me" and append the city when the prompt doesn't name it.
+  let query = prompt;
+  const city = ctx?.city?.trim();
+  if (city) {
+    const cityToken = city.split(",")[0].trim().toLowerCase();
+    if (cityToken && !prompt.toLowerCase().includes(cityToken)) {
+      query = `${prompt.replace(/\bnear me\b/gi, "").trim()} in ${city}`.replace(/\s+/g, " ").trim();
+    }
+  }
+  const results = await placesTextSearch(query, 10);
+  if (!results.length) return { engine: "maps", ok: true, measured: false, text: "No Google Maps results for this query.", sources: [] };
   const lines = results.map((p, i) => {
     const name = p.displayName?.text ?? "?";
     const rating = typeof p.rating === "number" ? `${p.rating}★` : "no rating";
@@ -182,7 +226,10 @@ async function probeGemini(prompt: string, key: string, signal?: AbortSignal): P
 
 function dedupe(a: string[]): string[] { return Array.from(new Set(a)); }
 
-export async function probeEngine(engine: Engine, prompt: string, signal?: AbortSignal): Promise<EngineAnswer> {
+// Optional per-run context. `city` scopes the Maps probe to the client's market.
+export interface ProbeContext { city?: string }
+
+export async function probeEngine(engine: Engine, prompt: string, signal?: AbortSignal, ctx?: ProbeContext): Promise<EngineAnswer> {
   const key = keyFor(engine);
   if (!key) return { engine, ok: false, text: "", sources: [], error: "no API key" };
   try {
@@ -191,15 +238,15 @@ export async function probeEngine(engine: Engine, prompt: string, signal?: Abort
     if (engine === "perplexity") return await probePerplexity(prompt, key, signal);
     if (engine === "gemini") return await probeGemini(prompt, key, signal);
     if (engine === "google-ai") return await probeGoogleAI(prompt, key, signal);
-    return await probeMaps(prompt, signal);
+    return await probeMaps(prompt, signal, ctx);
   } catch (e) {
     console.error(`[engines] ${engine} probe failed:`, e);
     return { engine, ok: false, text: "", sources: [], error: String(e).slice(0, 300) };
   }
 }
 
-export async function probeAllEngines(prompt: string, signal?: AbortSignal): Promise<EngineAnswer[]> {
-  return Promise.all(ENGINES.map((e) => probeEngine(e, prompt, signal)));
+export async function probeAllEngines(prompt: string, signal?: AbortSignal, ctx?: ProbeContext): Promise<EngineAnswer[]> {
+  return Promise.all(ENGINES.map((e) => probeEngine(e, prompt, signal, ctx)));
 }
 
 // ── Claude-based judgment of each engine's answer ────────────────────────────
@@ -215,12 +262,13 @@ export async function analyzePrompt(
 ): Promise<Record<Engine, Verdict>> {
   const fallback = (): Record<Engine, Verdict> => {
     const o = {} as Record<Engine, Verdict>;
-    for (const e of ENGINES) o[e] = { mentioned: false, position: null, sentiment: null, competitors: [] };
+    for (const e of ENGINES) o[e] = { mentioned: false, position: null, sentiment: null, competitors: [], judged: false };
     return o;
   };
   const apiKey = process.env.ANTHROPIC_API_KEY;
   const usable = answers.filter((a) => a.ok && a.text);
   if (!apiKey || usable.length === 0) return fallback();
+  const usableEngines = new Set(usable.map((a) => a.engine));
 
   const block = usable.map((a) => `### ${a.engine} answer:\n${a.text.slice(0, 4000)}`).join("\n\n");
   const user = `Business: ${business.name} (${business.trade} in ${business.city})
@@ -247,12 +295,19 @@ For each engine answer above, judge whether ${business.name} is named. Return th
     const out = fallback();
     for (const e of ENGINES) {
       const r = results[e];
-      if (r) out[e] = {
-        mentioned: r.mentioned === true,
-        position: Number.isFinite(Number(r.position)) ? Number(r.position) : null,
-        sentiment: ["positive", "neutral", "negative"].includes(r.sentiment) ? r.sentiment : null,
-        competitors: Array.isArray(r.competitors) ? r.competitors.map(String).slice(0, 8) : [],
-      };
+      if (r) {
+        out[e] = {
+          mentioned: r.mentioned === true,
+          position: Number.isFinite(Number(r.position)) ? Number(r.position) : null,
+          sentiment: ["positive", "neutral", "negative"].includes(r.sentiment) ? r.sentiment : null,
+          competitors: Array.isArray(r.competitors) ? r.competitors.map(String).slice(0, 8) : [],
+          judged: true,
+        };
+      } else if (usableEngines.has(e)) {
+        // The judge ran on this engine's answer even if it returned no verdict
+        // object for it — a genuine "not named", not a judge failure.
+        out[e].judged = true;
+      }
     }
     return out;
   } catch (e) {

@@ -29,9 +29,30 @@ export async function runWatchdog(): Promise<{ ok: boolean; problems: string[]; 
       const results = await Promise.all(
         engines.map((e) => probeEngine(e, "Who is a good plumber in Dallas, TX?", controller.signal))
       );
+      // Second chance before paging the owner: engine APIs throw transient
+      // 429/529s that a single-shot probe misreads as "broken". Re-probe
+      // failures once after a pause; only a repeat failure is a problem.
+      const failed = results.filter((r) => !r.ok);
+      const retried = new Map<string, { ok: boolean; error?: string }>();
+      if (failed.length > 0) {
+        await new Promise((r) => setTimeout(r, 20_000));
+        const controller2 = new AbortController();
+        const timer2 = setTimeout(() => controller2.abort(), 100_000);
+        try {
+          const second = await Promise.all(
+            failed.map((r) => probeEngine(r.engine, "Who is a good plumber in Dallas, TX?", controller2.signal))
+          );
+          for (const r of second) retried.set(r.engine, { ok: r.ok, error: r.error });
+        } finally {
+          clearTimeout(timer2);
+        }
+      }
       for (const r of results) {
-        if (!r.ok) problems.push(`Engine ${r.engine}: FAILING — ${r.error}`);
-        else if (r.note) warnings.push(`Engine ${r.engine}: ${r.note}`);
+        if (!r.ok) {
+          const second = retried.get(r.engine);
+          if (second?.ok) warnings.push(`Engine ${r.engine}: transient failure, recovered on retry (first error: ${r.error})`);
+          else problems.push(`Engine ${r.engine}: FAILING — ${second?.error ?? r.error}`);
+        } else if (r.note) warnings.push(`Engine ${r.engine}: ${r.note}`);
         else ok.push(`Engine ${r.engine}: OK`);
       }
     } finally {

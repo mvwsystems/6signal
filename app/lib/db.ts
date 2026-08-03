@@ -135,6 +135,44 @@ export async function upsertBusiness(b: BusinessInput): Promise<string | null> {
   }
 }
 
+// Normalize an email for dedupe/blocklisting: lowercase, drop "+tags", and for
+// Gmail also strip the dots the provider ignores — so "M.Walker+test@gmail.com"
+// and "mwalker@gmail.com" resolve to one address.
+export function normalizeEmail(email: string): string {
+  const e = (email || "").trim().toLowerCase();
+  const at = e.lastIndexOf("@");
+  if (at < 1) return e;
+  let local = e.slice(0, at);
+  const domain = e.slice(at + 1);
+  local = local.split("+")[0];
+  if (domain === "gmail.com" || domain === "googlemail.com") local = local.replace(/\./g, "");
+  return `${local}@${domain}`;
+}
+
+// Internal/test addresses that should never count as leads: the company domain,
+// the operator's own address, plus anything in LEAD_TEST_EMAILS (comma-list).
+const DEFAULT_TEST_EMAILS = ["mattvincentwalker@gmail.com"];
+export function isTestEmail(normalized: string): boolean {
+  if (!normalized) return true;
+  if (normalized.endsWith("@6signal.co")) return true;
+  const extra = (process.env.LEAD_TEST_EMAILS || "").split(",").map((x) => normalizeEmail(x)).filter(Boolean);
+  return new Set([...DEFAULT_TEST_EMAILS.map(normalizeEmail), ...extra]).has(normalized);
+}
+
+// Best-effort business attribution by website domain, without creating one.
+export async function businessIdByDomain(url?: string | null): Promise<string | null> {
+  const s = db();
+  if (!s) return null;
+  const domain = urlDomain(url);
+  if (!domain) return null;
+  try {
+    const { data } = await s.from("businesses").select("id").ilike("url", `%${domain}%`).limit(1).maybeSingle();
+    return (data?.id as string) ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export async function insertLead(args: {
   businessId: string | null;
   email: string;
@@ -142,10 +180,17 @@ export async function insertLead(args: {
 }): Promise<void> {
   const s = db();
   if (!s) return;
+  const email = normalizeEmail(args.email);
+  // Drop internal/test submissions so they never inflate the lead count.
+  if (isTestEmail(email)) return;
   try {
+    // Skip exact duplicates (same normalized email + source) — bots resubmit,
+    // and there is no unique constraint on the table.
+    const { data: dup } = await s.from("leads").select("id").eq("email", email).eq("source", args.source).limit(1).maybeSingle();
+    if (dup?.id) return;
     const { error } = await s.from("leads").insert({
       business_id: args.businessId,
-      email: args.email,
+      email,
       source: args.source,
     });
     if (error) throw error;
@@ -475,11 +520,22 @@ export async function getDashboardOverview(): Promise<{
       s.from("leads").select("id, business_id, email, source, created_at").order("created_at", { ascending: false }).limit(200),
       s.from("purchases").select("amount_total, product, email, created_at").order("created_at", { ascending: false }).limit(500),
     ]);
+    // Clean the leads feed (also heals legacy rows written before hygiene):
+    // drop internal/test addresses and de-duplicate by normalized email+source.
+    const seen = new Set<string>();
+    const cleanLeads = (leads.data ?? []).filter((l: Record<string, unknown>) => {
+      const em = normalizeEmail(String(l.email ?? ""));
+      if (isTestEmail(em)) return false;
+      const k = `${em}|${String(l.source ?? "")}`;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
     return {
       businesses: biz.data ?? [],
       audits: audits.data ?? [],
       signalScores: scores.data ?? [],
-      leads: leads.data ?? [],
+      leads: cleanLeads,
       purchases: purchases.data ?? [],
     };
   } catch (e) {
@@ -755,7 +811,7 @@ export async function getLastProbeTimes(): Promise<Record<string, string>> {
   }
 }
 
-export async function saveProbeResults(rows: Array<{ business_id: string; prompt_id: string; engine: string; mentioned: boolean; position: number | null; sentiment: string | null; competitors: unknown; sources: unknown; answer: string | null }>): Promise<void> {
+export async function saveProbeResults(rows: Array<{ business_id: string; prompt_id: string; engine: string; mentioned: boolean; position: number | null; sentiment: string | null; competitors: unknown; sources: unknown; answer: string | null; measured?: boolean }>): Promise<void> {
   const s = db();
   if (!s || !rows.length) return;
   try {
@@ -773,7 +829,7 @@ export async function getProbeResults(businessId: string, sinceDays = 90): Promi
     const since = new Date(Date.now() - sinceDays * 86400000).toISOString();
     const { data, error } = await s
       .from("probe_results")
-      .select("prompt_id, engine, mentioned, position, sentiment, competitors, sources, run_at")
+      .select("prompt_id, engine, mentioned, position, sentiment, competitors, sources, run_at, measured")
       .eq("business_id", businessId)
       .gte("run_at", since)
       .order("run_at", { ascending: true });
@@ -789,6 +845,8 @@ export async function getProbeResults(businessId: string, sinceDays = 90): Promi
 export interface PlanTaskInput {
   business_id: string;
   plan_audit_id: string | null;
+  task_key?: string | null;        // stable playbook key (enables idempotent upsert)
+  playbook_version?: string | null;
   phase: string | null;
   task: string;
   detail: string | null;
@@ -797,12 +855,45 @@ export interface PlanTaskInput {
   due_date: string | null; // YYYY-MM-DD
 }
 
+// Idempotent task sync for one business. Keyed rows (from the deterministic
+// playbook) upsert on (business_id, task_key) so regenerating a plan updates the
+// same tasks instead of appending duplicates. Tasks the client already advanced
+// (done / in_progress) are preserved. Open tasks that are no longer selected —
+// including legacy free-form rows with no task_key — are marked "skipped" so
+// history is kept but the checklist reflects the current correct set.
 export async function createPlanTasks(rows: PlanTaskInput[]): Promise<number> {
   const s = db();
   if (!s || !rows.length) return 0;
   try {
-    const { error } = await s.from("plan_tasks").insert(rows);
-    if (error) throw error;
+    const businessId = rows[0].business_id;
+    const keyed = rows.filter((r) => r.task_key);
+    const unkeyed = rows.filter((r) => !r.task_key);
+    const keys = keyed.map((r) => r.task_key as string);
+
+    if (keyed.length) {
+      const { error } = await s.from("plan_tasks").upsert(keyed, { onConflict: "business_id,task_key" });
+      if (error) throw error;
+      // Reopen any of these keys that were previously superseded but now apply
+      // again — without disturbing tasks the client marked done / in_progress.
+      if (keys.length) {
+        await s.from("plan_tasks").update({ status: "open" })
+          .eq("business_id", businessId).eq("status", "skipped").in("task_key", keys);
+      }
+    }
+    if (unkeyed.length) {
+      const { error } = await s.from("plan_tasks").insert(unkeyed);
+      if (error) throw error;
+    }
+
+    // Supersede open tasks that are no longer in the selected set. Two passes
+    // because `task_key not in (...)` does not match NULL (legacy free-form rows).
+    if (keys.length) {
+      const list = `(${keys.join(",")})`;
+      await s.from("plan_tasks").update({ status: "skipped" })
+        .eq("business_id", businessId).eq("status", "open").not("task_key", "in", list);
+      await s.from("plan_tasks").update({ status: "skipped" })
+        .eq("business_id", businessId).eq("status", "open").is("task_key", null);
+    }
     return rows.length;
   } catch (e) {
     console.error("[db] createPlanTasks failed:", e);
