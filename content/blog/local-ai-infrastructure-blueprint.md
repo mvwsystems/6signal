@@ -6,7 +6,7 @@ date: "2026-07-01"
 category: "White Paper"
 contentType: "White Paper"
 author: "Matt Vincent Walker"
-readTime: "42 min read"
+readTime: "12 min read"
 featured: false
 tags:
   - Local AI Visibility
