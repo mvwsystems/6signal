@@ -27,6 +27,11 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
   try { body = await req.json(); } catch { return NextResponse.json({ error: "Invalid JSON" }, { status: 400 }); }
   const fields: Record<string, unknown> = {};
   for (const k of EDITABLE) if (body && k in body) fields[k] = body[k];
+  // Archive / unarchive: hides the post from the default Articles list
+  // without touching its status or the published page on the client site.
+  if (body && typeof body.archived === "boolean") {
+    fields.archived_at = body.archived ? new Date().toISOString() : null;
+  }
   if (typeof fields.slug === "string") {
     fields.slug = fields.slug.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80);
   }

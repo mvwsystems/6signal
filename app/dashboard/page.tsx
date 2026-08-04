@@ -1565,6 +1565,7 @@ function AdsTab() {
 // ─── Content tab (generate + publish articles to client sites) ───────────────────
 interface ContentPost {
   id: string; status: string; title: string | null; slug: string | null; error: string | null;
+  archived_at: string | null;
   meta_description: string | null; target_prompt: string | null; summary: string | null;
   url: string | null; created_at: string; published_at: string | null;
   article_html?: string | null; faqs?: { q: string; a: string }[] | null;
@@ -1574,6 +1575,7 @@ interface ContentTopic { targetPrompt: string; mentionRate: number; enginesMissi
 function ContentTab({ businesses }: { businesses: Biz[] }) {
   const [bizId, setBizId] = useState("");
   const [posts, setPosts] = useState<ContentPost[]>([]);
+  const [showArchived, setShowArchived] = useState(false);
   const [topics, setTopics] = useState<ContentTopic[]>([]);
   const [repo, setRepo] = useState<string | null>(null);
   const [repoInput, setRepoInput] = useState("");
@@ -1635,6 +1637,16 @@ function ContentTab({ businesses }: { businesses: Biz[] }) {
       const d = await fetch(`/api/dashboard/content/${id}`).then((r) => r.json());
       if (d.post) setOpen(d.post);
     } catch { setErr("Could not load the draft."); }
+  };
+
+  const setArchived = async (id: string, archived: boolean) => {
+    setErr(null);
+    try {
+      const r = await fetch(`/api/dashboard/content/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ archived }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || !d.ok) throw new Error(d.error || "Archive failed");
+      await loadFor(bizId);
+    } catch (e: any) { setErr(e?.message || "Archive failed"); }
   };
 
   const saveDraft = async () => {
@@ -1722,10 +1734,20 @@ function ContentTab({ businesses }: { businesses: Biz[] }) {
           </div>
 
           <div style={card()}>
-            <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 15, marginBottom: 4 }}>Articles</div>
+            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
+              <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 15, marginBottom: 4 }}>Articles</div>
+              {posts.some((p) => p.archived_at) && (
+                <button
+                  style={{ background: "none", border: "none", cursor: "pointer", fontFamily: MONO, fontSize: 11, color: T.muted, textDecoration: "underline", padding: 0 }}
+                  onClick={() => setShowArchived((v) => !v)}
+                >
+                  {showArchived ? "Hide archived" : `Show archived (${posts.filter((p) => p.archived_at).length})`}
+                </button>
+              )}
+            </div>
             <div style={{ ...eyebrow, marginBottom: 14 }}>{repo ? `Publishing to github.com/${repo}` : "No repo set — publishing disabled for this client"}</div>
             {posts.length === 0 && <div style={{ color: T.muted, fontSize: 13 }}>Nothing yet.</div>}
-            {posts.map((p) => (
+            {posts.filter((p) => showArchived || !p.archived_at).map((p) => (
               <div key={p.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, padding: "10px 0", borderBottom: `1px solid ${T.border}` }}>
                 <div style={{ minWidth: 0 }}>
                   <div style={{ fontSize: 13, color: T.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.title || p.target_prompt || "(generating…)"}</div>
@@ -1739,6 +1761,9 @@ function ContentTab({ businesses }: { businesses: Biz[] }) {
                 <div style={{ display: "flex", gap: 6 }}>
                   {p.url && <a href={p.url} target="_blank" rel="noopener noreferrer" style={{ ...btn(), textDecoration: "none", whiteSpace: "nowrap" }}>View live</a>}
                   {(p.status === "draft" || p.status === "published") && <button style={btn(p.status === "draft")} onClick={() => openPost(p.id)}>{p.status === "draft" ? "Review" : "Open"}</button>}
+                  {(p.status === "draft" || p.status === "published") && (
+                    <button style={btn()} onClick={() => setArchived(p.id, !p.archived_at)}>{p.archived_at ? "Unarchive" : "Archive"}</button>
+                  )}
                   {p.status === "failed" && <button style={btn()} onClick={() => removeDraft(p.id)}>Delete</button>}
                 </div>
               </div>
