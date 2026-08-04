@@ -9399,6 +9399,48 @@ svg {
   text-decoration: none;
 }
 
+
+/* White paper figures & stat tiles — MDX strips inline style objects, so
+   these live here. Dark panels on screen; the print block restyles them. */
+.wp-fig {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #0e0e0c;
+  border: 1px solid #232320;
+  border-radius: 2px;
+}
+.wp-tiles {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 28px 0;
+}
+.wp-tile {
+  flex: 1 1 180px;
+  background: #0e0e0c;
+  border: 1px solid #232320;
+  border-radius: 2px;
+  padding: 20px;
+}
+.wp-tile-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: #6a6a64;
+}
+.wp-tile-num {
+  font-family: "Chakra Petch", sans-serif;
+  font-size: 34px;
+  color: #E6FF00;
+  margin: 8px 0 4px;
+}
+.wp-tile-cap {
+  font-size: 12px;
+  color: #a8a8a3;
+  line-height: 1.5;
+}
+
 /* ── White paper PDF edition (print) ─────────────────────── */
 .wp-print-cover {
   display: none;
@@ -9408,18 +9450,24 @@ svg {
 }
 
 @media print {
+  /* Letter paper with real margins; the cover page alone is full-bleed. */
   @page {
     size: letter;
+    margin: 0.75in 0.8in;
+  }
+  @page :first {
     margin: 0;
+  }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
   html,
   body {
-    background: #060606 !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+    background: #fbfaf8 !important;
     cursor: auto !important;
   }
-  /* Chrome-only shell: navigation, cursor, CTAs, related posts */
+  /* Screen-only shell: navigation, cursor, CTAs, related posts */
   .nav,
   footer,
   .mobile-cta,
@@ -9437,33 +9485,122 @@ svg {
     opacity: 1 !important;
     transform: none !important;
   }
+
+  /* Page 1 — the cover, full bleed, black */
   .wp-print-cover {
     display: block;
+    margin: 0;
+    font-size: 0;
+    line-height: 0;
     break-after: page;
   }
   .wp-print-cover img {
     display: block;
-    width: 100%;
+    width: 8.5in;
     height: 11in;
     object-fit: cover;
   }
-  .post-hero {
-    padding: 0.9in 0.85in 0.35in;
-  }
-  .post-body-section {
-    padding: 0.15in 0.85in 0.9in;
-  }
+
+  /* Content pages — printable light theme; @page supplies the margins */
   .wrap {
     max-width: 100%;
     padding: 0;
   }
+  .post-hero,
+  .post-body-section {
+    background: none !important;
+    border: none;
+    padding: 0.2in 0 0.1in;
+  }
+  .post-title,
+  .post-body h1,
+  .post-body h2,
+  .post-body h3,
+  .post-body h4 {
+    color: #0c0c0a !important;
+  }
+  .post-hero .idx,
+  .post-desc,
+  .post-byline,
+  .post-meta-sep {
+    color: #55534c !important;
+  }
+  .post-body,
+  .post-body p,
+  .post-body li,
+  .post-body td,
+  .post-body th,
+  .post-body em {
+    color: #21201c !important;
+  }
+  .post-body strong {
+    color: #000 !important;
+  }
+  .post-body a {
+    color: #4a4a00 !important;
+    text-decoration: underline;
+  }
+  .post-body table,
+  .post-body th,
+  .post-body td {
+    border-color: #ccc9c0 !important;
+  }
+  .rule,
+  .post-body hr {
+    border-color: #dedbd3 !important;
+  }
+
+  /* Figures: Chrome's print pipeline drops CSS backgrounds on SVGs and inline-
+     styled tiles, so restyle them for light paper — dark ink, light panels,
+     accents shifted to print-legible olive. CSS fill/stroke overrides beat
+     SVG presentation attributes. */
+  .post-body svg {
+    background: none !important;
+    border-color: #d9d6cc !important;
+  }
+  .post-body svg text {
+    fill: #211f1a !important;
+  }
+  .post-body svg text[fill="#E6FF00"] {
+    fill: #77850a !important;
+  }
+  .post-body svg rect[fill="#181816"] {
+    fill: #f0ede6 !important;
+  }
+  .post-body svg rect[fill="#0e0e0c"] {
+    fill: #f7f5ef !important;
+  }
+  .post-body svg [stroke="#E6FF00"] {
+    stroke: #a8b800 !important;
+  }
+  .wp-tile {
+    background: #f0ede6 !important;
+    border-color: #d9d6cc !important;
+  }
+  .wp-tile-label {
+    color: #55534b !important;
+  }
+  .wp-tile-num {
+    color: #77850a !important;
+  }
+  .wp-tile-cap {
+    color: #55534b !important;
+  }
+  /* Never split a figure across pages. */
   .post-body svg,
   .post-body table,
   .post-body img,
-  .post-body blockquote {
+  .post-body blockquote,
+  .post-body pre,
+  .wp-tiles,
+  .wp-tile {
     break-inside: avoid;
   }
-  h2, h3 {
+  h1, h2, h3, h4 {
     break-after: avoid;
+  }
+  p, li {
+    orphans: 3;
+    widows: 3;
   }
 }

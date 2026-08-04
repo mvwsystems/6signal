@@ -53,7 +53,7 @@ This paper makes five claims, each argued from cited industry data:
 
 Begin with the number that should embarrass a $13 trillion global industry: **about 1 percent.** That is construction's average annual labor-productivity growth over two decades, per [McKinsey Global Institute's landmark analysis](https://www.mckinsey.com/capabilities/operations/our-insights/reinventing-construction-through-a-productivity-revolution) — against 2.8 percent for the world economy and 3.6 percent for manufacturing. The same research ranked U.S. construction **second-to-last among all industries in digitization** (ahead of only agriculture) and found the industry investing 1.5 percent of value-added in technology against a 3.6 percent economy-wide average. McKinsey priced the catch-up opportunity at **$1.6 trillion a year, globally.**
 
-<svg viewBox="0 0 720 200" role="img" aria-label="Bar chart: average annual labor productivity growth over two decades. Construction 1.0 percent, total world economy 2.8 percent, manufacturing 3.6 percent." style={{maxWidth: "100%", height: "auto", background: "#0e0e0c", border: "1px solid #232320", borderRadius: "2px"}}>
+<svg viewBox="0 0 720 200" role="img" aria-label="Bar chart: average annual labor productivity growth over two decades. Construction 1.0 percent, total world economy 2.8 percent, manufacturing 3.6 percent." className="wp-fig">
   <text x="24" y="34" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">Labor productivity growth, ~20-year average</text>
   <text x="24" y="52" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">% PER YEAR · MCKINSEY GLOBAL INSTITUTE</text>
   <text x="24" y="92" fill="#f5f5f3" fontSize="11" fontFamily="JetBrains Mono, monospace">CONSTRUCTION</text>
@@ -73,21 +73,21 @@ The conventional reading of this chart is "construction is slow to adopt technol
 
 The better reading requires a second set of numbers. FMI's research found that **[95.5 percent of all data captured in engineering and construction goes unused](https://www.forconstructionpros.com/business/press-release/21031884/fmi-corp-study-95-of-all-data-captured-goes-unused-in-the-ec-industry)**. The follow-up study with Autodesk estimated that "bad data" — inaccurate, incomplete, inaccessible, or untimely information — [may have cost the global industry **$1.85 trillion** in a single year](https://www.autodesk.com/blogs/construction/autodesk-fmi-study-global-construction-industry-data-strategies/), including roughly $88 billion of rework directly attributable to decisions made on bad information. [PlanGrid and FMI's field research](https://www.prnewswire.com/news-releases/new-research-from-plangrid-and-fmi-identifies-factors-costing-the-construction-industry-more-than-177-billion-annually-300689826.html) put a stopwatch on the human cost: construction professionals spend about **14 hours per person per week** on conflict resolution, rework, and hunting for project information — $177.5 billion a year in U.S. labor cost alone.
 
-<div style={{display: "flex", gap: "12px", flexWrap: "wrap", margin: "28px 0"}}>
-  <div style={{flex: "1 1 180px", background: "#0e0e0c", border: "1px solid #232320", borderRadius: "2px", padding: "20px"}}>
-    <div style={{fontFamily: "JetBrains Mono, monospace", fontSize: "10px", letterSpacing: "0.15em", color: "#6a6a64"}}>DATA CAPTURED, NEVER USED</div>
-    <div style={{fontFamily: "Chakra Petch, sans-serif", fontSize: "34px", color: "#E6FF00", margin: "8px 0 4px"}}>95.5%</div>
-    <div style={{fontSize: "12px", color: "#a8a8a3", lineHeight: "1.5"}}>of all E&amp;C data — FMI, 2018</div>
+<div className="wp-tiles">
+  <div className="wp-tile">
+    <div className="wp-tile-label">DATA CAPTURED, NEVER USED</div>
+    <div className="wp-tile-num">95.5%</div>
+    <div className="wp-tile-cap">of all E&amp;C data — FMI, 2018</div>
   </div>
-  <div style={{flex: "1 1 180px", background: "#0e0e0c", border: "1px solid #232320", borderRadius: "2px", padding: "20px"}}>
-    <div style={{fontFamily: "JetBrains Mono, monospace", fontSize: "10px", letterSpacing: "0.15em", color: "#6a6a64"}}>GLOBAL COST OF BAD DATA</div>
-    <div style={{fontFamily: "Chakra Petch, sans-serif", fontSize: "34px", color: "#E6FF00", margin: "8px 0 4px"}}>$1.85T</div>
-    <div style={{fontSize: "12px", color: "#a8a8a3", lineHeight: "1.5"}}>in 2020 alone — FMI / Autodesk, 2021</div>
+  <div className="wp-tile">
+    <div className="wp-tile-label">GLOBAL COST OF BAD DATA</div>
+    <div className="wp-tile-num">$1.85T</div>
+    <div className="wp-tile-cap">in 2020 alone — FMI / Autodesk, 2021</div>
   </div>
-  <div style={{flex: "1 1 180px", background: "#0e0e0c", border: "1px solid #232320", borderRadius: "2px", padding: "20px"}}>
-    <div style={{fontFamily: "JetBrains Mono, monospace", fontSize: "10px", letterSpacing: "0.15em", color: "#6a6a64"}}>LOST PER PERSON, PER WEEK</div>
-    <div style={{fontFamily: "Chakra Petch, sans-serif", fontSize: "34px", color: "#E6FF00", margin: "8px 0 4px"}}>14 hrs</div>
-    <div style={{fontSize: "12px", color: "#a8a8a3", lineHeight: "1.5"}}>searching, conflict, rework — PlanGrid / FMI, 2018</div>
+  <div className="wp-tile">
+    <div className="wp-tile-label">LOST PER PERSON, PER WEEK</div>
+    <div className="wp-tile-num">14 hrs</div>
+    <div className="wp-tile-cap">searching, conflict, rework — PlanGrid / FMI, 2018</div>
   </div>
 </div>
 
@@ -97,7 +97,7 @@ Hold both sets of numbers together and the real diagnosis appears. Construction 
 
 The software industry's answer to construction has been the point solution: a better estimating tool, a better scheduling app, a better accounting package. Each genuinely improves the task it touches. None of them moved the industry's number, and the reason is visible the moment you trace one piece of information through a typical company.
 
-<svg viewBox="0 0 720 250" role="img" aria-label="Workflow diagram showing where information dies in a contracting company: field activity to office to ledger to closeout, with four leak points marked — receipts ride in trucks, invoices coded to the wrong job, change orders never billed, margin discovered at closeout." style={{maxWidth: "100%", height: "auto", background: "#0e0e0c", border: "1px solid #232320", borderRadius: "2px"}}>
+<svg viewBox="0 0 720 250" role="img" aria-label="Workflow diagram showing where information dies in a contracting company: field activity to office to ledger to closeout, with four leak points marked — receipts ride in trucks, invoices coded to the wrong job, change orders never billed, margin discovered at closeout." className="wp-fig">
   <text x="24" y="34" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">Where information dies</text>
   <text x="24" y="52" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">ONE JOB'S FINANCIAL TRUTH, IN TRANSIT</text>
   <rect x="24" y="80" width="120" height="44" rx="2" fill="none" stroke="#3a3a35" strokeWidth="1" />
@@ -144,7 +144,7 @@ There was a rational reason the edges stayed manual: moving information between 
 
 If the tool is the wrong unit of analysis, what is the right one? Strip any contracting company — a two-truck service outfit or a $50M civil GC — to what the business actually does, and you find the same four systems:
 
-<svg viewBox="0 0 720 320" role="img" aria-label="Diagram of the four-system model: revenue, operations, control, and learning systems arranged around a central connective layer, with lines linking the center to each system." style={{maxWidth: "100%", height: "auto", background: "#0e0e0c", border: "1px solid #232320", borderRadius: "2px"}}>
+<svg viewBox="0 0 720 320" role="img" aria-label="Diagram of the four-system model: revenue, operations, control, and learning systems arranged around a central connective layer, with lines linking the center to each system." className="wp-fig">
   <text x="24" y="34" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">The four-system contractor</text>
   <text x="24" y="52" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">AI'S ECONOMIC ROLE IS THE CENTER, NOT THE BOXES</text>
   <rect x="60" y="80" width="240" height="70" rx="2" fill="none" stroke="#3a3a35" strokeWidth="1" />
@@ -184,7 +184,7 @@ The four-system model reframes the AI question from "which tool should I buy?" t
 
 Call something "infrastructure" and you owe a bill of materials. An AI infrastructure for a contracting company has six working layers and one enclosing one:
 
-<svg viewBox="0 0 720 340" role="img" aria-label="Layer diagram of the AI infrastructure stack: action, intelligence, workflow, knowledge, data, and integration layers stacked, enclosed by a governance frame covering access, approval, and audit." style={{maxWidth: "100%", height: "auto", background: "#0e0e0c", border: "1px solid #232320", borderRadius: "2px"}}>
+<svg viewBox="0 0 720 340" role="img" aria-label="Layer diagram of the AI infrastructure stack: action, intelligence, workflow, knowledge, data, and integration layers stacked, enclosed by a governance frame covering access, approval, and audit." className="wp-fig">
   <text x="24" y="34" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">The infrastructure stack</text>
   <rect x="24" y="52" width="672" height="268" rx="2" fill="none" stroke="#E6FF00" strokeWidth="1" strokeDasharray="4 4" />
   <rect x="44" y="66" width="632" height="34" rx="2" fill="#181816" />
@@ -226,7 +226,7 @@ What does the missing connective layer actually cost a single company? The indus
 
 **Cash:** [Rabbet's payment research](https://rabbet.com/reports/construction-payments-2024) tracks what slow payments cost U.S. construction — and the trend line is the story:
 
-<svg viewBox="0 0 720 230" role="img" aria-label="Bar chart: the annual cost of slow payments to U.S. construction. 136 billion dollars in 2021, 208 billion in 2022, 280 billion in 2024, 299 billion in 2025." style={{maxWidth: "100%", height: "auto", background: "#0e0e0c", border: "1px solid #232320", borderRadius: "2px"}}>
+<svg viewBox="0 0 720 230" role="img" aria-label="Bar chart: the annual cost of slow payments to U.S. construction. 136 billion dollars in 2021, 208 billion in 2022, 280 billion in 2024, 299 billion in 2025." className="wp-fig">
   <text x="24" y="34" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">What slow payments cost U.S. construction</text>
   <text x="24" y="52" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">$ BILLIONS PER YEAR · RABBET CONSTRUCTION PAYMENTS REPORTS</text>
   <text x="24" y="92" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">2021</text>
@@ -253,7 +253,7 @@ Three currencies, one root: **truth arriving too late to act on.** The margin wa
 
 Here is the strangest chart in construction technology, assembled from two 2025 industry surveys:
 
-<svg viewBox="0 0 720 210" role="img" aria-label="Bar chart of the adoption paradox: 87 percent of contractors believe AI will meaningfully impact construction, 45 percent have no AI implementation at all, and about 12 percent use AI regularly." style={{maxWidth: "100%", height: "auto", background: "#0e0e0c", border: "1px solid #232320", borderRadius: "2px"}}>
+<svg viewBox="0 0 720 210" role="img" aria-label="Bar chart of the adoption paradox: 87 percent of contractors believe AI will meaningfully impact construction, 45 percent have no AI implementation at all, and about 12 percent use AI regularly." className="wp-fig">
   <text x="24" y="34" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">The adoption paradox</text>
   <text x="24" y="52" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">CONTRACTOR SURVEYS, 2025 · CMiC/DODGE + RICS</text>
   <text x="24" y="94" fill="#f5f5f3" fontSize="11" fontFamily="JetBrains Mono, monospace">BELIEVE AI WILL MATTER</text>
@@ -277,7 +277,7 @@ The gap has a rational anatomy, and this paper's framework predicts it. Contract
 
 The money has stopped waiting. Construction-technology venture funding reached [$3.1 billion in 2024](https://www.constructiondive.com/news/construction-technology-funding-maturity-startup/753108/), and the composition is shifting faster than the total:
 
-<svg viewBox="0 0 720 210" role="img" aria-label="Bar chart: AI and robotics share of construction technology venture investment. Under 20 percent in 2023, about 25 percent in 2024, 55 percent in the first quarter of 2025." style={{maxWidth: "100%", height: "auto", background: "#0e0e0c", border: "1px solid #232320", borderRadius: "2px"}}>
+<svg viewBox="0 0 720 210" role="img" aria-label="Bar chart: AI and robotics share of construction technology venture investment. Under 20 percent in 2023, about 25 percent in 2024, 55 percent in the first quarter of 2025." className="wp-fig">
   <text x="24" y="34" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">AI + robotics share of contech venture investment</text>
   <text x="24" y="52" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">% OF DOLLARS INVESTED · CONSTRUCTION DIVE / CONTECH INVESTMENT REPORTS</text>
   <text x="24" y="94" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">2023</text>
