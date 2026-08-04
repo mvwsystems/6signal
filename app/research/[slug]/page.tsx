@@ -19,6 +19,7 @@ const WP_PDFS: Record<string, { cover: string; pdf: string }> = {
   "aeo-field-manual-answer-engine-optimization": { cover: "/papers/covers/aeo-field-manual-answer-engine-optimization.png", pdf: "/papers/aeo-field-manual-answer-engine-optimization.pdf" },
   "ai-search-measurement-playbook": { cover: "/papers/covers/ai-search-measurement-playbook.png", pdf: "/papers/ai-search-measurement-playbook.pdf" },
   "the-connective-layer-ai-infrastructure-construction": { cover: "/papers/covers/the-connective-layer-ai-infrastructure-construction.png", pdf: "/papers/the-connective-layer-ai-infrastructure-construction.pdf" },
+  "local-ai-infrastructure-blueprint": { cover: "/papers/covers/local-ai-infrastructure-blueprint.png", pdf: "/papers/local-ai-infrastructure-blueprint.pdf" },
 };
 
 export function generateStaticParams() {
