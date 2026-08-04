@@ -24,8 +24,11 @@ export async function runWebGroundedJSON(opts: {
 
   const messages: Msg[] = [{ role: "user", content: opts.user }];
   let fullText = "";
+  // Transient 429/5xx/529s were killing whole generations (and the dashboard
+  // only saw "failed"); retry those with backoff. 400s stay fatal.
+  const RETRYABLE = new Set([429, 500, 502, 503, 529]);
 
-  for (let turn = 0; turn < 6; turn++) {
+  for (let turn = 0, attempt = 0; turn < 6; ) {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
@@ -41,13 +44,26 @@ export async function runWebGroundedJSON(opts: {
     });
     if (!res.ok) {
       const t = await res.text().catch(() => "");
+      if (RETRYABLE.has(res.status) && attempt < 3) {
+        attempt++;
+        const retryAfter = Number(res.headers.get("retry-after")) || attempt * 8;
+        await new Promise((r) => setTimeout(r, retryAfter * 1000));
+        continue;
+      }
       throw new Error(`Anthropic ${res.status}: ${t.slice(0, 300)}`);
     }
     const data = (await res.json()) as Resp;
     for (const b of data.content ?? []) if (b.type === "text" && b.text) fullText += b.text;
     if (data.stop_reason === "pause_turn") {
+      turn++;
       messages.push({ role: "assistant", content: data.content });
       continue;
+    }
+    if (data.stop_reason === "max_tokens") {
+      throw new Error(`Output truncated at max_tokens (${opts.maxTokens ?? 4096}) — the article did not fit; raise maxTokens.`);
+    }
+    if (data.stop_reason === "refusal") {
+      throw new Error("Model declined the request (refusal).");
     }
     break;
   }

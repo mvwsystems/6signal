@@ -146,10 +146,14 @@ Search the web for local/technical grounding, then return the JSON.`;
       summary: String(doc.summary ?? ""),
       faqs: Array.isArray(doc.faqs) ? doc.faqs : [],
       article_html: String(doc.article_html),
+      error: null,
     });
   } catch (e) {
     console.error("[content] generation failed:", e);
-    await updateContentPost(postId, { status: "failed" });
+    // Persist the reason — "failed" with no explanation cost a debugging
+    // session; the dashboard shows this string under the failed row.
+    const msg = (e instanceof Error ? e.message : String(e)).slice(0, 500);
+    await updateContentPost(postId, { status: "failed", error: msg });
   }
 }
 

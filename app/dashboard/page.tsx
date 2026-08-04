@@ -1564,7 +1564,7 @@ function AdsTab() {
 
 // ─── Content tab (generate + publish articles to client sites) ───────────────────
 interface ContentPost {
-  id: string; status: string; title: string | null; slug: string | null;
+  id: string; status: string; title: string | null; slug: string | null; error: string | null;
   meta_description: string | null; target_prompt: string | null; summary: string | null;
   url: string | null; created_at: string; published_at: string | null;
   article_html?: string | null; faqs?: { q: string; a: string }[] | null;
@@ -1732,6 +1732,9 @@ function ContentTab({ businesses }: { businesses: Biz[] }) {
                   <div style={{ fontFamily: MONO, fontSize: 11, color: statusColor(p.status) }}>
                     {p.status}{p.status === "generating" ? "…" : ""} · {(p.published_at || p.created_at || "").slice(0, 10)}
                   </div>
+                  {p.status === "failed" && p.error && (
+                    <div style={{ fontFamily: MONO, fontSize: 11, color: T.danger, marginTop: 4, opacity: 0.85 }}>{p.error}</div>
+                  )}
                 </div>
                 <div style={{ display: "flex", gap: 6 }}>
                   {p.url && <a href={p.url} target="_blank" rel="noopener noreferrer" style={{ ...btn(), textDecoration: "none", whiteSpace: "nowrap" }}>View live</a>}

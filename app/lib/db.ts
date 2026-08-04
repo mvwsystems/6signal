@@ -563,7 +563,7 @@ export async function listContentPosts(businessId: string): Promise<Record<strin
   if (!s) return [];
   try {
     const { data, error } = await s.from("content_posts")
-      .select("id, status, title, slug, meta_description, target_prompt, summary, url, created_at, published_at")
+      .select("id, status, title, slug, meta_description, target_prompt, summary, url, created_at, published_at, error")
       .eq("business_id", businessId).order("created_at", { ascending: false }).limit(100);
     if (error) throw error;
     return (data ?? []) as Record<string, unknown>[];
