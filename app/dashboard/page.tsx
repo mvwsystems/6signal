@@ -1570,12 +1570,13 @@ interface ContentPost {
   url: string | null; created_at: string; published_at: string | null;
   article_html?: string | null; faqs?: { q: string; a: string }[] | null;
 }
-interface ContentTopic { targetPrompt: string; mentionRate: number; enginesMissing: string[]; probes: number }
+interface ContentTopic { promptId: string; targetPrompt: string; mentionRate: number; enginesMissing: string[]; probes: number; written: boolean; dismissed: boolean }
 
 function ContentTab({ businesses }: { businesses: Biz[] }) {
   const [bizId, setBizId] = useState("");
   const [posts, setPosts] = useState<ContentPost[]>([]);
   const [showArchived, setShowArchived] = useState(false);
+  const [showArchivedTopics, setShowArchivedTopics] = useState(false);
   const [topics, setTopics] = useState<ContentTopic[]>([]);
   const [repo, setRepo] = useState<string | null>(null);
   const [repoInput, setRepoInput] = useState("");
@@ -1637,6 +1638,16 @@ function ContentTab({ businesses }: { businesses: Biz[] }) {
       const d = await fetch(`/api/dashboard/content/${id}`).then((r) => r.json());
       if (d.post) setOpen(d.post);
     } catch { setErr("Could not load the draft."); }
+  };
+
+  const setTopicDismissed = async (promptId: string, dismissed: boolean) => {
+    setErr(null);
+    try {
+      const r = await fetch("/api/dashboard/content", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ businessId: bizId, promptId, topicDismissed: dismissed }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || !d.ok) throw new Error(d.error || "Topic archive failed");
+      await loadFor(bizId);
+    } catch (e: any) { setErr(e?.message || "Topic archive failed"); }
   };
 
   const setArchived = async (id: string, archived: boolean) => {
@@ -1712,18 +1723,39 @@ function ContentTab({ businesses }: { businesses: Biz[] }) {
       {bizId && !open && (
         <div className="m1col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, alignItems: "start" }}>
           <div style={card()}>
-            <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 15, marginBottom: 4 }}>Write the next article</div>
+            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
+              <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 15, marginBottom: 4 }}>Write the next article</div>
+              {topics.some((t) => t.written || t.dismissed) && (
+                <button
+                  style={{ background: "none", border: "none", cursor: "pointer", fontFamily: MONO, fontSize: 11, color: T.muted, textDecoration: "underline", padding: 0 }}
+                  onClick={() => setShowArchivedTopics((v) => !v)}
+                >
+                  {showArchivedTopics ? "Hide written & archived" : `Show written & archived (${topics.filter((t) => t.written || t.dismissed).length})`}
+                </button>
+              )}
+            </div>
             <div style={{ ...eyebrow, marginBottom: 14 }}>Topics ranked by where AI engines are NOT mentioning {biz?.name}</div>
             {topics.length === 0 && <div style={{ color: T.muted, fontSize: 13, marginBottom: 12 }}>No probe data yet — run tracking probes first, or use a custom topic below.</div>}
-            {topics.map((t) => (
+            {topics.filter((t) => showArchivedTopics || (!t.written && !t.dismissed)).map((t) => (
               <div key={t.targetPrompt} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, padding: "10px 0", borderBottom: `1px solid ${T.border}` }}>
                 <div style={{ minWidth: 0 }}>
                   <div style={{ fontSize: 13, color: T.text }}>{t.targetPrompt}</div>
-                  <div style={{ fontFamily: MONO, fontSize: 11, color: t.mentionRate < 40 ? T.danger : T.warn }}>
+                  <div style={{ fontFamily: MONO, fontSize: 11, color: t.written ? T.ok : t.dismissed ? T.muted : t.mentionRate < 40 ? T.danger : T.warn }}>
+                    {t.written ? "✓ article written · " : t.dismissed ? "archived · " : ""}
                     mentioned {t.mentionRate}% · missing on {t.enginesMissing.length ? t.enginesMissing.map((e) => ENGINE_LABELS[e] ?? e).join(", ") : "—"}
                   </div>
                 </div>
-                <button style={{ ...btn(true), whiteSpace: "nowrap", opacity: busy === "gen" ? 0.5 : 1 }} disabled={busy === "gen"} onClick={() => generate(t.targetPrompt)}>Write article</button>
+                <div style={{ display: "flex", gap: 6 }}>
+                  {!t.written && (
+                    <button style={{ ...btn(), whiteSpace: "nowrap" }} onClick={() => setTopicDismissed(t.promptId, !t.dismissed)}>{t.dismissed ? "Restore" : "Archive"}</button>
+                  )}
+                  {!t.written && !t.dismissed && (
+                    <button style={{ ...btn(true), whiteSpace: "nowrap", opacity: busy === "gen" ? 0.5 : 1 }} disabled={busy === "gen"} onClick={() => generate(t.targetPrompt)}>Write article</button>
+                  )}
+                  {t.written && (
+                    <button style={{ ...btn(), whiteSpace: "nowrap", opacity: busy === "gen" ? 0.5 : 1 }} disabled={busy === "gen"} onClick={() => generate(t.targetPrompt)}>Write again</button>
+                  )}
+                </div>
               </div>
             ))}
             <div style={{ display: "flex", gap: 8, marginTop: 14 }}>

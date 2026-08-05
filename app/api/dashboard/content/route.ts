@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAuthed } from "../../../lib/dashboard-auth";
-import { createContentPost, listContentPosts, getBusiness, setBusinessGithubRepo } from "../../../lib/db";
+import { createContentPost, listContentPosts, getBusiness, setBusinessGithubRepo, setPromptArticleDismissed } from "../../../lib/db";
 import { suggestTopics } from "../../../lib/content";
 import { githubConfigured } from "../../../lib/github";
 import { enqueueWorker } from "../../../lib/enqueue";
@@ -37,9 +37,14 @@ export async function POST(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   if (!isAuthed(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  let body: { businessId?: string; repo?: string | null } | null = null;
+  let body: { businessId?: string; repo?: string | null; promptId?: string; topicDismissed?: boolean } | null = null;
   try { body = await req.json(); } catch { return NextResponse.json({ error: "Invalid JSON" }, { status: 400 }); }
   if (!body?.businessId) return NextResponse.json({ error: "businessId required" }, { status: 400 });
+  // Archive/restore a topic suggestion (per tracked prompt).
+  if (body.promptId && typeof body.topicDismissed === "boolean") {
+    const ok = await setPromptArticleDismissed(body.promptId, body.topicDismissed);
+    return NextResponse.json({ ok });
+  }
   const repo = body.repo ? body.repo.trim().replace(/^https?:\/\/github\.com\//, "").replace(/\/+$/, "") : null;
   if (repo && !/^[\w.-]+\/[\w.-]+$/.test(repo)) return NextResponse.json({ error: "repo must be owner/repo or a github.com URL" }, { status: 400 });
   const ok = await setBusinessGithubRepo(body.businessId, repo);

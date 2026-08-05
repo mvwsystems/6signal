@@ -690,11 +690,11 @@ export async function createTrackedPrompts(businessId: string, prompts: string[]
   }
 }
 
-export async function listTrackedPrompts(businessId: string): Promise<{ id: string; prompt: string }[]> {
+export async function listTrackedPrompts(businessId: string): Promise<{ id: string; prompt: string; article_dismissed_at?: string | null }[]> {
   const s = db();
   if (!s) return [];
   try {
-    const { data, error } = await s.from("tracked_prompts").select("id, prompt").eq("business_id", businessId).eq("active", true).order("created_at", { ascending: true });
+    const { data, error } = await s.from("tracked_prompts").select("id, prompt, article_dismissed_at").eq("business_id", businessId).eq("active", true).order("created_at", { ascending: true });
     if (error) throw error;
     return data ?? [];
   } catch (e) {
@@ -961,6 +961,23 @@ export async function recordPurchase(args: {
     return true;
   } catch (e) {
     console.error("[db] recordPurchase failed:", e);
+    return false;
+  }
+}
+
+// Archive/restore a tracked prompt as an ARTICLE TOPIC (does not affect probe
+// tracking) — keeps the "Write the next article" list to topics still wanted.
+export async function setPromptArticleDismissed(promptId: string, dismissed: boolean): Promise<boolean> {
+  const s = db();
+  if (!s) return false;
+  try {
+    const { error } = await s.from("tracked_prompts")
+      .update({ article_dismissed_at: dismissed ? new Date().toISOString() : null })
+      .eq("id", promptId);
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error("[db] setPromptArticleDismissed failed:", e);
     return false;
   }
 }

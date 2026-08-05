@@ -10,7 +10,7 @@
 import { runWebGroundedJSON } from "./aiScan";
 import {
   getBusiness, getContentPost, updateContentPost, listPublishedPosts,
-  listTrackedPrompts, getProbeResults,
+  listTrackedPrompts, getProbeResults, listContentPosts,
 } from "./db";
 import { getRepoFile, listRepoPaths, commitFiles, getDefaultBranch, githubConfigured } from "./github";
 import { generateOgPng } from "./ogImage";
@@ -18,17 +18,27 @@ import { generateOgPng } from "./ogImage";
 // ── Topic suggestions: the prompts AI engines are NOT mentioning the client for ──
 
 export interface TopicSuggestion {
+  promptId: string;
   targetPrompt: string;
   mentionRate: number;      // 0-100 across recent probes
   enginesMissing: string[]; // engines that never mentioned the business
   probes: number;
+  written: boolean;         // an article already exists for this prompt
+  dismissed: boolean;       // owner archived this topic
 }
 
 export async function suggestTopics(businessId: string): Promise<TopicSuggestion[]> {
-  const [prompts, results] = await Promise.all([
+  const [prompts, results, posts] = await Promise.all([
     listTrackedPrompts(businessId),
     getProbeResults(businessId, 30),
+    listContentPosts(businessId),
   ]);
+  // Topics already covered by an article (any non-failed post, archived or not).
+  const writtenPrompts = new Set(
+    posts
+      .filter((p) => p.status !== "failed" && typeof p.target_prompt === "string")
+      .map((p) => String(p.target_prompt).trim().toLowerCase())
+  );
   const byPrompt = new Map<string, { mentioned: number; total: number; missing: Set<string>; seen: Set<string> }>();
   for (const r of results as Array<{ prompt_id?: string; engine?: string; mentioned?: boolean }>) {
     if (!r.prompt_id || !r.engine) continue;
@@ -50,10 +60,22 @@ export async function suggestTopics(businessId: string): Promise<TopicSuggestion
         .filter((r) => r.prompt_id === p.id && r.engine === e);
       return engineRows.length > 0 && engineRows.every((r) => !r.mentioned);
     });
-    out.push({ targetPrompt: p.prompt, mentionRate: rate, enginesMissing: alwaysMissing, probes: agg.total });
+    out.push({
+      promptId: p.id,
+      targetPrompt: p.prompt,
+      mentionRate: rate,
+      enginesMissing: alwaysMissing,
+      probes: agg.total,
+      written: writtenPrompts.has(p.prompt.trim().toLowerCase()),
+      dismissed: Boolean(p.article_dismissed_at),
+    });
   }
   out.sort((a, b) => a.mentionRate - b.mentionRate);
-  return out.slice(0, 12);
+  // Actionable topics first (capped); written/dismissed ride along so the
+  // dashboard can show them under its archived toggle.
+  const active = out.filter((t) => !t.written && !t.dismissed).slice(0, 12);
+  const inactive = out.filter((t) => t.written || t.dismissed);
+  return [...active, ...inactive];
 }
 
 // ── Generation (background worker) ────────────────────────────────────────────
