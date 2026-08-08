@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="'JetBrains Mono', ui-monospace, monospace">
+  <rect width="1200" height="675" fill="#ffffff"/>
+  <text x="64" y="72" fill="#6f7c08" font-size="15" letter-spacing="5">6SIGNAL — THE AI SEARCH MEASUREMENT PLAYBOOK</text>
+  <text x="64" y="126" fill="#0c0c0a" font-size="38" font-weight="700" letter-spacing="1">THE MEASUREMENT CYCLE</text>
+  <text x="64" y="160" fill="#63615a" font-size="16">Two weeks per cycle. Measurement that doesn't change the work plan is decoration.</text>
+
+  
+  <g stroke="#d5d3cc" stroke-width="1">
+    <rect x="70" y="300" width="180" height="120" fill="#f7f7f5"/>
+    <rect x="300" y="300" width="180" height="120" fill="#f7f7f5"/>
+    <rect x="530" y="300" width="180" height="120" fill="#f7f7f5"/>
+    <rect x="760" y="300" width="180" height="120" fill="#f7f7f5"/>
+    <rect x="990" y="300" width="146" height="120" fill="#f7f7f5" stroke="#a8b800"/>
+  </g>
+  <g fill="#63615a" font-size="12" letter-spacing="3">
+    <text x="94" y="332">STEP 1</text><text x="324" y="332">STEP 2</text><text x="554" y="332">STEP 3</text><text x="784" y="332">STEP 4</text><text x="1010" y="332">STEP 5</text>
+  </g>
+  <g fill="#0c0c0a" font-size="21" font-weight="700">
+    <text x="94" y="368">MEASURE</text><text x="324" y="368">LOG</text><text x="554" y="368">DIAGNOSE</text><text x="784" y="368">FIX</text>
+  </g>
+  <text x="1010" y="368" fill="#6f7c08" font-size="21" font-weight="700">RETEST</text>
+  <g fill="#33322c" font-size="13">
+    <text x="94" y="398">Frozen prompts,</text><text x="94" y="382" opacity="0"> </text>
+    <text x="94" y="414">five engines</text>
+    <text x="324" y="398">Same fields,</text><text x="324" y="414">every run</text>
+    <text x="554" y="398">Gaps → lanes,</text><text x="554" y="414">not moods</text>
+    <text x="784" y="398">2–3 items,</text><text x="784" y="414">actually shipped</text>
+    <text x="1010" y="398">Same prompts.</text><text x="1010" y="414">Deltas only.</text>
+  </g>
+
+  
+  <g stroke="#a5a39a" stroke-width="2" fill="#a5a39a">
+    <line x1="250" y1="360" x2="292" y2="360"/><path d="M292,360 l-9,-5 v10 z"/>
+    <line x1="480" y1="360" x2="522" y2="360"/><path d="M522,360 l-9,-5 v10 z"/>
+    <line x1="710" y1="360" x2="752" y2="360"/><path d="M752,360 l-9,-5 v10 z"/>
+    <line x1="940" y1="360" x2="982" y2="360"/><path d="M982,360 l-9,-5 v10 z"/>
+  </g>
+  
+  <g stroke="#a8b800" stroke-width="2" fill="none">
+    <path d="M1063,420 v90 H160 v-82"/>
+  </g>
+  <path d="M160,428 l-6,11 h12 z" fill="#a8b800"/>
+  <text x="470" y="538" fill="#6f7c08" font-size="14" letter-spacing="3">EVERY TWO WEEKS — SAME INSTRUMENT</text>
+
+  <text x="64" y="612" fill="#33322c" font-size="15">Three honest numbers per cycle: mention rate · share of voice · win/loss flips.</text>
+  <text x="64" y="638" fill="#63615a" font-size="14">A prompt set that drifts produces a trendline that lies.</text>
+</svg>

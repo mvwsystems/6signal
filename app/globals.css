@@ -9059,6 +9059,10 @@ svg {
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 2px;
 }
+/* Research figures ship a light twin used only by the PDF edition */
+.post-body img.fig-print {
+  display: none;
+}
 
 /* Research article tables (white papers) — readable, and scrollable on phones
    instead of overflowing the page */
@@ -9442,7 +9446,8 @@ svg {
 }
 
 /* ── White paper PDF edition (print) ─────────────────────── */
-.wp-print-cover {
+.wp-print-cover,
+.wp-print-back {
   display: none;
 }
 .post-download {
@@ -9464,10 +9469,12 @@ svg {
   }
   html,
   body {
-    background: #fbfaf8 !important;
+    background: #fff !important;
     cursor: auto !important;
   }
-  /* Screen-only shell: navigation, cursor, CTAs, related posts */
+  /* Screen-only shell: navigation, cursor, CTAs, tags, related posts. The
+     bottom CTA is a full-bleed black panel — replaced in print by
+     .wp-print-back, which is sized to sit on one page. */
   .nav,
   footer,
   .mobile-cta,
@@ -9477,7 +9484,9 @@ svg {
   .post-download,
   .post-cta-mid,
   .blog-cta-section,
-  .post-related {
+  .post-tags-section,
+  .post-related,
+  .post-cta-bottom {
     display: none !important;
   }
   /* Reveal animations never fire in headless print — force visible */
@@ -9548,6 +9557,14 @@ svg {
   .rule,
   .post-body hr {
     border-color: #dedbd3 !important;
+    margin: 30px 0 !important;
+  }
+  /* Keep the closing rule + colophon line with the text above it instead of
+     stranding two lines on a sheet of their own. */
+  .post-body > hr:last-of-type,
+  .post-body > hr:last-of-type + p {
+    break-before: avoid;
+    break-after: avoid;
   }
 
   /* Figures: Chrome's print pipeline drops CSS backgrounds on SVGs and inline-
@@ -9565,17 +9582,47 @@ svg {
     fill: #77850a !important;
   }
   .post-body svg rect[fill="#181816"] {
-    fill: #f0ede6 !important;
+    fill: #f2f1ee !important;
   }
+  /* Figure canvas matches the paper so nothing reads as a gray block */
   .post-body svg rect[fill="#0e0e0c"] {
-    fill: #f7f5ef !important;
+    fill: #fff !important;
   }
   .post-body svg [stroke="#E6FF00"] {
     stroke: #a8b800 !important;
   }
+  /* Accent bars/marks — electric yellow all but disappears on white paper */
+  .post-body svg rect[fill="#E6FF00"],
+  .post-body svg path[fill="#E6FF00"],
+  .post-body svg circle[fill="#E6FF00"],
+  .post-body svg polygon[fill="#E6FF00"] {
+    fill: #a8b800 !important;
+  }
   .wp-tile {
-    background: #f0ede6 !important;
-    border-color: #d9d6cc !important;
+    background: #f7f7f5 !important;
+    border-color: #d5d3cc !important;
+  }
+  /* Code blocks are dark plates on screen — same ink problem as the figures */
+  .post-body pre {
+    background: #f7f7f5 !important;
+    border-color: #d5d3cc !important;
+    padding: 16px 18px !important;
+    margin: 22px 0 !important;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .post-body pre code,
+  .post-body code {
+    background: none !important;
+    color: #21201c !important;
+  }
+  /* Swap each dark figure plate for its light print twin */
+  .post-body img.fig-screen {
+    display: none !important;
+  }
+  .post-body img.fig-print {
+    display: block !important;
+    border-color: #d5d3cc !important;
   }
   .wp-tile-label {
     color: #55534b !important;
@@ -9602,5 +9649,74 @@ svg {
   p, li {
     orphans: 3;
     widows: 3;
+  }
+
+  /* Last page — a print-native closing page. Starts on its own sheet and is
+     sized to the 7in x 9.5in type area so it never splits. */
+  .wp-print-back {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: space-between;
+    /* Short of the 9.5in type area — Chrome pushes the last flex child to a
+       new sheet if the block measures the full column. */
+    min-height: 8.4in;
+    break-before: page;
+    break-inside: avoid;
+    padding: 0;
+  }
+  .wp-print-back-inner {
+    max-width: 5.6in;
+    padding-top: 1.4in;
+  }
+  .wp-print-back-eyebrow {
+    display: block;
+    color: #77850a !important;
+    margin-bottom: 0.28in;
+  }
+  .wp-print-back-h2 {
+    font-size: 40pt;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: #0c0c0a !important;
+    margin: 0 0 0.22in;
+  }
+  .wp-print-back-h2 em {
+    font-style: italic;
+  }
+  .wp-print-back-deck {
+    font-family: "Chakra Petch", monospace;
+    font-weight: 300;
+    font-size: 12pt;
+    line-height: 1.55;
+    color: #33322c !important;
+    margin: 0 0 0.42in;
+  }
+  .wp-print-back-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border: 1px solid #cfccc3;
+    border-left: 3px solid #a8b800;
+    padding: 0.24in 0.28in;
+  }
+  .wp-print-back-cta-label {
+    color: #55534b !important;
+  }
+  .wp-print-back-cta-url {
+    font-family: "Chakra Petch", monospace;
+    font-size: 15pt;
+    letter-spacing: -0.01em;
+    color: #0c0c0a !important;
+  }
+  .wp-print-back-foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    border-top: 1px solid #dedbd3;
+    padding-top: 0.14in;
+    color: #6b6961 !important;
+  }
+  .wp-print-back-foot .idx {
+    color: #6b6961 !important;
   }
 }

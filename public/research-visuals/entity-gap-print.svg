@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="'JetBrains Mono', ui-monospace, monospace">
+  <rect width="1200" height="675" fill="#ffffff"/>
+  <text x="64" y="66" fill="#6f7c08" font-size="15" letter-spacing="5">6SIGNAL — THE LOCAL ENTITY GAP</text>
+  <text x="64" y="118" fill="#0c0c0a" font-size="38" font-weight="700" letter-spacing="1">WHAT THE MACHINE ACTUALLY SEES</text>
+  <text x="64" y="150" fill="#63615a" font-size="16">Engines cross-check every public record about you. Disagreement doesn't average out — it reads as risk.</text>
+
+  
+  <g stroke="#d5d3cc" stroke-width="1">
+    <rect x="64" y="204" width="330" height="216" fill="#f7f7f5"/>
+    <rect x="424" y="204" width="330" height="216" fill="#f7f7f5"/>
+    <rect x="784" y="204" width="330" height="216" fill="#f7f7f5"/>
+  </g>
+  <g fill="#33322c" font-size="13" letter-spacing="3">
+    <text x="88" y="236">WEBSITE</text><text x="448" y="236">GOOGLE BUSINESS PROFILE</text><text x="808" y="236">DIRECTORIES</text>
+  </g>
+  <g fill="#0c0c0a" font-size="15">
+    <text x="88" y="278">"Plumbing + drains,</text><text x="88" y="300">all of Ellis County"</text>
+    <text x="448" y="278">"Plumber,</text><text x="448" y="300">Red Oak only"</text>
+    <text x="808" y="278">"Red Oak Plumbing Co."</text><text x="808" y="300">— old phone number</text>
+  </g>
+  <g fill="#b02f26" font-size="13">
+    <text x="88" y="348">≠ service area</text>
+    <text x="448" y="348">≠ services listed</text>
+    <text x="808" y="348">≠ name · ≠ phone</text>
+  </g>
+  <g fill="#63615a" font-size="13">
+    <text x="88" y="392">records last touched:</text>
+    <text x="88" y="410">2022 · 2019 · unknown</text>
+  </g>
+
+  
+  <g stroke="#c9c7bf" stroke-width="1.5" fill="none">
+    <path d="M229,420 v60 C229,516 560,500 580,522"/>
+    <path d="M589,420 v96"/>
+    <path d="M949,420 v60 C949,516 618,500 598,522"/>
+  </g>
+  <rect x="404" y="524" width="380" height="72" fill="#f7f7f5" stroke="#c1352b" stroke-width="1"/>
+  <text x="432" y="556" fill="#b02f26" font-size="16" font-weight="700">ENTITY CONFIDENCE: LOW</text>
+  <text x="432" y="580" fill="#33322c" font-size="14">→ the answer names someone else</text>
+
+  
+  <text x="850" y="548" fill="#17703c" font-size="15" font-weight="700">THE FIX IS BORING:</text>
+  <text x="850" y="574" fill="#33322c" font-size="14">same name, services, area,</text>
+  <text x="850" y="594" fill="#33322c" font-size="14">phone — everywhere. Verbatim.</text>
+
+  <text x="64" y="646" fill="#6f7c08" font-size="14" letter-spacing="1">The skipped business is often better at the trade — and worse at being legible.</text>
+</svg>

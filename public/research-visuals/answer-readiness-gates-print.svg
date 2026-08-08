@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="'JetBrains Mono', ui-monospace, monospace">
+  <rect width="1200" height="675" fill="#ffffff"/>
+  <text x="64" y="72" fill="#6f7c08" font-size="15" letter-spacing="5">6SIGNAL — THE CONTRACTOR ANSWER-READINESS REPORT</text>
+  <text x="64" y="126" fill="#0c0c0a" font-size="38" font-weight="700" letter-spacing="1">WHAT AN ENGINE NEEDS BEFORE IT NAMES YOU</text>
+  <text x="64" y="160" fill="#63615a" font-size="16">Four gates. Fail any one, and the answer names someone easier to verify.</text>
+
+  
+  <text x="64" y="248" fill="#33322c" font-size="15">"who should I call</text>
+  <text x="64" y="270" fill="#33322c" font-size="15">about a slab leak?"</text>
+  <g stroke="#a5a39a" stroke-width="2" fill="#a5a39a">
+    <line x1="230" y1="258" x2="268" y2="258"/><path d="M268,258 l-9,-5 v10 z"/>
+  </g>
+
+  
+  <g stroke="#d5d3cc" stroke-width="1">
+    <rect x="280" y="196" width="196" height="130" fill="#f7f7f5"/>
+    <rect x="512" y="196" width="196" height="130" fill="#f7f7f5"/>
+    <rect x="744" y="196" width="196" height="130" fill="#f7f7f5"/>
+    <rect x="976" y="196" width="160" height="130" fill="#f7f7f5" stroke="#a8b800"/>
+  </g>
+  <g fill="#63615a" font-size="12" letter-spacing="3">
+    <text x="302" y="226">GATE 1</text><text x="534" y="226">GATE 2</text><text x="766" y="226">GATE 3</text><text x="996" y="226">GATE 4</text>
+  </g>
+  <g fill="#0c0c0a" font-size="22" font-weight="700">
+    <text x="302" y="260">IDENTIFY</text><text x="534" y="260">VERIFY</text><text x="766" y="260">MATCH</text>
+  </g>
+  <text x="996" y="260" fill="#6f7c08" font-size="22" font-weight="700">ROUTE</text>
+  <g fill="#33322c" font-size="13">
+    <text x="302" y="288">one entity, one story,</text><text x="302" y="306">everywhere it looks</text>
+    <text x="534" y="288">specific reviews +</text><text x="534" y="306">corroboration</text>
+    <text x="766" y="288">content that answers</text><text x="766" y="306">the actual question</text>
+    <text x="996" y="288">a working call or</text><text x="996" y="306">booking path</text>
+  </g>
+  <g stroke="#a5a39a" stroke-width="2" fill="#a5a39a">
+    <line x1="476" y1="258" x2="504" y2="258"/><path d="M504,258 l-9,-5 v10 z"/>
+    <line x1="708" y1="258" x2="736" y2="258"/><path d="M736,258 l-9,-5 v10 z"/>
+    <line x1="940" y1="258" x2="968" y2="258"/><path d="M968,258 l-9,-5 v10 z"/>
+  </g>
+
+  
+  <g stroke="#c9c7bf" stroke-width="1.5" fill="none">
+    <path d="M378,326 v78"/><path d="M610,326 v78"/><path d="M842,326 v78"/>
+  </g>
+  <g fill="#c9c7bf">
+    <path d="M378,404 l-6,-10 h12 z"/><path d="M610,404 l-6,-10 h12 z"/><path d="M842,404 l-6,-10 h12 z"/>
+  </g>
+  <g fill="#b02f26" font-size="13" letter-spacing="1">
+    <text x="316" y="432">contradictory records</text>
+    <text x="556" y="432">"great job!" reviews</text>
+    <text x="792" y="432">brochure pages</text>
+  </g>
+  <g fill="#63615a" font-size="13">
+    <text x="336" y="454">→ SKIPPED</text><text x="576" y="454">→ SKIPPED</text><text x="812" y="454">→ SKIPPED</text>
+  </g>
+
+  
+  <rect x="976" y="380" width="160" height="80" fill="#f7f7f5" stroke="#1c7f45" stroke-width="1"/>
+  <text x="998" y="414" fill="#17703c" font-size="17" font-weight="700">NAMED IN</text>
+  <text x="998" y="438" fill="#17703c" font-size="17" font-weight="700">THE ANSWER</text>
+  <g stroke="#a8b800" stroke-width="2" fill="none"><path d="M1056,326 v46"/></g>
+  <path d="M1056,372 l-6,-10 h12 z" fill="#a8b800"/>
+
+  <text x="64" y="560" fill="#0c0c0a" font-size="17" font-weight="700">THE UNCOMFORTABLE FINDING:</text>
+  <text x="64" y="590" fill="#33322c" font-size="15">The contractors being named are frequently not the best in their market —</text>
+  <text x="64" y="614" fill="#6f7c08" font-size="15">they're the most legible. Craft doesn't transmit through a retrieval pipeline. Records do.</text>
+</svg>

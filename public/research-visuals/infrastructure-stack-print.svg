@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="'JetBrains Mono', ui-monospace, monospace">
+  <rect width="1200" height="675" fill="#ffffff"/>
+  <text x="64" y="66" fill="#6f7c08" font-size="15" letter-spacing="5">6SIGNAL — THE LOCAL AI INFRASTRUCTURE BLUEPRINT</text>
+  <text x="64" y="118" fill="#0c0c0a" font-size="38" font-weight="700" letter-spacing="1">THE LOCAL AI INFRASTRUCTURE STACK</text>
+  <text x="64" y="150" fill="#63615a" font-size="16">Build bottom-up. Each layer makes the next one stronger. Reverse the order and every layer underperforms.</text>
+
+  
+  <g stroke="#d5d3cc" stroke-width="1">
+    <rect x="64" y="556" width="860" height="54" fill="#efeeea"/>
+    <rect x="64" y="496" width="860" height="54" fill="#efeeea"/>
+    <rect x="64" y="436" width="860" height="54" fill="#f2f1ee"/>
+    <rect x="64" y="376" width="860" height="54" fill="#f4f3f0"/>
+    <rect x="64" y="316" width="860" height="54" fill="#f7f7f5"/>
+    <rect x="64" y="256" width="860" height="54" fill="#f7f7f5"/>
+    <rect x="64" y="196" width="860" height="54" fill="#f7f7f5"/>
+  </g>
+  <rect x="64" y="556" width="4" height="54" fill="#a8b800"/>
+  <rect x="64" y="496" width="4" height="54" fill="#a8b800"/>
+  <rect x="64" y="436" width="4" height="54" fill="#a8b800"/>
+  <rect x="64" y="376" width="4" height="54" fill="#9caa00"/>
+  <rect x="64" y="316" width="4" height="54" fill="#96a300"/>
+  <rect x="64" y="256" width="4" height="54" fill="#8a9600"/>
+  <rect x="64" y="196" width="4" height="54" fill="#8a9600"/>
+
+  <g fill="#63615a" font-size="13" letter-spacing="2">
+    <text x="92" y="578">01</text><text x="92" y="518">02</text><text x="92" y="458">03</text><text x="92" y="398">04</text><text x="92" y="338">05</text><text x="92" y="278">06</text><text x="92" y="218">07</text>
+  </g>
+  <g fill="#0c0c0a" font-size="19" font-weight="700">
+    <text x="140" y="590">GOOGLE BUSINESS PROFILE</text>
+    <text x="140" y="530">REVIEWS</text>
+    <text x="140" y="470">SERVICE PAGES</text>
+    <text x="140" y="410">DIRECTORIES</text>
+    <text x="140" y="350">SCHEMA</text>
+    <text x="140" y="290">QUESTION CLUSTERS</text>
+    <text x="140" y="230">CONVERSION PATH</text>
+  </g>
+  <g fill="#63615a" font-size="14">
+    <text x="500" y="589">the entity hub</text>
+    <text x="500" y="529">the trust dataset</text>
+    <text x="500" y="469">the source documents</text>
+    <text x="500" y="409">the corroboration layer</text>
+    <text x="500" y="349">the translation layer</text>
+    <text x="500" y="289">the answer architecture</text>
+    <text x="500" y="229">the final signal</text>
+  </g>
+
+  
+  <rect x="956" y="196" width="180" height="414" fill="none" stroke="#a8b800" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="1020" y="403" fill="#6f7c08" font-size="19" font-weight="700" letter-spacing="4" transform="rotate(90 1020 403)" text-anchor="middle">VERIFICATION</text>
+  <text x="1082" y="403" fill="#63615a" font-size="12" transform="rotate(90 1082 403)" text-anchor="middle">real prompts · real engines · logged</text>
+
+  <text x="64" y="646" fill="#33322c" font-size="15">Layer 08 — Verification — runs alongside all seven: it's what keeps the others honest.</text>
+</svg>

@@ -22,6 +22,31 @@ const WP_PDFS: Record<string, { cover: string; pdf: string }> = {
   "local-ai-infrastructure-blueprint": { cover: "/papers/covers/local-ai-infrastructure-blueprint.png", pdf: "/papers/local-ai-infrastructure-blueprint.pdf" },
 };
 
+// Research figures are dark plates on screen. Every /research-visuals/ SVG has
+// a light `-print.svg` twin (scripts/make-print-visuals.py) so the PDF edition
+// prints ink-light on white paper instead of a black block; CSS swaps them.
+function Figure(props: React.ImgHTMLAttributes<HTMLImageElement>) {
+  const src = typeof props.src === "string" ? props.src : "";
+  if (!src.startsWith("/research-visuals/") || !src.endsWith(".svg")) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img alt="" {...props} />;
+  }
+  return (
+    <>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img alt="" {...props} className="fig-screen" />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        {...props}
+        src={src.replace(/\.svg$/, "-print.svg")}
+        alt=""
+        aria-hidden="true"
+        className="fig-print"
+      />
+    </>
+  );
+}
+
 export function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
 }
@@ -165,7 +190,7 @@ export default async function BlogPostPage({
       <article className="post-body-section rule">
         <div className="wrap">
           <div className="post-body">
-            <MDXRemote source={post.content} components={{ BlogCTA }} />
+            <MDXRemote source={post.content} components={{ BlogCTA, img: Figure }} />
           </div>
 
           {/* MID-ARTICLE CTA */}
@@ -248,6 +273,32 @@ export default async function BlogPostPage({
           </div>
         </div>
       </section>
+
+      {/* PDF back page — print only; the screen CTA above is hidden in print
+          because its full-bleed black panel splits across paper pages. */}
+      {WP_PDFS[post.slug] && (
+        <section className="wp-print-back" aria-hidden="true">
+          <div className="wp-print-back-inner">
+            <span className="idx wp-print-back-eyebrow">Next step</span>
+            <h2 className="display wp-print-back-h2">
+              See where you <em>actually stand.</em>
+            </h2>
+            <p className="wp-print-back-deck">
+              The AI Visibility Audit runs your company through all six layers — GEO,
+              AEO, LEO, VEO, PEO, IEO — and delivers instant results. $27. Specific to
+              your business, your trade, and your market.
+            </p>
+            <div className="wp-print-back-cta">
+              <span className="idx wp-print-back-cta-label">Get the audit</span>
+              <span className="wp-print-back-cta-url">6signal.co/visibility-check</span>
+            </div>
+          </div>
+          <div className="wp-print-back-foot">
+            <span className="idx">6 Signal · {post.author}</span>
+            <span className="idx">6signal.co · hello@6signal.co</span>
+          </div>
+        </section>
+      )}
 
       <Footer />
       <BlogPageClient />

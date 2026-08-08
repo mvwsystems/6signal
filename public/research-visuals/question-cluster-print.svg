@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="'JetBrains Mono', ui-monospace, monospace">
+  <rect width="1200" height="675" fill="#ffffff"/>
+  <text x="64" y="66" fill="#6f7c08" font-size="15" letter-spacing="5">6SIGNAL — THE QUESTION CLUSTER ADVANTAGE</text>
+  <text x="64" y="118" fill="#0c0c0a" font-size="38" font-weight="700" letter-spacing="1">FAQ vs. QUESTION CLUSTER</text>
+  <text x="64" y="150" fill="#63615a" font-size="16">A flat FAQ is a checkbox. A cluster is an architecture engines read as comprehensive authority.</text>
+
+  
+  <text x="64" y="222" fill="#33322c" font-size="14" letter-spacing="3">THE FAQ BLOCK</text>
+  <rect x="64" y="242" width="380" height="200" fill="#f7f7f5" stroke="#d5d3cc" stroke-width="1"/>
+  <g fill="#63615a" font-size="14">
+    <text x="88" y="282">Q: Do you offer free quotes?</text>
+    <text x="88" y="312">Q: Are you licensed?</text>
+    <text x="88" y="342">Q: What areas do you serve?</text>
+    <text x="88" y="372">Q: How soon can you come?</text>
+    <text x="88" y="402">Q: Do you take cards?</text>
+  </g>
+  <text x="64" y="482" fill="#b02f26" font-size="13">five generic questions · two-sentence answers</text>
+  <text x="64" y="504" fill="#63615a" font-size="13">covers the first thirty seconds of the buyer's journey</text>
+
+  
+  <text x="620" y="222" fill="#33322c" font-size="14" letter-spacing="3">THE QUESTION CLUSTER</text>
+  
+  <rect x="770" y="300" width="240" height="76" fill="#f7f7f5" stroke="#a8b800" stroke-width="1.5"/>
+  <text x="794" y="332" fill="#6f7c08" font-size="16" font-weight="700">SERVICE PAGE</text>
+  <text x="794" y="356" fill="#33322c" font-size="13">water heaters</text>
+  
+  <g stroke="#c9c7bf" stroke-width="1.5">
+    <line x1="790" y1="300" x2="700" y2="262"/>
+    <line x1="890" y1="300" x2="890" y2="252"/>
+    <line x1="990" y1="300" x2="1080" y2="262"/>
+    <line x1="790" y1="376" x2="700" y2="420"/>
+    <line x1="890" y1="376" x2="890" y2="430"/>
+    <line x1="990" y1="376" x2="1080" y2="420"/>
+  </g>
+  <g stroke="#d5d3cc" stroke-width="1">
+    <rect x="596" y="238" width="208" height="46" fill="#f7f7f5"/>
+    <rect x="800" y="212" width="188" height="42" fill="#f7f7f5"/>
+    <rect x="992" y="238" width="150" height="46" fill="#f7f7f5"/>
+    <rect x="596" y="404" width="208" height="46" fill="#f7f7f5"/>
+    <rect x="790" y="428" width="200" height="46" fill="#f7f7f5"/>
+    <rect x="992" y="404" width="150" height="46" fill="#f7f7f5"/>
+  </g>
+  <g fill="#33322c" font-size="12">
+    <text x="610" y="258">"tank vs tankless —</text><text x="610" y="274">honest math?"</text>
+    <text x="814" y="238">"cost to replace</text><text x="814" y="250">in [city]?"</text>
+    <text x="1004" y="258">"why is it</text><text x="1004" y="274">popping?"</text>
+    <text x="610" y="424">"leaking from the</text><text x="610" y="440">bottom — dangerous?"</text>
+    <text x="804" y="448">"how long should</text><text x="804" y="464">one last?"</text>
+    <text x="1004" y="424">"repair or</text><text x="1004" y="440">replace?"</text>
+  </g>
+
+  <g fill="#17703c" font-size="13">
+    <text x="620" y="540">each question: one substantial, locally honest answer</text>
+  </g>
+  <text x="620" y="562" fill="#63615a" font-size="13">interlinked · prioritized by distance-to-phone-call</text>
+
+  <text x="64" y="622" fill="#0c0c0a" font-size="16" font-weight="700">SEQUENCE BY INTENT, NOT VOLUME:</text>
+  <text x="64" y="648" fill="#6f7c08" font-size="14">emergency + decision questions → cost + comparison → diagnostics. Curiosity content last, or never.</text>
+</svg>

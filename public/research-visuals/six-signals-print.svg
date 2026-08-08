@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="'JetBrains Mono', ui-monospace, monospace">
+  <rect width="1200" height="675" fill="#ffffff"/>
+  <text x="64" y="66" fill="#6f7c08" font-size="15" letter-spacing="5">6SIGNAL — THE AEO FIELD MANUAL</text>
+  <text x="64" y="118" fill="#0c0c0a" font-size="38" font-weight="700" letter-spacing="1">THE SIX-SIGNAL STACK</text>
+  <text x="64" y="150" fill="#63615a" font-size="16">Not SEO plus AI magic — one system in three tiers. Foundation decides eligibility; the answer tier decides who gets named.</text>
+
+  
+  <text x="64" y="230" fill="#63615a" font-size="13" letter-spacing="3">ANSWER TIER — WHERE BUYERS MEET YOU</text>
+  <text x="64" y="404" fill="#63615a" font-size="13" letter-spacing="3">LANGUAGE + ENTITY TIER</text>
+  <text x="64" y="542" fill="#63615a" font-size="13" letter-spacing="3">FOUNDATION</text>
+
+  
+  <g stroke="#d5d3cc" stroke-width="1">
+    <rect x="64" y="248" width="344" height="110" fill="#f7f7f5"/>
+    <rect x="428" y="248" width="344" height="110" fill="#f7f7f5"/>
+    <rect x="792" y="248" width="344" height="110" fill="#f7f7f5"/>
+  </g>
+  <rect x="64" y="248" width="344" height="4" fill="#a8b800"/>
+  <rect x="428" y="248" width="344" height="4" fill="#a8b800"/>
+  <rect x="792" y="248" width="344" height="4" fill="#a8b800"/>
+  <g fill="#0c0c0a" font-size="24" font-weight="700">
+    <text x="88" y="296">GEO</text><text x="452" y="296">AEO</text><text x="816" y="296">VEO</text>
+  </g>
+  <g fill="#33322c" font-size="14">
+    <text x="88" y="324">Named when ChatGPT, Gemini,</text><text x="88" y="342">Claude, Perplexity recommend</text>
+    <text x="452" y="324">Cited in AI Overviews</text><text x="452" y="342">and direct answers</text>
+    <text x="816" y="324">What Siri, Alexa, Assistant</text><text x="816" y="342">answer out loud</text>
+  </g>
+
+  
+  <g stroke="#d5d3cc" stroke-width="1">
+    <rect x="64" y="422" width="526" height="92" fill="#f7f7f5"/>
+    <rect x="610" y="422" width="526" height="92" fill="#f7f7f5"/>
+  </g>
+  <rect x="64" y="422" width="526" height="4" fill="#9caa00"/>
+  <rect x="610" y="422" width="526" height="4" fill="#9caa00"/>
+  <g fill="#0c0c0a" font-size="22" font-weight="700">
+    <text x="88" y="466">PEO</text><text x="634" y="466">LEO</text>
+  </g>
+  <g fill="#33322c" font-size="14">
+    <text x="170" y="464">surfacing inside the real questions buyers type and ask</text>
+    <text x="712" y="464">GBP strength + citation consistency across Maps and directories</text>
+  </g>
+
+  
+  <rect x="64" y="556" width="1072" height="70" fill="#f7f7f5" stroke="#d5d3cc" stroke-width="1"/>
+  <rect x="64" y="556" width="1072" height="4" fill="#8a9600"/>
+  <text x="88" y="600" fill="#0c0c0a" font-size="22" font-weight="700">IEO</text>
+  <text x="170" y="598" fill="#33322c" font-size="14">can machines access, parse, and extract your site — crawl, structure, schema. If this fails, nothing above it matters.</text>
+</svg>
