@@ -76,6 +76,21 @@ export default function StartPage() {
     restored.current = true;
   }, []);
 
+  // The reveal observer only sees elements that exist at mount. Every step
+  // swaps in fresh .reveal nodes (the questionnaire, the generating panel, the
+  // success panel), which would otherwise stay at opacity 0 — a blank page.
+  const stepped = useRef(false);
+  useEffect(() => {
+    if (!stepped.current) {
+      // First paint — the observer already has these nodes; let it animate.
+      stepped.current = true;
+      return;
+    }
+    document
+      .querySelectorAll<HTMLElement>(".vc2-form-section .reveal")
+      .forEach((el) => el.classList.add("in"));
+  }, [step, sections]);
+
   const setC = (field: string, value: string) => {
     setContact((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) setErrors((prev) => ({ ...prev, [field]: "" }));

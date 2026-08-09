@@ -3767,9 +3767,18 @@
     grid-template-columns: 1fr;
     gap: 48px;
   }
+  /* Three link columns don't fit a phone. Wrapping them as flex items left a
+     ragged hole under the short column, so lay them out explicitly: Trades
+     (the long one) spans both rows on the right, Site then Audit stack left. */
   .footer-right {
-    gap: 40px;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 24px;
+    row-gap: 40px;
+    align-items: start;
+  }
+  .footer-right .footer-col:nth-child(2) {
+    grid-row: span 2;
   }
   .footer-bottom {
     flex-direction: column;
