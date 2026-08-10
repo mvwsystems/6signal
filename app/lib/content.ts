@@ -51,7 +51,19 @@ export async function suggestTopics(businessId: string): Promise<TopicSuggestion
   const out: TopicSuggestion[] = [];
   for (const p of prompts) {
     const agg = byPrompt.get(p.id);
-    if (!agg || !agg.total) continue;
+    if (!agg || !agg.total) {
+      // Not probed yet (newly added prompt) — still show it as writable.
+      out.push({
+        promptId: p.id,
+        targetPrompt: p.prompt,
+        mentionRate: 0,
+        enginesMissing: [],
+        probes: 0,
+        written: writtenPrompts.has(p.prompt.trim().toLowerCase()),
+        dismissed: Boolean(p.article_dismissed_at),
+      });
+      continue;
+    }
     const rate = Math.round((100 * agg.mentioned) / agg.total);
     // Only suggest where there's real ground to gain.
     if (rate >= 80) continue;
@@ -70,10 +82,11 @@ export async function suggestTopics(businessId: string): Promise<TopicSuggestion
       dismissed: Boolean(p.article_dismissed_at),
     });
   }
-  out.sort((a, b) => a.mentionRate - b.mentionRate);
+  // Probed gaps first (worst mention rate at the top), then not-yet-probed prompts.
+  out.sort((a, b) => (a.probes === 0 ? 1 : 0) - (b.probes === 0 ? 1 : 0) || a.mentionRate - b.mentionRate);
   // Actionable topics first (capped); written/dismissed ride along so the
   // dashboard can show them under its archived toggle.
-  const active = out.filter((t) => !t.written && !t.dismissed).slice(0, 12);
+  const active = out.filter((t) => !t.written && !t.dismissed).slice(0, 20);
   const inactive = out.filter((t) => t.written || t.dismissed);
   return [...active, ...inactive];
 }
@@ -87,14 +100,17 @@ Use the web_search tool to ground every factual claim (local specifics, costs, c
 Writing rules:
 - Written for a homeowner/buyer, not for Google: direct, useful, specific to the trade and city. 1,000-1,500 words of body content.
 - Answer-first structure: the opening paragraph directly answers the target query in 2-3 sentences (this is what AI engines extract), then the article earns depth.
+- Write for query fan-out: AI engines reformulate the user's question into several sub-queries before searching (cost, licensing/permits, how the repair works, "near me" variants, warning signs). Identify 3-4 likely reformulations of the target query and make sure a section of the article is the best answer to each one — the article should win the whole cluster, not just the literal prompt.
+- At least one local-specificity anchor per article, grounded via web search and never invented: the area's soil/climate as it affects the trade, the city's permit office and inspection process, dominant housing stock and build era, or a named subdivision/corridor. This is what separates the page from national templated content.
+- If web search finds a license number or credential the business itself publishes (its website, GBP, or state license lookup), cite it once, exactly as published. Never invent or guess credentials.
 - Name the business naturally 3-5 times, including once in the opening answer and once in the closing CTA. Include the city/service area repeatedly but naturally.
 - No hype, no exclamation points, no "In today's world". Short paragraphs. Concrete numbers and specifics beat adjectives.
 
 HTML rules — you write ONLY the article body; the publishing system wraps it in the site's hero, FAQ, CTA, and footer automatically:
-- Output semantic content only: <h2> section headings (4-6 of them, short and punchy), <h3> where useful, <p>, <ul>/<ol>, <strong>, <a>, and simple <table> where a comparison genuinely helps.
+- Output semantic content only: <h2> section headings (4-6 of them, short and punchy), <h3> where useful, <p>, <ul>/<ol>, <strong>, <a>, and simple <table> elements. Include one comparison table when the topic supports it (options vs cost, symptom vs likely cause, repair vs replace) — tables are disproportionately extracted into AI answers.
 - One or two <div class="callout"><strong>Pro tip:</strong> …</div> blocks for field wisdom worth highlighting.
 - Do NOT include any hero, page title/h1, FAQ section, CTA section, or contact block — the template adds all of those. Do NOT use inline styles or classes other than "callout".
-- Relative links: the page lives one directory deep (blog/), so link existing pages as ../services/<page>.html, ../contact.html, ../locations/<page>.html. Work 2-3 such links naturally into the body text.
+- Internal links: always root-relative (starting with /), never ../ or sibling-relative — one canonical URL per page, from any depth. Mirror the exact URL style the TEMPLATE SAMPLE's own internal links use (e.g. extensionless /services/<page> vs /services/<page>.html); the EXISTING SITE PAGES list shows repo file paths, not necessarily the public URL form. Work at least 3 such links naturally into the body text, including one service page and one location or contact page.
 - The TEMPLATE SAMPLE is provided only so you match the site's voice and terminology — not its markup.
 
 Return ONLY valid JSON, no prose or fences:

@@ -1740,9 +1740,11 @@ function ContentTab({ businesses }: { businesses: Biz[] }) {
               <div key={t.targetPrompt} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, padding: "10px 0", borderBottom: `1px solid ${T.border}` }}>
                 <div style={{ minWidth: 0 }}>
                   <div style={{ fontSize: 13, color: T.text }}>{t.targetPrompt}</div>
-                  <div style={{ fontFamily: MONO, fontSize: 11, color: t.written ? T.ok : t.dismissed ? T.muted : t.mentionRate < 40 ? T.danger : T.warn }}>
+                  <div style={{ fontFamily: MONO, fontSize: 11, color: t.written ? T.ok : t.dismissed || t.probes === 0 ? T.muted : t.mentionRate < 40 ? T.danger : T.warn }}>
                     {t.written ? "✓ article written · " : t.dismissed ? "archived · " : ""}
-                    mentioned {t.mentionRate}% · missing on {t.enginesMissing.length ? t.enginesMissing.map((e) => ENGINE_LABELS[e] ?? e).join(", ") : "—"}
+                    {t.probes === 0
+                      ? "not probed yet — included in the next probe run"
+                      : <>mentioned {t.mentionRate}% · missing on {t.enginesMissing.length ? t.enginesMissing.map((e) => ENGINE_LABELS[e] ?? e).join(", ") : "—"}</>}
                   </div>
                 </div>
                 <div style={{ display: "flex", gap: 6 }}>
