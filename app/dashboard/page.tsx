@@ -1844,11 +1844,112 @@ function ContentTab({ businesses }: { businesses: Biz[] }) {
   );
 }
 
+// ─── Revenue tab ─────────────────────────────────────────────────────────────
+interface RevSource { label: string; amount: number; count: number }
+interface RevPayment { date: string; amount: number; source: string; email: string | null; description: string | null }
+interface RevData { configured: boolean; note?: string; year?: number; total?: number; count?: number; byMonth?: number[]; bySource?: RevSource[]; payments?: RevPayment[] }
+
+const REV_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+function RevenueTab() {
+  const [rev, setRev] = useState<RevData | null>(null);
+  const [failed, setFailed] = useState(false);
+  const [showAll, setShowAll] = useState(false);
+  useEffect(() => {
+    fetch("/api/dashboard/revenue")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => (d ? setRev(d) : setFailed(true)))
+      .catch(() => setFailed(true));
+  }, []);
+
+  if (failed) return <div style={card({ borderColor: `${T.danger}66` })}><span style={{ color: T.danger, fontSize: 13 }}>Could not load revenue data.</span></div>;
+  if (!rev) return <div style={{ color: T.muted, fontFamily: MONO, fontSize: 13, padding: 40, textAlign: "center" }}>Pulling 2026 revenue from Stripe…</div>;
+  if (!rev.configured) return <div style={card()}><span style={{ color: T.warn, fontSize: 13 }}>{rev.note ?? "Stripe not connected."}</span></div>;
+
+  const byMonth = rev.byMonth ?? [];
+  const total = rev.total ?? 0;
+  const now = new Date();
+  const curMonth = now.getFullYear() === rev.year ? now.getMonth() : 11;
+  const avg = total / (curMonth + 1);
+  const max = Math.max(...byMonth, 1);
+  const payments = rev.payments ?? [];
+  const shown = showAll ? payments : payments.slice(0, 25);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: 16 }}>
+        <Stat label={`${rev.year} revenue`} value={fmtMoney(total)} accent />
+        <Stat label="This month" value={fmtMoney(byMonth[curMonth] ?? 0)} />
+        <Stat label="Avg / month" value={fmtMoney(Math.round(avg))} />
+        <Stat label="Payments" value={String(rev.count ?? 0)} />
+      </div>
+
+      <div style={card()}>
+        <span style={eyebrow}>Revenue by month — {rev.year} (net of refunds)</span>
+        <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 8 }}>
+          {REV_MONTHS.map((m, i) => (
+            <div key={m} style={{ display: "grid", gridTemplateColumns: "40px 1fr 92px", alignItems: "center", gap: 12 }}>
+              <span style={{ fontFamily: MONO, fontSize: 11, color: i === curMonth ? T.accent : T.muted }}>{m}</span>
+              <div style={{ background: T.bg, border: `1px solid ${T.border}`, height: 18, borderRadius: 1 }}>
+                {byMonth[i] > 0 && <div style={{ width: `${Math.max((byMonth[i] / max) * 100, 2)}%`, height: "100%", background: T.accent, opacity: i === curMonth ? 1 : 0.75 }} />}
+              </div>
+              <span style={{ fontFamily: MONO, fontSize: 12, textAlign: "right", color: byMonth[i] ? T.text : T.muted }}>{byMonth[i] ? fmtMoney(byMonth[i]) : "—"}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr", gap: 16, alignItems: "start" }}>
+        <div style={card()}>
+          <span style={eyebrow}>By source</span>
+          <div style={{ marginTop: 12 }}>
+            {(rev.bySource ?? []).map((s) => (
+              <div key={s.label} style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 10, padding: "10px 0", borderBottom: `1px solid ${T.border}` }}>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: 13, color: T.text }}>{s.label}</div>
+                  <div style={{ fontFamily: MONO, fontSize: 11, color: T.muted }}>{s.count} payment{s.count === 1 ? "" : "s"}</div>
+                </div>
+                <span style={{ fontFamily: MONO, fontWeight: 700, fontSize: 14, whiteSpace: "nowrap" }}>{fmtMoney(s.amount)}</span>
+              </div>
+            ))}
+            {(rev.bySource ?? []).length === 0 && <div style={{ color: T.muted, fontSize: 13, padding: "12px 0" }}>No 2026 payments yet.</div>}
+          </div>
+        </div>
+
+        <div style={card()}>
+          <span style={eyebrow}>Every payment — {rev.year}</span>
+          <div style={{ marginTop: 12 }}>
+            {shown.map((p, i) => (
+              <div key={`${p.date}-${i}`} style={{ display: "grid", gridTemplateColumns: "72px 1fr 84px", alignItems: "baseline", gap: 10, padding: "9px 0", borderBottom: `1px solid ${T.border}` }}>
+                <span style={{ fontFamily: MONO, fontSize: 11, color: T.muted }}>{fmtDate(p.date)}</span>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: 13, color: T.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.source}</div>
+                  {p.email && <div style={{ fontFamily: MONO, fontSize: 11, color: T.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.email}</div>}
+                </div>
+                <span style={{ fontFamily: MONO, fontWeight: 700, fontSize: 13, textAlign: "right" }}>{fmtMoney(p.amount)}</span>
+              </div>
+            ))}
+            {payments.length === 0 && <div style={{ color: T.muted, fontSize: 13, padding: "12px 0" }}>No 2026 payments yet.</div>}
+            {payments.length > 25 && (
+              <button
+                style={{ background: "none", border: "none", cursor: "pointer", fontFamily: MONO, fontSize: 11, color: T.muted, textDecoration: "underline", padding: "10px 0 0" }}
+                onClick={() => setShowAll((v) => !v)}
+              >
+                {showAll ? "Show fewer" : `Show all ${payments.length} payments`}
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Main ────────────────────────────────────────────────────────────────────────
 export default function DashboardPage() {
   const [state, setState] = useState<"loading" | "locked" | "in">("loading");
   const [configured, setConfigured] = useState(true);
-  const [tab, setTab] = useState<"overview" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "proposals" | "ads">("overview");
+  const [tab, setTab] = useState<"overview" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "proposals" | "ads" | "revenue">("overview");
   const [data, setData] = useState<Overview | null>(null);
   const [dataErr, setDataErr] = useState<string | null>(null);
 
@@ -1888,6 +1989,7 @@ export default function DashboardPage() {
     { id: "prospects", label: "Prospects" },
     { id: "proposals", label: "Proposals" },
     { id: "ads", label: "Ads" },
+    { id: "revenue", label: "Revenue" },
   ];
 
   return (
@@ -1926,6 +2028,7 @@ export default function DashboardPage() {
         {tab === "prospects" && <ProspectsTab />}
         {tab === "proposals" && <ProposalsTab businesses={data?.businesses ?? []} />}
         {tab === "ads" && <AdsTab />}
+        {tab === "revenue" && <RevenueTab />}
         <div style={{ marginTop: 32, paddingTop: 20, borderTop: `1px solid ${T.border}`, textAlign: "center", ...eyebrow }}>
           6 Signal Command Center · Internal
         </div>
