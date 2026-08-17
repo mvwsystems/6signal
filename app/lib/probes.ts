@@ -17,10 +17,18 @@ export async function runProbeSweep(opts: { businessId?: string; cap?: number })
     items = await listAllActiveTracked();
   }
 
-  // Fair rotation: never-probed first, then least-recently-probed.
+  // Rotation, budgeted in two lanes. Never-probed prompts used to sort first
+  // outright, so adding a large batch of new prompts pushed the established
+  // set out of the sweep entirely and broke its trendline — the one thing the
+  // measurement is for. New prompts get at most half the run and phase in over
+  // a few sweeps; the rest of the budget goes to the least-recently-probed.
   const lastProbed = await getLastProbeTimes();
-  items.sort((a, b) => (lastProbed[a.id] ?? "").localeCompare(lastProbed[b.id] ?? ""));
-  const slice = items.slice(0, cap);
+  const fresh = items.filter((i) => !lastProbed[i.id]);
+  const seen = items
+    .filter((i) => lastProbed[i.id])
+    .sort((a, b) => (lastProbed[a.id] ?? "").localeCompare(lastProbed[b.id] ?? ""));
+  const freshQuota = Math.min(fresh.length, seen.length ? Math.max(1, Math.floor(cap / 2)) : cap);
+  const slice = [...fresh.slice(0, freshQuota), ...seen.slice(0, cap - freshQuota)];
 
   let processed = 0;
   let results = 0;

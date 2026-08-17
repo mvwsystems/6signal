@@ -23,11 +23,28 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   if (!isAuthed(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  let body: { businessId?: string; targetPrompt?: string } | null = null;
+  let body: { businessId?: string; targetPrompt?: string; force?: boolean } | null = null;
   try { body = await req.json(); } catch { return NextResponse.json({ error: "Invalid JSON" }, { status: 400 }); }
   const businessId = body?.businessId;
   const targetPrompt = (body?.targetPrompt ?? "").trim();
   if (!businessId || !targetPrompt) return NextResponse.json({ error: "businessId and targetPrompt required" }, { status: 400 });
+
+  // One article per prompt unless the owner explicitly asks for another pass.
+  // Without this, a re-click or a re-typed prompt silently queues a near-
+  // duplicate — which is how the same prompt ended up with three drafts.
+  if (!body?.force) {
+    const existing = (await listContentPosts(businessId)).find(
+      (p) => p.status !== "failed" && String(p.target_prompt ?? "").trim().toLowerCase() === targetPrompt.toLowerCase()
+    );
+    if (existing) {
+      return NextResponse.json({
+        error: `Already covered by "${existing.title ?? existing.slug ?? "a draft"}" (${existing.status}). Use "Write again" to add another pass.`,
+        duplicate: true,
+        existing: { id: existing.id, title: existing.title, status: existing.status },
+      }, { status: 409 });
+    }
+  }
+
   const postId = await createContentPost(businessId, targetPrompt);
   if (!postId) return NextResponse.json({ error: "Could not create the draft row." }, { status: 500 });
   const q = await enqueueWorker({ kind: "content-generate", postId, businessId });

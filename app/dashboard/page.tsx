@@ -1610,11 +1610,13 @@ function ContentTab({ businesses }: { businesses: Biz[] }) {
     return () => { if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; } };
   }, [posts, bizId, loadFor]);
 
-  const generate = async (targetPrompt: string) => {
+  // force=true is the deliberate "Write again" path; everything else gets the
+  // server's duplicate guard so a re-click can't queue a near-duplicate.
+  const generate = async (targetPrompt: string, force = false) => {
     if (!bizId || !targetPrompt.trim()) return;
     setBusy("gen"); setErr(null);
     try {
-      const r = await fetch("/api/dashboard/content", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ businessId: bizId, targetPrompt: targetPrompt.trim() }) });
+      const r = await fetch("/api/dashboard/content", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ businessId: bizId, targetPrompt: targetPrompt.trim(), force }) });
       const d = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(d.error || `error ${r.status}`);
       setCustom(""); await loadFor(bizId);
@@ -1755,7 +1757,7 @@ function ContentTab({ businesses }: { businesses: Biz[] }) {
                     <button style={{ ...btn(true), whiteSpace: "nowrap", opacity: busy === "gen" ? 0.5 : 1 }} disabled={busy === "gen"} onClick={() => generate(t.targetPrompt)}>Write article</button>
                   )}
                   {t.written && (
-                    <button style={{ ...btn(), whiteSpace: "nowrap", opacity: busy === "gen" ? 0.5 : 1 }} disabled={busy === "gen"} onClick={() => generate(t.targetPrompt)}>Write again</button>
+                    <button style={{ ...btn(), whiteSpace: "nowrap", opacity: busy === "gen" ? 0.5 : 1 }} disabled={busy === "gen"} onClick={() => generate(t.targetPrompt, true)}>Write again</button>
                   )}
                 </div>
               </div>

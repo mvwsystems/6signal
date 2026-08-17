@@ -102,6 +102,8 @@ Writing rules:
 - Answer-first structure: the opening paragraph directly answers the target query in 2-3 sentences (this is what AI engines extract), then the article earns depth.
 - Write for query fan-out: AI engines reformulate the user's question into several sub-queries before searching (cost, licensing/permits, how the repair works, "near me" variants, warning signs). Identify 3-4 likely reformulations of the target query and make sure a section of the article is the best answer to each one — the article should win the whole cluster, not just the literal prompt.
 - At least one local-specificity anchor per article, grounded via web search and never invented: the area's soil/climate as it affects the trade, the city's permit office and inspection process, dominant housing stock and build era, or a named subdivision/corridor. This is what separates the page from national templated content.
+- If the target query names a city OTHER than the business's home city, the bar is two verifiable facts specific to THAT city — its own permit office/inspection process, its housing stock and build era, a named subdivision or corridor, or its water utility and system quirks. Never city-swap an existing article: engines discount templated near-duplicates hard, and a page that could be about anywhere earns nothing. If web search cannot substantiate two such facts, write the article narrower (one service, one honest local detail) rather than padding it with generic copy.
+- Read the ARTICLES THIS SITE ALREADY HAS list before writing. Your article must answer a query none of them owns; where topics touch, say the different thing and link to the existing page rather than restating it.
 - If web search finds a license number or credential the business itself publishes (its website, GBP, or state license lookup), cite it once, exactly as published. Never invent or guess credentials.
 - Name the business naturally 3-5 times, including once in the opening answer and once in the closing CTA. Include the city/service area repeatedly but naturally.
 - No hype, no exclamation points, no "In today's world". Short paragraphs. Concrete numbers and specifics beat adjectives.
@@ -150,7 +152,16 @@ export async function runContentGeneration(args: { postId: string; businessId: s
         console.warn("[content] template fetch failed (continuing unstyled):", e);
       }
     }
-    const published = await listPublishedPosts(businessId);
+    // Drafts count as covered ground too — the writer needs the whole corpus,
+    // keyed by the buyer query each piece already owns, or geo/service pages
+    // come back as near-duplicates of each other.
+    const corpus = (await listContentPosts(businessId))
+      .filter((p) => p.status !== "failed" && p.id !== postId)
+      .map((p) => ({
+        title: String(p.title ?? p.slug ?? "untitled"),
+        prompt: String(p.target_prompt ?? ""),
+        status: String(p.status ?? ""),
+      }));
 
     const user = `Write the article.
 
@@ -165,8 +176,8 @@ TARGET BUYER QUERY (the article must be the best answer on the internet to this)
 EXISTING SITE PAGES (link to the relevant ones with ../ paths):
 ${existing.join("\n") || "(unknown)"}
 
-ALREADY-PUBLISHED GUIDES (do not duplicate these topics or slugs):
-${published.map((p) => `${p.slug} — ${p.title}`).join("\n") || "(none yet)"}
+ARTICLES THIS SITE ALREADY HAS (each already owns its buyer query — do not duplicate the topic, the slug, or the local anchors they lean on):
+${corpus.map((p) => `[${p.status}] "${p.prompt}" → ${p.title}`).join("\n") || "(none yet)"}
 
 TEMPLATE SAMPLE — the site's own <main> markup; mirror its classes and style idioms exactly:
 ${templateSample || "(no template available — use clean semantic HTML with minimal inline styles)"}
