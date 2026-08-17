@@ -1,0 +1,118 @@
+---
+title: "Voice Search for Contractors: What Siri, Alexa, and Google Assistant Actually Answer"
+slug: "voice-search-for-contractors-siri-alexa-google-assistant"
+description: "When a homeowner asks Siri or Google Assistant for a plumber, the answer comes from data most contractors have never claimed. How each assistant decides, why voice returns one name instead of ten, and the VEO checklist."
+date: "2026-08-16"
+category: "Insight"
+author: "Matt Vincent Walker"
+readTime: "8 min read"
+featured: false
+tags:
+  - VEO
+  - Voice Search
+  - AI Visibility
+  - Apple Maps
+  - Google Business Profile
+  - Local SEO
+  - Contractor Marketing
+---
+
+# Voice Search for Contractors: What Siri, Alexa, and Google Assistant Actually Answer
+
+A homeowner is standing in two inches of water, holding the main shutoff with one hand and a phone in the other.
+
+She is not going to type. She is going to ask.
+
+"Hey Siri, find me an emergency plumber."
+
+What happens in the next five seconds is decided by data most contractors have never looked at — and never claimed.
+
+## Short answer
+
+Voice assistants answer local questions from structured local business data, not from your website's homepage. Siri answers from Apple Maps, whose business records are managed through Apple Business Connect. Google Assistant answers from the Google Business Profile and Google's local index. Alexa draws on licensed local-business data, historically including Yelp listings and reviews.
+
+And unlike a screen full of results, a voice answer usually surfaces **one to three names**. There is no page two. There is barely a page one.
+
+Voice Engine Optimization — VEO, the fifth of the [six signals](/research/the-6signal-visibility-audit-what-we-measure-and-why) — is the work of making sure the data those assistants read resolves cleanly, confidently, to your company.
+
+## First, the statistic we refuse to quote
+
+You have probably seen it: "50% of all searches will be voice searches." It has been repeated in a thousand marketing decks.
+
+We are not going to quote a number like that, because the widely-circulated versions trace back to years-old predictions that never carried a rigorous source. The honest position is simpler: voice queries are real, they skew urgent and local — exactly the jobs contractors want — and the interface mechanics make them winner-take-most. The mechanics matter. The folklore does not.
+
+## How each assistant decides who to name
+
+### Siri — the Apple Maps layer
+
+Siri's local answers come from Apple Maps. Apple Maps business data is managed through **Apple Business Connect** — Apple's free, self-serve dashboard for claiming and controlling a business listing, and the layer Apple has been building out since 2023.
+
+Here is the gap: most contractors claimed their Google listing years ago and have never once logged into Apple's. Their Apple Maps presence is whatever Apple assembled automatically — old phone numbers, vague categories, no photos, unverified. When Siri reads that record aloud to a homeowner, it reads the unclaimed version.
+
+Every iPhone in your service area routes its voice queries through that data. That is a large share of your market you have never introduced yourself to. (We covered Apple's move to monetize this surface in [Apple Maps Ads Are Coming](/research/apple-maps-ads-dallas-fort-worth) — ads arrive on top of the same listing data.)
+
+### Google Assistant — the Business Profile layer
+
+Google Assistant answers local queries from Google's local systems — the same relevance, distance, and prominence machinery documented in Google's own local ranking guidance, fed by the **Google Business Profile**: categories, services, service area, hours, phone, reviews.
+
+Which means your Assistant visibility is roughly as strong as your [Business Profile is complete](/research/how-to-fix-google-business-profile-for-ai-visibility). An accurate primary category, real service listings, current hours, and a steady review signal are not cosmetic — they are the answer pool the Assistant draws from.
+
+### Alexa — the licensed-data layer
+
+Amazon does not run its own maps of local plumbers. Alexa's local answers have historically drawn on licensed data — most prominently Yelp's listings, ratings, and hours. If your Yelp record is thin, wrong, or arguing with your other listings, that is the version of your company Alexa knows.
+
+## Why voice is winner-take-most
+
+A search results page shows ten options and lets the buyer scroll. A voice assistant reads an answer.
+
+That single interface difference changes the economics of visibility:
+
+- On a screen, position seven still gets seen by somebody.
+- In a voice answer, the assistant names one to three businesses — and for urgent, hands-free queries, the caller frequently takes the first workable option.
+
+There is no long tail in a spoken answer. Either the assistant's data resolves confidently to your company, or you were never in the conversation.
+
+And urgency is the whole character of voice: burst pipes, dead AC in July, a garage door that will not close with the car inside. Hands busy, stress high, screen impractical. These are the highest-intent calls a contractor can receive — routed by data quality.
+
+## Why VEO is mostly a data problem, not a content problem
+
+Here is the encouraging part: unlike [answer-engine content work](/research/how-to-build-an-answer-ready-service-page), voice visibility barely involves writing anything.
+
+The assistants read structured records. So VEO inherits almost entirely from your [local entity layer](/research/local-entity-gap-ai-search):
+
+- **One name, one phone, one address, everywhere.** Voice systems cross-reference. A company whose Apple, Google, and Yelp records disagree gets skipped by machines that need confidence before speaking a name aloud.
+- **Accurate categories.** An assistant matching "emergency plumber" needs your record to say plumbing — specifically, correctly, in each system's own category taxonomy.
+- **Hours that are actually right.** Voice queries skew "open now." A listing showing closed at 9 p.m. loses the burst-pipe call to whoever's hours say open — regardless of who picks up in reality.
+- **A tap-to-call phone number that a human answers.** The assistant's job ends at the handoff. If the call rings out, the entire chain worked and the job still walked.
+
+This is also why voice is the signal that quietly rewards contractors who have done the unglamorous cleanup work — and quietly punishes everyone who "did SEO" but never touched their data layer.
+
+## The VEO checklist
+
+Fifteen minutes of diagnosis, in order:
+
+1. **Ask the assistants yourself.** Siri, Google Assistant, and Alexa: "find a [your trade] near me," "who fixes [your emergency] in [your city]." Note every name that comes back. This is the voice edition of [testing whether AI recommends your business](/research/how-to-test-whether-ai-recommends-your-business).
+2. **Claim Apple Business Connect.** Free, and the single most commonly missing piece. Verify the listing, fix the category, phone, hours, service area; add the logo and real photos.
+3. **Audit the Google Business Profile** — primary category, services, service area, hours, phone. Complete beats clever.
+4. **Reconcile Yelp** — even if you never market there. Alexa may be reading it.
+5. **Check your hours against reality**, including holidays and after-hours lines. "Open now" is a voice filter.
+6. **Call your own tap-to-call number.** The last mile is a human answering. (If nobody can answer mid-job, that is a solvable systems problem — it is exactly what an AI receptionist is for.)
+
+## Final answer
+
+When a homeowner asks Siri, Alexa, or Google Assistant who to call, the answer is read from structured business data — Apple Business Connect, the Google Business Profile, and licensed listings — and it surfaces one to three names, not ten.
+
+Most contractors have never claimed half of that data. The ones who have own a surface their competitors do not know exists.
+
+## Want to know what the assistants say about you?
+
+Get the AI Visibility Audit. [The $27 audit](/visibility-check) scores all six signals — including VEO — for your company, your trade, and your market, and gives you a ranked list of what to fix first.
+
+## Sources and further reading
+
+- Apple Business Connect: Apple's business listing management documentation
+- Google Business Profile: Tips to improve your local ranking
+- Google Search Central: Google Search Essentials
+- Yelp for Business: business listing and data documentation
+- [The Local Entity Gap](/research/local-entity-gap-ai-search) — why inconsistent records make machines skip you
+- [Apple Maps Ads Are Coming to DFW](/research/apple-maps-ads-dallas-fort-worth) — the paid layer arriving on top of Apple's listing data

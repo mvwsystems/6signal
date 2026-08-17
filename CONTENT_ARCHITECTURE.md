@@ -349,6 +349,21 @@ forbidden in this track — it argues that unsourced answers are liabilities.
 - `how-to-test-whether-ai-recommends-your-business` → add outbound to the bridge post.
 - `90-day-ai-visibility-roadmap-for-contractors` → the roadmap's intake/conversion step should cite the anchor.
 
+### Scheduled: August data + VEO pair (written 2026-08, dated 2026-08-09 and 2026-08-16)
+
+`we-ran-700-ai-visibility-checks-one-texas-market` — Field Note, **featured**. The first original-
+research post: 700 tracked checks / 12 real prompts / 5 engines + Maps grid, July 7–Aug 3 2026,
+X-Act (with permission). Every number verified against Supabase `probe_results` at write time
+(Gemini 113/124, ChatGPT 69/96, Perplexity 96/140, Claude 28/124, AI Overviews 0/84). Publishes
+the zero deliberately — the AI Overviews gap IS the finding. Links: recommendation-layer,
+how-to-test, visibility-audit, local-entity-gap, directories, measurement playbook, answer-ready.
+
+`voice-search-for-contractors-siri-alexa-google-assistant` — Insight. **Founds the VEO pillar**
+(previously the only signal with zero content). Siri→Apple Business Connect, Assistant→GBP,
+Alexa→licensed/Yelp data; winner-take-most interface argument; refuses the fake "50% voice" stat
+by name (authority play); VEO-inherits-LEO thesis; 6-step checklist. Links: apple-maps-ads,
+local-entity-gap, GBP-fix, how-to-test. Feeds the $500 Apple Business Setup commercially.
+
 ### White Paper: The Connective Layer (published 2026-08-01, 7am CDT via scheduled GH Action)
 
 `the-connective-layer-ai-infrastructure-construction` — the operations track's flagship. Takes the
