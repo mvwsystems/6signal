@@ -507,7 +507,7 @@ export default function Home() {
               The first documented client:{" "}
               <em>
                 X-Act Plumbing (Red Oak, TX) — named in 92% of tracked Gemini
-                recommendation checks, 71% of ChatGPT checks, and 68% of Perplexity
+                recommendation checks, 74% of ChatGPT checks, and 69% of Perplexity
                 checks, across 629 automated checks of 12 real buyer questions in
                 July 2026.
               </em>{" "}

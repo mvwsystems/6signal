@@ -653,7 +653,7 @@ export default function VisibilityCheckPage() {
               <strong>X-Act Plumbing — Red Oak, TX.</strong> Our tracking system ran 629
               automated checks of 12 real buyer questions across six AI engines, daily,
               July 7&ndash;20, 2026. X-Act was named in <strong>92% of Gemini checks</strong>,{" "}
-              <strong>71% of ChatGPT checks</strong>, and <strong>68% of Perplexity
+              <strong>74% of ChatGPT checks</strong>, and <strong>69% of Perplexity
               checks</strong> — and appeared at all 25 points of a market-wide Google
               Maps grid scan. Same tracking system, same buyer questions, your business:
               that&rsquo;s what the audit measures.

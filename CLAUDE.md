@@ -98,8 +98,8 @@ naming is fully gone; /services was deleted 2026-07-22 and 301s to /capabilities
 
 **X-Act Plumbing is documented and published (2026-07-22, client permission via owner).**
 [app/proof-data.ts](app/proof-data.ts) `cs-xact-plumbing` is status `"real"`, with every number
-pulled from the internal tracking system (629 probes, July 7–20 2026): Gemini 92%, ChatGPT 71%,
-Perplexity 68% mention rates; Maps present at 25/25 grid points. Surfaced on the homepage
+pulled from the internal tracking system (629 probes, July 7–20 2026): Gemini 92%, ChatGPT 74%,
+Perplexity 69% mention rates; Maps present at 25/25 grid points. Surfaced on the homepage
 outcomes note, /visibility-check (docline strip), and /work. **Deliberately unpublished** (owner's
 manual pre-tracking baseline, unrecorded): AI Overview citations, "Map Pack top 3", "page 2 →
 top 3 organic", "in 3 weeks" — see the provenance comment in proof-data.ts; dated screenshots

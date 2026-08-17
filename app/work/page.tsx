@@ -165,8 +165,8 @@ export default function WorkPage() {
               629 automated checks of 12 real buyer questions (&ldquo;Who is the best
               plumber in Red Oak, TX?&rdquo;, &ldquo;I have a burst pipe — who can come
               out fast?&rdquo;) across six AI engines, run daily July 7–20, 2026. X-Act
-              was named in 92% of Gemini recommendation checks (103 of 112), 71% of
-              ChatGPT checks (60 of 84), and 68% of Perplexity checks (87 of 128) — and
+              was named in 92% of Gemini recommendation checks (103 of 112), 74% of
+              ChatGPT checks (62 of 84), and 69% of Perplexity checks (88 of 128) — and
               appeared at all 25 points of a market-wide Google Maps grid scan for
               &ldquo;best plumber red oak tx.&rdquo; The full 90-day case study publishes
               after the first quarter of retainer work.

@@ -280,11 +280,11 @@ export const CASE_STUDIES: CaseStudy[] = [
     market: "Red Oak / DFW, TX",
     headline: "X-Act Plumbing: named in the answers when Red Oak asks AI for a plumber",
     summary:
-      "6 Signal's tracking system ran 629 automated checks of 12 real buyer questions ('Who is the best plumber in Red Oak, TX?', 'I have a burst pipe — who can come out fast?') across six AI engines, daily, July 7–20, 2026. X-Act Plumbing was named in 92% of Gemini checks, 71% of ChatGPT checks, and 68% of Perplexity checks — and appeared in Google Maps results at all 25 points of a market-wide grid scan for 'best plumber red oak tx'. Published with client permission.",
+      "6 Signal's tracking system ran 629 automated checks of 12 real buyer questions ('Who is the best plumber in Red Oak, TX?', 'I have a burst pipe — who can come out fast?') across six AI engines, daily, July 7–20, 2026. X-Act Plumbing was named in 92% of Gemini checks, 74% of ChatGPT checks, and 69% of Perplexity checks — and appeared in Google Maps results at all 25 points of a market-wide grid scan for 'best plumber red oak tx'. Published with client permission.",
     results: [
       "Gemini: named in 92% of tracked recommendation checks (103 of 112)",
-      "ChatGPT: named in 71% of tracked recommendation checks (60 of 84)",
-      "Perplexity: named in 68% of tracked recommendation checks (87 of 128)",
+      "ChatGPT: named in 74% of tracked recommendation checks (62 of 84)",
+      "Perplexity: named in 69% of tracked recommendation checks (88 of 128)",
       "Google Maps: present at 25 of 25 grid points across the Red Oak market for 'best plumber red oak tx', average position ~5.5",
       "Method: 12 real buyer prompts, checked daily across six engines — 629 checks, July 7–20, 2026",
     ],

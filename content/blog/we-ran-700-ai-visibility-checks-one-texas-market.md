@@ -38,10 +38,10 @@ The results, by engine:
 
 | Engine | Checks | Named the business | Mention rate |
 |---|---|---|---|
-| Gemini | 124 | 113 | **91%** |
-| ChatGPT | 96 | 69 | **72%** |
-| Perplexity | 140 | 96 | **69%** |
-| Claude | 124 | 28 | **23%** |
+| Gemini | 124 | 114 | **92%** |
+| ChatGPT | 96 | 72 | **75%** |
+| Perplexity | 140 | 99 | **71%** |
+| Claude | 124 | 33 | **27%** |
 | Google AI Overviews | 84 | 0 | **0%** |
 
 On Google Maps, a separate 25-point grid scan across the market for "best plumber red oak tx" found the company present at **all 25 grid points**, at an average position of roughly 5.5.
@@ -67,9 +67,9 @@ If you want to run this kind of testing yourself, the manual version is document
 
 ## What the spread means
 
-### Why Gemini says the name 91% of the time
+### Why Gemini says the name 92% of the time
 
-Gemini sits closest to Google's local data — the Business Profile, the reviews, the Maps entity. For a company with a clean local entity record, Gemini has the most confident grounding available, and it shows: 113 of 124 checks named the business.
+Gemini sits closest to Google's local data — the Business Profile, the reviews, the Maps entity. For a company with a clean local entity record, Gemini has the most confident grounding available, and it shows: 114 of 124 checks named the business.
 
 The lesson generalizes: engines answer local questions from local entity data. The company's [local entity signals](/research/local-entity-gap-ai-search) — consistent name, phone, service area, categories, review volume — are doing the recommending.
 
@@ -79,9 +79,9 @@ Both name the company in roughly seven of ten checks — strong, but less consis
 
 Perplexity's habit of citing sources makes it the most instructive engine to study: when it skips a business, you can usually see which sources it trusted instead. Often that's a directory — the pattern covered in [Why Directories and Aggregators Keep Winning AI Answers](/research/why-directories-and-aggregators-keep-winning-ai-answers).
 
-### Why Claude names it only 23% of the time
+### Why Claude names it only 27% of the time
 
-Claude is the most conservative engine in the set about recommending specific local businesses — it more often answers local questions with criteria ("look for licensed, insured plumbers with recent reviews") than with names. That caution shows in the data: 28 of 124.
+Claude is the most conservative engine in the set about recommending specific local businesses — it more often answers local questions with criteria ("look for licensed, insured plumbers with recent reviews") than with names. that caution shows in the data: 33 of 124.
 
 The takeaway is not "ignore Claude." It's that mention rates are engine-specific, and a strategy tuned only to one engine misreads the field.
 
@@ -89,19 +89,19 @@ The takeaway is not "ignore Claude." It's that mention rates are engine-specific
 
 Eighty-four checks. Zero mentions.
 
-Not zero because the company is weak — the same company scores 91% on Gemini and stands on all 25 Maps grid points. Zero because AI Overviews is a different game: it cites indexed web pages that directly answer the query, and it triggers selectively on local-service searches. Winning it is not an entity play; it is a content play — [answer-ready pages](/research/how-to-build-an-answer-ready-service-page) that say, in plain indexed text, what the Overview needs to quote.
+Not zero because the company is weak — the same company scores 92% on Gemini and stands on all 25 Maps grid points. Zero because AI Overviews is a different game: it cites indexed web pages that directly answer the query, and it triggers selectively on local-service searches. Winning it is not an entity play; it is a content play — [answer-ready pages](/research/how-to-build-an-answer-ready-service-page) that say, in plain indexed text, what the Overview needs to quote.
 
 This is the most important finding in the dataset: **a contractor can dominate four AI surfaces and be invisible on a fifth.** Visibility is not one number. It is six different systems keeping six different scores.
 
 ## Questions this data raises
 
-### Does a 91% mention rate mean 91% of buyers see the name?
+### Does a 92% mention rate mean 92% of buyers see the name?
 
-No. It means that when our tracked prompts were asked during the window, the engine named the business in 91% of checks. Real buyers phrase things differently, ask from different places, and get personalized results. Treat mention rate as a signal-strength reading, not an impression count.
+No. It means that when our tracked prompts were asked during the window, the engine named the business in 92% of checks. Real buyers phrase things differently, ask from different places, and get personalized results. Treat mention rate as a signal-strength reading, not an impression count.
 
 ### Is one company in one market enough to generalize?
 
-It is enough to demonstrate the *shape* of the problem — the same business scoring 91%, 72%, 69%, 23%, and 0% across five surfaces — and that shape is structural, not company-specific. The engines ground their answers differently, so uniform performance across them would be the surprise. Your rates will differ; the spread will not.
+It is enough to demonstrate the *shape* of the problem — the same business scoring 92%, 75%, 71%, 27%, and 0% across five surfaces — and that shape is structural, not company-specific. The engines ground their answers differently, so uniform performance across them would be the surprise. Your rates will differ; the spread will not.
 
 ### Why publish the zero?
 
@@ -116,12 +116,12 @@ The boring fundamentals, in the boring order: local entity cleanup first (Busine
 If you're a contractor, three usable conclusions:
 
 1. **You have six scores, not one.** Ranking well on Google tells you nothing about ChatGPT. Winning ChatGPT tells you nothing about AI Overviews. Each surface has to be checked on its own.
-2. **Mention rates are measurable.** "We do AI SEO" is a claim. "Named in 72% of tracked ChatGPT checks over four weeks" is a measurement. Demand the second kind of sentence from anyone you pay — including us.
+2. **Mention rates are measurable.** "We do AI SEO" is a claim. "Named in 75% of tracked ChatGPT checks over four weeks" is a measurement. Demand the second kind of sentence from anyone you pay — including us.
 3. **The recommendation layer is already running in your market.** Someone is being named for your trade in your city right now, at some rate, on every one of these engines. The only question is whether it's you — the argument made in full in [The Recommendation Layer](/research/the-recommendation-layer).
 
 ## Final answer
 
-Across 700 checks in one Texas market over four weeks, the same plumbing company was named in 91% of Gemini checks, 72% of ChatGPT checks, 69% of Perplexity checks, 23% of Claude checks, and 0% of Google AI Overview checks — while standing on all 25 points of a Maps grid scan.
+Across 700 checks in one Texas market over four weeks, the same plumbing company was named in 92% of Gemini checks, 75% of ChatGPT checks, 71% of Perplexity checks, 27% of Claude checks, and 0% of Google AI Overview checks — while standing on all 25 points of a Maps grid scan.
 
 AI visibility is not one thing. It is six systems keeping six scores, and every one of them is measurable.
 
@@ -131,7 +131,7 @@ Get the AI Visibility Audit. [The $27 audit](/visibility-check) runs your compan
 
 ## Sources and method notes
 
-- All mention-rate figures: 6Signal internal tracking system, 700 automated checks, July 7 – August 3, 2026, published with client permission. Counts by engine: Gemini 113/124, ChatGPT 69/96, Perplexity 96/140, Claude 28/124, Google AI Overviews 0/84.
+- All mention-rate figures: 6Signal internal tracking system, 700 automated checks, July 7 – August 3, 2026, published with client permission. Counts by engine: Gemini 114/124, ChatGPT 72/96, Perplexity 99/140, Claude 33/124, Google AI Overviews 0/84.
 - Maps data: 25-point geographic grid scan, query "best plumber red oak tx," July 2026.
 - Google Search Central: AI features and your website
 - Google Business Profile: Tips to improve your local ranking
