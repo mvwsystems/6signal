@@ -207,6 +207,36 @@ const ANALYZE_SYSTEM = `You judge AI-engine answers for brand visibility. Given 
 { "results": { "<engine>": { "mentioned": false, "position": null, "sentiment": null, "competitors": [] } } }
 sentiment is one of "positive" | "neutral" | "negative" | null. position is an integer or null.`;
 
+// Deterministic name-match safety net. The judge's own definition of
+// "mentioned" is "the business name actually appears" — so a false verdict
+// can never stand when the name is plainly in the answer text. Normalizes
+// away case, punctuation, markdown bold, and suffixes ("X-Act Plumbing LLC").
+function nameAppears(businessName: string, answerText: string): boolean {
+  const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const name = norm(businessName);
+  if (!name || name.length < 4) return false;
+  return norm(answerText).includes(name);
+}
+
+// Answers that name the business only to say it couldn't be found don't count.
+const CANT_FIND_RE =
+  /couldn'?t find|could not find|unable to (find|locate)|not familiar with|no (results|information|listings?) (for|about|on)|don'?t have (any )?(specific )?information/i;
+
+function applyNameMatchSafetyNet(
+  business: { name: string },
+  answers: EngineAnswer[],
+  verdicts: Record<Engine, Verdict>
+): Record<Engine, Verdict> {
+  for (const a of answers) {
+    if (!a.ok || !a.text) continue;
+    const v = verdicts[a.engine];
+    if (v && !v.mentioned && nameAppears(business.name, a.text) && !CANT_FIND_RE.test(a.text)) {
+      verdicts[a.engine] = { ...v, mentioned: true };
+    }
+  }
+  return verdicts;
+}
+
 export async function analyzePrompt(
   business: { name: string; trade: string; city: string },
   prompt: string,
@@ -220,7 +250,8 @@ export async function analyzePrompt(
   };
   const apiKey = process.env.ANTHROPIC_API_KEY;
   const usable = answers.filter((a) => a.ok && a.text);
-  if (!apiKey || usable.length === 0) return fallback();
+  if (usable.length === 0) return fallback();
+  if (!apiKey) return applyNameMatchSafetyNet(business, answers, fallback());
 
   const block = usable.map((a) => `### ${a.engine} answer:\n${a.text.slice(0, 4000)}`).join("\n\n");
   const user = `Business: ${business.name} (${business.trade} in ${business.city})
@@ -237,11 +268,11 @@ For each engine answer above, judge whether ${business.name} is named. Return th
       body: JSON.stringify({ model: "claude-haiku-4-5", max_tokens: 1024, temperature: 0, system: ANALYZE_SYSTEM, messages: [{ role: "user", content: user }] }),
       signal,
     });
-    if (!res.ok) return fallback();
+    if (!res.ok) return applyNameMatchSafetyNet(business, answers, fallback());
     const data = await res.json();
     const text: string = (data.content ?? []).filter((b: { type: string }) => b.type === "text").map((b: { text: string }) => b.text).join("");
     const m = text.replace(/```json\n?|```\n?/g, "").match(/\{[\s\S]*\}/);
-    if (!m) return fallback();
+    if (!m) return applyNameMatchSafetyNet(business, answers, fallback());
     const parsed = JSON.parse(m[0]);
     const results = parsed.results ?? {};
     const out = fallback();
@@ -254,9 +285,9 @@ For each engine answer above, judge whether ${business.name} is named. Return th
         competitors: Array.isArray(r.competitors) ? r.competitors.map(String).slice(0, 8) : [],
       };
     }
-    return out;
+    return applyNameMatchSafetyNet(business, answers, out);
   } catch (e) {
     console.error("[engines] analyzePrompt failed:", e);
-    return fallback();
+    return applyNameMatchSafetyNet(business, answers, fallback());
   }
 }
