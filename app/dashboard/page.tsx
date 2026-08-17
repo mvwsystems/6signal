@@ -1849,39 +1849,81 @@ function ContentTab({ businesses }: { businesses: Biz[] }) {
 // ─── Revenue tab ─────────────────────────────────────────────────────────────
 interface RevSource { label: string; amount: number; count: number }
 interface RevPayment { date: string; amount: number; source: string; email: string | null; description: string | null }
-interface RevData { configured: boolean; note?: string; year?: number; total?: number; count?: number; byMonth?: number[]; bySource?: RevSource[]; payments?: RevPayment[] }
+interface RevData { configured: boolean; note?: string; year?: number; years?: number[]; total?: number; count?: number; byMonth?: number[]; bySource?: RevSource[]; payments?: RevPayment[] }
 
 const REV_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 function RevenueTab() {
+  const [year, setYear] = useState(() => new Date().getFullYear());
   const [rev, setRev] = useState<RevData | null>(null);
   const [failed, setFailed] = useState(false);
   const [showAll, setShowAll] = useState(false);
+  // Year list survives a reload of the year itself, so the picker never blinks
+  // away while a different year is fetching.
+  const [years, setYears] = useState<number[]>([]);
   useEffect(() => {
-    fetch("/api/dashboard/revenue")
+    let live = true;
+    setRev(null); setFailed(false); setShowAll(false);
+    fetch(`/api/dashboard/revenue?year=${year}`)
       .then((r) => (r.ok ? r.json() : null))
-      .then((d) => (d ? setRev(d) : setFailed(true)))
-      .catch(() => setFailed(true));
-  }, []);
+      .then((d) => {
+        if (!live) return;
+        if (!d) { setFailed(true); return; }
+        setRev(d);
+        if (Array.isArray(d.years) && d.years.length) setYears(d.years);
+      })
+      .catch(() => { if (live) setFailed(true); });
+    return () => { live = false; };
+  }, [year]);
+
+  const picker = (
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <span style={{ fontFamily: MONO, fontSize: 11, color: T.muted, letterSpacing: "0.18em", textTransform: "uppercase" }}>Year</span>
+      <select
+        value={year}
+        onChange={(e) => setYear(Number(e.target.value))}
+        style={{ ...inputStyle, width: "auto", fontFamily: MONO, fontSize: 13, padding: "6px 10px" }}
+      >
+        {(years.length ? years : [year]).map((y) => <option key={y} value={y}>{y}</option>)}
+      </select>
+    </div>
+  );
 
   if (failed) return <div style={card({ borderColor: `${T.danger}66` })}><span style={{ color: T.danger, fontSize: 13 }}>Could not load revenue data.</span></div>;
-  if (!rev) return <div style={{ color: T.muted, fontFamily: MONO, fontSize: 13, padding: 40, textAlign: "center" }}>Pulling 2026 revenue from Stripe…</div>;
-  if (!rev.configured) return <div style={card()}><span style={{ color: T.warn, fontSize: 13 }}>{rev.note ?? "Stripe not connected."}</span></div>;
+  if (!rev) return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      {picker}
+      <div style={{ color: T.muted, fontFamily: MONO, fontSize: 13, padding: 40, textAlign: "center" }}>Pulling {year} revenue from Stripe…</div>
+    </div>
+  );
+  if (!rev.configured) return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      {picker}
+      <div style={card()}><span style={{ color: T.warn, fontSize: 13 }}>{rev.note ?? "Stripe not connected."}</span></div>
+    </div>
+  );
 
   const byMonth = rev.byMonth ?? [];
   const total = rev.total ?? 0;
   const now = new Date();
-  const curMonth = now.getFullYear() === rev.year ? now.getMonth() : 11;
-  const avg = total / (curMonth + 1);
+  const isCurrentYear = now.getFullYear() === rev.year;
+  // A closed-out year averages over all twelve months and has no "this month";
+  // the live year averages over elapsed months only, or January reads as a slump.
+  const curMonth = isCurrentYear ? now.getMonth() : -1;
+  const avg = total / (isCurrentYear ? curMonth + 1 : 12);
+  const bestMonth = byMonth.length ? byMonth.indexOf(Math.max(...byMonth)) : -1;
   const max = Math.max(...byMonth, 1);
   const payments = rev.payments ?? [];
   const shown = showAll ? payments : payments.slice(0, 25);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      {picker}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: 16 }}>
         <Stat label={`${rev.year} revenue`} value={fmtMoney(total)} accent />
-        <Stat label="This month" value={fmtMoney(byMonth[curMonth] ?? 0)} />
+        {isCurrentYear
+          ? <Stat label="This month" value={fmtMoney(byMonth[curMonth] ?? 0)} />
+          : <Stat label="Best month" value={bestMonth >= 0 && byMonth[bestMonth] ? `${REV_MONTHS[bestMonth]} · ${fmtMoney(byMonth[bestMonth])}` : "—"} />}
         <Stat label="Avg / month" value={fmtMoney(Math.round(avg))} />
         <Stat label="Payments" value={String(rev.count ?? 0)} />
       </div>
@@ -1914,7 +1956,7 @@ function RevenueTab() {
                 <span style={{ fontFamily: MONO, fontWeight: 700, fontSize: 14, whiteSpace: "nowrap" }}>{fmtMoney(s.amount)}</span>
               </div>
             ))}
-            {(rev.bySource ?? []).length === 0 && <div style={{ color: T.muted, fontSize: 13, padding: "12px 0" }}>No 2026 payments yet.</div>}
+            {(rev.bySource ?? []).length === 0 && <div style={{ color: T.muted, fontSize: 13, padding: "12px 0" }}>No {rev.year} payments.</div>}
           </div>
         </div>
 
@@ -1931,7 +1973,7 @@ function RevenueTab() {
                 <span style={{ fontFamily: MONO, fontWeight: 700, fontSize: 13, textAlign: "right" }}>{fmtMoney(p.amount)}</span>
               </div>
             ))}
-            {payments.length === 0 && <div style={{ color: T.muted, fontSize: 13, padding: "12px 0" }}>No 2026 payments yet.</div>}
+            {payments.length === 0 && <div style={{ color: T.muted, fontSize: 13, padding: "12px 0" }}>No {rev.year} payments.</div>}
             {payments.length > 25 && (
               <button
                 style={{ background: "none", border: "none", cursor: "pointer", fontFamily: MONO, fontSize: 11, color: T.muted, textDecoration: "underline", padding: "10px 0 0" }}

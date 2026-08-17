@@ -3,10 +3,11 @@ import { isAuthed } from "../../../lib/dashboard-auth";
 
 export const dynamic = "force-dynamic";
 
-// All 2026 revenue, straight from Stripe charges. Charges are the one object
-// that covers both revenue paths: invoice payments (retainers, care plans) AND
-// payment-link checkouts (the $27/$97/$197 funnel, website builds) — invoices
-// alone miss the funnel entirely. Amounts are net of refunds.
+// Revenue for one calendar year (?year=YYYY, default the current one), straight
+// from Stripe charges. Charges are the one object that covers both revenue
+// paths: invoice payments (retainers, care plans) AND payment-link checkouts
+// (the $27/$97/$197 funnel, website builds) — invoices alone miss the funnel
+// entirely. Amounts are net of refunds.
 // Requires STRIPE_SECRET_KEY with Charges read access.
 
 interface RevPayment {
@@ -17,7 +18,26 @@ interface RevPayment {
   description: string | null;
 }
 
-const YEAR = 2026;
+// Floor for the year picker if Stripe won't tell us when the account opened.
+const FALLBACK_FIRST_YEAR = 2024;
+
+// Selectable years run from the Stripe account's creation year to now. One
+// cheap /v1/account call; restricted keys may not read it, hence the fallback.
+async function firstYear(key: string, thisYear: number): Promise<number> {
+  try {
+    const res = await fetch("https://api.stripe.com/v1/account", {
+      headers: { Authorization: `Bearer ${key}` },
+      cache: "no-store",
+    });
+    if (!res.ok) return FALLBACK_FIRST_YEAR;
+    const acct = (await res.json()) as { created?: number };
+    if (!acct.created) return FALLBACK_FIRST_YEAR;
+    const y = new Date(acct.created * 1000).getUTCFullYear();
+    return y >= 2000 && y <= thisYear ? y : FALLBACK_FIRST_YEAR;
+  } catch {
+    return FALLBACK_FIRST_YEAR;
+  }
+}
 
 function classify(charge: Record<string, any>): string {
   if (charge.invoice) return "Client invoices (retainers & care)";
@@ -37,6 +57,13 @@ export async function GET(req: NextRequest) {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) return NextResponse.json({ configured: false, note: "STRIPE_SECRET_KEY not set in Netlify env vars." });
 
+  const thisYear = new Date().getUTCFullYear();
+  const asked = Number(req.nextUrl.searchParams.get("year"));
+  const YEAR = Number.isInteger(asked) && asked >= 2000 && asked <= thisYear ? asked : thisYear;
+  const since = await firstYear(key, thisYear);
+  const years: number[] = [];
+  for (let y = thisYear; y >= Math.min(since, YEAR); y--) years.push(y);
+
   const from = Math.floor(Date.UTC(YEAR, 0, 1) / 1000);
   const to = Math.floor(Date.UTC(YEAR + 1, 0, 1) / 1000);
 
@@ -53,14 +80,14 @@ export async function GET(req: NextRequest) {
       });
     } catch (e) {
       console.error("[revenue] Stripe fetch failed:", e);
-      return NextResponse.json({ configured: false, note: "Could not reach Stripe." });
+      return NextResponse.json({ configured: false, years, note: "Could not reach Stripe." });
     }
     if (!res.ok) {
       console.error(`[revenue] Stripe charges -> ${res.status}`);
       const note = res.status === 401 || res.status === 403
         ? "The Stripe key can't read charges — if it's a restricted key, grant it Charges: Read in the Stripe dashboard."
         : `Stripe returned ${res.status} for charges.`;
-      return NextResponse.json({ configured: false, note });
+      return NextResponse.json({ configured: false, years, note });
     }
     const body = (await res.json()) as Record<string, any>;
     const data = (body.data as Record<string, any>[]) ?? [];
@@ -102,6 +129,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({
     configured: true,
     year: YEAR,
+    years,
     total,
     count: payments.length,
     byMonth,
