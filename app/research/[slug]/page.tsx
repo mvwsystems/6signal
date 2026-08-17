@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 import Nav from "../../components/Nav";
 import Footer from "../../components/Footer";
 import BlogPageClient from "../../components/BlogPageClient";
@@ -190,7 +191,11 @@ export default async function BlogPostPage({
       <article className="post-body-section rule">
         <div className="wrap">
           <div className="post-body">
-            <MDXRemote source={post.content} components={{ BlogCTA, img: Figure }} />
+            <MDXRemote
+              source={post.content}
+              components={{ BlogCTA, img: Figure }}
+              options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
+            />
           </div>
 
           {/* MID-ARTICLE CTA */}
