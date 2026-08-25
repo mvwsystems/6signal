@@ -7,6 +7,8 @@ declare global {
     fbq: (...args: any[]) => void;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     _fbq: (...args: any[]) => void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    plausible: ((...args: any[]) => void) & { q?: any[] };
   }
 }
 

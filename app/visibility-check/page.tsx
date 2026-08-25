@@ -4,6 +4,7 @@ import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
 import { trackEvent } from "../lib/fbq";
+import { getAttribution } from "../lib/attribution";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -298,7 +299,7 @@ export default function VisibilityCheckPage() {
     fetch("/api/partial-lead", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ ...form, attribution: getAttribution() }),
       keepalive: true,
     }).catch(() => { /* best-effort */ });
   };
@@ -332,7 +333,7 @@ export default function VisibilityCheckPage() {
       const r = await fetch("/api/intake", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, attribution: getAttribution() }),
       });
       if (r.ok) intakeId = (await r.json())?.id ?? null;
     } catch { /* funnel works without it */ }

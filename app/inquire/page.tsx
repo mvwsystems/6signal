@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
+import { getAttribution } from "../lib/attribution";
 
 const REGARDING_OPTIONS = [
   { value: "start", label: "Start — Website & Brand" },
@@ -63,7 +64,7 @@ export default function InquirePage() {
       const r = await fetch("/api/inquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, attribution: getAttribution() }),
       });
       setStatus(r.ok ? "sent" : "failed");
     } catch {

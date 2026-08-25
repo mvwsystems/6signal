@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
   }
 
   const { name, company, email, phone, url, regarding, message, hp } = body ?? {};
+  const attribution = ((body ?? {}) as Record<string, unknown>).attribution as Record<string, unknown> | null ?? null;
 
   // Honeypot: bots fill every field; humans never see this one.
   if (hp) return NextResponse.json({ ok: true });
@@ -68,7 +69,7 @@ export async function POST(req: NextRequest) {
   });
 
   // Best-effort lead record — funnel unaffected if persistence is off.
-  await insertLead({ businessId: null, email, source: `inquiry_${about}` });
+  await insertLead({ businessId: null, email, source: `inquiry_${about}`, attribution });
 
   await pushAlert({
     title: `Inquiry — ${LABELS[about]}`,

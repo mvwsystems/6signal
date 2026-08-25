@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
+import { getAttribution } from "../lib/attribution";
 
 // Self-serve website intake: trade in -> AI-generated questionnaire ->
 // answers persisted server-side -> 50% deposit. When the $750 Stripe link
@@ -155,6 +156,7 @@ export default function StartPage() {
         trade,
         currentSite: contact.currentSite,
         hp: contact.hp,
+        attribution: getAttribution(),
         answers: sections.flatMap((s) =>
           s.questions
             .filter((q) => answers[q.id]?.trim())

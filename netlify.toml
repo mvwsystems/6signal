@@ -5,7 +5,7 @@
   # The Supabase project URL is a public endpoint, not a secret. Exempt it from
   # Netlify's secret scanner so documenting it (e.g. in .env.example) can't fail
   # the build. Real secrets (service role key, Stripe/Resend keys) stay scanned.
-  SECRETS_SCAN_OMIT_KEYS = "SUPABASE_URL,NEXT_PUBLIC_META_PIXEL_ID,NEXT_PUBLIC_CLARITY_PROJECT_ID"
+  SECRETS_SCAN_OMIT_KEYS = "SUPABASE_URL,NEXT_PUBLIC_META_PIXEL_ID,NEXT_PUBLIC_CLARITY_PROJECT_ID,NEXT_PUBLIC_PLAUSIBLE_DOMAIN"
   # Meta pixel ("Matt Walker's Pixel" on the personal ad account, reused while
   # the 6 Signal ad account is restricted). Pixel IDs are public by design —
   # they ship in the page source of every site that installs one.
@@ -13,6 +13,9 @@
   # Microsoft Clarity project ID — session recordings, heatmaps, per-field
   # form engagement. Public by design, same reasoning as the pixel above.
   NEXT_PUBLIC_CLARITY_PROJECT_ID = "xpq4gifflp"
+  # Plausible analytics — traffic volume and where it comes from (referrers,
+  # UTMs, AI engines). The domain is the site's own hostname, public by design.
+  NEXT_PUBLIC_PLAUSIBLE_DOMAIN = "6signal.co"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

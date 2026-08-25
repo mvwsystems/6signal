@@ -139,6 +139,8 @@ export async function insertLead(args: {
   businessId: string | null;
   email: string;
   source: string;
+  // Where this person came from on their first visit (app/lib/attribution.ts).
+  attribution?: Record<string, unknown> | null;
 }): Promise<void> {
   const s = db();
   if (!s) return;
@@ -147,6 +149,7 @@ export async function insertLead(args: {
       business_id: args.businessId,
       email: args.email,
       source: args.source,
+      attribution: args.attribution ?? null,
     });
     if (error) throw error;
   } catch (e) {
@@ -157,13 +160,14 @@ export async function insertLead(args: {
 export async function createIntake(args: {
   businessId: string | null;
   form: Record<string, unknown>;
+  attribution?: Record<string, unknown> | null;
 }): Promise<string | null> {
   const s = db();
   if (!s) return null;
   try {
     const { data, error } = await s
       .from("intakes")
-      .insert({ business_id: args.businessId, form: args.form })
+      .insert({ business_id: args.businessId, form: args.form, attribution: args.attribution ?? null })
       .select("id")
       .single();
     if (error) throw error;
@@ -472,7 +476,7 @@ export async function getDashboardOverview(): Promise<{
       s.from("businesses").select("id, name, url, trade, city, contact_email, created_at").order("created_at", { ascending: false }),
       s.from("audits").select("id, business_id, tier, overall_score, status, created_at").eq("status", "complete").order("created_at", { ascending: true }),
       s.from("signal_scores").select("audit_id, signal, score"),
-      s.from("leads").select("id, business_id, email, source, created_at").order("created_at", { ascending: false }).limit(200),
+      s.from("leads").select("id, business_id, email, source, attribution, created_at").order("created_at", { ascending: false }).limit(200),
       s.from("purchases").select("amount_total, product, email, created_at").order("created_at", { ascending: false }).limit(500),
     ]);
     return {

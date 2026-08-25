@@ -4,6 +4,7 @@ import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
 import AuditPopupButton from "../components/AuditPopupButton";
+import { getAttribution } from "../lib/attribution";
 
 const MAILTO = "hello@6signal.co";
 
@@ -29,6 +30,7 @@ export default function ContactPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          attribution: getAttribution(),
           name,
           company,
           email,

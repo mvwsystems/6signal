@@ -57,6 +57,7 @@ export async function POST(req: NextRequest) {
   }
 
   const { name, trade, city, email } = body ?? {};
+  const attribution = ((body ?? {}) as Record<string, unknown>).attribution as Record<string, unknown> | null ?? null;
   if (!name || !trade || !city || !email) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
@@ -122,7 +123,7 @@ export async function POST(req: NextRequest) {
     // (best-effort; never blocks the response on failure).
     try {
       const businessId = await upsertBusiness({ name, url: null, trade, city });
-      await insertLead({ businessId, email, source: "free_check" });
+      await insertLead({ businessId, email, source: "free_check", attribution });
       const checkId = randomUUID();
       await insertAuditRow({
         id: checkId,

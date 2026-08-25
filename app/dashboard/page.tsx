@@ -61,7 +61,8 @@ const fmtDate = (s?: string) => {
 interface Biz { id: string; name: string; url: string | null; trade: string; city: string; contact_email?: string | null; created_at: string }
 interface AuditRow { id: string; business_id: string | null; tier: string; overall_score: number | null; status: string; created_at: string }
 interface ScoreRow { audit_id: string; signal: string; score: number }
-interface LeadRow { id: string; business_id: string | null; email: string; source: string; created_at: string }
+interface LeadAttribution { channel?: string; source?: string; campaign?: string | null }
+interface LeadRow { id: string; business_id: string | null; email: string; source: string; attribution?: LeadAttribution | null; created_at: string }
 interface PurchaseRow { amount_total: number | null; product: string; email: string | null; created_at: string }
 interface Overview { businesses: Biz[]; audits: AuditRow[]; signalScores: ScoreRow[]; leads: LeadRow[]; purchases: PurchaseRow[] }
 
@@ -1303,6 +1304,17 @@ function OverviewTab({ data }: { data: Overview }) {
     for (const l of data.leads) m[l.source] = (m[l.source] || 0) + 1;
     return m;
   }, [data.leads]);
+  // Where the lead came from on their first visit — recorded from the browser
+  // at submit time (app/lib/attribution.ts). Leads captured before that shipped
+  // have none, hence "unknown".
+  const leadsByChannel = useMemo(() => {
+    const m: Record<string, number> = {};
+    for (const l of data.leads) {
+      const c = l.attribution?.channel || "unknown";
+      m[c] = (m[c] || 0) + 1;
+    }
+    return Object.entries(m).sort((a, b) => b[1] - a[1]);
+  }, [data.leads]);
 
   const revenue = data.purchases.reduce((sum, p) => sum + (p.amount_total || 0), 0);
   const scored = data.businesses.map((b) => latestByBiz[b.id]?.overall_score).filter((s): s is number => typeof s === "number");
@@ -1507,20 +1519,26 @@ function OverviewTab({ data }: { data: Overview }) {
       <div style={card({ padding: 0, overflow: "hidden", marginTop: 20 })}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 18px", borderBottom: `1px solid ${T.border}` }}>
           <span style={eyebrow}>Recent leads</span>
-          <span style={{ fontSize: 11, color: T.muted }}>
+          <span style={{ fontSize: 11, color: T.muted, textAlign: "right" }}>
             {Object.entries(leadsBySource).map(([src, n]) => `${leadSourceLabel(src)}: ${n}`).join(" · ") || "No leads yet"}
+            {leadsByChannel.length > 0 && (
+              <><br />{leadsByChannel.map(([c, n]) => `${c}: ${n}`).join(" · ")}</>
+            )}
           </span>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 0.9fr", padding: "12px 18px", borderBottom: `1px solid ${T.border}`, ...eyebrow }}>
-          <span>Email</span><span>Source</span><span>Business</span><span style={{ textAlign: "right" }}>When</span>
+        <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr 0.9fr", padding: "12px 18px", borderBottom: `1px solid ${T.border}`, ...eyebrow }}>
+          <span>Email</span><span>Source</span><span>Channel</span><span>Business</span><span style={{ textAlign: "right" }}>When</span>
         </div>
         {recentLeads.length === 0 && (
           <div style={{ padding: 40, textAlign: "center", color: T.muted, fontSize: 13 }}>No leads yet.</div>
         )}
         {recentLeads.map((l) => (
-          <div key={l.id} style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 0.9fr", padding: "10px 18px", borderBottom: `1px solid ${T.border}`, alignItems: "center" }}>
+          <div key={l.id} style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr 0.9fr", padding: "10px 18px", borderBottom: `1px solid ${T.border}`, alignItems: "center" }}>
             <span style={{ fontSize: 13, color: T.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{l.email}</span>
             <span style={{ fontSize: 12, color: l.source === "visibility_check_partial" ? T.warn : T.textSub }}>{leadSourceLabel(l.source)}</span>
+            <span style={{ fontSize: 12, color: l.attribution?.channel === "ai" ? T.accent : T.muted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              {l.attribution?.channel ? `${l.attribution.channel}${l.attribution.source && l.attribution.source !== "(direct)" ? ` · ${l.attribution.source}` : ""}` : "—"}
+            </span>
             <span style={{ fontSize: 12, color: T.muted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{l.business_id ? bizNameById[l.business_id] ?? "—" : "—"}</span>
             <span style={{ fontSize: 12, color: T.muted, textAlign: "right" }}>{fmtDate(l.created_at)}</span>
           </div>

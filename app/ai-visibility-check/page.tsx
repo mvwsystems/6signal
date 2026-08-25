@@ -4,6 +4,7 @@ import Link from "next/link";
 import Nav from "../components/Nav";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
 import { trackEvent } from "../lib/fbq";
+import { getAttribution } from "../lib/attribution";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -213,7 +214,7 @@ export default function AIVisibilityCheckPage() {
       const res = await fetch("/api/free-check", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, attribution: getAttribution() }),
       });
       const data = await res.json();
       if (!res.ok || data.error) {

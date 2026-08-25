@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
     currentSite?: string;
     answers?: { section: string; label: string; answer: string }[];
     hp?: string;
+    attribution?: Record<string, unknown> | null;
   } | null = null;
   try {
     body = await req.json();
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const { name, email, phone, company, trade, currentSite, answers, hp } = body ?? {};
+  const { name, email, phone, company, trade, currentSite, answers, hp, attribution } = body ?? {};
   if (hp) return NextResponse.json({ ok: true, id: null });
 
   if (!name?.trim() || !company?.trim() || !trade?.trim() || !email?.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -50,8 +51,9 @@ export async function POST(req: NextRequest) {
       currentSite: currentSite ?? "",
       answers: answered,
     },
+    attribution: attribution ?? null,
   });
-  await insertLead({ businessId, email, source: "website_intake" });
+  await insertLead({ businessId, email, source: "website_intake", attribution: attribution ?? null });
 
   // Owner notification — full Q&A, formatted, reply-to the prospect.
   const bySection = new Map<string, { label: string; answer: string }[]>();
