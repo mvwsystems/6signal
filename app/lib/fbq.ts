@@ -14,7 +14,14 @@ export function trackEvent(name: string, params?: Record<string, unknown>): void
   }
 
   if (typeof window.plausible === "function") {
-    window.plausible(name, params ? { props: params } : undefined);
+    // Meta wants { value, currency }; Plausible wants a revenue object, and
+    // attaches it to the goal so revenue can be read per traffic source.
+    const value = typeof params?.value === "number" ? params.value : null;
+    const currency = typeof params?.currency === "string" ? params.currency : "USD";
+    const options: Record<string, unknown> = {};
+    if (params) options.props = params;
+    if (value !== null) options.revenue = { currency, amount: value };
+    window.plausible(name, Object.keys(options).length ? options : undefined);
   }
 }
 

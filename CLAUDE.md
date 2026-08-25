@@ -128,7 +128,7 @@ testimonials, client logos, before/after screenshots, and the full 90-day case s
 | Payments | Stripe via external buy-links (no SDK) + webhook at [app/api/stripe-webhook/route.ts](app/api/stripe-webhook/route.ts) recording `checkout.session.completed` |
 | Database | **Supabase** project `6signal` (ref `syysezikhdmqbagfaqrf`, us-east-2) via `@supabase/supabase-js`, server-side only ([app/lib/db.ts](app/lib/db.ts)). Tables: businesses, leads, intakes, purchases, audits, signal_scores, ai_probes, site_snapshots, gbp_snapshots. RLS on, no public policies — service role only. All writes best-effort: missing env = persistence off, funnel unaffected |
 | Email | **Resend** via [app/lib/email.ts](app/lib/email.ts) (free-check results, purchase recovery links). Degrades to a logged warning without `RESEND_API_KEY` |
-| Analytics | **Plausible** (traffic + referrers/AI engines, `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`), **Microsoft Clarity** (recordings/heatmaps), **Meta Pixel** (ads). Conversion events fan out to Meta + Plausible from `app/lib/fbq.ts`. First-touch attribution (`app/lib/attribution.ts`) rides every funnel POST into `leads.attribution` / `intakes.attribution` |
+| Analytics | **Plausible** (traffic + referrers/AI engines, `NEXT_PUBLIC_PLAUSIBLE_SRC`), **Microsoft Clarity** (recordings/heatmaps), **Meta Pixel** (ads). Conversion events fan out to Meta + Plausible from `app/lib/fbq.ts`. First-touch attribution (`app/lib/attribution.ts`) rides every funnel POST into `leads.attribution` / `intakes.attribution` |
 
 Required env vars are documented in [.env.example](.env.example) — set them in Netlify
 (`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, `EMAIL_FROM`,
