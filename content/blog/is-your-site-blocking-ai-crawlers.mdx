@@ -1,0 +1,181 @@
+---
+title: "Is Your Site Blocking the AI Engines You Want to Appear In?"
+slug: "is-your-site-blocking-ai-crawlers"
+description: "GPTBot, ClaudeBot, PerplexityBot, Google-Extended: what each one actually does, why blocking the wrong one makes you invisible in AI answers, and the ten-minute check that tells you whether machines can read your site at all."
+date: "2026-08-22"
+category: "Insight"
+author: "Matt Vincent Walker"
+readTime: "9 min read"
+featured: false
+tags:
+  - IEO
+  - AI Crawlers
+  - robots.txt
+  - GPTBot
+  - llms.txt
+  - Technical SEO
+  - AI Visibility
+  - Contractor Marketing
+faq:
+  - q: "Should contractors block GPTBot and other AI crawlers?"
+    a: "For a local services business, no. Blocking AI crawlers is a defensive move that makes sense when your content is the product you sell — a publisher, a course, a research library. A contractor's website is a sales asset whose entire job is to be found and quoted. Blocking the crawlers that read it removes you from the answers you are trying to appear in, and no competitor has to do anything to benefit."
+  - q: "Does blocking Google-Extended remove me from Google's AI Overviews?"
+    a: "No, and this is the most expensive misunderstanding in the category. Google-Extended is a robots.txt token that governs whether your content is used for Gemini and Vertex AI grounding and model improvement. AI Overviews are served out of the Google Search index, which is built by Googlebot. Blocking Google-Extended does not take you out of AI Overviews; blocking Googlebot takes you out of Search entirely, AI Overviews included. They are two separate doors and people routinely lock the wrong one."
+  - q: "Can AI crawlers read a website built in React, Wix, or Squarespace?"
+    a: "They can read whatever the server returns as HTML. Googlebot renders JavaScript; most AI retrieval crawlers fetch raw HTML and do not reliably execute it. If your service descriptions, service area, and phone number only exist after JavaScript runs, a crawler that does not run it sees an empty shell. View the page source — not the inspector — and if your actual copy is not in there, neither is it in the answer."
+  - q: "What is llms.txt and does my site need one?"
+    a: "It is a proposed plain-text file at the root of a site that points machines to your most useful pages in clean markdown. No major engine has confirmed using it as a ranking input, so treat it as a map you leave out rather than a ticket you buy. It costs nothing and it disciplines you into naming your own most important pages, which is worth the twenty minutes on its own — but it does not compensate for a site that crawlers cannot read."
+  - q: "How do I check whether AI crawlers can access my site?"
+    a: "Three checks, ten minutes. Open yoursite.com/robots.txt in a browser and read every Disallow line and every user-agent block. Open the page source of your main service page and search it for a sentence you know is on the page. Then confirm your host or CDN does not have an AI-crawler or bot-fight setting switched on — that toggle is the most common cause of a block nobody remembers choosing."
+---
+
+# Is Your Site Blocking the AI Engines You Want to Appear In?
+
+A plumbing company in North Texas spent four months and about eleven thousand dollars on a website rebuild. The result is genuinely good. Fast, clean, real photos of real crews, service pages written by somebody who understood the trade.
+
+ChatGPT has never mentioned them. Neither has Perplexity.
+
+Their content is not the problem. Their `robots.txt` file has four lines in it that nobody in the company has ever read, put there by a plugin that promised to protect their content from AI scraping. It worked. It is protecting them from being recommended.
+
+<h2 id="short-answer">Short answer</h2>
+
+Before an AI engine can name your company, something has to fetch your pages and read them. That fetching is done by a set of named crawlers, and every one of them can be allowed or denied in a text file most contractors have never opened.
+
+Two things quietly break this layer:
+
+1. **A block nobody chose.** A host setting, a CDN default, or a security plugin denies AI crawlers, and nothing on the site looks broken.
+2. **A page that returns nothing.** The site is technically open, but the content only appears after JavaScript runs — and most AI crawlers do not run it.
+
+Either one produces the same outcome as having no website at all, with none of the symptoms. Your traffic looks normal. Your rankings look normal. You are simply not in the answer.
+
+This is **Index Engine Optimization — IEO**, the foundation layer of [the six signals](/research/the-6signal-visibility-audit-what-we-measure-and-why). It is the least discussed of the six and the only one that can zero out the other five.
+
+<h2 id="the-two-doors">The two doors: training and retrieval</h2>
+
+Almost every bad decision in this category comes from treating "AI crawlers" as one thing. They are two, and they do opposite work for you.
+
+**Training crawlers** collect text to improve models. What they take is absorbed into a model's general sense of the world. You get no link, no citation, and no traffic — which is exactly why publishers, who sell their words, block them.
+
+**Retrieval crawlers** fetch pages so an engine can *cite* them, either while building a search index or in the moment a user asks a question. This is the door your name walks through. Close it and you cannot be named, no matter how good the page is.
+
+Blocking the first is a business decision. Blocking the second is self-removal.
+
+| Crawler | Operator | What it is for | A local business should |
+|---|---|---|---|
+| `GPTBot` | OpenAI | Model training | Allow or block — your call |
+| `OAI-SearchBot` | OpenAI | Surfacing and linking sites in ChatGPT search | **Allow** |
+| `ChatGPT-User` | OpenAI | Fetching a page because a user asked about it | **Allow** |
+| `ClaudeBot` | Anthropic | Model training | Allow or block — your call |
+| `Claude-User` / `Claude-SearchBot` | Anthropic | User-triggered fetch and search indexing | **Allow** |
+| `PerplexityBot` | Perplexity | Search indexing and citation | **Allow** |
+| `Perplexity-User` | Perplexity | User-triggered fetch | **Allow** |
+| `Googlebot` | Google | Search index — which feeds AI Overviews | **Allow** |
+| `Google-Extended` | Google | Gemini grounding and model improvement | Allow or block — your call |
+| `Bingbot` | Microsoft | Bing index — which feeds Copilot | **Allow** |
+| `Applebot` | Apple | Siri, Spotlight, Safari suggestions | **Allow** |
+| `Applebot-Extended` | Apple | Apple model training | Allow or block — your call |
+
+Read that table one more time with a specific question in mind: which rows did your security plugin know the difference between? Most of them match on the string "bot" or ship a single "block AI scrapers" list that treats OpenAI's search crawler exactly like its training crawler.
+
+<h2 id="google-extended">The Google-Extended mistake</h2>
+
+This one deserves its own section because it is both the most common and the most backwards.
+
+Site owners who want out of "Google's AI" block `Google-Extended`, then wait to disappear from AI Overviews. They do not. `Google-Extended` governs whether content is used for Gemini and Vertex AI grounding and model improvement. **AI Overviews are served from the Search index** — the one Googlebot builds.
+
+So the two outcomes available are:
+
+- Block `Google-Extended`: you are still in Search, still eligible for AI Overviews, and no longer feeding Gemini. This is a coherent choice.
+- Block `Googlebot`: you are out of Google. All of it. Search, Maps context, AI Overviews, the lot. This is not a choice anyone makes on purpose.
+
+There is no third setting that keeps you in Search but out of AI Overviews. If that is what you want, this layer will not give it to you.
+
+<h2 id="the-default-block">The block you did not choose</h2>
+
+The plumbing company above did not decide to block anything. Someone installed a plugin, and the plugin had a checkbox.
+
+Four places to look, in the order they most often cause this:
+
+**Your CDN or host.** Cloudflare moved to blocking AI crawlers by default for new domains and added controls for site owners to manage crawler access directly. If your site sits behind Cloudflare or a similar service, an AI-crawler policy may be active that predates your involvement and lives entirely outside your website's files.
+
+**Your site builder.** Wix, Squarespace, GoDaddy, and most WordPress security suites now ship an "AI scraping" or "content protection" toggle. It is usually presented as protective and rarely explains what it costs.
+
+**An SEO plugin.** Several popular ones added AI crawler management. The defaults vary and they change between versions.
+
+**A `robots.txt` written by an agency that no longer works for you.** More common than it should be, and nobody audits an inherited file.
+
+The tell is always the same: nothing looks wrong. There is no error, no warning, no drop in traffic — because the traffic that never arrives leaves no trace. This is the same structural problem as [the missed call](/research/the-missed-call-ledger): the loss is invisible because it happens to demand that never reaches you.
+
+<h2 id="javascript">The second failure: a page that returns nothing</h2>
+
+The other half of IEO has nothing to do with permissions. Your site can be perfectly open and still be unreadable.
+
+Googlebot renders JavaScript. Most AI retrieval crawlers do not reliably execute it — they fetch the HTML the server returns and read that. If your site is a modern JavaScript build that assembles its content in the browser, what a crawler receives may be a skeleton: a nav, a footer, a loading div, and none of the sentences that would have gotten you named.
+
+The check takes fifteen seconds and it is not the one most people run. **View the page source, not the inspector.** The inspector shows you the page after JavaScript has run, which is exactly the view a crawler does not get. In Chrome, `view-source:yoursite.com/services`, then search that raw HTML for a sentence you know is on the page. Present means readable. Absent means the crawler sees the skeleton.
+
+This is why [directories keep beating contractors in AI answers](/research/why-directories-and-aggregators-keep-winning-ai-answers). Their pages are plain, server-rendered, and structurally boring — the exact qualities that make a page easy to extract.
+
+<h2 id="llms-txt">llms.txt: a map, not a ticket</h2>
+
+You will get pitched `llms.txt` this year, so here is the honest read.
+
+It is a proposed convention — a plain-text file at your site root that points machines toward your most useful pages in clean markdown. The idea is sound and the cost is near zero.
+
+What it is not is a ranking input. No major engine has committed to using it as one. Anyone selling `llms.txt` as the reason you will start appearing in ChatGPT is selling you something.
+
+We ship one on client sites for two honest reasons: it costs twenty minutes, and writing it forces a company to state which pages actually matter — a question most contractor sites have never answered. Treat it as a map you leave on the porch. It does not help if the door is locked, and it does not substitute for pages a crawler can read.
+
+<h2 id="how-to-check">The ten-minute check</h2>
+
+Run this in order. Any single failure is enough to explain silence in AI answers.
+
+**1. Read your robots.txt.** Go to `yoursite.com/robots.txt`. Read every line. You are looking for `Disallow: /` under any user-agent, and for any of the crawler names in the table above. A file that does not exist is fine — that means nothing is blocked.
+
+**2. Check the source of a real page.** `view-source:yoursite.com/services`, then find a sentence you know is on that page. If it is not in the raw HTML, crawlers are not reading it.
+
+**3. Check the host and CDN layer.** Look for bot-fight mode, AI crawler controls, or content-protection settings in Cloudflare, your host panel, or your builder. This is where blocks you never chose live.
+
+**4. Confirm the basics still exist.** A reachable sitemap, pages that return 200, no accidental `noindex` on service pages, and structured data that matches what the page says. Schema is the part machines use to confirm they understood you — [a translation layer, not a hack](/research/schema-is-not-a-hack-translation-layer).
+
+**5. Then test the answers themselves.** Access is necessary, not sufficient. Once you know machines can read the site, ask the engines the questions your buyers ask and log what comes back — [without lying to yourself about the results](/research/how-to-measure-ai-visibility-without-lying-to-yourself).
+
+<h2 id="who-should-block">Who should actually block, and who should not</h2>
+
+There is a real case for blocking training crawlers. If your content *is* the product — a publisher, a paid course, an archive somebody could reproduce — then feeding it to a model that will repeat it without attribution is giving away inventory.
+
+A contractor's website is the opposite. It is a sales asset whose entire purpose is to be read, understood, and quoted to a homeowner who has a problem right now. Nothing on it is proprietary. The service page describing how you handle a slab leak is not intellectual property; it is a pitch. Being copied into an answer that names you is the point.
+
+Which makes the default posture for local services straightforward: **allow retrieval, decide on training, and never let a plugin decide either one for you.**
+
+<h2 id="ieo">Where this sits in the six signals</h2>
+
+IEO — Index Engine Optimization — asks one question: can machines access, parse, and extract your site?
+
+It sits underneath the other five signals because it gates them. GEO makes you the recommendation. AEO makes you the citation. LEO makes your local record consistent. VEO makes you the spoken answer. PEO puts you in the language buyers actually use. Every one of those requires a source page a machine could read.
+
+We put IEO first in the [priority order](/research/aeo-field-manual-answer-engine-optimization) for exactly that reason. It is unglamorous, it is usually a single afternoon of work, and it is the only signal capable of setting the other five to zero.
+
+<h2 id="final-answer">Final answer</h2>
+
+Before you invest another dollar in AI visibility content, confirm the machines can reach it. Open your `robots.txt`, view the source of your main service page, and check whether your host has an AI crawler setting switched on.
+
+The plumbing company at the top of this piece fixed theirs in under an hour. Four lines removed from one file. The eleven thousand dollars they had already spent finally started working — not because anything on the site got better, but because it became legible to the systems doing the recommending.
+
+The worst version of this problem is not a badly built website. It is a good one nobody is allowed to read.
+
+<h2 id="cta">Find out what the engines can actually see</h2>
+
+The [AI Visibility Audit](/visibility-check) scores all six signals for your company, your trade, and your market — including a deterministic IEO check that crawls your site the way an engine would and tells you exactly what it could and could not read. $27, instant, no call required.
+
+<h2 id="sources">Sources and further reading</h2>
+
+- OpenAI: crawler documentation for `GPTBot`, `OAI-SearchBot`, and `ChatGPT-User`
+- Anthropic: crawler documentation for `ClaudeBot`, `Claude-User`, and `Claude-SearchBot`
+- Perplexity: `PerplexityBot` and `Perplexity-User` documentation
+- Google Search Central: Google crawlers, and the `Google-Extended` user-agent token
+- Apple: `Applebot` and `Applebot-Extended` documentation
+- Cloudflare: AI crawler controls and default blocking for new domains
+- [The Local AI Infrastructure Blueprint](/research/local-ai-infrastructure-blueprint) — the full eight-layer build order this sits at the bottom of
+- [We Ran 700 AI Visibility Checks in One Texas Market](/research/we-ran-700-ai-visibility-checks-one-texas-market) — what the engines actually returned
+- [Why Directories and Aggregators Keep Winning AI Answers](/research/why-directories-and-aggregators-keep-winning-ai-answers) — readability as a competitive advantage
