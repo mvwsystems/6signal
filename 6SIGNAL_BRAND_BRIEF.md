@@ -211,7 +211,7 @@ background: rgba(255,255,255,0.025);
 - `background: rgba(6,6,6,0.72); backdrop-filter: blur(16px)`
 - `border-bottom: 1px solid transparent` → on scroll: `rgba(255,255,255,0.07)`
 - Nav links: Chakra Petch, 12–13px, `#b8b8b5`, letter-spacing `0.02em`
-- Logo: `<img src="/6SIG_LOGO_FINAL_2.webp">` — do NOT recreate, do NOT use text
+- Logo: `<img src="/6SIGDashboardLogo.png">` — do NOT recreate, do NOT use text
 - CTA in nav: yellow primary button, text "Book the audit →"
 - Mobile (≤860px): hide nav links, show mobile menu trigger (3 yellow dots)
 
@@ -370,7 +370,7 @@ For a 6Signal dashboard, use these structural conventions:
 - ❌ Glassmorphism with colored tints
 
 ### The brand mark (chevrons)
-The 6Signal logo consists of three stacked chevrons pointing right: yellow (`#E6FF00`), white (`#f0f0f0`), gray (`#707070`). Never recreate this in code — always use the image `/6SIG_LOGO_FINAL_2.webp`.
+The 6Signal logo consists of three stacked chevrons pointing right, fading back: yellow (`#E6FF00`), olive (`#788405`), dark olive (`#3A4008`). Never recreate this in code — always use the image `/6SIGDashboardLogo.png`.
 
 ### Motion / animation
 - Reveal animations: `opacity 0 → 1` + `translateY(20px) → translateY(0)`, `0.6s ease-out`
@@ -593,7 +593,7 @@ Primary CTA text: "Book the Visibility Audit"
 Secondary CTA:    "See What We Check"
 Nav CTA:          "Book the audit →"
 Arrow icon:       SVG path "M0 5h14M10 1l4 4-4 4" (14×10, stroke 1.2)
-Logo file:        /6SIG_LOGO_FINAL_2.webp (do not recreate)
+Logo file:        /6SIGDashboardLogo.png (do not recreate)
 OG image:         /6SIG_SOCIAL_SHARE.png
 Base URL:         https://6signal.co
 ```

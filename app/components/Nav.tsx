@@ -46,7 +46,7 @@ export default function Nav() {
       <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
         <div className="nav-inner">
           <Link href="/" className="logo" aria-label="6 Signal">
-            <img src="/6SIG_LOGO_FINAL_2.webp" alt="6 Signal" className="logo-img" />
+            <img src="/6SIGDashboardLogo.png" alt="6 Signal" className="logo-img" />
           </Link>
           <div className="nav-links">
             {NAV_LINKS.map(({ href, label }) => (

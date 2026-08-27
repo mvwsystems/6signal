@@ -93,7 +93,7 @@ export default function AppleChecklistPage() {
       {/* ── HEADER ── */}
       <header className="acl-header">
         <div className="acl-header-inner">
-          <img src="/6SIG_LOGO_FINAL_2.webp" alt="6Signal" className="acl-logo" />
+          <img src="/6SIGDashboardLogo.png" alt="6Signal" className="acl-logo" />
           <span className="acl-doc-type">Checklist</span>
         </div>
       </header>
@@ -201,7 +201,7 @@ export default function AppleChecklistPage() {
           align-items: center;
           justify-content: space-between;
         }
-        .acl-logo { height: 24px; width: auto; }
+        .acl-logo { height: 36px; width: auto; }
         .acl-doc-type {
           font-family: "JetBrains Mono", ui-monospace, monospace;
           font-size: 10px;

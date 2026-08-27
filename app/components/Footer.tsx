@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="footer-inner">
           <div className="footer-left">
             <Link href="/" className="logo" aria-label="6 Signal">
-              <img src="/6SIG_LOGO_FINAL_2.webp" alt="6 Signal" className="logo-img" />
+              <img src="/6SIGDashboardLogo.png" alt="6 Signal" className="logo-img" />
             </Link>
             <p className="f-line">
               A specialized visibility practice for residential and commercial

@@ -181,7 +181,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 40px;
+    padding: 12px 40px;
     max-width: 1200px;
     margin: 0 auto;
   }
@@ -225,12 +225,12 @@
     letter-spacing: -0.005em;
   }
   .logo-img {
-    height: 28px;
+    height: 48px;
     width: auto;
     display: block;
   }
   .footer-left .logo-img {
-    height: 24px;
+    height: 44px;
   }
   .nav-links {
     display: flex;
@@ -3585,7 +3585,7 @@
     display: none;
   }
   .logo-img {
-    height: 21px;
+    height: 36px;
   }
   .nav-menu-wrap {
     display: flex;
@@ -5392,7 +5392,7 @@ svg {
 }
 
 .lp-footer-logo {
-  height: 18px;
+  height: 30px;
   width: auto;
   opacity: 0.6;
 }
@@ -7821,7 +7821,7 @@ svg {
 
 /* PDF back cover — hidden on screen, visible in print */
 .sb-pdf-back-cover { display: none; }
-.sb-pdf-back-logo { height: 32px; width: auto; }
+.sb-pdf-back-logo { height: 44px; width: auto; }
 .sb-pdf-back-tagline { color: var(--accent) !important; display: block; margin-top: 16px; }
 .sb-pdf-back-url {
   font-family: "Inter", sans-serif;
@@ -8557,7 +8557,7 @@ svg {
   gap: 16px;
   padding: 60px;
 }
-.ar-pdf-back-logo { height: 36px; width: auto; }
+.ar-pdf-back-logo { height: 48px; width: auto; }
 .ar-pdf-back-tagline {
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 10px;
@@ -8947,7 +8947,7 @@ svg {
   .ar-gap-block, .sb-qw-callout, .ar-exec-card { background: #f6f6f2 !important; }
 
   /* White brand logos are invisible on white — hide them; text wordmarks remain */
-  .ar-pdf-back-logo, .ar-page img[src*="LOGO"], .sb-page img[src*="LOGO"] {
+  .ar-pdf-back-logo, .ar-page img[src*="logo" i], .sb-page img[src*="logo" i] {
     display: none !important;
   }
 

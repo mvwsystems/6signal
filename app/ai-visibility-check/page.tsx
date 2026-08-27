@@ -757,7 +757,7 @@ export default function AIVisibilityCheckPage() {
         <div className="wrap">
           <div className="lp-footer-inner">
             <Link href="/" aria-label="6Signal — return to main site">
-              <img src="/6SIG_LOGO_FINAL_2.webp" alt="6Signal" className="lp-footer-logo" />
+              <img src="/6SIGDashboardLogo.png" alt="6Signal" className="lp-footer-logo" />
             </Link>
             <nav className="lp-footer-links" aria-label="Footer">
               <Link href="/" className="lp-footer-link">6signal.co</Link>

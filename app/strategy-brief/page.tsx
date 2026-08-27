@@ -668,7 +668,7 @@ function StrategyBriefInner() {
 
           {/* ─── PDF BACK COVER ────────────────────────────────────── */}
           <div className="sb-pdf-back-cover">
-            <img src="/6SIG_LOGO_FINAL_2.webp" alt="6Signal" className="sb-pdf-back-logo" />
+            <img src="/6SIGDashboardLogo.png" alt="6Signal" className="sb-pdf-back-logo" />
             <div className="idx sb-pdf-back-tagline">AI Visibility Starts Here</div>
             <div className="sb-pdf-back-url">6signal.co</div>
             <div className="idx sb-pdf-back-email">hello@6signal.co</div>

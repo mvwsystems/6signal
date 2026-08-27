@@ -697,7 +697,7 @@ function AuditResultsInner() {
           {/* ── PDF back cover — hidden on screen, visible in print ── */}
           <div className="ar-slide-wrap ar-slide-inactive ar-pdf-back-cover-wrap">
             <div className="ar-pdf-back-cover">
-              <img src="/6SIG_LOGO_FINAL_2.webp" alt="6Signal" className="ar-pdf-back-logo" />
+              <img src="/6SIGDashboardLogo.png" alt="6Signal" className="ar-pdf-back-logo" />
               <div className="ar-pdf-back-tagline">AI Visibility Starts Here</div>
               <div className="ar-pdf-back-url">6signal.co</div>
               <div className="ar-pdf-back-email">hello@6signal.co</div>

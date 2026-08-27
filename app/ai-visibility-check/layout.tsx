@@ -33,7 +33,7 @@ const schema = {
       "@id": `${BASE}/#organization`,
       name: "6Signal",
       url: BASE,
-      logo: { "@type": "ImageObject", url: `${BASE}/6SIG_LOGO_FINAL_2.webp` },
+      logo: { "@type": "ImageObject", url: `${BASE}/6SIGDashboardLogo.png` },
       sameAs: [BASE],
     },
     {

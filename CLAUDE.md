@@ -113,7 +113,9 @@ testimonials, client logos, before/after screenshots, and the full 90-day case s
 - Fonts: **Chakra Petch** (display), **Inter** (body), **JetBrains Mono** (labels/eyebrows).
 - Border radius 0–2px, thin `rgba(255,255,255,0.07)` borders, no stock photos, no gradients.
 - Full spec: [6SIGNAL_BRAND_BRIEF.md](6SIGNAL_BRAND_BRIEF.md) §3–6 (authoritative for design).
-- Logo: `/6SIG_LOGO_FINAL_2.webp` — never recreate in code.
+- Logo: `/6SIGDashboardLogo.png` — the chevron mark, no wordmark (replaced the
+  `6SIG_LOGO_FINAL_2.webp` lockup 2026-08-26). Near-square (414×299), so it needs a
+  far larger CSS height than the old 7:1 lockup did. Never recreate in code.
 - No Superhuman Systems branding exists in this repo; keep it that way.
 
 ## 7. Tech stack (actual, verified)
