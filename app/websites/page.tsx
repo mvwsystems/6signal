@@ -274,8 +274,8 @@ export default function WebsitesPage() {
             <em>Skip the call — start the build now.</em>
           </h3>
           <p style={{ maxWidth: "560px", margin: "0 auto 28px", fontSize: "15px", lineHeight: 1.7, color: "#9a9a98" }}>
-            Answer a questionnaire built for your specific trade (about ten minutes),
-            pay half of the $1,500 up front, and the build begins. Most sites are
+            Answer a questionnaire built for your specific trade (about ten minutes)
+            and the build begins — nothing to pay to get started. Most sites are
             live within 2&ndash;3 weeks.
           </p>
           <Link href="/start" className="btn btn-primary btn-lg">

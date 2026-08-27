@@ -3,9 +3,8 @@ import { upsertBusiness, createIntake, insertLead } from "../../lib/db";
 import { sendEmail, emailShell, heading, paragraph, monoLabel } from "../../lib/email";
 
 // Receives the completed /start website questionnaire. Persists the intake
-// (the id rides to Stripe as client_reference_id so the deposit links back),
-// emails the owner the full formatted Q&A immediately — the answers are never
-// lost even if the prospect abandons at payment.
+// (the id rides to Stripe as client_reference_id if the deposit step is ever
+// switched back on) and emails the owner the full formatted Q&A immediately.
 
 const esc = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -86,7 +85,7 @@ export async function POST(req: NextRequest) {
           `<strong style="color:#f5f5f3;">Contact:</strong> ${esc(name)} · ${esc(email)}${phone?.trim() ? ` · ${esc(phone)}` : ""}<br/>` +
           (currentSite?.trim() ? `<strong style="color:#f5f5f3;">Current website:</strong> ${esc(currentSite)} — crawl it for seed material at build time<br/>` : "") +
           `<strong style="color:#f5f5f3;">Intake ID:</strong> ${intakeId ?? "not persisted"}<br/>` +
-          `<strong style="color:#f5f5f3;">Deposit:</strong> sent to Stripe next — a second 🔥 email confirms payment.`
+          `<strong style="color:#f5f5f3;">Next:</strong> no payment step — build V1 from these answers and send it back.`
         ),
         qaHtml,
       ].join("")

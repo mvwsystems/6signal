@@ -6,10 +6,13 @@ import { useMicroInteractions } from "../hooks/useMicroInteractions";
 import { getAttribution } from "../lib/attribution";
 
 // Self-serve website intake: trade in -> AI-generated questionnaire ->
-// answers persisted server-side -> 50% deposit. When the $750 Stripe link
-// exists, set STRIPE_DEPOSIT and submission redirects straight to checkout;
-// until then the success screen promises the deposit link by email.
-const STRIPE_DEPOSIT: string | null = "https://buy.stripe.com/fZudRaaNM7Zhc1j7fj3ks0z";
+// answers persisted server-side -> done. No payment in the flow: the intake
+// is a link the operator sends, the answers come back, and V1 gets built from
+// them. Setting STRIPE_DEPOSIT back to the buy-link restores the 50% deposit
+// checkout at submit — the button, the form note, and the success screen all
+// switch with it.
+// const STRIPE_DEPOSIT = "https://buy.stripe.com/fZudRaaNM7Zhc1j7fj3ks0z";
+const STRIPE_DEPOSIT: string | null = null;
 
 const TRADES = [
   "Plumbing", "HVAC", "Roofing", "Electrical", "General Contracting",
@@ -204,7 +207,8 @@ export default function StartPage() {
               <p className="hero-deck reveal">
                 Answer a questionnaire built for your specific trade — it takes about
                 ten minutes and it&rsquo;s what lets us build an upscale site without
-                weeks of back-and-forth. $1,500 flat: half up front, half at launch.
+                weeks of back-and-forth. $1,500 flat, and nothing to pay to get
+                started.
               </p>
             )}
           </div>
@@ -343,7 +347,7 @@ export default function StartPage() {
                 <p className="vc2-form-note">
                   {submitError ?? (STRIPE_DEPOSIT
                     ? "Secure payment via Stripe. $750 now, $750 at launch. After your deposit clears, expect a direction call from the operator — then the build starts."
-                    : "$1,500 flat — half up front, half at launch. Your deposit link follows by email.")}
+                    : "No payment now. Your answers go straight to Matt Vincent Walker, and the first version of your site gets built from them.")}
                 </p>
               </div>
             </form>
@@ -353,13 +357,12 @@ export default function StartPage() {
             <div className="form-success reveal">
               <h3>Got it — everything we need is in.</h3>
               <p>
-                Your answers just landed with Matt Vincent Walker directly. Next: your
-                $750 deposit link arrives by email (half of the $1,500 flat price —
-                the rest is due at launch). Once the deposit clears, expect a call
-                from Matt before any design work begins — he&rsquo;ll have already been
-                through every answer you gave, and the call is where the direction
-                gets locked. One operator, no project managers, no ticket numbers.
-                Most sites are live within 2–3 weeks.
+                Your answers just landed with Matt Vincent Walker directly. Nothing to
+                pay, nothing else to do. He reads every answer himself, then builds the
+                first version of your site from them and sends it to you to look at —
+                a real site you can click through, not a mockup. From there you tell
+                him what to change. One operator, no project managers, no ticket
+                numbers. Most sites are live within 2–3 weeks.
               </p>
             </div>
           )}
