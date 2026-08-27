@@ -207,8 +207,7 @@ export default function StartPage() {
               <p className="hero-deck reveal">
                 Answer a questionnaire built for your specific trade — it takes about
                 ten minutes and it&rsquo;s what lets us build an upscale site without
-                weeks of back-and-forth. $1,500 flat, and nothing to pay to get
-                started.
+                weeks of back-and-forth. Nothing to pay to get started.
               </p>
             )}
           </div>
