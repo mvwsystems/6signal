@@ -16,6 +16,7 @@ export interface EngineAnswer {
   sources: string[];
   error?: string;
   note?: string; // non-fatal degradation worth surfacing (e.g. model fallback)
+  transient?: boolean; // upstream capacity/rate limit, survived the retries — not a config fault
 }
 
 export interface Verdict {
@@ -38,9 +39,48 @@ export function enginesWithKeys(): Engine[] {
   return ENGINES.filter((e) => keyFor(e));
 }
 
+// ── Transient upstream failures ──────────────────────────────────────────────
+// Every one of these providers returns 429/503 under load — Gemini most often,
+// with "high demand ... try again later". A single one of those used to fail
+// the engine for the whole run: in the watchdog it reads as a broken key, and
+// in a real sweep it silently drops that engine from the prompt's results,
+// pulling the recorded mention rate down for a reason that has nothing to do
+// with visibility. Retry them; report only what survives the retries.
+const TRANSIENT_STATUS = new Set([408, 425, 429, 500, 502, 503, 504]);
+
+export class UpstreamError extends Error {
+  constructor(public provider: string, public status: number, body: string) {
+    super(`${provider} ${status}: ${body}`);
+    this.name = "UpstreamError";
+  }
+  get transient(): boolean {
+    return TRANSIENT_STATUS.has(this.status);
+  }
+}
+
+function sleep(ms: number, signal?: AbortSignal): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (signal?.aborted) return reject(new Error("aborted"));
+    const t = setTimeout(resolve, ms);
+    signal?.addEventListener("abort", () => { clearTimeout(t); reject(new Error("aborted")); }, { once: true });
+  });
+}
+
+// Body is never read here, so the returned response is still consumable.
+async function fetchRetry(url: string, init: RequestInit, attempts = 3): Promise<Response> {
+  let res = await fetch(url, init);
+  for (let i = 1; i < attempts && !res.ok && TRANSIENT_STATUS.has(res.status); i++) {
+    // Exponential backoff, jittered so parallel engine probes don't retry in lockstep.
+    await sleep(Math.min(6000, 700 * 2 ** (i - 1)) + Math.floor(Math.random() * 400),
+                init.signal as AbortSignal | undefined);
+    res = await fetch(url, init);
+  }
+  return res;
+}
+
 // ── Per-engine probes ────────────────────────────────────────────────────────
 async function openAIOnce(prompt: string, key: string, model: string, signal?: AbortSignal): Promise<{ ok: boolean; status: number; errText: string; text: string; sources: string[] }> {
-  const res = await fetch("https://api.openai.com/v1/responses", {
+  const res = await fetchRetry("https://api.openai.com/v1/responses", {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
     body: JSON.stringify({ model, tools: [{ type: "web_search" }], input: prompt, include: ["web_search_call.action.sources"] }),
@@ -71,13 +111,13 @@ async function probeOpenAI(prompt: string, key: string, signal?: AbortSignal): P
     r = await openAIOnce(prompt, key, "gpt-4.1", signal);
     if (r.ok) note = `primary model "${primary}" unavailable — fell back to gpt-4.1 (set OPENAI_MODEL to silence this)`;
   }
-  if (!r.ok) throw new Error(`OpenAI ${r.status}: ${r.errText}`);
+  if (!r.ok) throw new UpstreamError("OpenAI", r.status, r.errText);
   return { engine: "chatgpt", ok: true, text: r.text, sources: dedupe(r.sources), note };
 }
 
 async function probeClaude(prompt: string, key: string, signal?: AbortSignal): Promise<EngineAnswer> {
   const model = process.env.CLAUDE_ENGINE_MODEL?.trim() || "claude-sonnet-4-6";
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
+  const res = await fetchRetry("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01" },
     body: JSON.stringify({
@@ -88,7 +128,7 @@ async function probeClaude(prompt: string, key: string, signal?: AbortSignal): P
     }),
     signal,
   });
-  if (!res.ok) throw new Error(`Claude ${res.status}: ${(await res.text().catch(() => "")).slice(0, 200)}`);
+  if (!res.ok) throw new UpstreamError("Claude", res.status, (await res.text().catch(() => "")).slice(0, 200));
   const data = await res.json();
   let text = "";
   const sources: string[] = [];
@@ -106,8 +146,8 @@ async function probeClaude(prompt: string, key: string, signal?: AbortSignal): P
 // meaningful answer — nobody is being named there.
 async function probeGoogleAI(prompt: string, key: string, signal?: AbortSignal): Promise<EngineAnswer> {
   const params = new URLSearchParams({ engine: "google", q: prompt, api_key: key, gl: "us", hl: "en" });
-  const res = await fetch(`https://serpapi.com/search.json?${params}`, { signal });
-  if (!res.ok) throw new Error(`SerpAPI ${res.status}: ${(await res.text().catch(() => "")).slice(0, 200)}`);
+  const res = await fetchRetry(`https://serpapi.com/search.json?${params}`, { signal });
+  if (!res.ok) throw new UpstreamError("SerpAPI", res.status, (await res.text().catch(() => "")).slice(0, 200));
   const data = await res.json();
   const ai = data.ai_overview;
   if (!ai || (!ai.text_blocks && !ai.answer)) {
@@ -148,13 +188,13 @@ async function probeMaps(prompt: string, signal?: AbortSignal): Promise<EngineAn
 
 async function probePerplexity(prompt: string, key: string, signal?: AbortSignal): Promise<EngineAnswer> {
   const model = process.env.PERPLEXITY_MODEL?.trim() || "sonar";
-  const res = await fetch("https://api.perplexity.ai/chat/completions", {
+  const res = await fetchRetry("https://api.perplexity.ai/chat/completions", {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
     body: JSON.stringify({ model, temperature: 0, messages: [{ role: "user", content: prompt }], web_search_options: { search_context_size: "low" } }),
     signal,
   });
-  if (!res.ok) throw new Error(`Perplexity ${res.status}: ${(await res.text().catch(() => "")).slice(0, 200)}`);
+  if (!res.ok) throw new UpstreamError("Perplexity", res.status, (await res.text().catch(() => "")).slice(0, 200));
   const data = await res.json();
   const text = data.choices?.[0]?.message?.content ?? "";
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -164,13 +204,13 @@ async function probePerplexity(prompt: string, key: string, signal?: AbortSignal
 
 async function probeGemini(prompt: string, key: string, signal?: AbortSignal): Promise<EngineAnswer> {
   const model = process.env.GEMINI_MODEL?.trim() || "gemini-2.5-flash";
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+  const res = await fetchRetry(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-goog-api-key": key },
     body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], tools: [{ google_search: {} }] }),
     signal,
   });
-  if (!res.ok) throw new Error(`Gemini ${res.status}: ${(await res.text().catch(() => "")).slice(0, 200)}`);
+  if (!res.ok) throw new UpstreamError("Gemini", res.status, (await res.text().catch(() => "")).slice(0, 200));
   const data = await res.json();
   const cand = data.candidates?.[0];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -194,7 +234,8 @@ export async function probeEngine(engine: Engine, prompt: string, signal?: Abort
     return await probeMaps(prompt, signal);
   } catch (e) {
     console.error(`[engines] ${engine} probe failed:`, e);
-    return { engine, ok: false, text: "", sources: [], error: String(e).slice(0, 300) };
+    const transient = e instanceof UpstreamError && e.transient;
+    return { engine, ok: false, text: "", sources: [], error: String(e).slice(0, 300), transient };
   }
 }
 

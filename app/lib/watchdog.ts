@@ -30,7 +30,11 @@ export async function runWatchdog(): Promise<{ ok: boolean; problems: string[]; 
         engines.map((e) => probeEngine(e, "Who is a good plumber in Dallas, TX?", controller.signal))
       );
       for (const r of results) {
-        if (!r.ok) problems.push(`Engine ${r.engine}: FAILING — ${r.error}`);
+        // An engine that 503s under load is not a broken key. It already got
+        // retried inside probeEngine; report it as degraded so a capacity blip
+        // upstream does not page as a system failure.
+        if (!r.ok && r.transient) warnings.push(`Engine ${r.engine}: upstream busy after retries (not a key problem) — ${r.error}`);
+        else if (!r.ok) problems.push(`Engine ${r.engine}: FAILING — ${r.error}`);
         else if (r.note) warnings.push(`Engine ${r.engine}: ${r.note}`);
         else ok.push(`Engine ${r.engine}: OK`);
       }
@@ -78,7 +82,14 @@ export async function runWatchdog(): Promise<{ ok: boolean; problems: string[]; 
           monoLabel("Watchdog · daily self-test"),
           heading(status),
           paragraph(items.join("<br/>")),
-          paragraph(`Engines tested: ${engines.join(", ") || "none"}. Fix keys in Netlify env, then redeploy. The "Test engines" button in the dashboard shows live detail.`),
+          paragraph(
+            `Engines tested: ${engines.join(", ") || "none"}. ` +
+            (problems.length
+              ? `Red items are configuration faults — fix keys in Netlify env, then redeploy. `
+              : "") +
+            `Orange items are upstream capacity and clear on their own; only chase one that persists across several days. ` +
+            `The "Test engines" button in the dashboard shows live detail.`
+          ),
         ].join("")
       ),
     });
