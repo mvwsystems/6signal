@@ -312,6 +312,24 @@ function renderClientReport(data: any) {
           {data.wins.map((w: string, i: number) => <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6 }}><span style={{ color: T.ok }}>✓</span><span style={{ fontSize: 13, color: T.text }}>{w}</span></div>)}
         </div>
       )}
+      {data?.losses?.length > 0 && (
+        <div style={card({ marginBottom: 16, borderColor: `${T.warn}44` })}>
+          <div style={{ ...eyebrow, color: T.warn, marginBottom: 10 }}>Positions lost</div>
+          {data.losses.map((l: string, i: number) => <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6 }}><span style={{ color: T.warn }}>△</span><span style={{ fontSize: 13, color: T.text }}>{l}</span></div>)}
+        </div>
+      )}
+      {data?.metrics?.prompt_set_changed && (
+        <div style={card({ marginBottom: 16 })}>
+          <div style={{ ...eyebrow, marginBottom: 8 }}>Like-for-like</div>
+          <div style={{ fontSize: 13, color: T.textSub, lineHeight: 1.6 }}>
+            {data.metrics.new_prompts} prompt{data.metrics.new_prompts === 1 ? " was" : "s were"} added mid-period, so the blended
+            rate is not comparable to last period. On the {data.metrics.cohort_prompts} prompts tracked in both periods:{" "}
+            <strong style={{ color: T.text }}>{data.metrics.cohort_rate ?? "—"}%</strong>
+            {data.metrics.cohort_rate_prev != null && <> vs {data.metrics.cohort_rate_prev}% last period</>}.
+            Newly tracked ground is at {data.metrics.new_rate ?? "—"}%.
+          </div>
+        </div>
+      )}
       <div className="m1col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
         {n?.focus_next?.length > 0 && <div style={card()}><div style={{ ...eyebrow, marginBottom: 10 }}>What we&rsquo;re doing next</div>{n.focus_next.map((f: string, i: number) => <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6 }}><span style={{ color: T.accent }}>•</span><span style={{ fontSize: 13, color: T.textSub }}>{f}</span></div>)}</div>}
         {n?.client_actions?.length > 0 && <div style={card({ borderColor: `${T.accent}44` })}><div style={{ ...eyebrow, color: T.accent, marginBottom: 10 }}>What we need from the client</div>{n.client_actions.map((a: string, i: number) => <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6 }}><span style={{ color: T.accent }}>→</span><span style={{ fontSize: 13, color: T.text }}>{a}</span></div>)}</div>}

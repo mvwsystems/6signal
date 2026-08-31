@@ -801,13 +801,36 @@ export interface PlanTaskInput {
   due_date: string | null; // YYYY-MM-DD
 }
 
+// Regenerating a battle plan used to append its whole task list again, so a
+// business that had three plans generated carried three copies of the same
+// work — and a "0 of 45 done" progress line that overstated what was actually
+// outstanding. Skip anything this business already has.
+const taskKey = (t: string) => t.toLowerCase().replace(/[^a-z0-9]/g, "");
+
 export async function createPlanTasks(rows: PlanTaskInput[]): Promise<number> {
   const s = db();
   if (!s || !rows.length) return 0;
   try {
-    const { error } = await s.from("plan_tasks").insert(rows);
+    const businessIds = [...new Set(rows.map((r) => r.business_id).filter(Boolean))] as string[];
+    const seen = new Set<string>();
+    if (businessIds.length) {
+      const { data } = await s.from("plan_tasks").select("business_id, task").in("business_id", businessIds);
+      for (const r of (data ?? []) as { business_id: string; task: string }[]) {
+        seen.add(`${r.business_id}|${taskKey(r.task)}`);
+      }
+    }
+    const fresh = rows.filter((r) => {
+      const k = `${r.business_id}|${taskKey(r.task)}`;
+      if (seen.has(k)) return false;
+      seen.add(k); // also dedupes within this batch
+      return true;
+    });
+    const skipped = rows.length - fresh.length;
+    if (skipped) console.warn(`[db] createPlanTasks: skipped ${skipped} task(s) this business already has`);
+    if (!fresh.length) return 0;
+    const { error } = await s.from("plan_tasks").insert(fresh);
     if (error) throw error;
-    return rows.length;
+    return fresh.length;
   } catch (e) {
     console.error("[db] createPlanTasks failed:", e);
     return 0;

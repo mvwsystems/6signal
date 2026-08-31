@@ -23,8 +23,19 @@ export interface ClientReportPayload {
     prompts_tracked: number;
     tasks_done: number;
     tasks_total: number;
+    // Headline rates computed on prompts tracked in BOTH windows, so a delta
+    // never reflects the prompt set changing underneath it.
+    cohort_rate: number | null;
+    cohort_rate_prev: number | null;
+    cohort_prompts: number;
+    // Prompts added mid-period, reported on their own instead of silently
+    // diluting the comparison.
+    new_rate: number | null;
+    new_prompts: number;
+    prompt_set_changed: boolean;
   };
   wins: string[];
+  losses: string[];
   narrative: { headline: string; summary: string; what_this_means: string; focus_next: string[]; client_actions: string[] };
   maps_grid?: {
     keyword: string; grid_size: number; spacing_miles: number; scanned_at: string;
@@ -81,16 +92,44 @@ export async function buildClientReport(businessId: string): Promise<{ id: strin
   const sov = mentions + compTotal > 0 ? Math.round((100 * mentions) / (mentions + compTotal)) : null;
   const topCompetitors = Object.entries(compCounts).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([name, count]) => ({ name, count }));
 
-  // Wins: prompt×engine flips ✗→✓ vs the previous window.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const prevLatest: Record<string, any> = {};
   for (const r of prev) prevLatest[`${r.prompt_id}|${r.engine}`] = r;
   const promptText = Object.fromEntries(prompts.map((p) => [p.id, p.prompt]));
+
+  // A rate is only comparable across a stable prompt set. When prompts are
+  // added mid-period the blended number moves for a reason that has nothing to
+  // do with visibility, so split it: the cohort tracked in both windows carries
+  // the headline delta, and prompts added since are reported separately.
+  const promptIdsIn = (rows: typeof cur) => new Set(rows.map((r) => String(r.prompt_id)));
+  const curIds = promptIdsIn(cur);
+  const prevIds = promptIdsIn(prev);
+  const cohortIds = new Set([...curIds].filter((id) => prevIds.has(id)));
+  const isCohort = (r: { prompt_id?: unknown }) => cohortIds.has(String(r.prompt_id));
+  const cohortRate = cohortIds.size ? rate(cur.filter(isCohort)) : null;
+  const cohortRatePrev = cohortIds.size ? rate(prev.filter(isCohort)) : null;
+  const newRows = cur.filter((r) => !isCohort(r));
+  const newPromptCount = new Set(newRows.map((r) => String(r.prompt_id))).size;
+
+  // Wins and losses come from the two most recent runs, on prompts both runs
+  // covered — the only pair where a flip means something changed.
+  const runDays = [...new Set(cur.map((r) => String(r.run_at).slice(0, 10)))].sort();
+  const lastDay = runDays[runDays.length - 1];
+  const priorDay = runDays[runDays.length - 2];
   const wins: string[] = [];
-  for (const k of Object.keys(latest)) {
-    const [pid, engine] = k.split("|");
-    if (latest[k].mentioned && prevLatest[k] && !prevLatest[k].mentioned) {
-      wins.push(`Now named in ${engine} for "${(promptText[pid] ?? "").slice(0, 80)}"`);
+  const losses: string[] = [];
+  if (lastDay && priorDay) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const byKey = (day: string) => Object.fromEntries(
+      cur.filter((r) => String(r.run_at).slice(0, 10) === day).map((r: any) => [`${r.prompt_id}|${r.engine}`, r])
+    );
+    const a = byKey(priorDay), b = byKey(lastDay);
+    for (const k of Object.keys(b)) {
+      if (!a[k]) continue; // not covered by both runs — no flip to claim
+      const [pid, engine] = k.split("|");
+      const label = `"${(promptText[pid] ?? "").slice(0, 80)}"`;
+      if (b[k].mentioned && !a[k].mentioned) wins.push(`Now named in ${engine} for ${label}`);
+      if (!b[k].mentioned && a[k].mentioned) losses.push(`Lost ${engine} for ${label}`);
     }
   }
 
@@ -102,6 +141,9 @@ export async function buildClientReport(businessId: string): Promise<{ id: strin
     mention_rate: rate(cur), mention_rate_prev: rate(prev), share_of_voice: sov,
     engines, top_competitors: topCompetitors, prompts_tracked: prompts.length,
     tasks_done: done.length, tasks_total: tasks.length,
+    cohort_rate: cohortRate, cohort_rate_prev: cohortRatePrev, cohort_prompts: cohortIds.size,
+    new_rate: newRows.length ? rate(newRows) : null, new_prompts: newPromptCount,
+    prompt_set_changed: newPromptCount > 0,
   };
 
   // Claude writes the client-facing narrative — grounded, warm, no hype.
@@ -114,13 +156,22 @@ export async function buildClientReport(businessId: string): Promise<{ id: strin
     try {
       const clientTasks = tasks.filter((t) => t.status !== "done" && t.owner === "Client").map((t) => t.task).slice(0, 5);
       const openOurs = tasks.filter((t) => t.status !== "done" && t.owner !== "Client").map((t) => t.task).slice(0, 6);
-      const facts = { business: business.name, trade: business.trade, city: business.city, is_baseline: isBaseline, metrics, wins: wins.slice(0, 6), our_open_work: openOurs, client_actions_open: clientTasks };
+      // Task counts are deliberately withheld: they are an internal delivery
+      // metric, and the model editorialised on them ("zero of 45 tasks
+      // completed") inside a document the client reads.
+      const { tasks_done: _td, tasks_total: _tt, ...clientSafeMetrics } = metrics;
+      const facts = {
+        business: business.name, trade: business.trade, city: business.city,
+        is_baseline: isBaseline, metrics: clientSafeMetrics,
+        wins: wins.slice(0, 6), losses: losses.slice(0, 4),
+        our_open_work: openOurs, client_actions_open: clientTasks,
+      };
       const res = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
         body: JSON.stringify({
           model: "claude-sonnet-4-6", max_tokens: 1200, temperature: 0,
-          system: `You write a client-facing AI-visibility report for a contractor client of 6 Signal. Plain English, warm, zero jargon, zero hype, grounded ONLY in the facts given. Explain numbers simply (mention rate = "when people ask AI assistants for a ${business.trade.toLowerCase()} in your area, you come up X% of the time"). If is_baseline, frame it as the starting line being measured before the work shows results. Return ONLY JSON: {"headline":"one strong plain sentence","summary":"3-4 sentences on where things stand","what_this_means":"2-3 sentences on what this means for their business in real terms (calls, jobs)","focus_next":["2-4 short bullets: what 6 Signal is doing next"],"client_actions":["0-3 short bullets: what the client should do, from client_actions_open only"]}`,
+          system: `You write a client-facing AI-visibility report for a contractor client of 6 Signal. Plain English, warm, zero jargon, zero hype, grounded ONLY in the facts given. Never state that an engine was gained or lost unless that exact item appears in wins or losses — do not infer a change from the rates. Never comment on how much work was or was not completed. If prompt_set_changed is true, say plainly that new questions and towns were added to tracking this period, quote cohort_rate (like-for-like) as the headline, and describe new_rate as early coverage on newly tracked ground rather than a decline. Explain numbers simply (mention rate = "when people ask AI assistants for a ${business.trade.toLowerCase()} in your area, you come up X% of the time"). If is_baseline, frame it as the starting line being measured before the work shows results. Return ONLY JSON: {"headline":"one strong plain sentence","summary":"3-4 sentences on where things stand","what_this_means":"2-3 sentences on what this means for their business in real terms (calls, jobs)","focus_next":["2-4 short bullets: what 6 Signal is doing next"],"client_actions":["0-3 short bullets: what the client should do, from client_actions_open only"]}`,
           messages: [{ role: "user", content: JSON.stringify(facts) }],
         }),
       });
@@ -148,7 +199,7 @@ export async function buildClientReport(businessId: string): Promise<{ id: strin
     business: { name: business.name, trade: business.trade, city: business.city },
     period_label: periodLabel, is_baseline: isBaseline,
     generated_at: new Date().toISOString(),
-    metrics, wins: wins.slice(0, 8), narrative,
+    metrics, wins: wins.slice(0, 8), losses: losses.slice(0, 6), narrative,
     maps_grid: gridScan ? {
       keyword: String(gridScan.keyword),
       grid_size: Number(gridScan.grid_size),
