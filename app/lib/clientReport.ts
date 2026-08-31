@@ -111,19 +111,25 @@ export async function buildClientReport(businessId: string): Promise<{ id: strin
   const newRows = cur.filter((r) => !isCohort(r));
   const newPromptCount = new Set(newRows.map((r) => String(r.prompt_id))).size;
 
-  // Wins and losses come from the two most recent runs, on prompts both runs
-  // covered — the only pair where a flip means something changed.
-  const runDays = [...new Set(cur.map((r) => String(r.run_at).slice(0, 10)))].sort();
-  const lastDay = runDays[runDays.length - 1];
-  const priorDay = runDays[runDays.length - 2];
+  // Wins and losses are month-over-month: the newest run in this period against
+  // the newest run in the previous one. Comparing the two most recent runs
+  // instead would only cover the gap between them — with a biweekly probe
+  // cadence that is a fortnight of a monthly report, and changes earlier in the
+  // period would go unreported. Restricted to prompt/engine pairs both runs
+  // covered, so a prompt added mid-period can never be claimed as a flip.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const newestDay = (rows: any[]) =>
+    [...new Set(rows.map((r) => String(r.run_at).slice(0, 10)))].sort().pop();
+  const lastDay = newestDay(cur);
+  const priorDay = newestDay(prev);
   const wins: string[] = [];
   const losses: string[] = [];
   if (lastDay && priorDay) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const byKey = (day: string) => Object.fromEntries(
-      cur.filter((r) => String(r.run_at).slice(0, 10) === day).map((r: any) => [`${r.prompt_id}|${r.engine}`, r])
+    const byKey = (rows: any[], day: string) => Object.fromEntries(
+      rows.filter((r) => String(r.run_at).slice(0, 10) === day).map((r: any) => [`${r.prompt_id}|${r.engine}`, r])
     );
-    const a = byKey(priorDay), b = byKey(lastDay);
+    const a = byKey(prev, priorDay), b = byKey(cur, lastDay);
     for (const k of Object.keys(b)) {
       if (!a[k]) continue; // not covered by both runs — no flip to claim
       const [pid, engine] = k.split("|");
