@@ -222,20 +222,50 @@ async function probeGemini(prompt: string, key: string, signal?: AbortSignal): P
 
 function dedupe(a: string[]): string[] { return Array.from(new Set(a)); }
 
-export async function probeEngine(engine: Engine, prompt: string, signal?: AbortSignal): Promise<EngineAnswer> {
+// Each engine gets its own clock. Callers run all six in parallel under one
+// shared deadline, so without this the slowest engine — Gemini, which does a
+// grounded web search before answering, and now retries on top of that — can
+// eat the whole budget and abort itself. A timeout is a latency problem, not a
+// configuration one, so it reports as transient.
+const ENGINE_TIMEOUT_MS = Number(process.env.ENGINE_TIMEOUT_MS) || 45_000;
+
+export async function probeEngine(
+  engine: Engine,
+  prompt: string,
+  signal?: AbortSignal,
+  opts?: { timeoutMs?: number },
+): Promise<EngineAnswer> {
   const key = keyFor(engine);
   if (!key) return { engine, ok: false, text: "", sources: [], error: "no API key" };
+
+  const budgetMs = opts?.timeoutMs ?? ENGINE_TIMEOUT_MS;
+  const local = new AbortController();
+  const timer = setTimeout(() => local.abort(), budgetMs);
+  const relay = () => local.abort();
+  signal?.addEventListener("abort", relay, { once: true });
+  const sig = local.signal;
+
   try {
-    if (engine === "chatgpt") return await probeOpenAI(prompt, key, signal);
-    if (engine === "claude") return await probeClaude(prompt, key, signal);
-    if (engine === "perplexity") return await probePerplexity(prompt, key, signal);
-    if (engine === "gemini") return await probeGemini(prompt, key, signal);
-    if (engine === "google-ai") return await probeGoogleAI(prompt, key, signal);
-    return await probeMaps(prompt, signal);
+    if (engine === "chatgpt") return await probeOpenAI(prompt, key, sig);
+    if (engine === "claude") return await probeClaude(prompt, key, sig);
+    if (engine === "perplexity") return await probePerplexity(prompt, key, sig);
+    if (engine === "gemini") return await probeGemini(prompt, key, sig);
+    if (engine === "google-ai") return await probeGoogleAI(prompt, key, sig);
+    return await probeMaps(prompt, sig);
   } catch (e) {
     console.error(`[engines] ${engine} probe failed:`, e);
-    const transient = e instanceof UpstreamError && e.transient;
-    return { engine, ok: false, text: "", sources: [], error: String(e).slice(0, 300), transient };
+    const aborted = sig.aborted || (e as { name?: string })?.name === "AbortError" || String(e).includes("aborted");
+    const outerAbort = aborted && signal?.aborted === true;
+    const transient = aborted || (e instanceof UpstreamError && e.transient);
+    const error = aborted
+      ? outerAbort
+        ? "cancelled — the run's overall time budget ran out"
+        : `no answer within ${Math.round(budgetMs / 1000)}s (upstream slow, not a key fault)`
+      : String(e).slice(0, 300);
+    return { engine, ok: false, text: "", sources: [], error, transient };
+  } finally {
+    clearTimeout(timer);
+    signal?.removeEventListener("abort", relay);
   }
 }
 
