@@ -51,6 +51,8 @@ export default function StartPage() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [genMsg, setGenMsg] = useState(GENERATING_MSGS[0]);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  // Ids of unanswered required questions — drives the red outline on each one.
+  const [missingIds, setMissingIds] = useState<string[]>([]);
   const restored = useRef(false);
 
   const trade = contact.trade === "Other" ? contact.tradeOther : contact.trade;
@@ -145,9 +147,23 @@ export default function StartPage() {
     e.preventDefault();
     const missing = sections.flatMap((s) => s.questions).filter((q) => q.required && !answers[q.id]?.trim());
     if (missing.length) {
-      setSubmitError(`Please answer: ${missing.map((q) => `"${q.label}"`).join(", ")}`);
+      // The old message listed every missing label in 10px muted type below the
+      // button, so a prospect with several blank required fields saw nothing
+      // happen at all. Mark the fields, say how many, and go to the first one.
+      setMissingIds(missing.map((q) => q.id));
+      setSubmitError(
+        missing.length === 1
+          ? "One answer is still needed — highlighted below."
+          : `${missing.length} answers are still needed — highlighted below.`
+      );
+      const first = document.getElementById(`q-${missing[0].id}`);
+      if (first) {
+        first.scrollIntoView({ behavior: "smooth", block: "center" });
+        first.querySelector<HTMLElement>("input, textarea, select")?.focus({ preventScroll: true });
+      }
       return;
     }
+    setMissingIds([]);
     setSubmitError(null);
     setStep("submitting");
     try {
@@ -307,14 +323,18 @@ export default function StartPage() {
                   </div>
                   <div className="vc2-form-grid">
                     {s.questions.map((q) => (
-                      <div key={q.id} className="vc2-field vc2-field--full">
+                      <div
+                        key={q.id}
+                        id={`q-${q.id}`}
+                        className={`vc2-field vc2-field--full${missingIds.includes(q.id) ? " vc2-field--error" : ""}`}
+                      >
                         <label className="vc2-label">
                           {q.label} {q.required ? <span className="vc2-req">*</span> : <span className="vc2-optional">(optional)</span>}
                         </label>
                         {q.type === "select" && q.options?.length ? (
                           <div className="vc2-select-wrap">
                             <select className="vc2-select" value={answers[q.id] ?? ""}
-                              onChange={(e) => setAnswers((p) => ({ ...p, [q.id]: e.target.value }))}>
+                              onChange={(e) => { setAnswers((p) => ({ ...p, [q.id]: e.target.value })); setMissingIds((m) => m.filter((id) => id !== q.id)); }}>
                               <option value="">Select...</option>
                               {q.options.map((o) => <option key={o} value={o}>{o}</option>)}
                             </select>
@@ -324,10 +344,10 @@ export default function StartPage() {
                           </div>
                         ) : q.type === "textarea" ? (
                           <textarea className="vc2-input" rows={4} placeholder={q.placeholder ?? ""} value={answers[q.id] ?? ""}
-                            onChange={(e) => setAnswers((p) => ({ ...p, [q.id]: e.target.value }))} style={{ resize: "vertical" }} />
+                            onChange={(e) => { setAnswers((p) => ({ ...p, [q.id]: e.target.value })); setMissingIds((m) => m.filter((id) => id !== q.id)); }} style={{ resize: "vertical" }} />
                         ) : (
                           <input className="vc2-input" type="text" placeholder={q.placeholder ?? ""} value={answers[q.id] ?? ""}
-                            onChange={(e) => setAnswers((p) => ({ ...p, [q.id]: e.target.value }))} />
+                            onChange={(e) => { setAnswers((p) => ({ ...p, [q.id]: e.target.value })); setMissingIds((m) => m.filter((id) => id !== q.id)); }} />
                         )}
                       </div>
                     ))}
@@ -343,8 +363,9 @@ export default function StartPage() {
                     </svg>
                   )}
                 </button>
+                {submitError && <p className="vc2-submit-error">{submitError}</p>}
                 <p className="vc2-form-note">
-                  {submitError ?? (STRIPE_DEPOSIT
+                  {(STRIPE_DEPOSIT
                     ? "Secure payment via Stripe. $750 now, $750 at launch. After your deposit clears, expect a direction call from the operator — then the build starts."
                     : "No payment now. Your answers go straight to Matt Vincent Walker, and the first version of your site gets built from them.")}
                 </p>

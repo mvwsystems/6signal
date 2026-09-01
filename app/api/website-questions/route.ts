@@ -59,6 +59,25 @@ const FALLBACK: Section[] = [
   },
 ];
 
+// The system prompt asks for at most 5 required questions; the model does not
+// always obey it. A Custom Home Builder set came back with 14 of 30 required,
+// which turns one submit click into a wall of validation and reads to the
+// prospect as a broken button. Keep the first few, make the rest optional —
+// an answered-later field is worth more than an abandoned questionnaire.
+const MAX_REQUIRED = 5;
+
+function capRequired(sections: Section[]): Section[] {
+  let budget = MAX_REQUIRED;
+  return sections.map((s) => ({
+    ...s,
+    questions: (s.questions ?? []).map((q) => {
+      if (!q.required) return q;
+      if (budget > 0) { budget -= 1; return q; }
+      return { ...q, required: false };
+    }),
+  }));
+}
+
 export async function POST(req: NextRequest) {
   let body: { trade?: string; company?: string; currentSite?: string } | null = null;
   try {
@@ -112,7 +131,7 @@ Rules:
         if (m) {
           const parsed = JSON.parse(m[0]);
           if (Array.isArray(parsed?.sections) && parsed.sections.length > 0) {
-            return NextResponse.json({ sections: parsed.sections, generated: true });
+            return NextResponse.json({ sections: capRequired(parsed.sections), generated: true });
           }
         }
       }

@@ -8181,6 +8181,18 @@ svg {
   letter-spacing: 0.1em;
   color: #ff6b6b;
 }
+/* Submit-level validation. The form note beside it is 10px #3a3a38 — deliberately
+   quiet helper text — so an error rendered in that slot was invisible against the
+   background and a blocked submit looked like a dead button. */
+.vc2-submit-error {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #ff6b6b;
+  margin: 14px 0 0;
+  padding-left: 12px;
+  border-left: 2px solid #ff6b6b;
+}
 .vc2-select-wrap { position: relative; }
 .vc2-select-wrap .vc2-select { padding-right: 36px; cursor: pointer; }
 .vc2-select option { background: #111110; color: #f5f5f3; }
