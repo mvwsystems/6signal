@@ -1583,19 +1583,104 @@ function OverviewTab({ data }: { data: Overview }) {
 }
 
 // ─── Ads tab (Looker embed) ──────────────────────────────────────────────────────
-function AdsTab() {
-  const url = process.env.NEXT_PUBLIC_LOOKER_URL;
-  if (!url) {
-    return (
-      <div style={card({ padding: 56, textAlign: "center", border: `1px dashed ${T.border}` })}>
-        <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 18, marginBottom: 8 }}>Ads reporting</div>
-        <p style={{ fontSize: 14, color: T.muted, maxWidth: 440, margin: "0 auto", lineHeight: 1.6 }}>
-          Build a Looker Studio report with the Google Ads + Meta Ads connectors, then set <span style={{ fontFamily: MONO, color: T.textSub }}>NEXT_PUBLIC_LOOKER_URL</span> in Netlify (Share → Embed report → copy the src URL). It renders here automatically.
-        </p>
+// One embedded Looker Studio report per client, stored on the business row.
+// A single global env URL would have shown every client the same numbers.
+function AdsTab({ businesses }: { businesses: Biz[] }) {
+  const [bizId, setBizId] = useState("");
+  const [lookerUrl, setLookerUrl] = useState<string | null>(null);
+  const [input, setInput] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [editing, setEditing] = useState(false);
+
+  const load = useCallback(async (id: string) => {
+    setErr(null);
+    try {
+      const d = await fetch(`/api/dashboard/ads?businessId=${id}`).then((r) => r.json());
+      setLookerUrl(d.lookerUrl ?? null);
+      setInput(d.lookerUrl ?? "");
+      setEditing(!d.lookerUrl);
+    } catch { setErr("Could not load this client's report."); }
+  }, []);
+
+  useEffect(() => {
+    if (!businesses.length) return;
+    const first = businesses[0].id;
+    setBizId((cur) => cur || first);
+  }, [businesses]);
+  useEffect(() => { if (bizId) load(bizId); }, [bizId, load]);
+
+  const save = async (value: string | null) => {
+    if (!bizId) return;
+    setBusy(true); setErr(null);
+    try {
+      const r = await fetch("/api/dashboard/ads", {
+        method: "PATCH", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ businessId: bizId, lookerUrl: value }),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || `error ${r.status}`);
+      setLookerUrl(d.lookerUrl ?? null);
+      setInput(d.lookerUrl ?? "");
+      setEditing(!d.lookerUrl);
+    } catch (e: any) { setErr(e?.message || "Could not save"); } finally { setBusy(false); }
+  };
+
+  const biz = businesses.find((b) => b.id === bizId);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+        <span style={eyebrow}>Client</span>
+        <select value={bizId} onChange={(e) => setBizId(e.target.value)}
+          style={{ ...inputStyle, width: "auto", fontSize: 13, padding: "8px 12px" }}>
+          {businesses.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
+        </select>
+        {lookerUrl && !editing && (
+          <button style={{ ...btn(), whiteSpace: "nowrap" }} onClick={() => setEditing(true)}>Change report</button>
+        )}
       </div>
-    );
-  }
-  return <iframe title="Ads reporting" src={url} style={{ width: "100%", height: "82vh", border: `1px solid ${T.border}`, borderRadius: 2 }} />;
+
+      {err && <div style={card({ borderColor: `${T.danger}66` })}><span style={{ color: T.danger, fontSize: 13 }}>{err}</span></div>}
+
+      {editing && (
+        <div style={card()}>
+          <div style={{ ...eyebrow, marginBottom: 10 }}>Looker Studio report for {biz?.name ?? "this client"}</div>
+          <p style={{ fontSize: 13, color: T.muted, lineHeight: 1.65, margin: "0 0 14px", maxWidth: 620 }}>
+            Build one report per client with the free Google Ads and Meta Ads connectors, then use
+            Share &rarr; Embed report &rarr; Embed URL and paste it here. Pasting the whole
+            &lt;iframe&gt; works too. The share URL will not — it renders as a Google sign-in wall.
+          </p>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <input style={{ ...inputStyle, flex: "1 1 380px", fontFamily: MONO, fontSize: 12 }}
+              placeholder="https://lookerstudio.google.com/embed/reporting/..."
+              value={input} onChange={(e) => setInput(e.target.value)} />
+            <button style={{ ...btn(true), whiteSpace: "nowrap", opacity: busy ? 0.5 : 1 }}
+              disabled={busy || !input.trim()} onClick={() => save(input)}>Save report</button>
+            {lookerUrl && (
+              <button style={{ ...btn(), whiteSpace: "nowrap" }} disabled={busy}
+                onClick={() => { if (confirm("Remove this client's ads report?")) save(null); }}>Remove</button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {lookerUrl && !editing && (
+        <iframe title={`Ads reporting — ${biz?.name ?? ""}`} src={lookerUrl}
+          style={{ width: "100%", height: "82vh", border: `1px solid ${T.border}`, borderRadius: 2 }} />
+      )}
+
+      {!lookerUrl && !editing && (
+        <div style={card({ padding: 56, textAlign: "center", border: `1px dashed ${T.border}` })}>
+          <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 18, marginBottom: 8 }}>No ads report yet</div>
+          <p style={{ fontSize: 14, color: T.muted, maxWidth: 440, margin: "0 auto 16px", lineHeight: 1.6 }}>
+            Nothing connected for {biz?.name ?? "this client"}.
+          </p>
+          <button style={btn(true)} onClick={() => setEditing(true)}>Connect a report</button>
+        </div>
+      )}
+    </div>
+  );
 }
 
 // ─── Content tab (generate + publish articles to client sites) ───────────────────
@@ -2107,7 +2192,7 @@ export default function DashboardPage() {
         {tab === "content" && <ContentTab businesses={data?.businesses ?? []} />}
         {tab === "prospects" && <ProspectsTab />}
         {tab === "proposals" && <ProposalsTab businesses={data?.businesses ?? []} />}
-        {tab === "ads" && <AdsTab />}
+        {tab === "ads" && <AdsTab businesses={data?.businesses ?? []} />}
         {tab === "revenue" && <RevenueTab />}
         <div style={{ marginTop: 32, paddingTop: 20, borderTop: `1px solid ${T.border}`, textAlign: "center", ...eyebrow }}>
           6 Signal Command Center · Internal

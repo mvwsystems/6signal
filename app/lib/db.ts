@@ -493,16 +493,31 @@ export async function getDashboardOverview(): Promise<{
 }
 
 // ── Continuous tracking ──────────────────────────────────────────────────────
-export async function getBusiness(id: string): Promise<{ id: string; name: string; url: string | null; trade: string; city: string; github_repo: string | null } | null> {
+export async function getBusiness(id: string): Promise<{ id: string; name: string; url: string | null; trade: string; city: string; github_repo: string | null; looker_url: string | null } | null> {
   const s = db();
   if (!s) return null;
   try {
-    const { data, error } = await s.from("businesses").select("id, name, url, trade, city, github_repo").eq("id", id).single();
+    const { data, error } = await s.from("businesses").select("id, name, url, trade, city, github_repo, looker_url").eq("id", id).single();
     if (error) throw error;
-    return data as { id: string; name: string; url: string | null; trade: string; city: string; github_repo: string | null };
+    return data as { id: string; name: string; url: string | null; trade: string; city: string; github_repo: string | null; looker_url: string | null };
   } catch (e) {
     console.error("[db] getBusiness failed:", e);
     return null;
+  }
+}
+
+// Ads reporting is one embedded Looker Studio report per client, stored on the
+// business — a single global URL would show every client the same numbers.
+export async function setBusinessLookerUrl(id: string, url: string | null): Promise<boolean> {
+  const s = db();
+  if (!s) return false;
+  try {
+    const { error } = await s.from("businesses").update({ looker_url: url }).eq("id", id);
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error("[db] setBusinessLookerUrl failed:", e);
+    return false;
   }
 }
 
