@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
@@ -11,6 +11,8 @@ const MAILTO = "hello@6signal.co";
 export default function ContactPage() {
   useMicroInteractions();
   const [submitted, setSubmitted] = useState(false);
+  // When the form appeared — bots submit in well under a second, humans don't.
+  const renderedAt = useRef(Date.now());
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,6 +24,7 @@ export default function ContactPage() {
     const phone = get("phone");
     const trade = get("trade");
     const message = get("message");
+    const hp = get("website");
 
     // Server-side send (works without a configured mail client). The old
     // mailto composer stays as the fallback if the API is unreachable.
@@ -37,6 +40,8 @@ export default function ContactPage() {
           phone,
           regarding: "general",
           message: [trade ? `Trade: ${trade}` : "", message].filter(Boolean).join("\n\n"),
+          hp,
+          elapsedMs: Date.now() - renderedAt.current,
         }),
       });
       if (r.ok) { setSubmitted(true); return; }
@@ -239,6 +244,17 @@ export default function ContactPage() {
                         required
                       />
                     </div>
+
+                    {/* Honeypot — offscreen, unlabeled, never shown to humans. Named
+                        "website" because form-filling bots reach for that field. */}
+                    <input
+                      type="text"
+                      name="website"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                      style={{ position: "absolute", left: "-9999px", height: 0, width: 0, opacity: 0 }}
+                    />
 
                     <button type="submit" className="btn btn-primary" style={{ width: "100%", justifyContent: "center" }}>
                       Send Message

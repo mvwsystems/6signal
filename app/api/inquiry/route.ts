@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { insertLead } from "../../lib/db";
 import { sendEmail, emailShell, heading, paragraph, monoLabel } from "../../lib/email";
 import { pushAlert } from "../../lib/notify";
+import { clientIp, scoreInquiry, throttled } from "../../lib/spam";
 
 // Structured inquiry form (/inquire + /contact). Replaces the old mailto:
 // links, which silently fail for anyone without a configured mail client.
@@ -31,13 +32,24 @@ export async function POST(req: NextRequest) {
   }
 
   const { name, company, email, phone, url, regarding, message, hp } = body ?? {};
-  const attribution = ((body ?? {}) as Record<string, unknown>).attribution as Record<string, unknown> | null ?? null;
-
-  // Honeypot: bots fill every field; humans never see this one.
-  if (hp) return NextResponse.json({ ok: true });
+  const raw = (body ?? {}) as Record<string, unknown>;
+  const attribution = raw.attribution as Record<string, unknown> | null ?? null;
+  const elapsedMs = typeof raw.elapsedMs === "number" ? raw.elapsedMs : null;
 
   if (!name?.trim() || !email?.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return NextResponse.json({ error: "Name and a valid email are required" }, { status: 400 });
+  }
+
+  // Spam screen: honeypot, keyboard-mash detection, dotted-gmail aliases,
+  // sub-second submits, and a per-IP burst throttle (see lib/spam.ts).
+  // Filtered submissions get a success response so the bot never adapts;
+  // nothing is emailed, pushed, or recorded.
+  const ip = clientIp(req.headers);
+  const verdict = scoreInquiry({ name, company, email, message, hp, elapsedMs });
+  if (throttled(ip)) verdict.reasons.push("ip_throttled");
+  if (verdict.spam || verdict.reasons.includes("ip_throttled")) {
+    console.warn(`[inquiry] dropped as spam (score ${verdict.score}: ${verdict.reasons.join(", ")}) ip=${ip} email=${email}`);
+    return NextResponse.json({ ok: true });
   }
   const about = REGARDING.has(regarding ?? "") ? (regarding as string) : "general";
 

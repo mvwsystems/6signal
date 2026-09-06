@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
@@ -38,6 +38,8 @@ export default function InquirePage() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "failed">("idle");
+  // When the form appeared — bots submit in well under a second, humans don't.
+  const renderedAt = useRef(Date.now());
 
   // Preselect the rung from ?about= (linked from the Climb pages).
   useEffect(() => {
@@ -64,7 +66,7 @@ export default function InquirePage() {
       const r = await fetch("/api/inquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, attribution: getAttribution() }),
+        body: JSON.stringify({ ...form, attribution: getAttribution(), elapsedMs: Date.now() - renderedAt.current }),
       });
       setStatus(r.ok ? "sent" : "failed");
     } catch {
