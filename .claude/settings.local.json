@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__claude_ai_Meta__ads_create_campaign",
+      "mcp__claude_ai_Meta__ads_create_ad_set",
+      "mcp__claude_ai_Meta__ads_create_creative",
+      "mcp__claude_ai_Meta__ads_create_ad",
+      "mcp__claude_ai_Meta__ads_update_entity",
+      "mcp__claude_ai_Meta__ads_activate_entity"
+    ]
+  }
+}

@@ -1,0 +1,242 @@
+---
+title: "The Supplier Signal: Material Suppliers, Manufacturer Directories, and the Trust Stack Behind AI Contractor Recommendations"
+slug: "the-supplier-signal-dfw-material-suppliers"
+description: "A white paper built on 700 tracked AI checks in a Dallas–Fort Worth market: the sources AI engines actually consult before recommending a contractor, why license boards and chambers outrank marketing, and how the DFW supply chain — Builders FirstSource, SRS Distribution, Acme Brick, Morrison Supply, City Electric Supply, Lennox — connects to a visibility layer most contractors never claim."
+date: "2026-09-01"
+category: "White Paper"
+contentType: "White Paper"
+author: "Matt Vincent Walker"
+readTime: "17 min read"
+featured: false
+tags:
+  - White Paper
+  - AI Visibility
+  - Original Research
+  - Material Suppliers
+  - Dallas-Fort Worth
+  - Manufacturer Directories
+  - Supply Chain
+  - Contractor Marketing
+faq:
+  - q: "What sources do AI engines actually trust when recommending contractors?"
+    a: "In 700 tracked checks of one Dallas–Fort Worth market, the source all three research engines — ChatGPT, Claude, and Perplexity — consulted most about the tracked business was its own website, followed by Angi, BBB, Yelp, HomeAdvisor, and BuildZoom. ChatGPT's research trail also ran through institutional records: the Texas State Board of Plumbing Examiners appeared 587 times, alongside the state comptroller's registry, city government pages, and the local chamber of commerce. The pattern is consistent: engines cross-reference sources that are hard to fake."
+  - q: "Do AI engines cite material suppliers when recommending contractors?"
+    a: "Not directly — in our 700-check window, no material supplier's domain appeared in the cross-engine consensus sources for contractor-recommendation prompts. The supply chain enters differently: through manufacturer certification and dealer directories (GAF, Trane, Carrier, Lennox, Generac, and others), which are institutional third-party listings of exactly the class AI engines verify against, and through supplier-adjacent buyer searches — brand and material questions where a contractor's content can be the answer."
+  - q: "Where do Dallas–Fort Worth contractors buy materials?"
+    a: "DFW is one of the most supplier-dense metros in America — several national distributors are headquartered here. Builders FirstSource, the largest building products supplier in the U.S., is based in Irving. SRS Distribution, the roofing distributor The Home Depot acquired for $18.25 billion, is based in McKinney. Acme Brick has been in Fort Worth since 1891, Morrison Supply since 1917, City Electric Supply runs its U.S. operations from Dallas, and Lennox International is headquartered in Richardson — plus branch networks from Ferguson, Winsupply, Johnstone Supply, ABC Supply, Beacon, and Elliott Electric across the metroplex."
+  - q: "What is a manufacturer certification directory and why does it matter for AI visibility?"
+    a: "Programs like GAF's factory-certified contractor locator, Trane Comfort Specialist, Carrier Factory Authorized Dealer, and Rheem Pro Partner publish a page about each credentialed contractor on the manufacturer's own high-authority domain — name, city, credential, often reviews. That is an institution vouching for a business in public, machine-readable form, which is the same class of source AI engines consult before naming anyone. Most contractors hold these credentials and never claim or maintain the listing."
+---
+
+Two searches happen around every job in Dallas–Fort Worth.
+
+The homeowner searches for a contractor: *who's the best roofer near me, is this plumber licensed, who should I trust with a panel upgrade.* The contractor searches for materials: *shingle prices McKinney, plumbing supply house open Saturday, who stocks Square D breakers in Fort Worth.*
+
+Both searches are increasingly answered by AI engines instead of ten blue links. And both are resolved the same way: the engine goes looking for sources it can trust, cross-references them, and reads back a short answer with a few names in it.
+
+This paper is about what "sources it can trust" actually means — not as a guess, but as measured data. Between July 7 and August 3, 2026, our tracking system ran [700 automated checks of real buyer prompts](/research/we-ran-700-ai-visibility-checks-one-texas-market) in one DFW plumbing market and recorded not just *who* the engines named, but *what they consulted before naming anyone*. The citation trails tell a story most visibility advice misses entirely — and the story runs, in a way we'll be precise about, through the supply chain that builds this metroplex.
+
+<div className="wp-tiles">
+  <div className="wp-tile">
+    <div className="wp-tile-label">TRACKED CHECKS</div>
+    <div className="wp-tile-num">700</div>
+    <div className="wp-tile-cap">12 buyer prompts · 5 engines + Maps · 27 days</div>
+  </div>
+  <div className="wp-tile">
+    <div className="wp-tile-label">MOST-CONSULTED SOURCE</div>
+    <div className="wp-tile-num">596×</div>
+    <div className="wp-tile-cap">the company's own website — ahead of every directory</div>
+  </div>
+  <div className="wp-tile">
+    <div className="wp-tile-label">LICENSE BOARD CHECKS</div>
+    <div className="wp-tile-num">587</div>
+    <div className="wp-tile-cap">tsbpe.texas.gov in ChatGPT's research trail</div>
+  </div>
+  <div className="wp-tile">
+    <div className="wp-tile-label">REDDIT APPEARANCES</div>
+    <div className="wp-tile-num">2,343</div>
+    <div className="wp-tile-cap">community threads in one engine's trail</div>
+  </div>
+</div>
+
+<h2 id="part-1">Part I — What the engines actually consulted</h2>
+
+Every time a web-grounded AI engine answers "who's a good plumber in Red Oak," it runs its own research first. Our system stores the source lists that come back with each answer. Filter those lists to the domains that appeared in **all three** research engines' trails — ChatGPT, Claude, and Perplexity, so no single engine's quirks skew the picture — and the consensus about one tracked company looks like this:
+
+<svg viewBox="0 0 720 372" role="img" aria-label="Bar chart of sources consulted by all three AI research engines about one tracked DFW plumbing company over 27 days. The company's own website leads with 596 appearances, then Angi 454, BBB 394, Yelp 326, HomeAdvisor 250, BuildZoom 202, Today's Homeowner 61, YellowPages 61, and the Red Oak chamber of commerce 51. Competitors' own websites also appear throughout the trails." className="wp-fig">
+  <text x="24" y="34" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">What ChatGPT, Claude, and Perplexity all consulted — one company, 27 days</text>
+  <text x="24" y="52" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">SOURCE-TRAIL APPEARANCES · DOMAINS PRESENT IN ALL 3 RESEARCH ENGINES · JUL 7 – AUG 3, 2026</text>
+  <text x="24" y="96" fill="#f5f5f3" fontSize="11" fontFamily="JetBrains Mono, monospace">THE COMPANY'S OWN SITE</text>
+  <rect x="250" y="84" width="430" height="14" rx="2" fill="#E6FF00" />
+  <text x="600" y="96" fill="#060606" fontSize="11" fontFamily="JetBrains Mono, monospace">596</text>
+  <text x="24" y="128" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">ANGI</text>
+  <rect x="250" y="116" width="327" height="14" rx="2" fill="#55554f" />
+  <text x="585" y="128" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">454</text>
+  <text x="24" y="160" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">BBB</text>
+  <rect x="250" y="148" width="284" height="14" rx="2" fill="#55554f" />
+  <text x="542" y="160" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">394</text>
+  <text x="24" y="192" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">YELP</text>
+  <rect x="250" y="180" width="235" height="14" rx="2" fill="#55554f" />
+  <text x="493" y="192" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">326</text>
+  <text x="24" y="224" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">HOMEADVISOR</text>
+  <rect x="250" y="212" width="180" height="14" rx="2" fill="#55554f" />
+  <text x="438" y="224" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">250</text>
+  <text x="24" y="256" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">BUILDZOOM</text>
+  <rect x="250" y="244" width="146" height="14" rx="2" fill="#55554f" />
+  <text x="404" y="256" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">202</text>
+  <text x="24" y="288" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">TODAY'S HOMEOWNER</text>
+  <rect x="250" y="276" width="44" height="14" rx="2" fill="#3a3a35" />
+  <text x="302" y="288" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">61</text>
+  <text x="24" y="320" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">YELLOWPAGES</text>
+  <rect x="250" y="308" width="44" height="14" rx="2" fill="#3a3a35" />
+  <text x="302" y="320" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">61</text>
+  <text x="24" y="352" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">RED OAK CHAMBER</text>
+  <rect x="250" y="340" width="37" height="14" rx="2" fill="#3a3a35" />
+  <text x="295" y="352" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">51</text>
+</svg>
+
+*Competitors' own websites also ran through every engine's trail — the engines read everyone's site, not just the winner's. Method notes and exclusions are at the end of this paper.*
+
+Three readings, in order of importance:
+
+**Your website is the most-consulted source about you.** Not Yelp. Not Angi. Your own site, 596 times — more than any directory. The engines use directories to *discover and corroborate*; they use your site to *verify*. This inverts a decade of local-marketing instinct that treated the website as a brochure and the profiles as the real battleground. For AI, [the site is the record of authority](/research/is-your-site-blocking-ai-crawlers) — if it's thin, outdated, or unparseable, every other signal weakens with it.
+
+**The directory layer is non-optional.** Angi, BBB, Yelp, HomeAdvisor, and BuildZoom appeared hundreds of times each, in all three engines. [We've written before about why directories keep winning AI answers](/research/why-directories-and-aggregators-keep-winning-ai-answers); this data closes the argument. Whether you like their sales calls is irrelevant to whether the engines read them.
+
+**Institutions punch far above their traffic.** A small-town chamber of commerce page — maybe a few hundred human visitors a month — appeared in all three engines' research, 51 times. And in ChatGPT's fuller trail, the pattern gets starker: the **Texas State Board of Plumbing Examiners appeared 587 times**, the state comptroller's business registry 50 times, city government pages throughout. The engine was checking paperwork.
+
+<h2 id="part-2">Part II — The trust stack</h2>
+
+Arrange those sources by *kind* rather than count and you get the structure that actually governs AI recommendations:
+
+<svg viewBox="0 0 720 348" role="img" aria-label="Diagram of the four-layer trust stack AI engines consult before recommending a contractor. Layer one, owned: the business website — the verification record. Layer two, institutional: license boards, state registries, city pages, chambers — hard to fake. Layer three, commercial: directories and review platforms — discovery and corroboration. Layer four, community: Reddit and local social threads — the unbought signal. The layers corroborate each other; a break between any two layers is where trust fails." className="wp-fig">
+  <text x="24" y="34" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">The trust stack — what corroborates what</text>
+  <text x="24" y="52" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">EVERY LAYER CHECKS THE OTHERS · A MISMATCH ANYWHERE IS A REASON TO SKIP YOU</text>
+  <rect x="150" y="72" width="420" height="52" rx="2" fill="#E6FF00" />
+  <text x="170" y="94" fill="#060606" fontSize="11" fontFamily="JetBrains Mono, monospace">01 · OWNED — YOUR WEBSITE</text>
+  <text x="170" y="112" fill="#3a3a35" fontSize="10" fontFamily="JetBrains Mono, monospace">the verification record · most-consulted source, 596×</text>
+  <rect x="120" y="136" width="480" height="52" rx="2" fill="#181816" stroke="#55554f" strokeWidth="1" />
+  <text x="140" y="158" fill="#f5f5f3" fontSize="11" fontFamily="JetBrains Mono, monospace">02 · INSTITUTIONAL — LICENSE BOARD · REGISTRY · CITY · CHAMBER</text>
+  <text x="140" y="176" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">hard to fake · tsbpe.texas.gov consulted 587× by one engine</text>
+  <rect x="90" y="200" width="540" height="52" rx="2" fill="#181816" stroke="#3a3a35" strokeWidth="1" />
+  <text x="110" y="222" fill="#f5f5f3" fontSize="11" fontFamily="JetBrains Mono, monospace">03 · COMMERCIAL — ANGI · BBB · YELP · HOMEADVISOR · BUILDZOOM</text>
+  <text x="110" y="240" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">discovery + corroboration · hundreds of consultations each</text>
+  <rect x="60" y="264" width="600" height="52" rx="2" fill="#181816" stroke="#232320" strokeWidth="1" />
+  <text x="80" y="286" fill="#f5f5f3" fontSize="11" fontFamily="JetBrains Mono, monospace">04 · COMMUNITY — REDDIT · LOCAL THREADS</text>
+  <text x="80" y="304" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">can't be bought · 2,343 appearances in one engine's trail</text>
+  <text x="24" y="340" fill="#55554f" fontSize="10" fontFamily="JetBrains Mono, monospace">THE STACK IS AN AUDIT, NOT A POPULARITY CONTEST — CONSISTENCY ACROSS LAYERS IS THE WIN CONDITION</text>
+</svg>
+
+*The engines don't rank these layers; they cross-reference them. The business that wins is the one whose story doesn't change between layers.*
+
+This is the deep pattern in the data, and it explains behavior that otherwise looks strange — like a frontier AI model spending 587 research calls on a licensing board's website. The engine is not doing marketing analysis. **It is doing due diligence, at machine speed, on every business it might name.** The sources it leans on are precisely the ones a careful buyer would check if they had unlimited time: the state's license record, the registry, the city, the chamber, the review platforms, the company's own claims about itself, and what neighbors say when nobody's selling anything.
+
+Which raises the question this paper exists to answer: what *other* institutional surfaces exist that vouch for contractors in public, machine-readable form — and that most contractors have never claimed?
+
+That's where the supply chain comes in.
+
+<h2 id="part-3">Part III — The supplier layer</h2>
+
+Every contractor in DFW already has supply-chain relationships: the counter they run to at 7am, the distributor that delivers to the job, the brands they install every week. What almost none of them have noticed is that the top of that supply chain — the **manufacturers** — publishes institutional directories of exactly the trust-stack class the engines verify against.
+
+When a roofer earns GAF factory certification, GAF publishes a page about that roofer on gaf.com: name, city, credential. When an HVAC company becomes a Trane Comfort Specialist or a Carrier Factory Authorized Dealer, the manufacturer's dealer locator says so, on the manufacturer's domain. These are layer-two sources — an institution staking its own name on yours — sitting on some of the highest-authority domains in the construction economy. They are also, in our experience [auditing contractor visibility](/research/the-6signal-audit-what-we-check), the single most commonly *unclaimed or abandoned* listing type: the credential was earned for the rebate program or the warranty tier, the listing went up with a wrong phone number or a stale city list, and nobody ever looked at it again.
+
+To be precise about what our data does and does not show: **no material supplier's domain appeared in the cross-engine consensus sources for our plumbing-market prompts.** We are not claiming AI engines cite Ferguson when someone asks for a plumber. The claim is structural, and it has two halves — manufacturer directories belong to the institutional class the engines demonstrably verify against, and supplier-adjacent searches are a second front where contractors can be the answer rather than the subject. Both halves are actionable today.
+
+Here are the programs worth claiming, by trade:
+
+1. **GAF factory-certified contractor locator** — roofing. The largest North American shingle manufacturer's directory; certification tiers are published per contractor, per city.
+2. **Owens Corning contractor network** — roofing. Same class, second household name; the listing carries the credential a storm-season buyer is told to look for.
+3. **CertainTeed credentialed-installer listings** — roofing and siding. Third of the big three; also covers exterior trades beyond shingles.
+4. **Trane Comfort Specialist dealer locator** — HVAC. The credential buyers are trained by Trane's own advertising to search for.
+5. **Carrier Factory Authorized Dealer locator** — HVAC. Factory authorization published on carrier.com, with the dealer's service area.
+6. **Lennox dealer locator** — HVAC. Lennox International is headquartered in Richardson, Texas — a DFW company publishing directory pages about DFW contractors.
+7. **Daikin Comfort Pro network** — HVAC. The world's largest HVAC manufacturer, with its major U.S. manufacturing base in Texas.
+8. **Rheem Pro Partner program** — HVAC and water heaters. One of the few programs that reaches plumbers as well, through the water-heater line.
+9. **Generac dealer locator** — electrical. The standby-generator search is one of the highest-intent electrical queries in Texas, and Generac's locator is where that buyer is sent.
+10. **Mitsubishi Electric Diamond Contractor listings** — HVAC. The mini-split specialist credential, increasingly searched as ductless systems spread through DFW's older housing stock.
+11. **James Hardie Contractor Alliance** — siding and exteriors. The fiber-cement brand buyers name when they ask AI "what siding survives Texas sun."
+12. **Kohler authorized dealer and installer listings** — plumbing, generators, bath remodels. Reaches the remodel buyer at the brand-research stage, before "find me an installer."
+
+Every one of these is a page an institution publishes about you, on a domain the engines already trust, that either exists and is correct, exists and is wrong, or doesn't exist while your competitor's does. Auditing that list costs an afternoon. The [same rule that governs every listing](/research/local-entity-gap-ai-search) governs these: exact name, current phone, true city list, matching everything else the internet says about you.
+
+<h2 id="part-4">Part IV — The DFW supply map, and the search crossfire</h2>
+
+There's a second, less obvious reason the supply chain matters for visibility, and it's about where the *searches* happen rather than where the citations do.
+
+Dallas–Fort Worth is not just a big construction market; it is one of the supply chain's capital cities. The scale is easy to underestimate:
+
+| Supplier | Trade | DFW anchor |
+|---|---|---|
+| **Builders FirstSource** | Lumber, structural, millwork | Headquartered in Irving — the largest building-products supplier in the U.S. |
+| **SRS Distribution** | Roofing | Headquartered in McKinney — acquired by The Home Depot for $18.25B in 2024 |
+| **Acme Brick** | Masonry | Fort Worth since 1891 — a Berkshire Hathaway company |
+| **Morrison Supply** | Plumbing, HVAC | Fort Worth since 1917 — the Southwest's leading plumbing distributor |
+| **City Electric Supply** | Electrical | U.S. headquarters in downtown Dallas — family-owned, 700+ branches |
+| **Lennox International** | HVAC equipment | Headquartered in Richardson |
+| **Ferguson · Winsupply · Johnstone · ABC Supply · Beacon · Elliott Electric** | All trades | National and Texas networks with branch coverage across the metroplex |
+
+Every branch on that map generates searches, all day, every day: contractors searching *"plumbing supply near me," "shingle delivery McKinney," "electrical distributor open Saturday Fort Worth"* — and homeowners searching the brands those branches stock: *"best AC brand for Texas heat," "GAF vs Owens Corning," "how long does Acme brick last."*
+
+This is the crossfire:
+
+<svg viewBox="0 0 720 300" role="img" aria-label="Diagram of two overlapping search worlds. Left: homeowners searching for contractors — who's the best roofer near me, is this plumber licensed. Right: contractors searching for materials — shingle prices McKinney, supply house open Saturday. The overlap zone contains manufacturer directories, brand and material questions, and supplier-adjacent content — where a contractor's name and content can be the answer to both audiences." className="wp-fig">
+  <text x="24" y="34" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">The search crossfire — two audiences, one overlap</text>
+  <text x="24" y="52" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">BE PRESENT WHERE THE TWO SEARCH WORLDS INTERSECT</text>
+  <rect x="34" y="80" width="330" height="170" rx="2" fill="#181816" stroke="#3a3a35" strokeWidth="1" />
+  <rect x="356" y="80" width="330" height="170" rx="2" fill="#181816" stroke="#3a3a35" strokeWidth="1" />
+  <rect x="356" y="80" width="8" height="170" fill="#0e0e0c" />
+  <rect x="286" y="66" width="148" height="198" rx="2" fill="#0e0e0c" stroke="#E6FF00" strokeWidth="1" />
+  <text x="54" y="108" fill="#f5f5f3" fontSize="11" fontFamily="JetBrains Mono, monospace">HOMEOWNERS ASK</text>
+  <text x="54" y="134" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">best roofer near me</text>
+  <text x="54" y="152" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">is this plumber licensed</text>
+  <text x="54" y="170" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">AC replacement cost DFW</text>
+  <text x="470" y="108" fill="#f5f5f3" fontSize="11" fontFamily="JetBrains Mono, monospace">CONTRACTORS ASK</text>
+  <text x="470" y="134" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">shingle prices McKinney</text>
+  <text x="470" y="152" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">supply house open Saturday</text>
+  <text x="470" y="170" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">who stocks Square D</text>
+  <text x="306" y="118" fill="#E6FF00" fontSize="10" fontFamily="JetBrains Mono, monospace">THE OVERLAP</text>
+  <text x="306" y="146" fill="#f5f5f3" fontSize="10" fontFamily="JetBrains Mono, monospace">manufacturer</text>
+  <text x="306" y="162" fill="#f5f5f3" fontSize="10" fontFamily="JetBrains Mono, monospace">directories</text>
+  <text x="306" y="188" fill="#f5f5f3" fontSize="10" fontFamily="JetBrains Mono, monospace">brand + material</text>
+  <text x="306" y="204" fill="#f5f5f3" fontSize="10" fontFamily="JetBrains Mono, monospace">questions</text>
+  <text x="306" y="230" fill="#f5f5f3" fontSize="10" fontFamily="JetBrains Mono, monospace">install expertise</text>
+  <text x="306" y="246" fill="#f5f5f3" fontSize="10" fontFamily="JetBrains Mono, monospace">content</text>
+  <text x="24" y="286" fill="#55554f" fontSize="10" fontFamily="JetBrains Mono, monospace">A CONTRACTOR WHO ANSWERS THE BRAND QUESTION IS PRESENT BEFORE "FIND ME AN INSTALLER" IS EVER ASKED</text>
+</svg>
+
+*The homeowner asking "GAF vs Owens Corning for Texas hail" hasn't searched for a roofer yet. The roofer whose page answers that question is already in the conversation.*
+
+The material-brand question is the earliest visible moment of a job. A homeowner researching *"best water heater brand for hard water"* is weeks from searching *"water heater installer Arlington"* — but an AI engine answering the first question will happily name a local installer whose site actually answers it, with real installation experience behind the words. This is [Prompt Engine Optimization](/research/contractor-content-should-start-with-questions-not-keywords) applied to the supply chain: the buyer's research language is full of brand and material names, and almost no DFW contractor writes content there. The ones who do inherit an empty surface.
+
+The supplier relationships feed the same loop from the other side. The counter you buy from is the program you qualify for; the program is the directory listing; the directory listing is the institutional citation; the citation is the reason an engine trusts your name enough to read it aloud. The supply chain was always part of the business. Now it's part of the visibility.
+
+<h2 id="part-5">Part V — The playbook</h2>
+
+For the operator who wants the whole paper as a work order:
+
+1. **Audit your own site first — it's the most-consulted source about you.** Services in plain language, cities you actually serve, license number visible, credentials named. The engines read it 596 times in 27 days for one company; assume they read yours too.
+2. **Check your institutional layer for exact-name consistency.** Your license board record (TSBPE, TDLR), the state comptroller's registry, your city and chamber listings — the name, address, and phone on each must match your site and your [Google Business Profile](/research/how-to-fix-google-business-profile-for-ai-visibility) exactly. This is the layer the engines treat as ground truth, and a rename or an old address quietly poisons it.
+3. **Claim the big five directories, whether you like them or not.** Angi, BBB, Yelp, HomeAdvisor, BuildZoom — all five appeared in all three engines' research, hundreds of times. Free claims and correct data; nobody is asking you to buy their lead product.
+4. **List every manufacturer credential you already hold, then claim each listing.** Walk the twelve-program list in Part III. If you install the brand and qualify for the program, the missing listing is a free institutional citation you're leaving on the table.
+5. **Write the brand-and-material answers for your trade.** Three to five pages answering the questions your buyers ask about the materials you install — Texas-specific, experience-backed, [structured so an engine can lift the answer](/research/how-to-build-an-answer-ready-service-page). This is the crossfire content nobody in your market has written.
+6. **Ask your reviews to mention the material and the city.** "Replaced our roof" is weak data; "replaced our hail-damaged roof in Frisco with GAF Timberline" is a [review that feeds every layer at once](/research/what-contractor-reviews-need-to-say-for-ai-visibility).
+7. **Measure before and after.** Run the checks yourself with the [measurement playbook](/research/ai-search-measurement-playbook), or let the [$27 AI Visibility Audit](/visibility-check) score all six signals for your trade and city in one pass.
+
+<h2 id="method">Method, and what this paper does not claim</h2>
+
+The citation data comes from our internal tracking system: 700 automated checks of 12 real buyer prompts for one Dallas–Fort Worth plumbing market, July 7 – August 3, 2026, across ChatGPT, Claude, Perplexity, Gemini, Google AI Overviews, and Google Maps, with every engine's answer and source list stored at check time. Headline source counts use only domains present in all three research engines' trails, to keep any single engine's quirks out of the numbers. Single-engine figures (the license board, Reddit, the state registry) are labeled as such and come from ChatGPT's research trail, which reports sources consulted during search, not only sources cited in the final answer. Gemini's redirected grounding URLs can't be resolved to domains and are excluded. One market and one trade is one market and one trade — we publish the pattern because the institutional logic generalizes, and we expect rates and rankings to vary by market, trade, and season. And as stated plainly in Part III: no supplier domain appeared in our consensus data, so this paper claims the supply chain's *directory and search-surface* value, not measured supplier citations. When we can measure more trades in more markets, we'll publish what we find — including whatever contradicts this paper.
+
+---
+
+*The Supplier Signal is part of 6 Signal's visibility research. For the measured baseline behind it, read [We Ran 700 AI Visibility Checks in One Texas Market](/research/we-ran-700-ai-visibility-checks-one-texas-market); for how the weighting shifts by trade, read [AI Visibility by Trade](/research/ai-visibility-by-trade-roofers-plumbers-hvac-electricians); for the wider theory of third-party mentions, read [The Source Ecosystem](/research/the-source-ecosystem-third-party-mentions-ai-recommendations). To see where your business stands today, start with the [free AI visibility check](/ai-visibility-check) or the [$27 AI Visibility Audit](/visibility-check).*
+
+## Sources
+
+- 6 Signal internal tracking system — 700 probe records with stored answers and source trails, July 7 – August 3, 2026 (method above; baseline published in [the field note](/research/we-ran-700-ai-visibility-checks-one-texas-market))
+- Builders FirstSource — [company overview](https://en.wikipedia.org/wiki/Builders_FirstSource) and [corporate office, Irving](https://www.bldr.com/location/builders-firstsource-corporate-office/BFSDAT)
+- SRS Distribution / The Home Depot acquisition — [Dallas Innovates](https://dallasinnovates.com/home-depot-acquires-mckinney-based-srs-distribution-for-over-18b/) (2024)
+- Acme Brick — [company history](https://en.wikipedia.org/wiki/Acme_Brick) and [Fort Worth Business Press at the company's 125th](https://fortworthbusiness.com/real-estate/building-a-name-acme-brick-at-125/)
+- Morrison Supply — [company history](https://punchout.morrisonsupply.com/About/About-Morrison-Supply) and [Fort Worth Business Press acquisition coverage](https://fortworthbusiness.com/real-estate/fort-worth-firm-acquired-for-1-4b-by-australian-plumbing-waterworks-hvac-giant/)
+- City Electric Supply — U.S. headquarters, Dallas ([company profile](https://www.zoominfo.com/c/city-electric-supply/8847555))
+- Texas State Board of Plumbing Examiners — [tsbpe.texas.gov](https://tsbpe.texas.gov/); Texas Department of Licensing and Regulation — [tdlr.texas.gov](https://www.tdlr.texas.gov/)

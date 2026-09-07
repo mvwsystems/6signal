@@ -373,3 +373,31 @@ Seven inline SVG visuals (JSX-attribute syntax — MDX requires camelCase; chart
 emphasis pattern: #E6FF00 subject series, neutral grays for context, every series direct-labeled).
 Companion positioning: cross-links the AEO Field Manual as "the revenue system's white paper."
 All statistics real and cited; sources section at the end is part of the authority play.
+
+### Late-August / early-September set (written 2026-09-06, dated 2026-08-28 / 09-01 / 09-04)
+
+`ai-visibility-by-trade-roofers-plumbers-hvac-electricians` — Insight, 2026-08-28. Fills roadmap
+item #5 (trade comparison). Urgency-spectrum figure + seven-surfaces listicle; per-trade weighting
+(plumbers→registries, roofers→manufacturer certs, HVAC→dealer programs + both funnel ends,
+electricians→TDLR/reviews). Only measured claims come from the 700-check plumbing baseline
+(tsbpe 587× is ChatGPT trail data). Links: recommendation-layer pillar, emergency-trades, voice,
+roofers, 700-checks, GBP-fix, crawlers, directories, source-ecosystem, reviews, both audit articles.
+
+`the-supplier-signal-dfw-material-suppliers` — **White Paper 07/07, 2026-09-01**, with PDF edition
+(public/papers/…pdf + cover; added to WP_PDFS and generate-wp-pdfs.sh). Original research core:
+source-trail domain analysis from the same 700 probes (3-engine consensus: own site 596 > Angi 454 >
+BBB 394 > Yelp 326 > HomeAdvisor 250 > BuildZoom 202; single-engine: tsbpe 587, Reddit 2,343 —
+verified against probe_results 2026-09-06). Trust-stack model (owned→institutional→commercial→
+community), 12-program manufacturer-directory listicle, DFW supplier table (BFS Irving, SRS McKinney,
+Acme Brick FW 1891, Morrison FW 1917, CES Dallas, Lennox Richardson — all web-verified), search-
+crossfire thesis. Method section explicitly disclaims measured supplier citations (none appeared) —
+the claim is directory-class + search-surface. Supplier/brand queries are the SEO crossfire play.
+
+`how-to-read-your-ai-visibility-test-results` — Training, 2026-09-04. Fills roadmap item #8
+(interpretation sequel to how-to-test). Nine-rules listicle + reading-bands figure with the real
+X-Act spread plotted (92/75/71/27/0 — every band occupied in one window). Band-by-band fix
+priorities mirror the audit's LEO→IEO ordering. Links: how-to-test, 700-checks, measurement
+playbook, measure-without-lying, local-entity-gap, GBP-fix, crawlers, question-cluster, supplier
+signal (Part VII citation-trail rule), funnel CTAs.
+
+All three lean on GFM tables/SVG figures now supported in the renderer (remark-gfm added 2026-09-06).

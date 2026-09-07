@@ -21,6 +21,7 @@ const WP_PDFS: Record<string, { cover: string; pdf: string }> = {
   "ai-search-measurement-playbook": { cover: "/papers/covers/ai-search-measurement-playbook.png", pdf: "/papers/ai-search-measurement-playbook.pdf" },
   "the-connective-layer-ai-infrastructure-construction": { cover: "/papers/covers/the-connective-layer-ai-infrastructure-construction.png", pdf: "/papers/the-connective-layer-ai-infrastructure-construction.pdf" },
   "local-ai-infrastructure-blueprint": { cover: "/papers/covers/local-ai-infrastructure-blueprint.png", pdf: "/papers/local-ai-infrastructure-blueprint.pdf" },
+  "the-supplier-signal-dfw-material-suppliers": { cover: "/papers/covers/the-supplier-signal-dfw-material-suppliers.png", pdf: "/papers/the-supplier-signal-dfw-material-suppliers.pdf" },
 };
 
 // Research figures are dark plates on screen. Every /research-visuals/ SVG has

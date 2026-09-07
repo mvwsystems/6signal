@@ -11,6 +11,7 @@ SLUGS=(
   ai-search-measurement-playbook
   the-connective-layer-ai-infrastructure-construction
   local-ai-infrastructure-blueprint
+  the-supplier-signal-dfw-material-suppliers
 )
 PATH="/usr/local/bin:$PATH" npx next start -p 3999 & SERVER=$!
 trap "kill $SERVER" EXIT
