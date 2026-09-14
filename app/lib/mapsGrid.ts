@@ -20,10 +20,29 @@ function nameMatches(businessName: string, resultTitle: string): boolean {
 
 /** Business location from Google Places (New); falls back to the city itself.
  *  The business hit is only trusted when the returned name actually matches —
- *  otherwise Places happily returns a competitor as the "top result". */
-async function geocodeCenter(name: string, city: string): Promise<{ lat: number; lng: number; label: string } | null> {
+ *  otherwise Places happily returns a competitor as the "top result".
+ *
+ *  When the business has a stored place_id, skip the text search entirely: it
+ *  is the only way to be certain the grid is centred on THIS business. Name
+ *  search is guesswork — norm() strips the trade word, so "X-Act Plumbing"
+ *  reduces to "x act", frequently fails to match, and silently falls back to
+ *  the city centroid. A centroid grid misreports coverage for any business
+ *  that isn't in the middle of town. */
+async function geocodeCenter(name: string, city: string, placeId?: string | null): Promise<{ lat: number; lng: number; label: string } | null> {
   const key = process.env.GOOGLE_PLACES_API_KEY?.trim();
   if (!key) return null;
+  if (placeId) {
+    const byId = await fetch(`https://places.googleapis.com/v1/places/${encodeURIComponent(placeId)}`, {
+      headers: { "X-Goog-Api-Key": key, "X-Goog-FieldMask": "displayName,location" },
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .catch(() => null);
+    if (byId?.location) {
+      return { lat: byId.location.latitude, lng: byId.location.longitude, label: byId.displayName?.text ?? name };
+    }
+    // A stale or wrong place_id shouldn't abort the scan — fall through to search.
+    console.warn(`[mapsGrid] place_id lookup failed for ${name}; falling back to text search.`);
+  }
   const search = async (q: string) => {
     const res = await fetch("https://places.googleapis.com/v1/places:searchText", {
       method: "POST",
@@ -66,7 +85,7 @@ export async function runMapsGridScan(args: { businessId: string; keyword?: stri
   const gridSize = Math.min(7, Math.max(3, args.gridSize ?? 5));
   const spacing = Math.min(5, Math.max(0.5, args.spacingMiles ?? 1.5));
 
-  const center = await geocodeCenter(business.name, business.city);
+  const center = await geocodeCenter(business.name, business.city, business.place_id);
   if (!center) throw new Error("Could not geocode the business location (GOOGLE_PLACES_API_KEY).");
 
   const half = (gridSize - 1) / 2;

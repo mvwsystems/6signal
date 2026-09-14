@@ -493,13 +493,13 @@ export async function getDashboardOverview(): Promise<{
 }
 
 // ── Continuous tracking ──────────────────────────────────────────────────────
-export async function getBusiness(id: string): Promise<{ id: string; name: string; url: string | null; trade: string; city: string; github_repo: string | null; looker_url: string | null } | null> {
+export async function getBusiness(id: string): Promise<{ id: string; name: string; url: string | null; trade: string; city: string; place_id: string | null; github_repo: string | null; looker_url: string | null } | null> {
   const s = db();
   if (!s) return null;
   try {
-    const { data, error } = await s.from("businesses").select("id, name, url, trade, city, github_repo, looker_url").eq("id", id).single();
+    const { data, error } = await s.from("businesses").select("id, name, url, trade, city, place_id, github_repo, looker_url").eq("id", id).single();
     if (error) throw error;
-    return data as { id: string; name: string; url: string | null; trade: string; city: string; github_repo: string | null; looker_url: string | null };
+    return data as { id: string; name: string; url: string | null; trade: string; city: string; place_id: string | null; github_repo: string | null; looker_url: string | null };
   } catch (e) {
     console.error("[db] getBusiness failed:", e);
     return null;
