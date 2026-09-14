@@ -141,17 +141,53 @@ async function probeClaude(prompt: string, key: string, signal?: AbortSignal): P
   return { engine: "claude", ok: true, text, sources: dedupe(sources) };
 }
 
+// Google Search is not a chat box. Tracked prompts are written as buyer
+// questions — right for ChatGPT/Claude/Perplexity/Gemini, useless here: Google
+// reads the leading interrogative and returns a dictionary definition of it
+// ("Which" → the pronoun, "Tank" → the armoured vehicle and the R&B singer),
+// which can never cite a local business. Reduce the question to the keyword
+// form a person would actually type.
+export function toSearchQuery(prompt: string): string {
+  let q = prompt.toLowerCase();
+  // Buyer questions often trail a second clause: "... — which plumber is best?"
+  q = q.split(/\s+[—–-]{1,2}\s+/)[0];
+  // Drop apostrophes rather than spacing them, so "who's" collapses to "whos"
+  // and "plumber's" to "plumbers" instead of leaving a stray "s" token.
+  q = q.replace(/['’]/g, "");
+  q = q.replace(/[?!.,"]/g, " ");
+  // Interrogatives stack ("how do i…", "what should a…", "why do…"), so strip
+  // from the front repeatedly rather than matching one fixed phrase.
+  const LEAD =
+    /^\s*(whos|who|whom|which|whats|what|when|where|why|how|should|shall|can|could|would|will|do|does|did|is|are|am|i|we|you|my|need|have|want|to|recommend|there)\b\s*/;
+  let prev: string;
+  do {
+    prev = q;
+    q = q.replace(LEAD, " ").trimStart();
+  } while (q !== prev);
+  q = q.replace(/\b(i|me|my|mine|we|our|us|you|your|a|an|the|please|actually|really)\b/g, " ");
+  return q.replace(/\s+/g, " ").trim() || prompt;
+}
+
 // Google AI Overviews via SerpAPI: the actual AI Overview block Google shows
 // for this query (env-gated by SERPAPI_KEY). "No AI Overview" is itself a
 // meaningful answer — nobody is being named there.
 async function probeGoogleAI(prompt: string, key: string, signal?: AbortSignal): Promise<EngineAnswer> {
-  const params = new URLSearchParams({ engine: "google", q: prompt, api_key: key, gl: "us", hl: "en" });
+  const query = toSearchQuery(prompt);
+  const params = new URLSearchParams({ engine: "google", q: query, api_key: key, gl: "us", hl: "en" });
   const res = await fetchRetry(`https://serpapi.com/search.json?${params}`, { signal });
   if (!res.ok) throw new UpstreamError("SerpAPI", res.status, (await res.text().catch(() => "")).slice(0, 200));
   const data = await res.json();
-  const ai = data.ai_overview;
+  let ai = data.ai_overview;
+  // SerpAPI frequently returns the overview behind a token rather than inline.
+  // Treating that as "no overview" under-reports AEO: the block is there, it
+  // just needs a second fetch against the dedicated engine.
+  if (ai?.page_token && !ai.text_blocks && !ai.answer) {
+    const p2 = new URLSearchParams({ engine: "google_ai_overview", page_token: ai.page_token, api_key: key });
+    const r2 = await fetchRetry(`https://serpapi.com/search.json?${p2}`, { signal });
+    if (r2.ok) ai = (await r2.json().catch(() => null))?.ai_overview ?? ai;
+  }
   if (!ai || (!ai.text_blocks && !ai.answer)) {
-    return { engine: "google-ai", ok: true, text: "No AI Overview appeared for this query.", sources: [] };
+    return { engine: "google-ai", ok: true, text: `No AI Overview appeared for: ${query}`, sources: [], note: `searched: ${query}` };
   }
   const parts: string[] = [];
   const walk = (node: unknown): void => {
@@ -165,7 +201,7 @@ async function probeGoogleAI(prompt: string, key: string, signal?: AbortSignal):
   walk(ai);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sources = ((ai.references ?? []) as any[]).map((r) => r.link).filter(Boolean);
-  return { engine: "google-ai", ok: true, text: parts.join("\n").slice(0, 6000) || "AI Overview present but empty.", sources: dedupe(sources) };
+  return { engine: "google-ai", ok: true, text: parts.join("\n").slice(0, 6000) || "AI Overview present but empty.", sources: dedupe(sources), note: `searched: ${query}` };
 }
 
 // Google Maps ranking via the existing Places key: the ranked local results a
