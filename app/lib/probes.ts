@@ -2,13 +2,20 @@
 // never in a request lambda (this host kills those ~60s in). Saves after every
 // prompt so partial progress survives even a worker death.
 
-import { probeAllEngines, analyzePrompt, ENGINES } from "./engines";
-import { listTrackedPrompts, listAllActiveTracked, getLastProbeTimes, saveProbeResults, getBusiness } from "./db";
+import { probeAllEngines, analyzePrompt, ENGINES, toSearchQuery } from "./engines";
+import { listTrackedPrompts, listAllActiveTracked, getLastProbeTimes, saveProbeResults, saveSerpRankings, getBusiness } from "./db";
+
+// "https://www.x-actplumbing.com/about" → "x-actplumbing.com"
+function domainOf(u?: string | null): string | null {
+  if (!u) return null;
+  const d = u.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/[/?#].*$/, "");
+  return d || null;
+}
 
 export async function runProbeSweep(opts: { businessId?: string; cap?: number }): Promise<{ processed: number; results: number }> {
   const cap = opts.cap ?? 30;
 
-  let items: Array<{ id: string; prompt: string; business_id: string; business: { name: string; trade: string; city: string } | null }>;
+  let items: Array<{ id: string; prompt: string; business_id: string; business: { name: string; trade: string; city: string; url: string | null } | null }>;
   if (opts.businessId) {
     const business = await getBusiness(opts.businessId);
     if (!business) return { processed: 0, results: 0 };
@@ -49,6 +56,25 @@ export async function runProbeSweep(opts: { businessId?: string; cap?: number })
         });
       }
       await saveProbeResults(rows); // incremental — survives interruption
+
+      // Classic organic position, free of charge: the google-ai probe already
+      // fetched this SERP to read the AI Overview. A miss is recorded as
+      // position null rather than skipped — "searched and not ranking" is the
+      // measurement, and dropping it would make a trendline look like uptime.
+      const ga = answers.find((a) => a.engine === "google-ai");
+      const domain = domainOf(p.business.url);
+      if (ga?.ok && ga.organic && domain) {
+        const hit = ga.organic.find((r) => domainOf(r.link) === domain);
+        await saveSerpRankings([{
+          business_id: p.business_id,
+          prompt_id: p.id,
+          query: toSearchQuery(p.prompt),
+          position: hit ? hit.position : null,
+          url: hit ? hit.link : null,
+          top_domains: ga.organic.slice(0, 10).map((r) => domainOf(r.link) ?? "").filter(Boolean),
+          results_seen: ga.organic.length,
+        }]);
+      }
       processed++;
       results += rows.length;
     } catch (e) {

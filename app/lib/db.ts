@@ -734,11 +734,11 @@ export async function deactivateTrackedPrompt(id: string): Promise<void> {
 
 // For the scheduled runner: every active prompt across all businesses, with the
 // business context needed to probe + judge.
-export async function listAllActiveTracked(): Promise<Array<{ id: string; prompt: string; business_id: string; business: { name: string; trade: string; city: string } | null }>> {
+export async function listAllActiveTracked(): Promise<Array<{ id: string; prompt: string; business_id: string; business: { name: string; trade: string; city: string; url: string | null } | null }>> {
   const s = db();
   if (!s) return [];
   try {
-    const { data, error } = await s.from("tracked_prompts").select("id, prompt, business_id, businesses(name, trade, city)").eq("active", true);
+    const { data, error } = await s.from("tracked_prompts").select("id, prompt, business_id, businesses(name, trade, city, url)").eq("active", true);
     if (error) throw error;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (data ?? []).map((r: any) => ({ id: r.id, prompt: r.prompt, business_id: r.business_id, business: r.businesses ?? null }));
@@ -795,9 +795,15 @@ export async function getProbeResults(businessId: string, sinceDays = 90): Promi
       .select("prompt_id, engine, mentioned, position, sentiment, competitors, sources, run_at")
       .eq("business_id", businessId)
       .gte("run_at", since)
-      .order("run_at", { ascending: true });
+      // PostgREST caps the response (1000 rows by default). Ordered ascending
+      // that silently returned the OLDEST rows and dropped everything recent —
+      // the dashboard went blind to anything after the row count crossed the
+      // cap. Take newest-first under an explicit limit, then restore
+      // chronological order for callers that plot a trend.
+      .order("run_at", { ascending: false })
+      .limit(5000);
     if (error) throw error;
-    return data ?? [];
+    return (data ?? []).slice().reverse();
   } catch (e) {
     console.error("[db] getProbeResults failed:", e);
     return [];
@@ -1021,5 +1027,52 @@ export async function setPromptArticleDismissed(promptId: string, dismissed: boo
   } catch (e) {
     console.error("[db] setPromptArticleDismissed failed:", e);
     return false;
+  }
+}
+
+// ── Organic rank tracking ────────────────────────────────────────────────────
+// Populated from the SerpAPI response the AEO probe already fetches, so this
+// adds no API cost. A null position means "searched, and we did not find the
+// business in the captured window" — which is a real measurement, not a gap.
+export interface SerpRankingRow {
+  business_id: string;
+  prompt_id: string | null;
+  query: string;
+  position: number | null;
+  url: string | null;
+  top_domains: string[];
+  results_seen: number;
+}
+
+export async function saveSerpRankings(rows: SerpRankingRow[]): Promise<boolean> {
+  const s = db();
+  if (!s || rows.length === 0) return false;
+  try {
+    const { error } = await s.from("serp_rankings").insert(rows);
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error("[db] saveSerpRankings failed:", e);
+    return false;
+  }
+}
+
+export async function getSerpRankings(businessId: string, sinceDays = 90): Promise<Record<string, unknown>[]> {
+  const s = db();
+  if (!s) return [];
+  try {
+    const since = new Date(Date.now() - sinceDays * 86400000).toISOString();
+    const { data, error } = await s
+      .from("serp_rankings")
+      .select("prompt_id, query, position, url, top_domains, results_seen, run_at")
+      .eq("business_id", businessId)
+      .gte("run_at", since)
+      .order("run_at", { ascending: false })
+      .limit(5000);
+    if (error) throw error;
+    return (data ?? []).slice().reverse();
+  } catch (e) {
+    console.error("[db] getSerpRankings failed:", e);
+    return [];
   }
 }

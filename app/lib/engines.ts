@@ -17,7 +17,14 @@ export interface EngineAnswer {
   error?: string;
   note?: string; // non-fatal degradation worth surfacing (e.g. model fallback)
   transient?: boolean; // upstream capacity/rate limit, survived the retries — not a config fault
+  // Classic blue-link results, captured only by the google-ai probe. The SerpAPI
+  // response carrying the AI Overview already contains them, so organic rank
+  // tracking costs nothing extra — it was being thrown away. The caller matches
+  // the business domain; this stays engine-agnostic about whose result is whose.
+  organic?: OrganicResult[];
 }
+
+export interface OrganicResult { position: number; link: string; title: string }
 
 export interface Verdict {
   mentioned: boolean;
@@ -177,6 +184,11 @@ async function probeGoogleAI(prompt: string, key: string, signal?: AbortSignal):
   const res = await fetchRetry(`https://serpapi.com/search.json?${params}`, { signal });
   if (!res.ok) throw new UpstreamError("SerpAPI", res.status, (await res.text().catch(() => "")).slice(0, 200));
   const data = await res.json();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const organic: OrganicResult[] = ((data.organic_results ?? []) as any[])
+    .map((r, i) => ({ position: Number(r.position) || i + 1, link: String(r.link ?? ""), title: String(r.title ?? "") }))
+    .filter((r) => r.link)
+    .slice(0, 20);
   let ai = data.ai_overview;
   // SerpAPI frequently returns the overview behind a token rather than inline.
   // Treating that as "no overview" under-reports AEO: the block is there, it
@@ -187,7 +199,7 @@ async function probeGoogleAI(prompt: string, key: string, signal?: AbortSignal):
     if (r2.ok) ai = (await r2.json().catch(() => null))?.ai_overview ?? ai;
   }
   if (!ai || (!ai.text_blocks && !ai.answer)) {
-    return { engine: "google-ai", ok: true, text: `No AI Overview appeared for: ${query}`, sources: [], note: `searched: ${query}` };
+    return { engine: "google-ai", ok: true, text: `No AI Overview appeared for: ${query}`, sources: [], note: `searched: ${query}`, organic };
   }
   const parts: string[] = [];
   const walk = (node: unknown): void => {
@@ -201,7 +213,7 @@ async function probeGoogleAI(prompt: string, key: string, signal?: AbortSignal):
   walk(ai);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sources = ((ai.references ?? []) as any[]).map((r) => r.link).filter(Boolean);
-  return { engine: "google-ai", ok: true, text: parts.join("\n").slice(0, 6000) || "AI Overview present but empty.", sources: dedupe(sources), note: `searched: ${query}` };
+  return { engine: "google-ai", ok: true, text: parts.join("\n").slice(0, 6000) || "AI Overview present but empty.", sources: dedupe(sources), note: `searched: ${query}`, organic };
 }
 
 // Google Maps ranking via the existing Places key: the ranked local results a
