@@ -218,11 +218,22 @@ async function probeGoogleAI(prompt: string, key: string, signal?: AbortSignal):
 
 // Google Maps ranking via the existing Places key: the ranked local results a
 // buyer sees for this query. The judge reads the ordered list for position.
+//
+// Two faults used to make this report a flat 0% for a business that was
+// genuinely on the map. It was sent the raw buyer question, and Places text
+// search does badly with a full sentence — a quarter of probes came back with
+// no results at all. And it looked only ten deep, while a business ranking
+// around tenth sits right on the boundary: present on Maps, invisible here.
+// Search-style query, and twenty results (the Places API maximum), so a rank
+// just outside the pack is recorded as a rank instead of an absence.
+const MAPS_DEPTH = 20;
+
 async function probeMaps(prompt: string, signal?: AbortSignal): Promise<EngineAnswer> {
   void signal;
   const { placesTextSearch } = await import("./places");
-  const results = await placesTextSearch(prompt, 10);
-  if (!results.length) return { engine: "maps", ok: true, text: "No Google Maps results for this query.", sources: [] };
+  const query = toSearchQuery(prompt);
+  const results = await placesTextSearch(query, MAPS_DEPTH);
+  if (!results.length) return { engine: "maps", ok: true, text: `No Google Maps results for: ${query}`, sources: [], note: `searched: ${query}` };
   const lines = results.map((p, i) => {
     const name = p.displayName?.text ?? "?";
     const rating = typeof p.rating === "number" ? `${p.rating}★` : "no rating";
@@ -231,7 +242,13 @@ async function probeMaps(prompt: string, signal?: AbortSignal): Promise<EngineAn
   });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sources = results.map((p: any) => p.googleMapsUri).filter(Boolean);
-  return { engine: "maps", ok: true, text: `Google Maps results for this query, in ranked order:\n${lines.join("\n")}`, sources: dedupe(sources) };
+  return {
+    engine: "maps",
+    ok: true,
+    text: `Google Maps results for "${query}", in ranked order (top ${MAPS_DEPTH}):\n${lines.join("\n")}`,
+    sources: dedupe(sources),
+    note: `searched: ${query}`,
+  };
 }
 
 async function probePerplexity(prompt: string, key: string, signal?: AbortSignal): Promise<EngineAnswer> {
