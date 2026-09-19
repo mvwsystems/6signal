@@ -1,0 +1,276 @@
+---
+title: "MIT's 10 Levers for Generative AI, Applied to Contractors"
+slug: "mit-10-levers-generative-ai-contractors"
+description: "MIT studied more than twenty companies over three years to find what separates generative AI that makes work better from AI that only makes it faster. Their ten levers, translated for contractors — with the numbers, the caveats, and a ten-question audit that scores your shop."
+date: "2026-09-11"
+category: "Insight"
+contentType: "Insight"
+author: "Matt Vincent Walker"
+readTime: "11 min read"
+featured: true
+tags:
+  - AI Infrastructure
+  - Generative AI
+  - Contractor Operations
+  - Research
+  - MIT
+  - Systemize
+faq:
+  - q: "What are MIT's ten levers for generative AI?"
+    a: "Three principles and seven outcomes from the MIT Industrial Performance Center's 2026 report Humans in the Loop. The principles: gather evidence before scaling, accept that one size does not fit all, and learn when to trust the tool. The outcomes: minimize drudgery, promote learning, preserve teamwork, design better interfaces, keep investing in domain expertise, maintain accountability, and create new work. The finding underneath all ten is that the same tool makes a job better or merely faster depending on how the employer deploys it."
+  - q: "Does the MIT research apply to small contractors?"
+    a: "Partly, and the report says so itself. The companies studied were primarily large, established incumbents, and most interviewees were managers rather than frontline workers. The manufacturing findings transfer most directly — a workforce of young technicians and retiring experts, tools bought from outside vendors, and skepticism that AI can meet quality standards. The levers are management practices, not technology, which is why they scale down to a ten-person shop."
+  - q: "What is the difference between generative AI making a job better and making it faster?"
+    a: "Faster means the same task takes less time. Better means the work improves in quality, the person doing it learns something, and the job becomes more worth having. MIT found the less successful deployments automated tasks on time savings alone without asking what it did to quality, rework, or the skills of the person who used to do the task. Those are the three questions to ask before scaling anything."
+  - q: "What are the three failure modes of AI adoption?"
+    a: "Disuse, misuse, and overuse, borrowed from decades of research on automated systems. Disuse is not automating when it would help. Misuse is deploying automation that performs poorly. Overuse is automation that works well but produces consequences nobody planned for — the skill that quietly disappears from the crew, or the team task that becomes one person's solo burden."
+  - q: "Should a contractor adopt AI agents?"
+    a: "Not as a leap. MIT's working group found that agents, as deployed in the companies it studied, are an incremental step from robotic process automation rather than a new transformation — a bot handles the routine case and a human handles the edge case. For a contractor that means the same rule applies as for any AI tool: start from a problem you already know is costing you, and keep a person on the exceptions."
+---
+
+Generative AI does not make a job better or worse. The employer's deployment choices do. That is the finding underneath a three-year MIT study of more than twenty companies, published as [Humans in the Loop](https://ipc.mit.edu/wp-content/uploads/2026/04/Humans_in_the_Loop_full_r01M.pdf) in April 2026 and distilled by MIT Sloan into [ten levers](https://mitsloan.mit.edu/ideas-made-to-matter/10-levers-shaping-generative-ai-truly-improves-worker-performance) this month. None of the companies studied was a contractor. Nearly all of the levers apply to one.
+
+This is a translation. The researchers — [Ben Armstrong](https://ipc.mit.edu/people/ben-armstrong/) of the MIT Industrial Performance Center, [Kate Kellogg](https://mitsloan.mit.edu/faculty/directory/kate-kellogg) of MIT Sloan, and [Julie Shah](https://aeroastro.mit.edu/people/julie-shah/) of MIT's Interactive Robotics Group — interviewed executives, managers, and employees across healthcare, finance, retail, and manufacturing from 2023 to 2025. What follows is what they found, what it looks like on a job site, and where the study's own limits mean you should hold the conclusions loosely. At the end is a ten-question audit that scores how a shop is actually using these tools.
+
+<h2 id="the-question">What question was MIT actually asking?</h2>
+
+Not whether AI works. Whether it makes jobs better, or just faster — and what separates the two.
+
+The report opens with a number: in January 2026, roughly half of American workers reported using AI. What that has done to the quality of their jobs, the authors write, "remains largely unclear." So they went and looked, company by company, at what generative AI was deployed to do, how the roles of the people around it changed, and which experiments scaled versus which got quietly shelved.
+
+Three patterns showed up everywhere. The companies were pointing AI at three kinds of problem:
+
+| The problem | What it is | Where it shows up in a contracting business |
+|---|---|---|
+| **Bottleneck** | Skilled people buried in simple tasks that block higher-value work | The estimator answering scheduling texts; the owner rewriting the same proposal language for the fortieth time |
+| **Cafeteria** | A process that needs input from several experts, integrated into one output | A bid that needs the super's take on sequence, the PM's on subs, and the office's on terms before it goes out |
+| **Learning curve** | The extra time a novice needs to do complex work in a new domain | A second-year tech troubleshooting a unit he has never seen, from a manual he has never read |
+
+Every use case in the study maps to one of those three. It is worth deciding which one you are actually trying to solve before buying anything, because the tools and the risks differ for each.
+
+<svg viewBox="0 0 720 300" role="img" aria-label="Infographic: the three problems generative AI was deployed to solve in MIT's study. Bottleneck: skilled people buried in simple tasks. Cafeteria: one output needing several experts' input. Learning curve: novices doing complex work. Each mapped to a contractor example." className="wp-fig">
+  <text x="24" y="34" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">Three problems, every company</text>
+  <text x="24" y="52" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">MIT IPC · 20+ COMPANIES · 2023–2025 · TRANSLATED TO A CONTRACTING BUSINESS</text>
+  <rect x="24" y="76" width="212" height="196" rx="2" fill="#0e0e0c" stroke="#2a2a26" />
+  <rect x="24" y="76" width="212" height="3" fill="#E6FF00" />
+  <text x="40" y="106" fill="#E6FF00" fontSize="11" fontFamily="JetBrains Mono, monospace">01 · BOTTLENECK</text>
+  <text x="40" y="130" fill="#f5f5f3" fontSize="12" fontFamily="Chakra Petch, sans-serif">Skilled people, simple tasks</text>
+  <text x="40" y="156" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">The estimator answering</text>
+  <text x="40" y="170" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">scheduling texts all day.</text>
+  <text x="40" y="200" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">AI job: speed the near-</text>
+  <text x="40" y="214" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">routine so the skill is</text>
+  <text x="40" y="228" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">spent where it counts.</text>
+  <rect x="254" y="76" width="212" height="196" rx="2" fill="#0e0e0c" stroke="#2a2a26" />
+  <rect x="254" y="76" width="212" height="3" fill="#E6FF00" opacity="0.75" />
+  <text x="270" y="106" fill="#E6FF00" fontSize="11" fontFamily="JetBrains Mono, monospace">02 · CAFETERIA</text>
+  <text x="270" y="130" fill="#f5f5f3" fontSize="12" fontFamily="Chakra Petch, sans-serif">One output, many experts</text>
+  <text x="270" y="156" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">A bid that needs the super,</text>
+  <text x="270" y="170" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">the PM and the office first.</text>
+  <text x="270" y="200" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">AI job: predict what each</text>
+  <text x="270" y="214" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">expert would say, from</text>
+  <text x="270" y="228" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">what they have said before.</text>
+  <rect x="484" y="76" width="212" height="196" rx="2" fill="#0e0e0c" stroke="#2a2a26" />
+  <rect x="484" y="76" width="212" height="3" fill="#E6FF00" opacity="0.5" />
+  <text x="500" y="106" fill="#E6FF00" fontSize="11" fontFamily="JetBrains Mono, monospace">03 · LEARNING CURVE</text>
+  <text x="500" y="130" fill="#f5f5f3" fontSize="12" fontFamily="Chakra Petch, sans-serif">Novices, complex work</text>
+  <text x="500" y="156" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">A second-year tech on a</text>
+  <text x="500" y="170" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">unit he has never seen.</text>
+  <text x="500" y="200" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">AI job: perform as if</text>
+  <text x="500" y="214" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">experienced — and, done</text>
+  <text x="500" y="228" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">right, become experienced.</text>
+  <text x="24" y="292" fill="#55554f" fontSize="9" fontFamily="JetBrains Mono, monospace">Source: MIT IPC, Humans in the Loop (April 2026). Contractor examples are ours, not the report's.</text>
+</svg>
+
+<h2 id="the-ten-levers">What are the ten levers, and what do they look like on a job site?</h2>
+
+The report lays them out as three principles that govern how you use the tools, then seven outcomes worth aiming at. Here is each one, with the contractor version underneath.
+
+<svg viewBox="0 0 720 420" role="img" aria-label="Infographic of MIT's ten levers for generative AI. Three principles: gather evidence before scaling, one size does not fit all, learn when to trust. Seven outcomes: minimize drudgery, promote learning, preserve teamwork, design better interfaces, invest in domain expertise, maintain accountability, create new work." className="wp-fig">
+  <text x="24" y="34" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">The ten levers</text>
+  <text x="24" y="52" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">THREE PRINCIPLES THAT GOVERN USE · SEVEN OUTCOMES WORTH AIMING AT</text>
+  <text x="24" y="86" fill="#E6FF00" fontSize="10" fontFamily="JetBrains Mono, monospace">PRINCIPLES</text>
+  <rect x="24" y="96" width="672" height="1" fill="#2a2a26" />
+  <rect x="24" y="110" width="212" height="52" rx="2" fill="#E6FF00" />
+  <text x="38" y="132" fill="#060606" fontSize="11" fontFamily="JetBrains Mono, monospace">01</text>
+  <text x="38" y="150" fill="#060606" fontSize="12" fontFamily="Chakra Petch, sans-serif">Gather evidence before scaling</text>
+  <rect x="254" y="110" width="212" height="52" rx="2" fill="#E6FF00" />
+  <text x="268" y="132" fill="#060606" fontSize="11" fontFamily="JetBrains Mono, monospace">02</text>
+  <text x="268" y="150" fill="#060606" fontSize="12" fontFamily="Chakra Petch, sans-serif">One size does not fit all</text>
+  <rect x="484" y="110" width="212" height="52" rx="2" fill="#E6FF00" />
+  <text x="498" y="132" fill="#060606" fontSize="11" fontFamily="JetBrains Mono, monospace">03</text>
+  <text x="498" y="150" fill="#060606" fontSize="12" fontFamily="Chakra Petch, sans-serif">Learn when to trust</text>
+  <text x="24" y="200" fill="#E6FF00" fontSize="10" fontFamily="JetBrains Mono, monospace">OUTCOMES</text>
+  <rect x="24" y="210" width="672" height="1" fill="#2a2a26" />
+  <rect x="24" y="224" width="160" height="52" rx="2" fill="#0e0e0c" stroke="#2a2a26" />
+  <text x="36" y="246" fill="#E6FF00" fontSize="11" fontFamily="JetBrains Mono, monospace">04</text>
+  <text x="36" y="264" fill="#f5f5f3" fontSize="11" fontFamily="Chakra Petch, sans-serif">Minimize drudgery</text>
+  <rect x="195" y="224" width="160" height="52" rx="2" fill="#0e0e0c" stroke="#2a2a26" />
+  <text x="207" y="246" fill="#E6FF00" fontSize="11" fontFamily="JetBrains Mono, monospace">05</text>
+  <text x="207" y="264" fill="#f5f5f3" fontSize="11" fontFamily="Chakra Petch, sans-serif">Promote learning</text>
+  <rect x="366" y="224" width="160" height="52" rx="2" fill="#0e0e0c" stroke="#2a2a26" />
+  <text x="378" y="246" fill="#E6FF00" fontSize="11" fontFamily="JetBrains Mono, monospace">06</text>
+  <text x="378" y="264" fill="#f5f5f3" fontSize="11" fontFamily="Chakra Petch, sans-serif">Preserve teamwork</text>
+  <rect x="537" y="224" width="159" height="52" rx="2" fill="#0e0e0c" stroke="#2a2a26" />
+  <text x="549" y="246" fill="#E6FF00" fontSize="11" fontFamily="JetBrains Mono, monospace">07</text>
+  <text x="549" y="264" fill="#f5f5f3" fontSize="11" fontFamily="Chakra Petch, sans-serif">Better interfaces</text>
+  <rect x="24" y="288" width="212" height="52" rx="2" fill="#0e0e0c" stroke="#2a2a26" />
+  <text x="36" y="310" fill="#E6FF00" fontSize="11" fontFamily="JetBrains Mono, monospace">08</text>
+  <text x="36" y="328" fill="#f5f5f3" fontSize="11" fontFamily="Chakra Petch, sans-serif">Keep investing in expertise</text>
+  <rect x="254" y="288" width="212" height="52" rx="2" fill="#0e0e0c" stroke="#2a2a26" />
+  <text x="266" y="310" fill="#E6FF00" fontSize="11" fontFamily="JetBrains Mono, monospace">09</text>
+  <text x="266" y="328" fill="#f5f5f3" fontSize="11" fontFamily="Chakra Petch, sans-serif">Maintain accountability</text>
+  <rect x="484" y="288" width="212" height="52" rx="2" fill="#0e0e0c" stroke="#2a2a26" />
+  <text x="496" y="310" fill="#E6FF00" fontSize="11" fontFamily="JetBrains Mono, monospace">10</text>
+  <text x="496" y="328" fill="#f5f5f3" fontSize="11" fontFamily="Chakra Petch, sans-serif">Create new work</text>
+  <text x="24" y="376" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">The principles decide whether the outcomes are reachable. Skip 01 and every outcome becomes a guess.</text>
+  <text x="24" y="404" fill="#55554f" fontSize="9" fontFamily="JetBrains Mono, monospace">Source: Armstrong, Kellogg &amp; Shah, MIT IPC (2026); MIT Sloan Ideas Made to Matter (Sept 3, 2026).</text>
+</svg>
+
+<h3 id="lever-1">1. Gather evidence before scaling</h3>
+
+The most effective deployments in the study started with a problem the company had already defined and already knew was worth solving. The less successful ones, in the Sloan summary's words, automated tasks based on time savings alone "without asking what it meant for quality."
+
+**On a job site:** Before you put AI on proposals, write down what a bad proposal costs you now — the rework, the scope fights, the bids you lost to a vague line item. Then decide what evidence would prove the tool helped. Faster is not evidence. Fewer change orders is.
+
+<h3 id="lever-2">2. One size does not fit all</h3>
+
+Workers doing the same job used the tools in vastly different ways, and the report treats that as a feature. Variation produces evidence about what works, for whom, and when — and it improves job quality, because people can use the tool how they want and skip it when they do not trust it.
+
+**On a job site:** Let the estimator who loves the tool go deep and the one who distrusts it work his way. Then compare their outputs. You will learn more from the difference than from a mandate.
+
+<h3 id="lever-3">3. Learn when to trust</h3>
+
+Willingness to trust is one of the strongest predictors of using automation well. The problem with generative AI is that it is a black box, so people cannot calibrate that trust on their own. The report's answer: if the tool cannot be made transparent, the employer has to build the practices that tell workers when to lean on it and when not to.
+
+**On a job site:** Make a short list. AI drafts the follow-up email — send it. AI drafts the scope of work — a person reads every line. AI suggests a fix for a unit — the tech confirms against the manual before touching anything. Trust by task, written down, is what calibration looks like in a shop.
+
+<h3 id="lever-4">4. Minimize drudgery</h3>
+
+AI proved most effective at removing routine work so people could spend time on problem-solving. The report adds a useful observation: the people closest to the routine tasks are the ones best placed to spot what should be automated.
+
+**On a job site:** Ask the office manager and the lead tech what they do every day that a machine could do. Their list will be more accurate than yours.
+
+<h3 id="lever-5">5. Promote learning</h3>
+
+This is the lever with the sharpest warning in the report. It cites a study in which undergraduates doing a research task with ChatGPT showed far less brain activity and far less ability to remember their work than peers using a search engine or their own memory. The implication for the learning-curve problem is direct: a tool that helps an inexperienced worker perform as if experienced may not be helping them become experienced.
+
+**On a job site:** Your second-year tech who fixes the unit with AI's help and cannot explain what was wrong is a liability in eighteen months. Build the tool so it shows the reasoning, not just the answer, and make the explanation part of the job.
+
+<h3 id="lever-6">6. Preserve teamwork</h3>
+
+AI can let one person finish what used to take three. The report is careful about the cost: the collaboration it removes was also where mentoring, collective learning, and trust between colleagues happened. Turning a cooperative task into a solo one can make the job less desirable and the team less capable.
+
+**On a job site:** The pre-bid huddle where the super corrects the estimator's sequence is not wasted time. It is how the estimator learns to sequence. Keep it, even if the tool could skip it.
+
+<h3 id="lever-7">7. Design better interfaces</h3>
+
+Most companies buy AI rather than build it, so the interface — how the tool is configured, what it shows, when it interrupts — is the lever they actually control. Good design builds what the report calls situational awareness while managing mental load.
+
+**On a job site:** The difference between a tool that dumps a summary and one that flags the three things that changed since yesterday is the difference between a tool people use and one they turn off. You cannot change the model. You can change the setup.
+
+<h3 id="lever-8">8. Continue to invest in domain expertise</h3>
+
+The report predicts short-term reductions in entry-level roles in the fields where AI is strongest, and in the same breath insists that "breakthroughs will still require experienced people to interpret and test what AI produces." Its manufacturing section describes what it calls a bipolar workforce: a growing share of young workers and a concentration of technical experts about to retire. AI that helps a novice technician troubleshoot from the manuals could raise the floor faster than experience alone. It does not replace the person who wrote the manual.
+
+**On a job site:** That is your shop. The master plumber is sixty-one. The apprentice is twenty-three. AI is a bridge between them only if the master is still in the loop on anything that matters.
+
+<h3 id="lever-9">9. Maintain accountability</h3>
+
+AI output can look credible while hiding an error. Making a named person accountable for the result, the report argues, "builds an incentive to actually learn the material and raises the cost of making an error." Its example is airport security, which adds random secondary screening precisely so the human does not switch off.
+
+**On a job site:** Every AI-drafted document has an owner whose name is on it. When the tool gets the load calc wrong, someone is accountable for having sent it. That is not blame. It is the only thing that keeps the human reading.
+
+<h3 id="lever-10">10. Create new work</h3>
+
+The report ends the list on the point most articles about AI skip: new technology does not only remove roles, it invents them. Redesigning jobs around both what the business needs and what people want to learn was associated with better adoption and more engaged careers.
+
+**On a job site:** The office manager who now runs the AI proposal system, reviews its output, and trains new hires on it has a job that did not exist two years ago and is harder to leave. That is the outcome worth aiming for.
+
+<LeversQuiz />
+
+<h2 id="what-scales">What made an AI deployment stick, and what got it shelved?</h2>
+
+This is the most useful section of the report for anyone about to spend money, and it barely made the summary. After the experimentation phase, the working group asked why some applications scaled and others were quietly abandoned. Three features showed up in the ones that stuck.
+
+| Feature of what scaled | What it meant in practice | The contractor test |
+|---|---|---|
+| **A pre-existing, well-documented problem** | The winners addressed a challenge the organization already knew was costing it — doctors drowning in notes, nurses losing information at shift handoff | Can you state the problem in one sentence, with a number, before you name a tool? |
+| **A constellation of technologies plus a human** | One company paired an LLM to read and categorize inquiries with an older rules-based bot to send consistent replies — the LLM for flexibility, the bot for reliability, because they would not let the LLM compose the answer | Is the AI doing the part where variation is fine, and something predictable doing the part where it is not? |
+| **Persistence** | A life-sciences firm's first attempt failed and was nearly shelved until an internal program supported iterating on it | Have you budgeted for the second attempt, or does the first bad output kill the project? |
+
+The report's line on why the first feature matters is worth keeping: when frontline users "have a shared interest and incentive to solve a problem, that might overcome their resistance to technological change." Nobody resists a tool that fixes the thing they complain about.
+
+<svg viewBox="0 0 720 250" role="img" aria-label="Infographic: three features MIT found in AI deployments that scaled rather than being shelved. A pre-existing well-documented problem; a constellation of technologies with a human in the loop; and persistence through a failed first attempt." className="wp-fig">
+  <text x="24" y="34" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">Scale versus shelves</text>
+  <text x="24" y="52" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">THE THREE FEATURES THAT SEPARATED WHAT STUCK FROM WHAT WAS ABANDONED</text>
+  <rect x="24" y="80" width="6" height="140" fill="#E6FF00" />
+  <text x="48" y="102" fill="#E6FF00" fontSize="11" fontFamily="JetBrains Mono, monospace">01  A PROBLEM YOU ALREADY HAD</text>
+  <text x="48" y="120" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">Documented, costed, and complained about before the tool showed up.</text>
+  <text x="48" y="152" fill="#E6FF00" fontSize="11" fontFamily="JetBrains Mono, monospace">02  AI PLUS SOMETHING RELIABLE, PLUS A PERSON</text>
+  <text x="48" y="170" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">The LLM where variation is fine. A rules bot where it is not. A human on the edge cases.</text>
+  <text x="48" y="202" fill="#E6FF00" fontSize="11" fontFamily="JetBrains Mono, monospace">03  A BUDGET FOR THE SECOND TRY</text>
+  <text x="48" y="220" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">The first version usually disappoints. The ones that scaled were allowed to iterate.</text>
+  <text x="24" y="242" fill="#55554f" fontSize="9" fontFamily="JetBrains Mono, monospace">Source: MIT IPC, Humans in the Loop, "Stage 3: Scale and Shelves."</text>
+</svg>
+
+One more finding from the same section deserves a contractor's attention. A real estate company piloted its AI tools with its highest-performing brokers first, on the reasonable theory that the best people would give the best feedback. It did not work. Experienced brokers with deep contact lists needed different things from the tool than newer brokers still building their knowledge — and the newer brokers turned out to have the most to gain. If you pilot AI with your best estimator, you may learn nothing about what it would do for your third-best one.
+
+<h2 id="the-numbers">What do the numbers say, and which ones should you trust?</h2>
+
+The report is unusually honest about forecasts, including the ones made by people who build these tools.
+
+<svg viewBox="0 0 720 300" role="img" aria-label="Bar chart comparing AI job-impact forecasts to a measured number. A 2013 forecast said 47 percent of US jobs were vulnerable to automation by 2030; a follow-up with a small methodology change said 9 percent. Recent estimates put 50 to 70 percent of jobs as having a substantial share of tasks vulnerable to generative AI. The one measured figure: roughly 50 percent of American workers reported using AI in January 2026." className="wp-fig">
+  <text x="24" y="34" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">Forecasts swing by a factor of five. Usage is the number that is real.</text>
+  <text x="24" y="52" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">SHARE OF US JOBS OR WORKERS · EACH BAR MEASURES SOMETHING DIFFERENT — THAT IS THE POINT</text>
+  <text x="24" y="92" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">2013 forecast: jobs "vulnerable" by 2030</text>
+  <rect x="24" y="98" width="329" height="14" rx="2" fill="#55554f" />
+  <text x="362" y="110" fill="#f5f5f3" fontSize="11" fontFamily="JetBrains Mono, monospace">47%</text>
+  <text x="24" y="138" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">Same forecast, small methodology change</text>
+  <rect x="24" y="144" width="63" height="14" rx="2" fill="#55554f" />
+  <text x="96" y="156" fill="#f5f5f3" fontSize="11" fontFamily="JetBrains Mono, monospace">9%</text>
+  <text x="24" y="184" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">Recent estimates: jobs with a substantial share of tasks exposed to generative AI</text>
+  <rect x="24" y="190" width="350" height="14" rx="2" fill="#3a3a35" />
+  <rect x="374" y="190" width="140" height="14" rx="2" fill="#3a3a35" opacity="0.45" />
+  <text x="522" y="202" fill="#f5f5f3" fontSize="11" fontFamily="JetBrains Mono, monospace">50–70%</text>
+  <text x="24" y="230" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">Measured: American workers who reported using AI, January 2026</text>
+  <rect x="24" y="236" width="350" height="14" rx="2" fill="#E6FF00" />
+  <text x="382" y="248" fill="#E6FF00" fontSize="11" fontFamily="JetBrains Mono, monospace">≈50%</text>
+  <text x="24" y="284" fill="#55554f" fontSize="9" fontFamily="JetBrains Mono, monospace">Source: MIT IPC, Humans in the Loop (2026), citing Frey &amp; Osborne (2013), subsequent revisions, and 2026 survey data.</text>
+</svg>
+
+A widely cited 2013 paper predicted that 47 percent of the US labor market was vulnerable to automation by 2030. A follow-up study changed the forecasting method slightly and got 9 percent. The report notes that current predictions about generative AI vary just as widely, from claims that it will "disrupt" half of white-collar jobs within five years to estimates that it will have only a modest effect on productivity. Its own language for what it found on the ground is more careful: AI is a "jagged frontier," far more useful on some tasks than others, and in many companies "a hammer in search of a nail."
+
+Two other figures matter for anyone reading this from a truck.
+
+First, when Anthropic released data on how its own model was being used, more than a third of usage was for computer and mathematical tasks — a category that covers about 3 percent of the workforce. The loudest AI success stories come from the smallest slice of the labor market. Software is where these tools are strongest; your business is not software.
+
+Second, the report cites analysts projecting that generative AI "threatens white collar jobs, often occupied by skilled workers, and that middle-skill jobs in the skilled trades may become beneficiaries of this wave of technological change." That sentence is the trades' position in this whole story, stated by researchers with no reason to flatter you.
+
+<h2 id="the-caveats">Where does the study stop applying to a contractor?</h2>
+
+Three places, and the report names all of them itself.
+
+The companies studied were "primarily large, established organizations that are among the leading firms in their industries." Not a ten-truck HVAC company. The dynamics of a Fortune 500 pilot — dedicated data scientists, internal sandboxes, hackathons — do not exist in a shop where the owner is also the estimator.
+
+The people interviewed were mostly managers, "not the frontline workers or individual contributors whose jobs have been affected." A manager's account of how the crew uses a tool is not the crew's account.
+
+And the manufacturers in the study were skeptical that generative AI could meet the quality standards of a production environment. Most of their AI came from outside vendors. Their software expertise to modify it was limited. That description fits a contractor better than anything else in the report — and it means the levers you can actually pull are the management ones, not the engineering ones.
+
+Which is the good news. Nine of the ten levers are practices, not products. Gather evidence, calibrate trust, keep the expert in the loop, name an owner. None of it requires a data scientist. All of it requires deciding, before the tool arrives, what better means.
+
+<h2 id="what-to-do">What should a contractor do with this?</h2>
+
+Pick one problem from the three-problem table above. State what it costs you now, in a number. Choose the evidence that would prove a tool fixed it. Pilot with the person who has the most to gain, not the most to show off. Keep an experienced person on every output that matters, and put a name on every document the tool drafts. Budget for the second attempt.
+
+Then, when the tool is working, ask the question the report ends on: what new work has this created, and who is going to grow into it?
+
+If you scored the audit above, your two lowest levers are where to start. Everything else in this post can wait until those are running without you.
+
+<BlogCTA label="Before you deploy anything" headline="Find out whether the AI engines can find you first." subheadline="Half of your future customers will ask ChatGPT, Gemini, or Google's AI who to call before they ever see your website. The AI Visibility Audit shows whether you are in the answer." buttonText="Get My AI Visibility Audit — $27" buttonHref="/visibility-check" />
+
+<h2 id="sources">Sources</h2>
+
+- Armstrong, B., Shah, J., et al. *Humans in the Loop: The Evolution of Work in Early Experiments With Generative AI.* MIT Industrial Performance Center, April 2026. [Full report (PDF)](https://ipc.mit.edu/wp-content/uploads/2026/04/Humans_in_the_Loop_full_r01M.pdf).
+- Murray, S. "10 levers for shaping generative AI that truly improves worker performance." *MIT Sloan Ideas Made to Matter*, September 3, 2026. [Article](https://mitsloan.mit.edu/ideas-made-to-matter/10-levers-shaping-generative-ai-truly-improves-worker-performance).
+- Researcher pages: [Ben Armstrong](https://ipc.mit.edu/people/ben-armstrong/), MIT IPC; [Kate Kellogg](https://mitsloan.mit.edu/faculty/directory/kate-kellogg), MIT Sloan; [Julie Shah](https://aeroastro.mit.edu/people/julie-shah/), MIT AeroAstro.
+- All contractor examples and the ten-question audit are ours, not the researchers'. Direct quotations are from the report and the Sloan article.

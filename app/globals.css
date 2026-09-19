@@ -9892,3 +9892,29 @@ svg {
   .pl-hero-grid { grid-template-columns: 1fr; gap: 36px; }
   .pl-hero-visual img { max-width: 320px; }
 }
+
+/* ── Levers quiz (embedded in research posts via <LeversQuiz />) ─────────────
+   Reuses .pl-q / .pl-live / .pl-hp from /profit-leak so the two audits read as
+   one instrument. Only the wrapper, capture row, and result panel are new. */
+.lq { margin: 3rem 0; padding: 1.75rem 1.75rem 1.5rem; background: #0e0e0c; border: 1px solid rgba(255,255,255,0.07); border-radius: 2px; }
+.lq-eyebrow { display: block; margin-bottom: 8px; color: #7a7a78; }
+.lq-title { font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 1.45rem; line-height: 1.15; margin: 0 0 10px; color: #f5f5f3; }
+.lq-rule { margin: 0 0 18px; font-size: 14.5px; line-height: 1.6; color: #b8b8b5; }
+.lq .pl-section { margin-bottom: 0; }
+.lq-q-lever { display: block; margin-bottom: 3px; color: #E6FF00; font-size: 10px; }
+.lq-capture { margin-top: 18px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.1); }
+.lq-capture-lede { margin: 0 0 12px; font-size: 14.5px; color: #f5f5f3; }
+.lq-fields { display: grid; grid-template-columns: 1fr 1.4fr auto; gap: 10px; align-items: stretch; }
+.lq-fields .btn { white-space: nowrap; }
+.lq-error { margin-top: 8px; }
+.lq-fine { display: block; margin-top: 10px; color: #7a7a78; }
+.lq-result { padding-top: 6px; }
+.lq-result-score { display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+.lq-result-num { font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 56px; line-height: 1; color: #E6FF00; }
+.lq-result-band { font-family: 'Chakra Petch', sans-serif; font-weight: 600; font-size: 1.3rem; margin: 6px 0 8px; color: #f5f5f3; }
+.lq-result-text { margin: 0 0 16px; font-size: 15px; line-height: 1.6; color: #b8b8b5; }
+.lq-lowest { padding: 14px 16px; background: #060606; border: 1px solid rgba(255,255,255,0.07); border-radius: 2px; }
+.lq-lowest ul { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.lq-lowest li { font-size: 15px; color: #f5f5f3; }
+.lq-lowest li .idx { color: #E6FF00; margin-right: 8px; }
+@media (max-width: 640px) { .lq { padding: 1.25rem 1rem; } .lq-fields { grid-template-columns: 1fr; } }

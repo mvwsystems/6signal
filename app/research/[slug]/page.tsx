@@ -9,6 +9,7 @@ import BlogPageClient from "../../components/BlogPageClient";
 import AuditPopupButton from "../../components/AuditPopupButton";
 import { getAllPosts, getPostBySlug, getRelatedPosts, formatDate } from "../../lib/blog";
 import BlogCTA from "../../components/BlogCTA";
+import LeversQuiz from "../../components/LeversQuiz";
 
 const BASE = "https://6signal.co";
 
@@ -194,7 +195,7 @@ export default async function BlogPostPage({
           <div className="post-body">
             <MDXRemote
               source={post.content}
-              components={{ BlogCTA, img: Figure }}
+              components={{ BlogCTA, LeversQuiz, img: Figure }}
               options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
             />
           </div>

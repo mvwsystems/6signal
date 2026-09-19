@@ -1,0 +1,110 @@
+---
+title: "Anthropic's Pace-of-AI Measurements: What 26% AI-Led R&D Means for Contractors"
+slug: "anthropic-measuring-pace-of-ai-development-contractors"
+description: "Anthropic just published the first hard measurements of how fast AI is building AI inside a frontier lab: Claude now leads 26% of the company's own R&D, up from under 1% in February. What that pace means for a business at the far end of the pipe — and why the gap is the opportunity."
+date: "2026-09-18"
+category: "Insight"
+contentType: "Insight"
+author: "Matt Vincent Walker"
+readTime: "6 min read"
+featured: false
+tags:
+  - Anthropic
+  - AI Development
+  - Frontier Labs
+  - AI Visibility
+  - Research
+  - Contractor Marketing
+faq:
+  - q: "What did Anthropic measure in its pace-of-AI-development report?"
+    a: "Three things about its own operations: how much of its AI research and development is now led by its model Claude, measured on a six-level automation scale; how its automated oversight of roughly 30,000 internal AI agents performs, measured across more than a billion decisions; and what share of its compute goes to safety work, measured over one week in July 2026. It is a transparency framework with Anthropic's own numbers attached, published so other labs can report the same way."
+  - q: "What is the AI R&D Automation Index?"
+    a: "Anthropic's measure of how much of its own research and engineering work its model performs, using an automation-level scale from Epoch AI. Level 0 is no AI involvement; level 3 means AI collaborates on large pieces of work under close direction; level 4 means AI leads a task end to end from a high-level prompt while a person supervises; level 5 is fully autonomous. As of August 2026, Claude was at level 4 on 26 percent of the company's AI R&D and at level 3 or above on more than 90 percent. It was at level 5 on none of it."
+  - q: "What does a 0.002 percent block rate mean?"
+    a: "Anthropic runs an automated monitor that checks every action its internal agents take before it executes. Across more than a billion decisions in August 2026, that monitor blocked about one in 47,000. A separate after-the-fact review flags roughly one to two transcripts per thousand for closer examination, and about fifty a week reach a human. The low block rate is not evidence the agents are safe on their own; it is a description of how much intervention the current system produces."
+  - q: "Does the pace of AI development inside labs matter to a contractor?"
+    a: "Yes, but not in the way headlines suggest. The same class of systems that now writes a quarter of its own research is the class that answers when a homeowner asks who to call. Their capability is compounding on a six-month clock. What reaches a job site moves on a much slower one — MIT's field research calls AI a jagged frontier that is often a hammer in search of a nail. The gap between those two clocks is where a contractor can still get ahead."
+---
+
+Anthropic has published the first hard numbers on how fast AI is building AI inside a frontier lab. As of August 2026, its model Claude leads 26 percent of the company's own AI research and development, up from under 1 percent in February. More than 90 percent of that work now involves the model as a collaborator or better. None of it is fully autonomous. For a contractor, the number that matters is not the 26 percent. It is the six months.
+
+The report is [Measurements for understanding the pace of AI development inside frontier labs](https://www.anthropic.com/institute/measuring-pace-of-ai-development), published this week by the Anthropic Institute and written by Marina Favaro and Phillie Wright, with research direction from Jack Clark. It says nothing about small businesses, occupations, or anything that happens outside an AI lab. This post is about why it matters anyway, and about the parts of it you should hold loosely.
+
+<h2 id="what-was-published">What did Anthropic actually publish?</h2>
+
+A measurement framework with the company's own numbers attached, built so that other labs could report the same way. Three measurements, each with a stated method and a stated limitation.
+
+| Measurement | What it tracks | The headline number |
+|---|---|---|
+| **AI R&D Automation Index** | How much of Anthropic's research and engineering work Claude performs, on a six-level scale (AL0 no AI involvement, AL3 AI collaborates, AL4 AI leads, AL5 fully autonomous) | AL4 on 26% of AI R&D in August 2026, up from under 1% in February. AL3 or above on more than 90%. AL5 on none. |
+| **Oversight of AI agents** | How automated monitors perform across roughly 30,000 internal agents — a real-time check before every action, and a slower review after | Over a billion decisions in August; 0.002% blocked before execution, about 1 in 47,000. Around 100,000 transcripts a week flagged for after-the-fact review; about 50 a week reach a human. |
+| **Compute allocation** | What share of computing power goes to safety work versus capability work, over one week | About 6% of AI R&D compute went to safety, July 13–20, 2026. About 12% of the compute for AI-driven AI R&D. |
+
+The stated purpose is transparency. In the report's words, "As the world considers pacing the frontier, we should do everything possible to minimize the gap between what frontier labs know and what the public knows."
+
+<svg viewBox="0 0 720 280" role="img" aria-label="Chart: share of Anthropic's AI research and development that Claude leads end to end, at automation level 4. February 2026, under 1 percent. August 2026, 26 percent. A second marker shows that more than 90 percent of the work is now at level 3, AI collaborates, or above. Fully autonomous, level 5: zero." className="wp-fig">
+  <text x="24" y="34" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">Share of Anthropic's own AI R&amp;D that Claude leads</text>
+  <text x="24" y="52" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">AUTOMATION LEVEL 4 — AI LEADS END TO END, HUMAN SUPERVISES · EPOCH AI SCALE · ANTHROPIC, SEPT 2026</text>
+  <text x="24" y="98" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">FEB 2026</text>
+  <rect x="120" y="86" width="6" height="16" rx="2" fill="#55554f" />
+  <text x="136" y="98" fill="#f5f5f3" fontSize="11" fontFamily="JetBrains Mono, monospace">under 1%</text>
+  <text x="24" y="140" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">AUG 2026</text>
+  <rect x="120" y="128" width="156" height="16" rx="2" fill="#E6FF00" />
+  <text x="286" y="140" fill="#E6FF00" fontSize="11" fontFamily="JetBrains Mono, monospace">26%</text>
+  <text x="330" y="140" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">← six months</text>
+  <rect x="24" y="170" width="672" height="1" fill="#2a2a26" />
+  <text x="24" y="200" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">AL3 OR ABOVE (AI COLLABORATES OR BETTER), AUG 2026</text>
+  <rect x="24" y="208" width="600" height="10" rx="2" fill="#3a3a35" />
+  <rect x="24" y="208" width="540" height="10" rx="2" fill="#E6FF00" opacity="0.55" />
+  <text x="632" y="217" fill="#f5f5f3" fontSize="11" fontFamily="JetBrains Mono, monospace">over 90%</text>
+  <text x="24" y="246" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">AL5 — FULLY AUTONOMOUS, NO HUMAN IN THE LOOP</text>
+  <text x="632" y="246" fill="#f5f5f3" fontSize="11" fontFamily="JetBrains Mono, monospace">0%</text>
+  <text x="24" y="272" fill="#55554f" fontSize="9" fontFamily="JetBrains Mono, monospace">Source: Anthropic Institute, "Measurements for understanding the pace of AI development inside frontier labs" (2026). Self-reported.</text>
+</svg>
+
+The line the report itself draws under the chart: "Claude is not operating fully autonomously for any measured subset of AI R&D work."
+
+<h2 id="why-it-matters">Why should a contractor care what happens inside a frontier lab?</h2>
+
+Because of the two clocks.
+
+The first clock runs inside the lab. A system that led under 1 percent of its own development in February led 26 percent by August. Whatever you think of the method — and there are real questions, below — the direction is not in dispute, and Anthropic is one of a handful of companies whose systems answer when a homeowner in Waxahachie types "who should I call about a slab leak" into an AI assistant. The recommendation layer that decides whether your business gets named is built by the class of system that is now writing a quarter of its own research.
+
+The second clock runs on a job site, and it is much slower. MIT's Industrial Performance Center spent three years watching more than twenty companies try to put generative AI to work, and its report — which we translated for contractors [here](/research/mit-10-levers-generative-ai-contractors) — describes a technology that is "far more useful on some tasks than others," and in many companies "a hammer in search of a nail." The manufacturers it studied bought their AI from outside vendors and doubted it could meet their quality standards. The most common way AI arrived in most workplaces was in the background, embedded in software the company already used, with no decision to adopt it at all. And the much-discussed shift to AI agents, the researchers found, is "an incremental change from robotic process automation" rather than a new transformation.
+
+So: the systems that decide who gets recommended are compounding on a six-month clock. The systems that run a contracting business are moving on a multi-year one. That gap is not a threat. It is the window. The engines are getting better at answering the question faster than most local businesses are getting better at being the answer, which means the businesses that make themselves findable, verifiable, and consistent now are competing against a field that mostly has not started.
+
+<h2 id="the-caveats">Which of these numbers should you hold loosely?</h2>
+
+Anthropic lists its own limitations, and they are substantial enough to repeat.
+
+**The model graded its own work.** The automation index was produced by having Claude rate roughly 15,000 of the company's own tasks. When staff rated the same areas independently, the model matched them exactly 59 percent of the time — better than the 35 percent rate at which two humans matched each other, and within one level of the humans 97 percent of the time. That is a reasonable result and also a system judging itself, which the report acknowledges could produce correlated errors.
+
+**The task list is frozen.** The basket of tasks was fixed to a July 2026 baseline. Any new kind of work that has appeared since is not in the measurement. The index can therefore describe how much of last summer's job the model does, not how much of this autumn's.
+
+**One week of compute is a snapshot, not a trend.** The safety-allocation figure covers July 13 to 20. The report is explicit that safety research uses less compute by nature — the design work is time-intensive, not compute-intensive — so the 6 percent understates effort even before questions about labeling, and a single week cannot show direction.
+
+**Oversight has been running for months, not years.** The monitors have not had time to encounter every pattern of behavior, and the report expects the methods to change significantly.
+
+None of that undercuts the direction of the R&D number. It does mean the precise figures are best read as the first data points on a chart Anthropic has committed to keep updating, and it means a lab reporting on itself will need outside verification before the numbers should settle anything.
+
+<h2 id="what-to-do">What should a contractor do with a report about a frontier lab?</h2>
+
+Three things, none of which require understanding automation levels.
+
+**Be the answer before the engines get better at asking.** Every one of these systems researches a business before recommending it — its website, its Google profile, the directories and license registries that vouch for it. We tracked [700 AI visibility checks in one Texas market](/research/we-ran-700-ai-visibility-checks-one-texas-market) and found the same company scoring 92 percent on one engine and zero on another, in the same window, on identical work. The difference was whether each engine's pipeline could see and verify the business. That is fixable, and it is worth more every month the engines improve.
+
+**Start from a problem you already have.** The MIT finding that separated AI deployments that scaled from ones that got shelved was a pre-existing, documented problem the tool was pointed at. That holds whether the tool is a proposal drafter or an AI receptionist. A faster clock in the lab does not change the order of operations in your office.
+
+**Keep a person on the edge cases.** The most useful detail in Anthropic's oversight numbers is not the 0.002 percent block rate. It is that about fifty transcripts a week still reach a human. Even the company that builds these systems runs them with someone on the exceptions. So should you.
+
+The pace of AI development is now measurable, and the first measurement says a quarter. It will be higher next time. The businesses that will be fine are not the ones that predicted the number. They are the ones that were findable when the engines came looking.
+
+<BlogCTA label="The engines are getting better at asking" headline="Find out whether they can find you." subheadline="The AI Visibility Audit checks whether ChatGPT, Gemini, Perplexity, and Google's AI name your business when a customer asks who to call — and what to fix if they don't." buttonText="Get My AI Visibility Audit — $27" buttonHref="/visibility-check" />
+
+<h2 id="sources">Sources</h2>
+
+- Favaro, M., and Wright, P. "Measurements for understanding the pace of AI development inside frontier labs." *Anthropic Institute*, September 2026. [Report](https://www.anthropic.com/institute/measuring-pace-of-ai-development). All figures for the automation index, agent oversight, and compute allocation are Anthropic's self-reported measurements for July and August 2026.
+- Epoch AI. The automation-level scale (AL0–AL5) used by the index. [Toward an O*NET for AI R&D](https://epoch.substack.com/p/toward-an-onet-for-ai-r-and-d).
+- Armstrong, B., Shah, J., et al. *Humans in the Loop.* MIT Industrial Performance Center, April 2026. Our contractor translation is at [MIT's 10 Levers for Generative AI, Applied to Contractors](/research/mit-10-levers-generative-ai-contractors).
+- Direct quotations are from the Anthropic report and the MIT report. The two-clocks framing and every contractor application are ours.
