@@ -9769,3 +9769,116 @@ svg {
   vertical-align: top;
 }
 .post-body td strong { color: #f5f5f3; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   /profit-leak — Field Guide No. 01 lead magnet (added 2026-09-18)
+   Reuses avc-*, vc2-*, btn, lp-footer, mobile-cta. Only what's new lives here:
+   the modeled-exposure strip, the seven-leaks map, the audit/download mode
+   toggle, the twenty-one checkbox rows, the running score, and the result.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* modeled exposure strip */
+.pl-model { padding: 56px 0; background: #060606; }
+.pl-model-inner {
+  max-width: 760px; padding: 28px 32px;
+  background: #0e0e0c; border: 1px solid rgba(255,255,255,0.07); border-radius: 2px;
+}
+.pl-model-label { display: block; margin-bottom: 10px; color: #7a7a78; }
+.pl-model-figure {
+  display: block; font-family: 'Chakra Petch', sans-serif; font-weight: 700;
+  font-size: clamp(30px, 4.6vw, 46px); line-height: 1; letter-spacing: -0.01em; color: #E6FF00;
+}
+.pl-model-note { margin: 14px 0 0; max-width: 64ch; font-size: 14.5px; line-height: 1.65; color: #9a9a97; }
+
+/* the seven leaks */
+.pl-leaks { padding: 72px 0; }
+.pl-leak-list { list-style: none; margin: 0; padding: 0; max-width: 760px; border-top: 1px solid rgba(255,255,255,0.1); }
+.pl-leak {
+  display: grid; grid-template-columns: 36px 1fr auto; gap: 18px; align-items: baseline;
+  padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.pl-leak-num { color: #E6FF00; }
+.pl-leak-name { font-family: 'Chakra Petch', sans-serif; font-weight: 600; font-size: 17px; color: #f5f5f3; }
+.pl-leak-where { color: #7a7a78; text-align: right; }
+.pl-leak-note { margin: 22px 0 0; max-width: 64ch; font-size: 14.5px; line-height: 1.65; color: #9a9a97; }
+
+/* mode toggle — two tabs, one path */
+.pl-mode { display: inline-flex; margin-top: 22px; border: 1px solid rgba(255,255,255,0.12); border-radius: 2px; }
+.pl-mode-btn {
+  appearance: none; background: transparent; border: 0; cursor: pointer;
+  padding: 11px 18px; font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  letter-spacing: 0.14em; text-transform: uppercase; color: #7a7a78;
+}
+.pl-mode-btn + .pl-mode-btn { border-left: 1px solid rgba(255,255,255,0.12); }
+.pl-mode-btn.is-on { background: #E6FF00; color: #060606; }
+.pl-mode-btn:focus-visible { outline: 2px solid #E6FF00; outline-offset: 2px; }
+
+/* honeypot — off-screen, not display:none (bots check for that) */
+.pl-hp { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+
+/* the audit */
+.pl-audit { margin-top: 36px; }
+.pl-audit-rule {
+  margin: 0 0 26px; padding: 14px 18px; border-left: 3px solid #E6FF00;
+  background: #0e0e0c; font-size: 14.5px; line-height: 1.6; color: #b8b8b5;
+}
+.pl-section { border: 0; margin: 0 0 22px; padding: 0; min-width: 0; }
+.pl-section-title {
+  display: flex; justify-content: space-between; gap: 12px; width: 100%;
+  padding: 0 0 8px; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.1); color: #E6FF00;
+}
+.pl-section-score { color: #7a7a78; }
+.pl-q {
+  display: grid; grid-template-columns: 22px 1fr; gap: 14px; align-items: start;
+  padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.06); cursor: pointer;
+}
+.pl-q input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.pl-q-box {
+  width: 20px; height: 20px; margin-top: 1px; border: 1px solid rgba(255,255,255,0.28);
+  border-radius: 2px; background: #060606; position: relative; transition: border-color .15s, background .15s;
+}
+.pl-q-box::after {
+  content: ""; position: absolute; left: 6px; top: 2px; width: 5px; height: 10px;
+  border: solid #060606; border-width: 0 2px 2px 0; transform: rotate(45deg); opacity: 0;
+}
+.pl-q:hover .pl-q-box { border-color: rgba(255,255,255,0.6); }
+.pl-q input:focus-visible + .pl-q-box { outline: 2px solid #E6FF00; outline-offset: 2px; }
+.pl-q.is-yes .pl-q-box { background: #E6FF00; border-color: #E6FF00; }
+.pl-q.is-yes .pl-q-box::after { opacity: 1; }
+.pl-q-text { font-size: 15px; line-height: 1.55; color: #b8b8b5; }
+.pl-q.is-yes .pl-q-text { color: #f5f5f3; }
+
+.pl-live {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-top: 8px; padding: 16px 18px; background: #0e0e0c; border: 1px solid rgba(255,255,255,0.07); border-radius: 2px;
+}
+.pl-live-num { font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 28px; color: #E6FF00; }
+.pl-live-num i { font-style: normal; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7a7a78; margin-left: 6px; }
+
+/* result */
+.pl-result { max-width: 760px; }
+.pl-result-score { display: flex; align-items: baseline; gap: 14px; margin: 10px 0 6px; }
+.pl-result-num { font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: clamp(56px, 9vw, 88px); line-height: 1; color: #E6FF00; }
+.pl-result-of { color: #7a7a78; }
+.pl-result-band { font-size: clamp(22px, 3vw, 30px); margin: 6px 0 12px; }
+.pl-result-text { max-width: 64ch; font-size: 15.5px; line-height: 1.65; color: #b8b8b5; margin: 0 0 22px; }
+.pl-result-sections { list-style: none; margin: 0 0 26px; padding: 0; border-top: 1px solid rgba(255,255,255,0.1); }
+.pl-result-row {
+  display: grid; grid-template-columns: 30px 1fr 140px 44px; gap: 14px; align-items: center;
+  padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.pl-result-row-name { font-size: 15px; color: #f5f5f3; }
+.pl-result-bar { display: block; height: 6px; background: rgba(255,255,255,0.08); position: relative; }
+.pl-result-bar i { position: absolute; left: 0; top: 0; bottom: 0; background: #E6FF00; }
+.pl-result-row.is-low .pl-result-bar i { background: #f5f5f3; }
+.pl-result-row-n { text-align: right; color: #7a7a78; }
+.pl-result .lp-cta-pair { margin-top: 8px; }
+
+@media (max-width: 640px) {
+  .pl-leak { grid-template-columns: 30px 1fr; }
+  .pl-leak-where { grid-column: 2; text-align: left; }
+  .pl-result-row { grid-template-columns: 30px 1fr 44px; }
+  .pl-result-bar { display: none; }
+  .pl-mode { display: flex; }
+  .pl-mode-btn { flex: 1; padding: 11px 8px; text-align: center; }
+}
