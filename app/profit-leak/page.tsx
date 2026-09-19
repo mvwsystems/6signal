@@ -108,6 +108,10 @@ export default function ProfitLeakPage() {
   return (
     <>
       <Nav />
+      {/* Custom cursor targets — useMicroInteractions() looks these up by id;
+          without them the hook has nothing to move and the page shows no cursor. */}
+      <div id="cursor-dot" aria-hidden="true" />
+      <div id="cursor-ring" aria-hidden="true" />
 
       {/* ── HERO ─────────────────────────────────────────────── */}
       <section className="avc-hero">
