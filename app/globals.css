@@ -9882,3 +9882,13 @@ svg {
   .pl-mode { display: flex; }
   .pl-mode-btn { flex: 1; padding: 11px 8px; text-align: center; }
 }
+
+/* /profit-leak hero — copy left, the guide on a tablet right. The image ships
+   its own soft shadow in its alpha channel, so no CSS shadow here. */
+.pl-hero-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 48px; align-items: center; }
+.pl-hero-visual { margin: 0; }
+.pl-hero-visual img { display: block; width: 100%; height: auto; max-width: 460px; margin: 0 auto; }
+@media (max-width: 860px) {
+  .pl-hero-grid { grid-template-columns: 1fr; gap: 36px; }
+  .pl-hero-visual img { max-width: 320px; }
+}

@@ -117,6 +117,8 @@ export default function ProfitLeakPage() {
       <section className="avc-hero">
         <div className="hero-glow" />
         <div className="wrap avc-hero-inner">
+          <div className="pl-hero-grid">
+          <div className="pl-hero-copy">
           <span className="idx avc-hero-eyebrow">Field Guide No. 01 / For General Contractors</span>
           <h1 className="display avc-hero-headline reveal">
             The Contractor Profit Leak Audit
@@ -137,6 +139,19 @@ export default function ProfitLeakPage() {
           <p className="idx avc-hero-trust reveal">
             Free · Your result immediately · Your copy of the guide by email
           </p>
+          </div>
+          <figure className="pl-hero-visual reveal">
+            <img
+              src="/profit-leak-guide-tablet.webp"
+              alt="The Contractor Profit Leak Audit field guide, shown on a tablet"
+              width={1000}
+              height={1280}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+            />
+          </figure>
+          </div>
         </div>
       </section>
 
