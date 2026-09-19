@@ -18,7 +18,6 @@ interface Body {
   mode?: string;
   name?: string;
   email?: string;
-  phone?: string;
   company?: string;
   answers?: unknown;
   attribution?: Record<string, unknown> | null;
@@ -83,15 +82,11 @@ export async function POST(req: Request) {
   const mode = body.mode === "audit" ? "audit" : "download";
   const name = (body.name ?? "").trim().slice(0, 80);
   const email = (body.email ?? "").trim().toLowerCase();
-  const phone = (body.phone ?? "").trim().slice(0, 32);
   const company = (body.company ?? "").trim().slice(0, 120);
 
   if (name.length < 2) return NextResponse.json({ ok: false, error: "Enter your name" }, { status: 400 });
   if (!EMAIL_RE.test(email) || email.length > 254) {
     return NextResponse.json({ ok: false, error: "Enter a valid email" }, { status: 400 });
-  }
-  if (phone.replace(/\D/g, "").length < 7) {
-    return NextResponse.json({ ok: false, error: "Enter a phone number" }, { status: 400 });
   }
   if (company.length < 2) return NextResponse.json({ ok: false, error: "Enter your company name" }, { status: 400 });
 
@@ -166,7 +161,6 @@ export async function POST(req: Request) {
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
         ${row("Company", esc(company))}
         ${row("Email", `<a href="mailto:${esc(email)}" style="color:#E6FF00;">${esc(email)}</a>`)}
-        ${row("Phone", `<a href="tel:${esc(phone.replace(/[^\d+]/g, ""))}" style="color:#E6FF00;">${esc(phone)}</a>`)}
         ${row("Path", mode === "audit" ? "Scored the audit on the page" : "Downloaded the PDF")}
         ${row("Source", esc(String(body.attribution?.source ?? "(direct)")))}
         ${row("Kit", "Tagged 6 SIGNAL + profit-leak")}

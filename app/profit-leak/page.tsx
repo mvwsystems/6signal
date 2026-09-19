@@ -9,8 +9,8 @@ import { SECTIONS, QUESTION_COUNT, bandFor, scoreAnswers, PDF_PATH } from "./aud
 
 // /profit-leak — Field Guide No. 01 as a lead magnet. Two paths share one
 // contact form: download the PDF, or score the twenty-one-question audit on
-// the page and get the result immediately. Both capture name, email, phone
-// and company, subscribe to Kit, and alert the owner. Mirrors the
+// the page and get the result immediately. Both capture name, email and
+// company, subscribe to Kit, and alert the owner. Mirrors the
 // /ai-visibility-check landing-page shell (Nav + minimal footer).
 
 type Mode = "audit" | "download";
@@ -18,7 +18,6 @@ type Mode = "audit" | "download";
 interface Form {
   name: string;
   email: string;
-  phone: string;
   company: string;
   website: string; // honeypot — stays empty for humans
 }
@@ -37,7 +36,7 @@ export default function ProfitLeakPage() {
   useMicroInteractions();
 
   const [mode, setMode] = useState<Mode>("audit");
-  const [form, setForm] = useState<Form>({ name: "", email: "", phone: "", company: "", website: "" });
+  const [form, setForm] = useState<Form>({ name: "", email: "", company: "", website: "" });
   const [answers, setAnswers] = useState<boolean[]>(() => Array(QUESTION_COUNT).fill(false));
   const [errors, setErrors] = useState<Partial<Record<keyof Form, string>>>({});
   const [loading, setLoading] = useState(false);
@@ -68,7 +67,6 @@ export default function ProfitLeakPage() {
     const next: typeof errors = {};
     if (form.name.trim().length < 2) next.name = "Enter your name";
     if (!EMAIL_RE.test(form.email.trim())) next.email = "Enter a valid email";
-    if (form.phone.replace(/\D/g, "").length < 7) next.phone = "Enter a phone number";
     if (form.company.trim().length < 2) next.company = "Enter your company name";
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -227,11 +225,6 @@ export default function ProfitLeakPage() {
                     <label className="vc2-label" htmlFor="pl-email">Email <span className="vc2-req">*</span></label>
                     <input id="pl-email" className="vc2-input" type="email" autoComplete="email" inputMode="email" value={form.email} onChange={setField("email")} />
                     {errors.email && <span className="vc2-error">{errors.email}</span>}
-                  </div>
-                  <div className={`vc2-field${errors.phone ? " vc2-field--error" : ""}`}>
-                    <label className="vc2-label" htmlFor="pl-phone">Phone <span className="vc2-req">*</span></label>
-                    <input id="pl-phone" className="vc2-input" type="tel" autoComplete="tel" inputMode="tel" value={form.phone} onChange={setField("phone")} />
-                    {errors.phone && <span className="vc2-error">{errors.phone}</span>}
                   </div>
                   {/* honeypot — off-screen, never shown to people */}
                   <div className="pl-hp" aria-hidden="true">
