@@ -9918,3 +9918,23 @@ svg {
 .lq-lowest li { font-size: 15px; color: #f5f5f3; }
 .lq-lowest li .idx { color: #E6FF00; margin-right: 8px; }
 @media (max-width: 640px) { .lq { padding: 1.25rem 1rem; } .lq-fields { grid-template-columns: 1fr; } }
+
+/* ── /dashboard theme tokens ──────────────────────────────────────────────────
+   The dashboard styles itself inline through one T object (app/dashboard/
+   theme.ts) whose values are these variables. Dark is the default and the
+   brand. Light swaps the ramp and darkens the accent to #5C6600 so it stays
+   readable as text on white — the brand yellow only survives as a fill. */
+.dash-root {
+  --db-bg: #060606; --db-surface: #0e0e0c; --db-panel: #0e0e0c; --db-panel2: #141412;
+  --db-border: rgba(255,255,255,0.07); --db-border-h: rgba(255,255,255,0.16);
+  --db-accent: #E6FF00; --db-text: #f5f5f3; --db-text-sub: #a8a8a3; --db-muted: #6a6a64;
+  --db-danger: #ef4444; --db-warn: #f97316; --db-ok: #22c55e;
+  color-scheme: dark;
+}
+html[data-db-theme="light"] .dash-root {
+  --db-bg: #FAFAF7; --db-surface: #FFFFFF; --db-panel: #FFFFFF; --db-panel2: #F2F2EE;
+  --db-border: rgba(17,17,16,0.12); --db-border-h: rgba(17,17,16,0.26);
+  --db-accent: #5C6600; --db-text: #111110; --db-text-sub: #4a4a44; --db-muted: #6E6E63;
+  --db-danger: #B42318; --db-warn: #B54708; --db-ok: #1F7A3F;
+  color-scheme: light;
+}

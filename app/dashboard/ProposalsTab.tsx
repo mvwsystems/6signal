@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
+import { T, MONO, DISP, BODY } from "./theme";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Printable client proposals (retainer quotes), matching the 6Signal engagement
@@ -10,14 +11,6 @@ import { useCallback, useEffect, useState } from "react";
 // rest of /dashboard (no globals.css changes except the print-area rule).
 // ─────────────────────────────────────────────────────────────────────────────
 
-const T = {
-  bg: "#060606", panel: "#0e0e0c", panel2: "#141412",
-  border: "rgba(255,255,255,0.07)", accent: "#E6FF00",
-  text: "#f5f5f3", textSub: "#a8a8a3", muted: "#6a6a64", danger: "#ef4444", ok: "#22c55e",
-};
-const MONO = "'JetBrains Mono', ui-monospace, monospace";
-const DISP = "'Chakra Petch', sans-serif";
-const BODY = "'Inter', sans-serif";
 
 const card = (extra?: React.CSSProperties): React.CSSProperties => ({ background: T.panel, border: `1px solid ${T.border}`, borderRadius: 2, padding: 20, ...extra });
 const eyebrow: React.CSSProperties = { fontFamily: MONO, fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: T.muted };

@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Radar, Ring, SignalBars, LineChart, Donut, Sparkline, MapHeatGrid } from "../components/charts";
 import ProposalsTab from "./ProposalsTab";
+import { T, alpha, MONO, DISP, BODY, useDbTheme } from "./theme";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 6 Signal — internal AI Visibility Command Center (/dashboard)
@@ -9,25 +10,6 @@ import ProposalsTab from "./ProposalsTab";
 // (no globals.css changes). Reuses the live server-side audit engine for scans.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const T = {
-  bg: "#060606",
-  surface: "#0e0e0c",
-  panel: "#0e0e0c",
-  panel2: "#141412",
-  border: "rgba(255,255,255,0.07)",
-  borderH: "rgba(255,255,255,0.16)",
-  accent: "#E6FF00",
-  text: "#f5f5f3",
-  textSub: "#a8a8a3",
-  muted: "#6a6a64",
-  danger: "#ef4444",
-  warn: "#f97316",
-  ok: "#22c55e",
-};
-
-const MONO = "'JetBrains Mono', ui-monospace, monospace";
-const DISP = "'Chakra Petch', sans-serif";
-const BODY = "'Inter', sans-serif";
 
 const SIGNALS = [
   { key: "geo", label: "GEO", full: "Generative Engine Optimization" },
@@ -241,7 +223,7 @@ function ReportRunner({ cta, subtitle, longNote, endpoint, render, businesses = 
         )}
       </div>
       <div>
-        {err && <div style={card({ borderColor: `${T.danger}66`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{err}</span></div>}
+        {err && <div style={card({ borderColor: `${alpha(T.danger, 40)}`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{err}</span></div>}
         {!data && !running && !err && (
           <div style={card({ padding: 56, textAlign: "center", border: `1px dashed ${T.border}` })}>
             <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 18, marginBottom: 8 }}>{cta}</div>
@@ -286,7 +268,7 @@ function renderClientReport(data: any) {
   );
   return (
     <div>
-      <div style={card({ marginBottom: 16, borderColor: `${T.accent}44` })}>
+      <div style={card({ marginBottom: 16, borderColor: `${alpha(T.accent, 27)}` })}>
         <div style={{ ...eyebrow, marginBottom: 6 }}>{data?.period_label}{data?.is_baseline ? " · starting line" : ""}</div>
         <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 22, marginBottom: 6 }}>{data?.business?.name}</div>
         {n?.headline && <p style={{ fontFamily: DISP, fontWeight: 700, fontSize: 16, color: T.text, margin: "0 0 8px", lineHeight: 1.4 }}>{n.headline}</p>}
@@ -307,13 +289,13 @@ function renderClientReport(data: any) {
         </div>
       )}
       {data?.wins?.length > 0 && (
-        <div style={card({ marginBottom: 16, borderColor: `${T.ok}44` })}>
+        <div style={card({ marginBottom: 16, borderColor: `${alpha(T.ok, 27)}` })}>
           <div style={{ ...eyebrow, color: T.ok, marginBottom: 10 }}>New wins</div>
           {data.wins.map((w: string, i: number) => <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6 }}><span style={{ color: T.ok }}>✓</span><span style={{ fontSize: 13, color: T.text }}>{w}</span></div>)}
         </div>
       )}
       {data?.losses?.length > 0 && (
-        <div style={card({ marginBottom: 16, borderColor: `${T.warn}44` })}>
+        <div style={card({ marginBottom: 16, borderColor: `${alpha(T.warn, 27)}` })}>
           <div style={{ ...eyebrow, color: T.warn, marginBottom: 10 }}>Positions lost</div>
           {data.losses.map((l: string, i: number) => <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6 }}><span style={{ color: T.warn }}>△</span><span style={{ fontSize: 13, color: T.text }}>{l}</span></div>)}
         </div>
@@ -332,7 +314,7 @@ function renderClientReport(data: any) {
       )}
       <div className="m1col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
         {n?.focus_next?.length > 0 && <div style={card()}><div style={{ ...eyebrow, marginBottom: 10 }}>What we&rsquo;re doing next</div>{n.focus_next.map((f: string, i: number) => <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6 }}><span style={{ color: T.accent }}>•</span><span style={{ fontSize: 13, color: T.textSub }}>{f}</span></div>)}</div>}
-        {n?.client_actions?.length > 0 && <div style={card({ borderColor: `${T.accent}44` })}><div style={{ ...eyebrow, color: T.accent, marginBottom: 10 }}>What we need from the client</div>{n.client_actions.map((a: string, i: number) => <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6 }}><span style={{ color: T.accent }}>→</span><span style={{ fontSize: 13, color: T.text }}>{a}</span></div>)}</div>}
+        {n?.client_actions?.length > 0 && <div style={card({ borderColor: `${alpha(T.accent, 27)}` })}><div style={{ ...eyebrow, color: T.accent, marginBottom: 10 }}>What we need from the client</div>{n.client_actions.map((a: string, i: number) => <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6 }}><span style={{ color: T.accent }}>→</span><span style={{ fontSize: 13, color: T.text }}>{a}</span></div>)}</div>}
       </div>
     </div>
   );
@@ -351,14 +333,14 @@ function renderScan(data: any, form: Record<string, string>) {
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4, flexWrap: "wrap" }}>
             <span style={{ fontFamily: DISP, fontWeight: 700, fontSize: 20 }}>{data?.business?.name || form.name}</span>
             <span style={{ background: `${tier.color}1f`, color: tier.color, fontWeight: 700, fontSize: 11, padding: "3px 10px", borderRadius: 20, border: `1px solid ${tier.color}55`, fontFamily: MONO }}>{tier.label}</span>
-            <span style={{ background: data?.business?.found ? `${T.ok}1f` : `${T.danger}1f`, color: data?.business?.found ? T.ok : T.danger, fontWeight: 700, fontSize: 11, padding: "3px 10px", borderRadius: 20, fontFamily: MONO }}>{data?.business?.found ? "NAMED BY AI" : "NOT NAMED"}</span>
+            <span style={{ background: data?.business?.found ? `${alpha(T.ok, 12)}` : `${alpha(T.danger, 12)}`, color: data?.business?.found ? T.ok : T.danger, fontWeight: 700, fontSize: 11, padding: "3px 10px", borderRadius: 20, fontFamily: MONO }}>{data?.business?.found ? "NAMED BY AI" : "NOT NAMED"}</span>
           </div>
           <div style={{ fontSize: 13, color: T.muted }}>{[trade, city, form.url].filter(Boolean).join(" · ")}</div>
         </div>
         <Radar scores={scores} size={180} />
       </div>
       {data?.ai_answer && (
-        <div style={card({ marginBottom: 16, borderColor: `${T.accent}33` })}>
+        <div style={card({ marginBottom: 16, borderColor: `${alpha(T.accent, 20)}` })}>
           <div style={{ ...eyebrow, marginBottom: 8 }}>What AI says — &ldquo;best {trade} in {city}&rdquo;</div>
           <p style={{ fontSize: 14, lineHeight: 1.6, color: T.text, margin: 0 }}>{data.ai_answer}</p>
           {Array.isArray(data?.competitors) && data.competitors.length > 0 && (
@@ -403,7 +385,7 @@ function renderBattlePlan(data: any, form: Record<string, string>) {
         <Radar scores={scores} size={180} />
       </div>
 
-      {data?.ai_answer && <div style={card({ marginBottom: 16, borderColor: `${T.accent}33` })}><div style={{ ...eyebrow, marginBottom: 8 }}>What AI says — &ldquo;best {trade} in {city}&rdquo;</div><p style={{ fontSize: 14, lineHeight: 1.6, color: T.text, margin: 0 }}>{data.ai_answer}</p></div>}
+      {data?.ai_answer && <div style={card({ marginBottom: 16, borderColor: `${alpha(T.accent, 20)}` })}><div style={{ ...eyebrow, marginBottom: 8 }}>What AI says — &ldquo;best {trade} in {city}&rdquo;</div><p style={{ fontSize: 14, lineHeight: 1.6, color: T.text, margin: 0 }}>{data.ai_answer}</p></div>}
 
       {data?.local_audit && (
         <div style={card({ marginBottom: 16 })}>
@@ -485,7 +467,7 @@ function renderBattlePlan(data: any, form: Record<string, string>) {
       )}
 
       {Array.isArray(data?.pitch_angles) && data.pitch_angles.length > 0 && (
-        <div style={card({ marginBottom: 16, borderColor: `${T.accent}55`, background: `${T.accent}0a` })}>
+        <div style={card({ marginBottom: 16, borderColor: `${alpha(T.accent, 33)}`, background: `${alpha(T.accent, 4)}` })}>
           <div style={{ ...eyebrow, color: T.accent, marginBottom: 12 }}>Pitch angles — use these on the call</div>
           {data.pitch_angles.map((p: string, i: number) => (
             <div key={i} style={{ display: "flex", gap: 10, marginBottom: 8 }}>
@@ -496,7 +478,7 @@ function renderBattlePlan(data: any, form: Record<string, string>) {
         </div>
       )}
 
-      {data?.cost_of_inaction && <div style={card({ borderColor: `${T.danger}55` })}><div style={{ ...eyebrow, color: T.danger, marginBottom: 6 }}>Cost of inaction</div><p style={{ fontSize: 13, color: T.text, lineHeight: 1.5, margin: 0 }}>{data.cost_of_inaction}</p></div>}
+      {data?.cost_of_inaction && <div style={card({ borderColor: `${alpha(T.danger, 33)}` })}><div style={{ ...eyebrow, color: T.danger, marginBottom: 6 }}>Cost of inaction</div><p style={{ fontSize: 13, color: T.text, lineHeight: 1.5, margin: 0 }}>{data.cost_of_inaction}</p></div>}
     </div>
   );
 }
@@ -506,7 +488,7 @@ function renderExecPlan(data: any, form: Record<string, string>) {
   const b = data?.business ?? {};
   return (
     <div>
-      <div style={card({ marginBottom: 16, borderColor: `${T.accent}55` })}>
+      <div style={card({ marginBottom: 16, borderColor: `${alpha(T.accent, 33)}` })}>
         <div style={{ ...eyebrow, marginBottom: 6 }}>90-Day Execution Plan — {b.name || form.name}</div>
         {data?.north_star && <p style={{ fontFamily: DISP, fontWeight: 700, fontSize: 18, color: T.text, margin: "0 0 12px", lineHeight: 1.35 }}>{data.north_star}</p>}
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -1038,7 +1020,7 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
       )}
 
       {!businesses.length && <div style={card({ padding: 48, textAlign: "center" })}><p style={{ fontSize: 14, color: T.muted, margin: 0 }}>No businesses yet. Run a scan or wait for a lead, then track them here.</p></div>}
-      {err && <div style={card({ borderColor: `${T.danger}66`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{err}</span></div>}
+      {err && <div style={card({ borderColor: `${alpha(T.danger, 40)}`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{err}</span></div>}
 
       {bizId && (
         <div className="dash-print-area">
@@ -1521,7 +1503,7 @@ function OverviewTab({ data }: { data: Overview }) {
                 <div style={{ textAlign: "right", fontFamily: MONO, fontSize: 13, color: c.open_amount > 0 ? T.warn : T.muted }}>{c.open_amount > 0 ? `${fmtMoney(c.open_amount)} (${c.open_count})` : "—"}</div>
                 <div style={{ textAlign: "right" }}>
                   {c.past_due || c.delinquent ? (
-                    <span style={{ background: `${T.danger}1f`, color: T.danger, fontWeight: 700, fontSize: 11, padding: "3px 10px", borderRadius: 20, fontFamily: MONO }}>
+                    <span style={{ background: `${alpha(T.danger, 12)}`, color: T.danger, fontWeight: 700, fontSize: 11, padding: "3px 10px", borderRadius: 20, fontFamily: MONO }}>
                       {c.past_due ? `PAST DUE${c.oldest_due ? ` · ${fmtDate(c.oldest_due)}` : ""}` : "DELINQUENT"}
                     </span>
                   ) : (
@@ -1641,7 +1623,7 @@ function AdsTab({ businesses }: { businesses: Biz[] }) {
         )}
       </div>
 
-      {err && <div style={card({ borderColor: `${T.danger}66` })}><span style={{ color: T.danger, fontSize: 13 }}>{err}</span></div>}
+      {err && <div style={card({ borderColor: `${alpha(T.danger, 40)}` })}><span style={{ color: T.danger, fontSize: 13 }}>{err}</span></div>}
 
       {editing && (
         <div style={card()}>
@@ -1834,9 +1816,9 @@ function ContentTab({ businesses }: { businesses: Biz[] }) {
         )}
       </div>
 
-      {err && <div style={card({ borderColor: `${T.danger}66`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{err}</span></div>}
+      {err && <div style={card({ borderColor: `${alpha(T.danger, 40)}`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{err}</span></div>}
       {bizId && !githubReady && (
-        <div style={card({ borderColor: `${T.warn}66`, marginBottom: 16 })}>
+        <div style={card({ borderColor: `${alpha(T.warn, 40)}`, marginBottom: 16 })}>
           <span style={{ color: T.warn, fontSize: 13 }}>GITHUB_TOKEN is not set in Netlify — you can generate and edit drafts, but publishing is disabled. Add the fine-grained PAT (Contents: read/write on the client repos) as a normal env var (never “secret”), then redeploy.</span>
         </div>
       )}
@@ -1960,7 +1942,7 @@ function ContentTab({ businesses }: { businesses: Biz[] }) {
             <input style={inputStyle} value={open.meta_description ?? ""} onChange={(e) => setOpen({ ...open, meta_description: e.target.value })} readOnly={open.status === "published"} />
           </div>
           <div style={{ ...eyebrow, marginBottom: 6 }}>Preview (rendered with the client site’s own stylesheet)</div>
-          <iframe title="Article preview" sandbox="" srcDoc={previewDoc(open)} style={{ width: "100%", height: "70vh", border: `1px solid ${T.border}`, borderRadius: 2, background: "#0a0a0c" }} />
+          <iframe title="Article preview" sandbox="" srcDoc={previewDoc(open)} style={{ width: "100%", height: "70vh", border: `1px solid ${T.border}`, borderRadius: 2, background: T.surface }} />
         </div>
       )}
     </div>
@@ -2010,7 +1992,7 @@ function RevenueTab() {
     </div>
   );
 
-  if (failed) return <div style={card({ borderColor: `${T.danger}66` })}><span style={{ color: T.danger, fontSize: 13 }}>Could not load revenue data.</span></div>;
+  if (failed) return <div style={card({ borderColor: `${alpha(T.danger, 40)}` })}><span style={{ color: T.danger, fontSize: 13 }}>Could not load revenue data.</span></div>;
   if (!rev) return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       {picker}
@@ -2139,6 +2121,7 @@ export default function DashboardPage() {
     })();
   }, [loadData]);
 
+  const [dbTheme, toggleDbTheme] = useDbTheme();
   const logout = async () => { await fetch("/api/dashboard/auth", { method: "DELETE" }); setState("locked"); setData(null); };
 
   if (state === "loading") return <div className="dash-root" style={{ minHeight: "100vh", background: T.bg, color: T.muted, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 13 }}>Loading…</div>;
@@ -2169,6 +2152,7 @@ export default function DashboardPage() {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
           {tab === "overview" && <button style={{ ...btn(), padding: "7px 14px" }} onClick={loadData}>Refresh</button>}
+          <button aria-label="Toggle light or dark mode" title={dbTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"} style={{ background: "none", border: `1px solid ${T.border}`, color: T.muted, cursor: "pointer", fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.12em", padding: "6px 10px", borderRadius: 2 }} onClick={toggleDbTheme}>{dbTheme === "dark" ? "LIGHT" : "DARK"}</button>
           <button style={{ background: "none", border: "none", color: T.muted, cursor: "pointer", fontFamily: MONO, fontSize: 12 }} onClick={logout}>Log out</button>
         </div>
       </div>
@@ -2183,7 +2167,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="dash-main" style={{ padding: 24, maxWidth: 1320, margin: "0 auto" }}>
-        {dataErr && <div style={card({ borderColor: `${T.danger}66`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{dataErr}</span></div>}
+        {dataErr && <div style={card({ borderColor: `${alpha(T.danger, 40)}`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{dataErr}</span></div>}
         {tab === "overview" && (data ? <OverviewTab data={data} /> : <div style={{ color: T.muted, fontFamily: MONO, fontSize: 13, padding: 40, textAlign: "center" }}>Loading data…</div>)}
         {tab === "scan" && <ScanTab businesses={data?.businesses ?? []} />}
         {tab === "battle" && <BattlePlanTab businesses={data?.businesses ?? []} />}

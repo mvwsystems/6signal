@@ -20,6 +20,15 @@ export const viewport: Viewport = {
   themeColor: "#060606",
 };
 
+// Applies the saved light/dark choice before first paint so a light-mode user
+// never sees a black flash. Dark is the default; the toggle lives in the header.
+const THEME_BOOT = `try{var t=localStorage.getItem("6sig_db_theme");document.documentElement.setAttribute("data-db-theme",t==="light"?"light":"dark")}catch(e){}`;
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
+      {children}
+    </>
+  );
 }
