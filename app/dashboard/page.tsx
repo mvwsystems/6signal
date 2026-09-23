@@ -885,7 +885,7 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
   const [busy, setBusy] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [runMsg, setRunMsg] = useState<string | null>(null);
-  const [diag, setDiag] = useState<{ engine: string; ok: boolean; error: string | null; note?: string | null; ms: number }[] | null>(null);
+  const [diag, setDiag] = useState<{ engine: string; ok: boolean; error: string | null; note?: string | null; query?: string | null; ms: number }[] | null>(null);
 
   const biz = businesses.find((b) => b.id === bizId) || null;
 
@@ -1014,6 +1014,7 @@ function TrackingTab({ businesses }: { businesses: Biz[] }) {
               <span style={{ fontFamily: MONO, fontSize: 12, color: d.ok ? T.ok : T.danger }}>{d.ok ? `OK · ${(d.ms / 1000).toFixed(1)}s` : "FAILED"}</span>
               {!d.ok && <span style={{ fontSize: 12, color: T.textSub, wordBreak: "break-all" }}>{d.error}</span>}
               {d.ok && d.note && <span style={{ fontSize: 12, color: T.warn, wordBreak: "break-all" }}>△ {d.note}</span>}
+              {d.ok && d.query && <span style={{ fontSize: 12, color: T.muted, wordBreak: "break-all" }}>searched: {d.query}</span>}
             </div>
           ))}
         </div>

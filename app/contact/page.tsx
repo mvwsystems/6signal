@@ -22,6 +22,7 @@ export default function ContactPage() {
     const phone = get("phone");
     const trade = get("trade");
     const message = get("message");
+    const hp = get("hp");
 
     // Server-side send (works without a configured mail client). The old
     // mailto composer stays as the fallback if the API is unreachable.
@@ -37,6 +38,7 @@ export default function ContactPage() {
           phone,
           regarding: "general",
           message: [trade ? `Trade: ${trade}` : "", message].filter(Boolean).join("\n\n"),
+          hp,
         }),
       });
       if (r.ok) { setSubmitted(true); return; }
@@ -239,6 +241,17 @@ export default function ContactPage() {
                         required
                       />
                     </div>
+
+                    {/* Honeypot: humans never see it, bots fill every field. /api/inquiry drops any submission that sets it. */}
+                    <input
+                      type="text"
+                      id="hp"
+                      name="hp"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                      style={{ position: "absolute", left: "-9999px", height: 0, width: 0, opacity: 0 }}
+                    />
 
                     <button type="submit" className="btn btn-primary" style={{ width: "100%", justifyContent: "center" }}>
                       Send Message

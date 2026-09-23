@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { insertLead } from "../../lib/db";
 import { sendEmail, emailShell, heading, paragraph, monoLabel } from "../../lib/email";
 import { pushAlert } from "../../lib/notify";
+import { looksLikeSpam } from "../../lib/spam";
 
 // Structured inquiry form (/inquire + /contact). Replaces the old mailto:
 // links, which silently fail for anyone without a configured mail client.
@@ -38,6 +39,15 @@ export async function POST(req: NextRequest) {
 
   if (!name?.trim() || !email?.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return NextResponse.json({ error: "Name and a valid email are required" }, { status: 400 });
+  }
+
+  // Silent drop, same 200 the honeypot returns: a rejected bot just retries
+  // with different mash, an "accepted" one moves on. Nothing is emailed,
+  // recorded, or pushed for these.
+  const spam = looksLikeSpam({ name, company, email, message });
+  if (spam) {
+    console.warn("[inquiry] dropped spam:", spam);
+    return NextResponse.json({ ok: true });
   }
   const about = REGARDING.has(regarding ?? "") ? (regarding as string) : "general";
 

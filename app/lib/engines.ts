@@ -16,6 +16,10 @@ export interface EngineAnswer {
   sources: string[];
   error?: string;
   note?: string; // non-fatal degradation worth surfacing (e.g. model fallback)
+  // The search-style query an engine actually ran (google-ai, maps rewrite the
+  // buyer question). Informational only — it used to ride in `note`, which the
+  // watchdog reads as "degraded", so those two engines warned on every healthy day.
+  query?: string;
   transient?: boolean; // upstream capacity/rate limit, survived the retries — not a config fault
   // Classic blue-link results, captured only by the google-ai probe. The SerpAPI
   // response carrying the AI Overview already contains them, so organic rank
@@ -199,7 +203,7 @@ async function probeGoogleAI(prompt: string, key: string, signal?: AbortSignal):
     if (r2.ok) ai = (await r2.json().catch(() => null))?.ai_overview ?? ai;
   }
   if (!ai || (!ai.text_blocks && !ai.answer)) {
-    return { engine: "google-ai", ok: true, text: `No AI Overview appeared for: ${query}`, sources: [], note: `searched: ${query}`, organic };
+    return { engine: "google-ai", ok: true, text: `No AI Overview appeared for: ${query}`, sources: [], query, organic };
   }
   const parts: string[] = [];
   const walk = (node: unknown): void => {
@@ -213,7 +217,7 @@ async function probeGoogleAI(prompt: string, key: string, signal?: AbortSignal):
   walk(ai);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sources = ((ai.references ?? []) as any[]).map((r) => r.link).filter(Boolean);
-  return { engine: "google-ai", ok: true, text: parts.join("\n").slice(0, 6000) || "AI Overview present but empty.", sources: dedupe(sources), note: `searched: ${query}`, organic };
+  return { engine: "google-ai", ok: true, text: parts.join("\n").slice(0, 6000) || "AI Overview present but empty.", sources: dedupe(sources), query, organic };
 }
 
 // Google Maps ranking via the existing Places key: the ranked local results a
@@ -233,7 +237,7 @@ async function probeMaps(prompt: string, signal?: AbortSignal): Promise<EngineAn
   const { placesTextSearch } = await import("./places");
   const query = toSearchQuery(prompt);
   const results = await placesTextSearch(query, MAPS_DEPTH);
-  if (!results.length) return { engine: "maps", ok: true, text: `No Google Maps results for: ${query}`, sources: [], note: `searched: ${query}` };
+  if (!results.length) return { engine: "maps", ok: true, text: `No Google Maps results for: ${query}`, sources: [], query };
   const lines = results.map((p, i) => {
     const name = p.displayName?.text ?? "?";
     const rating = typeof p.rating === "number" ? `${p.rating}★` : "no rating";
@@ -247,7 +251,7 @@ async function probeMaps(prompt: string, signal?: AbortSignal): Promise<EngineAn
     ok: true,
     text: `Google Maps results for "${query}", in ranked order (top ${MAPS_DEPTH}):\n${lines.join("\n")}`,
     sources: dedupe(sources),
-    note: `searched: ${query}`,
+    query,
   };
 }
 
