@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import MetaPixel from "./components/MetaPixel";
-import Clarity from "./components/Clarity";
 import Plausible from "./components/Plausible";
 import Attribution from "./components/Attribution";
 
@@ -75,7 +74,6 @@ export default function RootLayout({
       </head>
       <body>
         <MetaPixel />
-        <Clarity />
         <Plausible />
         <Attribution />
         {children}

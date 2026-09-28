@@ -52,8 +52,8 @@ export default function PrivacyPage() {
           <p>
             <strong>Usage information.</strong> Like most websites, we use analytics to
             understand how the site is used: Meta Pixel (ad measurement — page views and
-            purchase events) and Microsoft Clarity (session recordings, heatmaps, and
-            interaction data). These tools use cookies and similar technologies.
+            purchase events) and Plausible (privacy-focused traffic counts, no personal
+            data). These tools may use cookies and similar technologies.
           </p>
 
           <h2>How we use it</h2>
