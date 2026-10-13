@@ -53,7 +53,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <div>© 6 Signal · All rights reserved · <Link href="/privacy" style={{ color: "inherit" }}>Privacy</Link></div>
+          <div>© 6 Signal · <a href="tel:+18176236399" style={{ color: "inherit" }}>(817) 623-6399</a> · <Link href="/privacy" style={{ color: "inherit" }}>Privacy</Link></div>
           <div>Based in DFW · Signal · Repetition · Reach</div>
         </div>
       </div>

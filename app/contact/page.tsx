@@ -111,6 +111,12 @@ export default function ContactPage() {
                   </a>
                 </div>
                 <div className="contact-way">
+                  <span className="contact-way-label">Phone</span>
+                  <a href="tel:+18176236399" className="contact-way-val">
+                    (817) 623-6399
+                  </a>
+                </div>
+                <div className="contact-way">
                   <span className="contact-way-label">Response</span>
                   <span className="contact-way-val">Same day, usually within a few hours</span>
                 </div>
