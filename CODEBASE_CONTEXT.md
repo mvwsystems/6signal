@@ -17,11 +17,11 @@
 
 | Layer | Technology |
 |-------|-----------|
-| Framework | Next.js 15.5.18 (App Router) |
+| Framework | Next.js ^15.5.28 (App Router) — pinned ≥15.5.28 for the Image Optimization RCE fixes |
 | Language | TypeScript 5.4 |
 | React | 19.2.0 |
-| Styling | Custom CSS (`app/globals.css`) — no Tailwind used in practice |
-| Blog/Content | MDX files parsed with `gray-matter` + `next-mdx-remote` |
+| Styling | Custom CSS (`app/globals.css`) — Tailwind removed 2026-10-22; its preflight reset is inlined at the top of the file |
+| Blog/Content | MDX files; front matter split in `app/lib/blog.ts` on `js-yaml` 4 (replaced `gray-matter` 2026-10-22), rendered with `next-mdx-remote` |
 | Deployment | Netlify (via `@netlify/plugin-nextjs`) |
 | Repo | GitHub → `mvwsystems/6signal` |
 | Payment | Stripe (external checkout links, no SDK in codebase) |
@@ -220,7 +220,7 @@ Commercial contractors uses its own `CommercialPage` component at `/commercial-c
 
 Single file: `app/globals.css`
 
-- No Tailwind utility classes in practice (package installed but not used)
+- No Tailwind (package removed 2026-10-22; `.italic` is the one utility, defined by hand at the end of the file)
 - CSS custom properties defined in `:root`
 - Key variables: `--accent: #E6FF00` (neon lime), `--bg: #060606`, `--text: #f5f5f3`
 - Fonts: Chakra Petch (display), Inter (body), JetBrains Mono (idx/mono labels)

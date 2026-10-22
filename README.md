@@ -4,9 +4,9 @@ Marketing site for 6 Signal, a specialized AI visibility practice for roofing op
 
 ## Tech stack
 
-- Next.js 14 (App Router)
+- Next.js 15 (App Router)
 - TypeScript
-- Tailwind CSS
+- Hand-written CSS in `app/globals.css` (no Tailwind)
 - Deployed on Netlify
 
 ## Local development
@@ -44,7 +44,6 @@ Once live, in Netlify: **Domain settings → Add custom domain → 6signal.co** 
 - `app/page.tsx` — the entire landing page
 - `app/globals.css` — design system (Fraunces serif, Inter, JetBrains Mono, hairline rules)
 - `app/layout.tsx` — root layout, font preloads, metadata
-- `tailwind.config.ts` — design tokens
 
 ## Future routes
 

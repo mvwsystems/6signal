@@ -122,8 +122,8 @@ testimonials, client logos, before/after screenshots, and the full 90-day case s
 
 | Layer | Reality |
 |---|---|
-| Framework | **Next.js 15.5.18, App Router**, React 19, TypeScript (README says Next 14 + "roofing operators" — stale) |
-| Styling | Single ~7,000-line [app/globals.css](app/globals.css). Tailwind installed but **zero utility classes used** — never add them |
+| Framework | **Next.js ^15.5.28, App Router**, React 19, TypeScript (README says Next 14 + "roofing operators" — stale). Pinned ≥15.5.28 for the Image Optimization RCE fixes; keep `npm audit` at zero |
+| Styling | Single ~10,000-line [app/globals.css](app/globals.css). **No Tailwind** (removed 2026-10-22 — it was unused; its preflight reset is inlined at the top of globals.css and `.italic` is the one utility defined by hand). No PostCSS config — Next's defaults apply. Never reintroduce utility classes |
 | Content | MDX/MD blog in `content/blog/` via gray-matter + next-mdx-remote, rendered at `/research/[slug]` |
 | AI | Claude API (`claude-haiku-4-5`) called via **raw fetch** (no @anthropic-ai SDK) in 3 routes: [app/api/free-check/route.ts](app/api/free-check/route.ts), [app/api/generate-audit/route.ts](app/api/generate-audit/route.ts), [app/api/generate-strategy/route.ts](app/api/generate-strategy/route.ts). Requires `ANTHROPIC_API_KEY` |
 | Hosting | Netlify (`@netlify/plugin-nextjs`), `main` auto-deploys |
