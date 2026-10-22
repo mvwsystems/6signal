@@ -1,8 +1,23 @@
 import fs from "fs";
 import path from "path";
-import matter from "gray-matter";
+import { load as loadYaml } from "js-yaml";
 
 const BLOG_DIR = path.join(process.cwd(), "content/blog");
+
+// Minimal front-matter splitter. Replaced gray-matter on 2026-10-22: it pins
+// js-yaml 3.x, which carries unpatched DoS advisories. Output was verified
+// identical to gray-matter across every file in content/blog at the swap.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type FrontMatter = Record<string, any>;
+
+function parseFrontmatter(raw: string): { data: FrontMatter; content: string } {
+  const src = raw.replace(/^﻿/, "");
+  const m = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(src);
+  if (!m) return { data: {}, content: src };
+  const parsed = loadYaml(m[1]);
+  const data = parsed && typeof parsed === "object" ? (parsed as FrontMatter) : {};
+  return { data, content: src.slice(m[0].length) };
+}
 
 export interface FaqItem {
   q: string;
@@ -37,7 +52,7 @@ function getFiles(): string[] {
 
 function parsePost(file: string): Post {
   const raw = fs.readFileSync(path.join(BLOG_DIR, file), "utf-8");
-  const { data, content } = matter(raw);
+  const { data, content } = parseFrontmatter(raw);
   return {
     title: data.title ?? "",
     slug: data.slug ?? file.replace(/\.(mdx?|md)$/, ""),
