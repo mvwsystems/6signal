@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
@@ -10,10 +10,23 @@ const MAILTO = "hello@6signal.co";
 
 export default function ContactPage() {
   useMicroInteractions();
-  const [submitted, setSubmitted] = useState(false);
+  // idle → sending → sent | failed. The old boolean had no in-flight state: the
+  // button stayed live and unchanged for the several seconds the server takes
+  // to email, record, and push, so people clicked again — one prospect sent the
+  // same message six times. "sending" disables the button and relabels it;
+  // "failed" shows a visible error instead of a false "Got it."
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "failed">("idle");
+  const inFlight = useRef(false);
+  const successRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (status !== "sent") return;
+    successRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [status]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (inFlight.current) return;
     const form = e.currentTarget;
     const get = (id: string) => (form.elements.namedItem(id) as HTMLInputElement | null)?.value ?? "";
     const name = get("name");
@@ -24,8 +37,11 @@ export default function ContactPage() {
     const message = get("message");
     const hp = get("hp");
 
-    // Server-side send (works without a configured mail client). The old
-    // mailto composer stays as the fallback if the API is unreachable.
+    // Server-side send (works without a configured mail client). If the API
+    // fails we say so and offer the mailto link — we no longer auto-open a mail
+    // client and then claim the message was received.
+    inFlight.current = true;
+    setStatus("sending");
     try {
       const r = await fetch("/api/inquiry", {
         method: "POST",
@@ -41,21 +57,15 @@ export default function ContactPage() {
           hp,
         }),
       });
-      if (r.ok) { setSubmitted(true); return; }
-    } catch { /* fall through to mailto */ }
-
-    const body = [
-      name ? `Name: ${name}` : "",
-      company ? `Company: ${company}` : "",
-      email ? `Email: ${email}` : "",
-      phone ? `Phone: ${phone}` : "",
-      trade ? `Trade: ${trade}` : "",
-      message ? `\nMessage:\n${message}` : "",
-    ].filter(Boolean).join("\n");
-
-    window.location.href = `mailto:${MAILTO}?subject=${encodeURIComponent("🔥 6 Signal 🔥")}&body=${encodeURIComponent(body)}`;
-    setSubmitted(true);
+      setStatus(r.ok ? "sent" : "failed");
+    } catch {
+      setStatus("failed");
+    } finally {
+      inFlight.current = false;
+    }
   };
+
+  const sending = status === "sending";
 
   return (
     <>
@@ -147,8 +157,8 @@ export default function ContactPage() {
 
             {/* RIGHT — FORM */}
             <div className="contact-right">
-              {submitted ? (
-                <div className="form-success">
+              {status === "sent" ? (
+                <div className="form-success" ref={successRef} role="status" aria-live="polite">
                   <h3>Got it. We&rsquo;ll be in touch.</h3>
                   <p>
                     Expect a response within a few hours. In the meantime, you can also{" "}
@@ -253,15 +263,31 @@ export default function ContactPage() {
                       style={{ position: "absolute", left: "-9999px", height: 0, width: 0, opacity: 0 }}
                     />
 
-                    <button type="submit" className="btn btn-primary" style={{ width: "100%", justifyContent: "center" }}>
-                      Send Message
-                      <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
-                        <path d="M0 5h14M10 1l4 4-4 4" />
-                      </svg>
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      style={{ width: "100%", justifyContent: "center" }}
+                      disabled={sending}
+                      aria-busy={sending}
+                    >
+                      {sending ? "Sending..." : "Send Message"}
+                      {!sending && (
+                        <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
+                          <path d="M0 5h14M10 1l4 4-4 4" />
+                        </svg>
+                      )}
                     </button>
-                    <p className="form-note">
-                      We respond same day — usually within a few hours.
-                    </p>
+                    {status === "failed" ? (
+                      <p className="form-error" role="alert">
+                        That didn&rsquo;t go through. Nothing was sent — please try again, or email{" "}
+                        <a href={`mailto:${MAILTO}?subject=${encodeURIComponent("🔥 6 Signal 🔥")}`}>{MAILTO}</a>{" "}
+                        directly and it reaches the same place.
+                      </p>
+                    ) : (
+                      <p className="form-note">
+                        {sending ? "Sending your message — one moment." : "We respond same day — usually within a few hours."}
+                      </p>
+                    )}
                   </form>
                 </>
               )}

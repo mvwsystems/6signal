@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
@@ -38,6 +38,15 @@ export default function InquirePage() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "failed">("idle");
+  const inFlight = useRef(false);
+  const successRef = useRef<HTMLDivElement>(null);
+
+  // Bring the confirmation into view. The form is tall; without this a phone
+  // user who submitted from the bottom is left looking at the footer.
+  useEffect(() => {
+    if (status !== "sent") return;
+    successRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [status]);
 
   // Preselect the rung from ?about= (linked from the Climb pages).
   useEffect(() => {
@@ -58,7 +67,9 @@ export default function InquirePage() {
     if (!form.name.trim()) errs.name = "Name is required";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) errs.email = "A valid email is required";
     if (Object.keys(errs).length) { setErrors(errs); return; }
+    if (inFlight.current) return;
 
+    inFlight.current = true;
     setStatus("sending");
     try {
       const r = await fetch("/api/inquiry", {
@@ -69,6 +80,8 @@ export default function InquirePage() {
       setStatus(r.ok ? "sent" : "failed");
     } catch {
       setStatus("failed");
+    } finally {
+      inFlight.current = false;
     }
   };
 
@@ -97,7 +110,7 @@ export default function InquirePage() {
       <section className="vc2-form-section rule" id="inquiry-form">
         <div className="wrap">
           {status === "sent" ? (
-            <div className="form-success">
+            <div className="form-success" ref={successRef} role="status" aria-live="polite">
               <h3>Got it. You&rsquo;ll hear from Matt directly.</h3>
               <p>
                 Same day, usually within a few hours. In the meantime, the{" "}
@@ -243,6 +256,7 @@ export default function InquirePage() {
                   className="btn btn-primary btn-lg vc2-submit"
                   type="submit"
                   disabled={status === "sending"}
+                  aria-busy={status === "sending"}
                 >
                   {status === "sending" ? "Sending..." : "Send to Matt"}
                   {status !== "sending" && (
@@ -251,9 +265,16 @@ export default function InquirePage() {
                     </svg>
                   )}
                 </button>
+                {status === "failed" && (
+                  <p className="vc2-submit-error" role="alert">
+                    That didn&rsquo;t go through. Nothing was sent — please try again, or email{" "}
+                    <a href="mailto:hello@6signal.co" style={{ color: "inherit", textDecoration: "underline" }}>hello@6signal.co</a>{" "}
+                    directly and it reaches the same place.
+                  </p>
+                )}
                 <p className="vc2-form-note">
-                  {status === "failed"
-                    ? "Something went wrong — email hello@6signal.co directly and it will reach the same place."
+                  {status === "sending"
+                    ? "Sending — one moment."
                     : "Goes directly to the operator. No sales sequence, no list, no follow-up chase."}
                 </p>
               </div>
