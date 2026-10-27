@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hard Rock Custom Countertops — AI Visibility Findings & Growth Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  @font-face { font-family: "Chakra Petch"; font-weight: 500; src: url("fonts/ChakraPetch-500.woff2") format("woff2"); }
+  @font-face { font-family: "Chakra Petch"; font-weight: 600; src: url("fonts/ChakraPetch-600.woff2") format("woff2"); }
+  @font-face { font-family: "Chakra Petch"; font-weight: 700; src: url("fonts/ChakraPetch-700.woff2") format("woff2"); }
+
+  :root {
+    --ink: #111110;
+    --muted: #6b6b66;
+    --faint: #9a9a94;
+    --line: #e4e4e0;
+    --line-strong: #111110;
+    --panel: #fafaf8;
+    --yellow: #E6FF00;
+    --yellow-pale: #f9ffcc;
+    --yellow-border: #cfdc1a;
+    --olive: #7f8c00;
+    --olive-soft: #e3e8b8;
+    --red: #b3261e;
+    --red-pale: #fbeae8;
+    --red-border: #e9c4c0;
+    --green-pale: #e9f3e6;
+    --green-ink: #2f6b2f;
+    --dark: #111110;
+    --mono: "JetBrains Mono", "DejaVu Sans Mono", monospace;
+    --body: "Inter", "Liberation Sans", Arial, sans-serif;
+    --disp: "Chakra Petch", "Inter", sans-serif;
+  }
+  @page { size: Letter; margin: 0.62in 0.72in 0.7in 0.72in; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; color: var(--ink); }
+  body { font-family: var(--body); font-size: 11.25pt; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  p { margin: 0 0 9pt; }
+  strong { font-weight: 600; }
+  a { color: inherit; text-decoration: none; }
+
+  .eyebrow { font-family: var(--mono); font-size: 7.6pt; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin: 0 0 7pt; }
+  h1 { font-family: var(--disp); font-weight: 700; font-size: 44pt; line-height: 0.98; letter-spacing: -0.01em; margin: 0 0 12pt; }
+  h2 { break-after: avoid; font-family: var(--disp); font-weight: 700; font-size: 16.5pt; line-height: 1.2; margin: 0 0 6pt; letter-spacing: -0.005em; }
+  h3 { font-family: var(--disp); font-weight: 700; font-size: 12.5pt; margin: 0 0 4pt; }
+  .lede { break-after: avoid; color: var(--muted); font-size: 10.75pt; max-width: 6.2in; margin-bottom: 12pt; }
+  .section { padding-top: 16pt; margin-top: 16pt; border-top: 1px solid var(--line); break-inside: auto; }
+  .section.first { border-top: 0; margin-top: 0; padding-top: 0; }
+  .keep { break-inside: avoid; }
+  .pb { break-before: page; }
+
+  /* Cover */
+  .masthead { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 9pt; border-bottom: 2.5px solid var(--line-strong); font-family: var(--mono); }
+  .masthead .brand { font-size: 12pt; font-weight: 700; letter-spacing: 0.32em; }
+  .masthead .doc { font-size: 7.6pt; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
+  .cover-space { height: 125pt; }
+  .cover-sub { font-size: 12pt; color: var(--ink); max-width: 5.6in; margin: 0 0 30pt; line-height: 1.45; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10pt; }
+  .stat { border: 1px solid var(--line); padding: 16pt 14pt 14pt; }
+  .stat.yellow { background: var(--yellow-pale); border-color: var(--yellow-border); }
+  .stat.red { border: 1.5px solid var(--red); }
+  .stat .n { font-family: var(--disp); font-weight: 700; font-size: 34pt; line-height: 1; margin-bottom: 8pt; }
+  .stat.red .n { color: var(--red); }
+  .stat .l { font-family: var(--mono); font-size: 7.6pt; line-height: 1.5; color: var(--muted); }
+  .stat .eyebrow { margin-bottom: 10pt; }
+  .caption { font-family: var(--mono); font-size: 7.6pt; color: var(--muted); margin-top: 10pt; }
+  .cover-meta { break-inside: avoid; margin-top: 95pt; border-top: 1px solid var(--line); padding-top: 12pt; display: grid; grid-template-columns: 1fr 1fr; row-gap: 10pt; column-gap: 24pt; font-size: 10pt; }
+  .cover-meta .eyebrow { margin-bottom: 3pt; }
+
+  /* Callouts */
+  .dark { background: var(--dark); color: #f5f5f3; padding: 16pt 20pt 16pt 22pt; border-left: 5px solid var(--yellow); font-size: 12pt; line-height: 1.45; margin: 12pt 0 14pt; break-inside: avoid; }
+  .dark mark { background: transparent; color: var(--yellow); font-weight: 600; }
+  .note { background: var(--yellow-pale); border: 1px solid var(--yellow-border); border-left: 4px solid var(--olive); padding: 14pt 18pt 12pt 18pt; margin: 12pt 0 14pt; break-inside: avoid; }
+  .note h3 { margin-bottom: 6pt; }
+  .note p { color: #3f3f3a; }
+  .note p:last-child { margin-bottom: 0; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; border: 1px solid var(--line); font-size: 10.5pt; }
+  thead th { font-family: var(--mono); font-weight: 400; font-size: 7.4pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 9pt 10pt; border-bottom: 1px solid var(--line); }
+  tbody td { padding: 8pt 10pt; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: 0; }
+  tr { break-inside: avoid; }
+  td.num, th.num { text-align: right; font-family: var(--mono); font-size: 9.5pt; white-space: nowrap; }
+  td.sub { color: var(--muted); font-size: 9.5pt; }
+  td .t { font-weight: 600; display: block; }
+  td .d { color: var(--muted); font-size: 9.2pt; line-height: 1.4; display: block; margin-top: 1pt; }
+  .red { color: var(--red); }
+  .bold { font-weight: 700; }
+  .mono { font-family: var(--mono); }
+
+  /* Badges */
+  .b { display: inline-block; font-family: var(--mono); font-size: 7.4pt; letter-spacing: 0.06em; padding: 1.5pt 5pt; border-radius: 1px; vertical-align: middle; white-space: nowrap; }
+  .b.y { background: var(--yellow); color: #111; }
+  .b.r { background: var(--red); color: #fff; }
+  .b.rp { background: var(--red-pale); color: var(--red); }
+  .b.g { background: var(--green-pale); color: var(--green-ink); }
+  .b.n { background: #eeeeea; color: #555; }
+  .b.k { background: var(--dark); color: #fff; }
+
+  /* Bars */
+  .bar { display: inline-block; width: 60pt; height: 5pt; background: #e6e6e2; vertical-align: middle; margin-right: 6pt; }
+  .bar i { display: block; height: 100%; background: var(--olive); }
+
+  /* Issue cards */
+  .issue { border: 1px solid var(--line); border-left: 4px solid var(--line); padding: 11pt 14pt 10pt; margin: 0 0 8pt; break-inside: avoid; }
+  .issue.critical { border-left-color: var(--red); }
+  .issue.high { border-left-color: #efb8b3; }
+  .issue h3 { font-size: 12pt; display: flex; align-items: center; gap: 8pt; margin-bottom: 4pt; }
+  .issue p { margin: 0; color: #2c2c28; font-size: 10.5pt; }
+
+  /* Lists */
+  .num-list { list-style: none; margin: 10pt 0 0; padding: 0; }
+  .num-list li { display: flex; gap: 12pt; padding: 8pt 0; border-bottom: 1px solid var(--line); font-size: 11pt; }
+  .num-list li:last-child { border-bottom: 0; }
+  .num-list .k { flex: 0 0 auto; }
+  .box { border: 1px solid var(--line); padding: 14pt 18pt 12pt; margin: 0 0 10pt; break-inside: avoid; }
+  .box h3 { font-size: 12.5pt; }
+  .box .sub { color: var(--muted); font-size: 10.25pt; margin-bottom: 6pt; }
+  .box ul { margin: 0; padding-left: 16pt; }
+  .box li { margin: 0 0 3pt; font-size: 10.5pt; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; }
+
+  /* Phase table */
+  .phase { table-layout: fixed; }
+  .phase td { padding: 11pt 10pt; }
+  .phase col.c1 { width: 24pt; } .phase col.c2 { width: 40%; } .phase col.c3 { width: 31%; }
+  .phase .inv { text-align: right; font-family: var(--mono); font-size: 8.4pt; color: var(--muted); line-height: 1.5; }
+  .phase .inv .big { font-size: 11pt; font-weight: 700; color: var(--ink); display: block; }
+  .phase .inv .big.y { background: var(--yellow); display: inline-block; padding: 1pt 5pt; font-size: 8.6pt; }
+
+  .rule-strong { border-top: 2.5px solid var(--line-strong); margin-top: 28pt; padding-top: 9pt; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 7.8pt; color: var(--muted); }
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10pt; margin: 12pt 0 0; }
+</style>
+</head>
+<body>
+
+<!-- ───────────────────────── COVER ───────────────────────── -->
+<div class="masthead">
+  <div class="brand">6 SIGNAL</div>
+  <div class="doc">AI Visibility Findings &amp; Growth Plan</div>
+</div>
+<div class="cover-space"></div>
+<p class="eyebrow">Prepared for</p>
+<h1>Hard Rock Custom Countertops</h1>
+<p class="cover-sub">Custom stone fabrication and installation — Southlake and Arlington, Texas, targeting Northeast Tarrant County's luxury kitchens and Dallas–Fort Worth commercial work.</p>
+
+<div class="stats">
+  <div class="stat yellow"><div class="n">150+</div><div class="l">Five-star reviews on record<br>across six platforms</div></div>
+  <div class="stat"><div class="n red">8</div><div class="l">Visible on the Southlake<br>Google Business Profile</div></div>
+  <div class="stat red"><div class="n">1</div><div class="l">Review on Yelp, filed under<br>"General Contractors"</div></div>
+</div>
+<p class="caption">Thirty-one listings, two trade names, four addresses and nine indexed site pages checked on 27 October 2026. Every source recorded.</p>
+
+<div class="cover-meta">
+  <div><p class="eyebrow">Prepared by</p>Matt Vincent Walker · 6 Signal</div>
+  <div><p class="eyebrow">Date</p>27 October 2026</div>
+  <div><p class="eyebrow">Engines in scope</p>ChatGPT · Claude · Gemini · Perplexity · AI Overviews · Maps</div>
+  <div><p class="eyebrow">Contact</p>hello@6signal.co · 6signal.co</div>
+</div>
+
+<!-- ───────────────────────── THE FINDING ───────────────────────── -->
+<div class="section first pb">
+  <p class="eyebrow">The finding</p>
+  <h2>The internet thinks you are a two-year-old company with eight reviews.</h2>
+  <p class="lede">Hard Rock has fabricated stone in North Texas since 2010, carries a 4.9-to-5.0 rating on every platform that lists it, and holds two Best of Houzz awards. None of that reaches the places an AI engine or a luxury buyer looks first. The rebrand from Hard Rock Granite &amp; Tile, the move from Dallas to Arlington, and the Southlake office each left a fragment behind, and the fragments have never been joined.</p>
+
+  <div class="cards3">
+    <div class="stat yellow"><p class="eyebrow">Rating, every platform</p><div class="n">4.9+</div><div class="l">Angi, Houzz, Google, Yelp, Birdeye, Nextdoor</div></div>
+    <div class="stat"><p class="eyebrow">Reviews where AI looks first</p><div class="n red">8 + 1</div><div class="l">Google and Yelp, the two most-cited local sources</div></div>
+    <div class="stat red"><p class="eyebrow">Pages for your own market</p><div class="n">0</div><div class="l">No Southlake, Colleyville, Westlake or Keller page. One page is titled for Frisco.</div></div>
+  </div>
+
+  <div class="dark">Every review platform agrees you do excellent work. The problem is that they disagree about who you are. <mark>Two names, two live websites with two different emails, four addresses, and four different "years in business" are indexed right now.</mark> AI engines build an entity from consistency. This one does not resolve, so the proof never attaches to the name.</div>
+</div>
+
+<!-- ───────────────────────── WHERE THE PROOF LIVES ───────────────────────── -->
+<div class="section">
+  <p class="eyebrow">Where the proof lives</p>
+  <h2>A hundred and fifty reviews, stranded on the platforms that matter least.</h2>
+  <p class="lede">Each listing as it appears today. The two surfaces AI engines cite most for local services — the Google Business Profile for Google's AI Mode, and Yelp for ChatGPT — are the two thinnest.</p>
+  <table>
+    <thead><tr><th>Platform</th><th>Listed as</th><th class="num">Rating</th><th class="num">Reviews</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><span class="t">Google (Southlake)</span><span class="d">Countertop contractor · hours incomplete</span></td><td class="sub">Hard Rock Custom Countertops</td><td class="num">5.0</td><td class="num red bold">8</td><td><span class="b rp">Thin</span></td></tr>
+      <tr><td><span class="t">Angi (Arlington)</span><span class="d">"Veteran owned and operated"</span></td><td class="sub">Hard Rock Granite &amp; Tile</td><td class="num">4.9</td><td class="num bold">97</td><td><span class="b r">Flagged "may not be in business"</span></td></tr>
+      <tr><td><span class="t">Angi (Dallas / Southlake)</span><span class="d">Shows 27–28 years of experience</span></td><td class="sub">Hard Rock Granite and Tile, Inc.</td><td class="num">4.9</td><td class="num bold">37</td><td><span class="b rp">Old name</span></td></tr>
+      <tr><td><span class="t">Houzz</span><span class="d">Best of Houzz Service 2017 and 2019</span></td><td class="sub">Hard Rock Granite &amp; Tile, Inc. · Dallas</td><td class="num">4.9</td><td class="num">7</td><td><span class="b rp">Old name, old city</span></td></tr>
+      <tr><td><span class="t">Birdeye</span><span class="d">Aggregator from a past review tool</span></td><td class="sub">Hard Rock Custom Countertops</td><td class="num">5.0</td><td class="num">8</td><td><span class="b n">Dormant</span></td></tr>
+      <tr><td><span class="t">Yelp</span><span class="d">49 photos · ChatGPT's most-cited local source</span></td><td class="sub">Hard Rock Custom Countertops</td><td class="num">5.0</td><td class="num red bold">1</td><td><span class="b r">Category: General Contractors</span></td></tr>
+      <tr><td><span class="t">Nextdoor</span><span class="d">Three separate pages: Arlington, Dallas, Euless</span></td><td class="sub">Hard Rock Granite &amp; Tile</td><td class="num">—</td><td class="num">7 faves</td><td><span class="b rp">Split</span></td></tr>
+      <tr><td><span class="t">HomeAdvisor</span><span class="d">"Veteran owned"</span></td><td class="sub">Hard Rock Granite and Tile</td><td class="num">—</td><td class="num">—</td><td><span class="b rp">Old name</span></td></tr>
+      <tr><td><span class="t">BBB</span><span class="d">Not accredited, not rated</span></td><td class="sub">Hard Rock Granite &amp; Tile, Inc. · Dallas</td><td class="num">—</td><td class="num">—</td><td><span class="b rp">Old name, old city</span></td></tr>
+      <tr><td><span class="t">Facebook · Instagram · LinkedIn</span><span class="d">384 likes on Facebook; LinkedIn still titled Granite and Tile</span></td><td class="sub">Mixed</td><td class="num">—</td><td class="num">—</td><td><span class="b n">Thin</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <h3>Why the location of a review matters more than its count</h3>
+    <p>Independent 2026 studies of local-service searches put Google's own Business Profile data in roughly 80% of AI Mode citations and the business's own website in roughly 73% of AI Overview citations. Yelp is the source ChatGPT returns most consistently for "who should I call." Reddit and Nextdoor threads are cited by every engine. Angi and Houzz are read, but they are not where the answer is formed.</p>
+    <p><strong>Moving the proof is the fastest large win available.</strong> No new customers are required. The reviews already exist; they are simply filed where the engines do not look, under a name you no longer use.</p>
+  </div>
+</div>
+
+<!-- ───────────────────────── WHAT THE ENGINES RETURN ───────────────────────── -->
+<div class="section">
+  <p class="eyebrow">What comes back today</p>
+  <h2>Named in Southlake by the profile alone. Named nowhere else.</h2>
+  <p class="lede">Buyer questions were put to search and AI answer surfaces on 27 October 2026. These are observed snapshots, not estimates. The forty-question probe set on the next page runs across all six engines at kickoff and every two weeks after, so movement is measured against a recorded baseline.</p>
+  <table>
+    <thead><tr><th>Question a buyer asks</th><th>Who came back</th><th class="num">Hard Rock</th></tr></thead>
+    <tbody>
+      <tr><td>Best countertop company in Southlake, TX</td><td class="sub">Hard Rock (via the Google profile), DFW Quartz Countertops, Texas Counter Fitters, Lowe's, Thumbtack</td><td class="num"><span class="b y">Named</span></td></tr>
+      <tr><td>Best quartz countertop installer in Arlington, TX</td><td class="sub">Hilton's Flooring, Mr. Handyman, Thumbtack, SlabWise</td><td class="num"><span class="b r">Not named</span></td></tr>
+      <tr><td>Countertop fabricator in Colleyville, Keller or Grapevine for quartzite</td><td class="sub">DFW Quartz Countertops, Capstone Countertops, Crown Granite &amp; Marble, Majestic</td><td class="num"><span class="b r">Not named</span></td></tr>
+      <tr><td>Who does countertops for luxury custom homes in Westlake, Southlake, Colleyville</td><td class="sub">Arlington Marble (targeting Vineyard and Bridlewood by name), FloorsElite</td><td class="num"><span class="b r">Not named</span></td></tr>
+      <tr><td>Best countertop fabricators near Southlake, Keller, Grapevine, Colleyville</td><td class="sub">Steve Naylor, Mauricio's Stonecraft, Dallas Unique Granite, DallaStone, Century Granite, Platinum Granite</td><td class="num"><span class="b r">Not named</span></td></tr>
+      <tr><td>Commercial countertop fabricator in Dallas–Fort Worth for multifamily, hotel, restaurant</td><td class="sub">KAT Fabricators, Galaxy Granite, Granite Fabricators Inc, Onis Stone, Blue Sky</td><td class="num"><span class="b r">Not named</span></td></tr>
+      <tr><td>Commercial countertop contractor in Fort Worth for restaurants and medical</td><td class="sub">Countertops Inc, JG Natural Stone, The Countertop Company; Hard Rock appears only by its own site's one-line description</td><td class="num"><span class="b rp">Self-described only</span></td></tr>
+      <tr><td>Hard Rock Custom Countertops reviews</td><td class="sub">Google profile (8), Birdeye (8), Yelp (1); the 134 Angi reviews surface under the old name</td><td class="num"><span class="b y">Named</span></td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:9pt;"><strong>Read across the rows.</strong> Asked by name, the business is found. Asked the way a buyer in Southlake, Colleyville, Arlington or a Fort Worth estimator actually asks, a competitor is named every time. Arlington Marble is already writing Colleyville neighborhood copy from across town. Hard Rock is on S. Kimball Avenue and has no Southlake page.</p>
+</div>
+
+<!-- ───────────────────────── PROBE SET ───────────────────────── -->
+<div class="section">
+  <p class="eyebrow">Evidence, going forward</p>
+  <h2>Forty questions, six engines, every two weeks</h2>
+  <p class="lede">The prompt set is built around the three buyers you named: the luxury homeowner, the builder or designer who refers, and the commercial estimator. A sample follows; the full set is loaded at kickoff and each answer is stored with a timestamp.</p>
+  <table>
+    <thead><tr><th>Question put to the engines</th><th class="num">Intent</th></tr></thead>
+    <tbody>
+      <tr><td>Who is the best countertop fabricator near Southlake, TX?</td><td class="num"><span class="b y">Residential</span></td></tr>
+      <tr><td>Who installs Taj Mahal quartzite countertops in Colleyville, TX?</td><td class="num"><span class="b y">Residential</span></td></tr>
+      <tr><td>Best custom countertop company in Westlake, TX for a luxury kitchen remodel?</td><td class="num"><span class="b y">Residential</span></td></tr>
+      <tr><td>Will the 2026 quartz tariff raise my countertop price in Dallas–Fort Worth?</td><td class="num"><span class="b y">Residential</span></td></tr>
+      <tr><td>Who can do a waterfall island in quartzite near Keller or Trophy Club?</td><td class="num"><span class="b y">Residential</span></td></tr>
+      <tr><td>How does Hard Rock Custom Countertops compare to Arlington Marble?</td><td class="num"><span class="b y">Brand</span></td></tr>
+      <tr><td>Which countertop fabricators in DFW work with custom home builders?</td><td class="num"><span class="b n">Trade</span></td></tr>
+      <tr><td>Who do interior designers in Southlake use for stone countertops?</td><td class="num"><span class="b n">Trade</span></td></tr>
+      <tr><td>Who fabricates commercial countertops for restaurants in Fort Worth, TX?</td><td class="num"><span class="b k">Commercial</span></td></tr>
+      <tr><td>Which countertop subcontractors do multifamily projects in Dallas–Fort Worth?</td><td class="num"><span class="b k">Commercial</span></td></tr>
+      <tr><td>Who installs quartz or solid surface countertops for hotels near the Arlington Entertainment District?</td><td class="num"><span class="b k">Commercial</span></td></tr>
+      <tr><td>Who provides shop drawings and specification support for stone countertops in DFW?</td><td class="num"><span class="b k">Commercial</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ───────────────────────── BRAND AND WEBSITE ───────────────────────── -->
+<div class="section">
+  <p class="eyebrow">Brand and website</p>
+  <h2>What's undercutting the work, ranked by damage</h2>
+  <p class="lede">The craft is not in question: seam quality, slab-selection guidance and clean installs come up unprompted in reviews going back a decade. What follows is everything standing between that record and a buyer believing it.</p>
+
+  <div class="issue critical"><h3><span class="b r">Critical</span>Two names, two live websites, two emails</h3><p>hardrockgraniteandtile.com still serves its own home, company, services and contact pages under the old name with info@hardrockgraniteandtile.com. The new site uses info@hrccdfw.com. Nothing redirects. To an engine these are two businesses sharing a phone number.</p></div>
+  <div class="issue critical"><h3><span class="b r">Critical</span>Angi says you may be out of business</h3><p>The Arlington listing that holds 97 five-star reviews carries a "this pro may not be in business" notice. A homeowner cross-checking you sees it; so does every crawler.</p></div>
+  <div class="issue critical"><h3><span class="b r">Critical</span>The proof is filed where the engines do not look</h3><p>134 reviews on Angi, 7 on Houzz, 8 on Birdeye, all under Hard Rock Granite &amp; Tile. Eight on Google and one on Yelp under the current name. The engines form the answer from the latter two.</p></div>
+  <div class="issue high"><h3><span class="b rp">High</span>Yelp lists you as a general contractor</h3><p>Wrong category, one review. Yelp is the source ChatGPT cites most for local services. A buyer asking it for a countertop fabricator cannot be shown a general contractor.</p></div>
+  <div class="issue high"><h3><span class="b rp">High</span>No page for the market you sit in</h3><p>No Southlake, Colleyville, Westlake, Keller, Grapevine, Trophy Club or Arlington page. The indexed bathroom-vanity page is titled "Frisco, TX." Competitors in Colleyville and Richardson already publish Southlake pages.</p></div>
+  <div class="issue high"><h3><span class="b rp">High</span>Commercial work is one sentence</h3><p>"Homes and businesses" and "offices and commercial projects" appear once. There is no commercial page, no capability statement, no sectors, no lead times, no insurance facts, nothing an estimator can forward.</p></div>
+  <div class="issue high"><h3><span class="b rp">High</span>Four ages, four addresses</h3><p>Founded 2010 on Yelp and D&amp;B; "over 15 years" on the site; 16, 27 and 28 years across three Angi and HomeAdvisor listings. Addresses indexed in Dallas, Watauga, Arlington and Southlake. Nothing says which is current.</p></div>
+  <div class="issue"><h3><span class="b n">Medium</span>Legacy URLs still indexed</h3><p>A query-string page from an earlier content system ("Residential Countertops Stone Supplier in Southlake, TX") is still in Google's index alongside the new site, a sign of an incomplete migration that a crawl will confirm.</p></div>
+  <div class="issue"><h3><span class="b n">Medium</span>No machine-readable identity</h3><p>No LocalBusiness or Organization schema was found in any indexed page, no FAQ markup, and no sameAs links tying the site to the profiles. The site never states, in a form a model can read, that Hard Rock Custom Countertops and Hard Rock Granite &amp; Tile are the same company.</p></div>
+  <div class="issue"><h3><span class="b n">Medium</span>"By appointment only" reads as absence</h3><p>Both locations are appointment-only, the Google hours are incomplete, and a luxury buyer who reaches voicemail calls Arlington Marble next. Appointment-only should read as exclusive; today it reads as closed.</p></div>
+  <div class="issue"><h3><span class="b n">Medium</span>No trade program for the people who refer</h3><p>Builders, designers and cabinet showrooms send repeat work on reliability, not price. There is no page with lead times, templating turnaround, bid-ready pricing or terms for them to hand a client.</p></div>
+  <div class="issue"><h3><span class="b n">Low</span>The blog answers no buyer question</h3><p>Posts are seasonal lifestyle pieces (Memorial Day entertaining, busy family kitchens). None is a question a buyer types; none names a city; the 2025 quartzite piece is the only one aligned to what the luxury market is asking for.</p></div>
+  <div class="issue"><h3><span class="b n">Low</span>No price anchoring</h3><p>Southlake kitchens trade at $50,000–150,000 all-in and Colleyville countertop installs average about $3,000 for mixed materials. A stated starting range for quartzite and marble filters tire-kickers and signals tier.</p></div>
+</div>
+
+<!-- ───────────────────────── ONLINE PRESENCE ───────────────────────── -->
+<div class="section">
+  <p class="eyebrow">Online presence</p>
+  <h2>Where you show up, and where you don't</h2>
+  <p class="lede">Nineteen channels, weighted by share of realistic lead flow for a fabricator in Northeast Tarrant County with commercial ambitions. The weights sum to 100.</p>
+  <table>
+    <thead><tr><th style="width:22pt">#</th><th>Channel</th><th>Status</th><th class="num">Weight</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td><span class="t">Google Business Profile, Southlake</span><span class="d">The surface AI Mode cites in four of five local answers. Needs full hours, secondary categories, products, services, seeded Q&amp;A, 30+ geotagged job photos, weekly posts.</span></td><td><span class="b rp">8 reviews</span></td><td class="num"><span class="bar"><i style="width:100%"></i></span>18%</td></tr>
+      <tr><td class="num">2</td><td><span class="t">Google review velocity</span><span class="d">Target 40 within 30 days from the Angi, Houzz and Birdeye base, then sustained weekly asks.</span></td><td><span class="b rp">Stalled</span></td><td class="num"><span class="bar"><i style="width:67%"></i></span>12%</td></tr>
+      <tr><td class="num">3</td><td><span class="t">Name, address and phone consistency</span><span class="d">Two names, four addresses, two emails, four founding dates across 31 listings.</span></td><td><span class="b rp">Conflicting</span></td><td class="num"><span class="bar"><i style="width:67%"></i></span>12%</td></tr>
+      <tr><td class="num">4</td><td><span class="t">Yelp</span><span class="d">ChatGPT's most consistent local citation.</span></td><td><span class="b rp">1 review, wrong category</span></td><td class="num"><span class="bar"><i style="width:44%"></i></span>8%</td></tr>
+      <tr><td class="num">5</td><td><span class="t">Website technical</span><span class="d">Old domain live, legacy URLs indexed, Frisco title, no schema found, hours and email mismatches.</span></td><td><span class="b rp">Fragmented</span></td><td class="num"><span class="bar"><i style="width:44%"></i></span>8%</td></tr>
+      <tr><td class="num">6</td><td><span class="t">City and neighborhood pages</span><span class="d">Southlake, Colleyville, Westlake, Keller, Grapevine, Trophy Club, Arlington, Mansfield, Fort Worth.</span></td><td><span class="b rp">None</span></td><td class="num"><span class="bar"><i style="width:39%"></i></span>7%</td></tr>
+      <tr><td class="num">7</td><td><span class="t">Houzz</span><span class="d">Two Best of Houzz awards sitting under the old name in Dallas. Designers shortlist here.</span></td><td><span class="b rp">Old name, old city</span></td><td class="num"><span class="bar"><i style="width:33%"></i></span>6%</td></tr>
+      <tr><td class="num">8</td><td><span class="t">Angi and HomeAdvisor</span><span class="d">134 reviews behind a "may not be in business" flag. Claim, correct, keep.</span></td><td><span class="b r">Flagged</span></td><td class="num"><span class="bar"><i style="width:28%"></i></span>5%</td></tr>
+      <tr><td class="num">9</td><td><span class="t">Commercial bid directories</span><span class="d">Blue Book ProView, ISqFt, BuildingConnected. Where estimators find subs when one drops.</span></td><td><span class="b rp">Not found</span></td><td class="num"><span class="bar"><i style="width:28%"></i></span>5%</td></tr>
+      <tr><td class="num">10</td><td><span class="t">Manufacturer fabricator locators</span><span class="d">Cambria, Cosentino, Caesarstone, MSI, Daltile. Crawlable, authoritative, already cited for competitors.</span></td><td><span class="b rp">Not listed</span></td><td class="num"><span class="bar"><i style="width:22%"></i></span>4%</td></tr>
+      <tr><td class="num">11</td><td><span class="t">Instagram</span><span class="d">The visual channel for luxury kitchens; designers browse it.</span></td><td><span class="b n">Thin</span></td><td class="num"><span class="bar"><i style="width:17%"></i></span>3%</td></tr>
+      <tr><td class="num">12</td><td><span class="t">Facebook</span><span class="d">384 likes; linked from the site.</span></td><td><span class="b n">Low activity</span></td><td class="num"><span class="bar"><i style="width:17%"></i></span>3%</td></tr>
+      <tr><td class="num">13</td><td><span class="t">Nextdoor</span><span class="d">Three pages under the old name. Southlake and Colleyville neighbors ask "who did your countertops" here weekly.</span></td><td><span class="b rp">Split</span></td><td class="num"><span class="bar"><i style="width:11%"></i></span>2%</td></tr>
+      <tr><td class="num">14</td><td><span class="t">BBB</span><span class="d">Old name, Dallas address, not rated.</span></td><td><span class="b rp">Stale</span></td><td class="num"><span class="bar"><i style="width:11%"></i></span>2%</td></tr>
+      <tr><td class="num">15</td><td><span class="t">Apple Business Connect, Bing Places</span><span class="d">Free, permanent, and what Siri and voice assistants read.</span></td><td><span class="b n">Unconfirmed</span></td><td class="num"><span class="bar"><i style="width:6%"></i></span>1%</td></tr>
+      <tr><td class="num">16</td><td><span class="t">LinkedIn</span><span class="d">Matters for GC estimators and designers. Still titled Granite and Tile.</span></td><td><span class="b rp">Old name</span></td><td class="num"><span class="bar"><i style="width:6%"></i></span>1%</td></tr>
+      <tr><td class="num">17</td><td><span class="t">Reddit</span><span class="d">r/Dallas and r/FortWorth countertop threads are cited by every engine.</span></td><td><span class="b n">None</span></td><td class="num"><span class="bar"><i style="width:6%"></i></span>1%</td></tr>
+      <tr><td class="num">18</td><td><span class="t">Certification directories</span><span class="d">Texas HUB, veteran-owned programs, city small-business registries. Primes on public work must solicit certified subs.</span></td><td><span class="b n">Eligibility unchecked</span></td><td class="num"><span class="bar"><i style="width:6%"></i></span>1%</td></tr>
+      <tr><td class="num">19</td><td><span class="t">Local press and awards</span><span class="d">Southlake Style Readers' Choice, 360West Best of Southlake, Community Impact. Nominations open each January.</span></td><td><span class="b n">None</span></td><td class="num"><span class="bar"><i style="width:6%"></i></span>1%</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ───────────────────────── RECOMMENDATION ───────────────────────── -->
+<div class="section">
+  <p class="eyebrow">Recommendation</p>
+  <h2>Consolidate the entity, move the proof, then open three doors</h2>
+  <p class="lede">You asked for more jobs, commercial work and higher-end residential clients. Those are three different buyers who find a fabricator three different ways, and each is missing a specific asset.</p>
+  <div class="note">
+    <h3>One company, one name, one address set, then a page and a proof for each buyer</h3>
+    <p>Nothing in this plan works while the engines hold two businesses. The first four weeks make Hard Rock Custom Countertops the only answer to "who is Hard Rock Granite &amp; Tile," move the reviews to Google and Yelp, and clear the Angi flag. Only then do city pages, a trade program and a commercial capability statement have something to attach to.</p>
+    <p><strong>The category to own is natural stone for Northeast Tarrant County's luxury kitchens</strong>, which is where the price, the trend and your strength coincide. Commercial is the second door, opened from the Arlington shop, with a certification if eligibility holds. Volume residential follows both.</p>
+  </div>
+  <table>
+    <thead><tr><th>Buyer</th><th>How they find a fabricator</th><th>What is missing today</th></tr></thead>
+    <tbody>
+      <tr><td><span class="t">Luxury homeowner</span><span class="d">Southlake, Colleyville, Westlake, Keller, Trophy Club</span></td><td class="sub">Asks ChatGPT or Google for "best quartzite fabricator near Southlake," reads the Google profile and Yelp, looks for their neighborhood in a portfolio.</td><td class="sub">City pages with real local jobs, a quartzite authority page, consolidated reviews, a by-appointment experience that reads as premium.</td></tr>
+      <tr><td><span class="t">Builder, designer, showroom</span><span class="d">The referral layer</span></td><td class="sub">Does not search. Refers on reliability. Wants lead times, templating turnaround, a price sheet to bid from, a PM who answers.</td><td class="sub">A trade program page and leave-behind, a Houzz profile under the current name, lunches. One designer relationship can carry several jobs a month.</td></tr>
+      <tr><td><span class="t">Commercial estimator</span><span class="d">Interior-finish and multifamily GCs</span></td><td class="sub">Finds subs on Blue Book, ISqFt, BuildingConnected and past bid lists; searches "commercial countertop fabricator Fort Worth" when a sub drops.</td><td class="sub">A commercial page, a capability statement, sectors and lead times, insurance facts, shop-drawing capacity, and ideally a certification primes are required to solicit.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ───────────────────────── TARGET MARKET ───────────────────────── -->
+<div class="section">
+  <p class="eyebrow">The target market</p>
+  <h2>Northeast Tarrant's luxury kitchens, and the Arlington–Fort Worth commercial corridor</h2>
+  <p class="lede">The Southlake office sits inside the richest cluster of suburbs in the county. The Arlington shop sits inside the largest hospitality and multifamily build-out in it. Neither fact appears on the website.</p>
+  <table>
+    <thead><tr><th>Market</th><th class="num">Home values, 2026</th><th>What the buyer is asking for</th></tr></thead>
+    <tbody>
+      <tr><td><span class="t">Southlake</span><span class="d">Carillon Parc homes under construction; Timarron, Vaquero-adjacent</span></td><td class="num">~$1.3M typical</td><td class="sub">Quartzite (Taj Mahal), honed finishes, book-matched islands, a fabricator who will walk the slab yard with them.</td></tr>
+      <tr><td><span class="t">Colleyville</span><span class="d">Vineyard, Bridlewood Estates</span></td><td class="num">~$1.0M, +11% YoY</td><td class="sub">Large-format slabs for remodels; competitors already name these neighborhoods in copy.</td></tr>
+      <tr><td><span class="t">Westlake</span><span class="d">Vaquero, Glenwyck Farms</span></td><td class="num">$5.1M median sale</td><td class="sub">Marble and rare quartzite, waterfall edges, designer-led. The highest ticket in the county.</td></tr>
+      <tr><td><span class="t">Keller · Trophy Club · Grapevine</span><span class="d">Steve Naylor and Platinum Granite's home turf</span></td><td class="num">$550K–900K</td><td class="sub">Volume remodels, quartz and quartzite, speed and reviews decide.</td></tr>
+      <tr><td><span class="t">Arlington · Mansfield</span><span class="d">The shop's home market</span></td><td class="num">$350K–600K</td><td class="sub">Granite and quartz replacements; Hilton's Flooring wins on slab-yard convenience today.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <h3>The commercial pipeline within fifteen minutes of the Arlington shop</h3>
+    <p>Arlington Entertainment District: a ~510-room Americana by Loews hotel ($500M) breaking ground after the World Cup, the 404,000 SF Anthem mixed-use project ($135M+), One Ranger Way luxury multifamily, a 145-room boutique hotel on the old Caravan site. Fort Worth: Westside Village ($1.7B; first phase 308 units and 100,000 SF of office), $473M of multifamily permitted in January 2026 alone, the North Stockyards hotel and multifamily. Southlake's Carillon Parc commercial phase is tabled at council; when the retail plaza is approved it is the hometown commercial target.</p>
+    <p><strong>The Blue Book counted countertop scopes on 232 restaurant projects and 76 non-residential buildings in DFW in the past twelve months.</strong> KAT Fabricators, Galaxy Granite and Countertops Inc are the names estimators see. Hard Rock is not on the list because Hard Rock has not told anyone it belongs there.</p>
+  </div>
+</div>
+
+<!-- ───────────────────────── TAILWINDS ───────────────────────── -->
+<div class="section keep">
+  <p class="eyebrow">Timing</p>
+  <h2>Two things happening in the market that nobody local is saying out loud</h2>
+  <div class="two">
+    <div class="note" style="margin:0">
+      <h3>Quartz got a tariff. Natural stone did not.</h3>
+      <p>A Section 201 safeguard on imported quartz surfaces took effect 15 August 2026: 25% inside a quota, 50% above it, stacked on the anti-dumping duties already on Indian and Turkish quartz. Granite, marble, quartzite and soapstone are outside scope. Every homeowner and every GC estimator in DFW is being re-quoted on quartz this quarter.</p>
+      <p><strong>"Natural stone is tariff-proof. Your quote is locked for sixty days."</strong> Factual, timely, and a reason to call Hard Rock instead of the quartz-led shops.</p>
+    </div>
+    <div class="note" style="margin:0">
+      <h3>2026 is a quartzite year, and specs are watching silica.</h3>
+      <p>Designer trend reports for 2026 put quartzite, honed and matte finishes, marble-look veining and porcelain at the top, with granite fading. That is a natural-stone fabricator's year.</p>
+      <p>Separately, California is advancing restrictions on high-silica engineered stone. Not Texas law, but architects and national GCs are already writing silica language into specifications. A one-page silica-safe fabrication statement (wet cutting, dust control, monitoring) wins that conversation before a competitor has one.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ───────────────────────── GROWTH ───────────────────────── -->
+<div class="section">
+  <p class="eyebrow">Growth</p>
+  <h2>Every way to get the name out</h2>
+  <p class="lede">Ordered the way it should be built: relationships first, proof second, spend last.</p>
+
+  <div class="box">
+    <h3>In person</h3>
+    <p class="sub">Referrals close luxury kitchens. This is where the first year is won, and it is the owner's calendar, not a platform.</p>
+    <ul>
+      <li>Builder program with the Southlake–Westlake custom builders: Atwood, WillowTree, Eclipse, Stewart, Calais, Garabedian, J. Lambert, Providential, PentaVia, Matt Adams, Monument, Lorant &amp; Elliott, Sierra Fine, Vesta, Veranda</li>
+      <li>Designer lunches: Kat Black Interiors, Land &amp; Luxury Studio, The Kitchen Source, Pristine Home Interiors, Heritage Design Studio, Crest Residential Design, Compassion Construction</li>
+      <li>Showroom partnerships where countertops get specified: The Designery Southlake, Cabinet IQ Grapevine, Cabinet Savie, Starpower Southlake</li>
+      <li>Commercial: capability statement in hand to Steele &amp; Freeman, Byrne, Muckleroy &amp; Falls, Bob Moore (Arlington), Ridgemont, Reliable, Westwood, Rampart Multifamily, FPI, CCI, AUI, Kinley, PRIM; multifamily specialists KWA, Cadence McShane, Moss</li>
+      <li>Southlake Chamber alongside Grapevine; Greater Fort Worth Builders Association; NARI North Texas; NKBA Dallas chapter for the designer room</li>
+      <li>Texas HUB and veteran-owned certification if eligibility holds; city small-business registries in Fort Worth and Arlington</li>
+      <li>Job-site signage in Carillon and Vineyard; a Southlake selection studio appointment that feels exclusive, not absent</li>
+      <li>Ask every designer, builder and cabinet partner for a Google review and a referral at install</li>
+    </ul>
+  </div>
+
+  <div class="box">
+    <h3>Content and earned media</h3>
+    <p class="sub">The engines cite the business's own pages in three of four AI Overviews. Give them pages worth citing.</p>
+    <ul>
+      <li>City pages for Southlake, Colleyville, Westlake, Keller, Grapevine, Trophy Club, Arlington, Mansfield and Fort Worth, each with real local jobs and neighborhood names</li>
+      <li>Authority pages: quartzite vs quartz in 2026 and what the tariff means; Taj Mahal quartzite cost, care and the dolomite fakes; how long fabrication takes in DFW; what countertops cost in Southlake</li>
+      <li>A commercial page and a downloadable capability statement: sectors, materials including porcelain and solid surface, shop drawings, insurance, lead times, references</li>
+      <li>A trade program page: templating within five business days of cabinets set, slab-selection concierge, bid-ready pricing, 50/50 terms</li>
+      <li>One dated luxury case study with designer co-credit, published to the site, Houzz and the Google profile</li>
+      <li>Short templating, cutting and install videos for the Google profile, Instagram and YouTube; video is cited roughly twice as often by AI Overviews as by AI Mode</li>
+      <li>Owner-answered threads on Reddit and Nextdoor where neighbors ask who did the countertops</li>
+      <li>Southlake Style Readers' Choice and 360West Best of Southlake nominations (January), Community Impact business briefs</li>
+    </ul>
+  </div>
+
+  <div class="two">
+    <div class="box" style="margin:0">
+      <h3>Paid</h3>
+      <p class="sub">Only once the profile and pages convert.</p>
+      <ul>
+        <li>Google Local Services Ads and branded search across Southlake, Colleyville, Keller, Grapevine</li>
+        <li>Search ads on "quartzite countertops Southlake" and "commercial countertops Fort Worth"</li>
+        <li>Meta and Instagram geo-fenced to the five luxury ZIPs, creative from real installs</li>
+        <li>Nextdoor sponsored posts by neighborhood</li>
+        <li>Retargeting on every page and video</li>
+      </ul>
+    </div>
+    <div class="box" style="margin:0">
+      <h3>Automated</h3>
+      <p class="sub">Where the work compounds instead of repeating.</p>
+      <ul>
+        <li>Review requests triggered at install, automatically</li>
+        <li>Speed-to-lead: text back inside sixty seconds on every call and form</li>
+        <li>Appointment booking for slab-selection visits straight onto the calendar</li>
+        <li>Weekly auto-posting of install photos to Google, Instagram and Facebook</li>
+        <li>Nurture for the 3–9 month remodel window</li>
+        <li>Fortnightly AI-engine probes against the baseline, reported monthly</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ───────────────────────── AI INFRASTRUCTURE ───────────────────────── -->
+<div class="section">
+  <p class="eyebrow">AI infrastructure</p>
+  <h2>Running and scaling the shop, not just marketing it</h2>
+  <p class="lede">Marketing creates demand. Infrastructure is what lets a two-location fabricator take it without the owner, who is also the company's general counsel, becoming the bottleneck on every estimate and every templating date.</p>
+  <div class="box">
+    <h3>Front office — stop losing what you already earn</h3>
+    <p class="sub">Both locations are appointment-only. Every missed call on the (817) line is a luxury buyer dialing the next name on the list.</p>
+    <ul>
+      <li>AI receptionist that answers every call, day or night, books the slab-selection appointment and never sends a Westlake buyer to voicemail</li>
+      <li>Speed-to-lead: inbound form or call gets a text back inside sixty seconds</li>
+      <li>Email triage that separates bid invitations, RFIs, designer requests and invoices from noise</li>
+      <li>Review requests and referral asks triggered automatically at install</li>
+      <li>A simple status page for builders and designers: templated, cut, scheduled, installed</li>
+    </ul>
+  </div>
+  <div class="box">
+    <h3>Internal operations — where a fabricator scales or stalls</h3>
+    <p class="sub">Two locations, a distributor-based slab model and a growing sales team is three coordination problems landing on one person.</p>
+    <ul>
+      <li>Quote generation from a scoped template: slab, fabrication, edge, cutouts, install, tear-out, in minutes</li>
+      <li>Commercial bid takeoffs from plans, against historical cost data, so GC invitations get answered on time</li>
+      <li>Templating and install scheduling across both crews with automatic customer and partner updates</li>
+      <li>Slab hold and remnant tracking across the distributors you use</li>
+      <li>Job costing that flags variance while the job is running</li>
+      <li>A weekly owner report: every job, every variance, every decision waiting on you</li>
+    </ul>
+  </div>
+  <p><strong>The honest sequence:</strong> front office at the same time as visibility, because a missed call wastes money already spent. Internal operations once the job count makes the coordination hurt, usually the point at which the owner stops being able to hold every templating date in their head.</p>
+</div>
+
+<!-- ───────────────────────── THE PLAN ───────────────────────── -->
+<div class="section">
+  <p class="eyebrow">The plan</p>
+  <h2>Phased, ranked by what grows the business fastest</h2>
+  <p class="lede">Each phase is ordered by return, not by convenience. Nothing in a later phase works properly without the one before it, which is why the sequence matters more than the speed.</p>
+  <table class="phase">
+    <colgroup><col class="c1"><col class="c2"><col class="c3"><col></colgroup>
+    <thead><tr><th>#</th><th>Phase</th><th>What it buys</th><th class="num">Investment</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="num">01</td>
+        <td><span class="t">Foundation</span><span class="d">Weeks 1–4. Entity decision memo signed (one legal name, one primary address, one email). Old domain redirected page for page. Google Business Profile rebuilt: full hours, categories, products, services, Q&amp;A, 30+ real photos, weekly posting. Angi flag cleared; Angi, Houzz, Yelp, BBB, Nextdoor, D&amp;B renamed and re-addressed. Yelp category fixed. Review campaign to the Angi, Houzz and Birdeye base. Schema shipped with the old name as alternateName. Apple and Bing claimed. Certification eligibility checked and filed.</span></td>
+        <td class="sub">Stops the trust leak and joins the two businesses into one. Nothing below this line performs until a buyer who looks twice sees one company with 150 reviews.</td>
+        <td class="inv"><span class="big">$1,000</span>one-time GBP build<br><span class="mono bold">included free</span> with the Sprint<br>photos supplied by you</td>
+      </tr>
+      <tr>
+        <td class="num">02</td>
+        <td><span class="t">Visibility — 90-Day Sprint</span><span class="d">Months 1–3. Forty tracked prompts probed every two weeks; Maps grid at both addresses; town scan across eight cities. Nine city pages, four authority pages, the commercial page and capability statement, the trade program page. Houzz refreshed under the current name. Manufacturer locator applications. Blue Book, ISqFt and BuildingConnected profiles. Reddit and Nextdoor threads. One dated luxury case study. Monthly report with before-and-after against the baseline.</span></td>
+        <td class="sub">Closes the gap: named in Southlake by the profile alone today, absent for every buyer question tested. This is the measured problem in this report and the only line with a baseline already on record.</td>
+        <td class="inv"><span class="big">$1,500/mo</span>90-day minimum<br>AI visibility <span class="mono bold">and</span> SEO<br>includes the $1,000 GBP build<br>one fabricator per market</td>
+      </tr>
+      <tr>
+        <td class="num">03</td>
+        <td><span class="t">Website rebuild, if the crawl calls for it</span><span class="d">Month 1, overlapping. If the kickoff crawl confirms a legacy content system behind the indexed query-string URLs, the content plan runs on a new build instead of patching the old one. If the platform is sound, this line is zero.</span></td>
+        <td class="sub">Makes every page in Phase 02 land on a site the engines can read: schema, speed, structure, one email, one name.</td>
+        <td class="inv"><span class="big">$1,500</span>flat, only if needed<br>optional care plan $97/mo</td>
+      </tr>
+      <tr>
+        <td class="num">04</td>
+        <td><span class="t">Front-office AI</span><span class="d">Months 2–5. AI receptionist on the (817) line, sixty-second speed-to-lead, slab-appointment booking, email triage, automatic review requests, partner status page.</span></td>
+        <td class="sub">Protects the demand the phase above creates. A missed call on a $40,000 Westlake kitchen is the most expensive thing in this document.</td>
+        <td class="inv"><span class="big">$500</span>one-time setup<br>then <span class="mono bold">$397/mo</span></td>
+      </tr>
+      <tr>
+        <td class="num">05</td>
+        <td><span class="t">Trade and commercial doors</span><span class="d">Months 3–9. Builder and designer program delivered by the owner with 6 Signal's leave-behinds and lists; GC outreach to the twenty named contractors with the capability statement and the tariff quote-lock; chamber and association memberships; then paid: Local Services Ads, search, Meta, retargeting.</span></td>
+        <td class="sub">Adds streams that do not depend on search at all, and puts Hard Rock on the bid lists where commercial work is actually awarded.</td>
+        <td class="inv"><span class="big y">scoped</span><br>plus ad spend and dues, set by you</td>
+      </tr>
+      <tr>
+        <td class="num">06</td>
+        <td><span class="t">Internal AI infrastructure</span><span class="d">Months 6–12. Quote generation, commercial takeoffs, two-crew scheduling, slab and remnant tracking, job-cost variance, weekly owner report.</span></td>
+        <td class="sub">Removes the owner as the bottleneck. Worth doing when job count makes coordination hurt, not before.</td>
+        <td class="inv"><span class="big y">$500 remote / $1,000 on-site scoping</span><br>credited in full, then build fee + monthly run fee</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <h3>How the pricing works</h3>
+    <p>Fixed figures above are firm. <strong>Scoped</strong> phases are priced from a paid scoping session, $500 remote or $1,000 on site, credited in full against the build if you proceed within thirty days. Internal infrastructure cannot be quoted before someone has seen how the shop actually runs; a number given before that is a guess dressed as a quote.</p>
+    <p>The $1,000 Google Business Profile build stands alone if you want only that. Start the 90-Day Sprint and it is included at no extra cost. The Sprint is not discounted; the build is folded in, because a profile without posting, reviews and citations behind it decays back to where it started.</p>
+    <p><strong>You shoot it, we do everything after.</strong> Photography and video are not included in any phase. You supply the images from your own camera or a photographer you hire; selection, naming, sequencing and publishing across the site, the Google profile and every channel in the plan are ours. Advertising spend, association dues, certification fees and third-party software are paid directly by you and are not fees to 6 Signal.</p>
+  </div>
+
+  <div class="keep">
+    <h3>What Phase 02 would cost you assembled from agencies</h3>
+    <p class="lede" style="margin-bottom:8pt">The $1,500/mo Sprint covers AI visibility <strong>and</strong> conventional SEO in one line. Bought as separate services, the same scope looks like this.</p>
+    <table>
+      <thead><tr><th>Component, bought separately</th><th class="num">Typical market rate</th></tr></thead>
+      <tbody>
+        <tr><td>Local SEO retainer</td><td class="num">$1,500 – $3,500/mo</td></tr>
+        <tr><td>Content production, 4–6 pieces a month</td><td class="num">$1,200 – $3,000/mo</td></tr>
+        <tr><td>AI visibility monitoring and optimisation</td><td class="num">$1,000 – $2,500/mo</td></tr>
+        <tr><td>Technical SEO and schema</td><td class="num">$500 – $1,500/mo</td></tr>
+        <tr><td>Citation and listing management</td><td class="num">$100 – $300/mo</td></tr>
+        <tr><td>Rank, Maps and reporting</td><td class="num">$200 – $500/mo</td></tr>
+        <tr style="border-top:2px solid var(--line-strong)"><td class="bold">Assembled total</td><td class="num bold">$4,500 – $11,300/mo</td></tr>
+        <tr><td class="bold">6 Signal 90-Day Sprint — all of it</td><td class="num"><span class="b y">$1,500/mo</span></td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:8pt; color: var(--muted); font-size:10pt;">Those ranges are typical market rates for buying each service separately in this metro, not quotes, and not measured. The difference is not a discount; it is one operator doing the whole stack instead of four vendors each carrying their own overhead and account management.</p>
+  </div>
+
+  <div class="note" style="padding-top:12pt;padding-bottom:10pt;"><p><strong>One fabricator per market per trade.</strong> Taking this on for Hard Rock Custom Countertops means not taking it on for another countertop fabricator in Northeast Tarrant County.</p></div>
+</div>
+
+<!-- ───────────────────────── SEQUENCE ───────────────────────── -->
+<div class="section">
+  <p class="eyebrow">Sequence</p>
+  <h2>The first thirty days</h2>
+  <p class="lede">In this order. Everything else in this report stacks on top of these eight. On the first one: you decide it, we do everything after.</p>
+  <ol class="num-list">
+    <li><span class="b y">01</span><span>Decide the entity: one legal name, which address is the primary profile, one email. Sign the memo.</span></li>
+    <li><span class="b y">02</span><span>Grant access to Google, Yelp, Angi, Houzz, the two domains and the phone line.</span></li>
+    <li><span class="b y">03</span><span>Redirect hardrockgraniteandtile.com page for page and retire the second email.</span></li>
+    <li><span class="b y">04</span><span>Rebuild the Southlake Google Business Profile and clear the Angi "may not be in business" flag.</span></li>
+    <li><span class="b y">05</span><span>Fix the Yelp category, then send the review request to the last 50 customers across Angi, Houzz and Birdeye.</span></li>
+    <li><span class="b y">06</span><span>Supply 30 real photos of installed jobs with the city and, where the client allows, the neighborhood.</span></li>
+    <li><span class="b y">07</span><span>Ship the Southlake page and the commercial page, thin, with schema; they are built out in month two.</span></li>
+    <li><span class="b y">08</span><span>Run the forty-prompt baseline across six engines and the Maps grid at both addresses. Everything after is measured against it.</span></li>
+  </ol>
+</div>
+
+<!-- ───────────────────────── METHOD ───────────────────────── -->
+<div class="section keep">
+  <p class="eyebrow">Method</p>
+  <h2>How these findings were produced</h2>
+  <p>Thirty-one listings, nine indexed website pages, the legacy domain, and the public profiles of fourteen competing fabricators were reviewed on 27 October 2026. Review counts and ratings are quoted as each platform displayed them on that date. The buyer-question snapshots are recorded search and AI-answer results for eight questions, each listing the providers actually returned.</p>
+  <p>The forty-question probe set has been built and is run at kickoff across ChatGPT, Claude, Gemini, Perplexity, Google AI Overviews and Google Maps. Each answer is stored in full with a timestamp and judged for whether Hard Rock is named; these engines are non-deterministic, so the stored answer is the evidence, not the score. The same questions re-run every two weeks measure movement against that baseline. A deterministic crawl of the website for machine-readability (schema, sitemap, crawler access, titles) is run the same day and scored in code.</p>
+  <p>The brand, website, channel and market sections are analyst assessment, not measurement, and are labelled as such. Channel weights are judgement calls about lead flow in this market, not observed data. Market figures cite Zillow, Redfin, the City of Fort Worth, Tarrant Appraisal District, the Blue Book, the Federal Register and the Section 201 proclamation as published in 2026. Certification eligibility and the website platform are confirmed with the owner at kickoff.</p>
+
+  <div class="rule-strong">
+    <span>6 Signal · AI visibility for builders and contractors</span>
+    <span>hello@6signal.co · 6signal.co</span>
+  </div>
+</div>
+
+</body>
+</html>
