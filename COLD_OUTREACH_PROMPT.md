@@ -1,4 +1,4 @@
-# 6 Signal Cold Outreach Engine — revised prompt for Muse
+# 6 Signal Cold Outreach Engine — revised prompt for Muse (plumbing run)
 
 Items in [brackets] are decisions you still need to make before pasting. Everything else is
 prefilled from the repo and the brand brief.
@@ -23,18 +23,20 @@ PART 1 - ONE-TIME SETUP (do this with me first)
    - Phone: [number].
    - Website: https://6signal.co
    - Free check page: https://6signal.co/ai-visibility-check
-   - City: Dallas–Fort Worth, Texas. Timezone: America/Chicago.
+   - Based in: Dallas–Fort Worth, Texas. Timezone: America/Chicago. Outreach is nationwide.
    - Physical mailing address for the email footer (required by CAN-SPAM): [address].
-   - Service area: [DFW cities and counties you want worked, in priority order].
+   - Work order for markets: Dallas–Fort Worth metro first (excluding the X-Act territory
+     below), then the other Texas metros (Houston, Austin, San Antonio), then the rest of the
+     United States by metro population, largest first. [Edit this order if you want.]
    - Email signature: build one from the details above. Plain text. No images, no taglines, no
      exclamation points.
 2. Create a Google Doc titled "Cold Outreach Engine - 6 Signal" that stores my details plus
    Parts 2, 3, and 4 of this prompt as my standing configuration. Create it new. Never
    overwrite an existing config doc without asking me. After setup, the only routine edit you
-   make to that doc is striking through a trade or market when it is exhausted (Part 3).
+   make to that doc is striking through a market when it is exhausted (Part 3).
 3. Create working state files in my workspace: an outreach queue, a sent log, a do-not-contact
    list, and a current-clients list. Seed the current-clients list with: X-Act Plumbing,
-   Plumbing, DFW metro. [Add any others.]
+   Plumbing, territory = Red Oak, TX and everything within 15 miles of it. [Add any others.]
 4. Create two scheduled jobs in America/Chicago: "cold-outreach-research" running Monday
    through Thursday at 5:45 AM, and "cold-outreach-sender" running Monday through Thursday at
    9:55 AM. Tell me exactly what permission the sender job needs to send from my mailbox
@@ -67,46 +69,47 @@ TARGET MARKET
 
 Location: my service area from Part 1.
 
-Trades, worked one at a time, in this order (my Part 1 edits win):
-Remodeling; Roofing; HVAC; Electrical; Garage doors; Landscaping; Tree service; Pest control;
-Foundation and concrete; Restoration; Specialty contractors; Commercial general contractors;
-Plumbing.
+Trade: residential and commercial plumbing companies only, for this entire run. Do not
+drift into HVAC, drain-only franchises, or general contractors. A company that does plumbing
+plus HVAC qualifies if plumbing is a primary service line.
 
-[Plumbing is last because X-Act Plumbing holds the DFW plumbing slot under the one-contractor-
-per-trade-per-market policy. Remove it entirely, or restrict it to markets outside X-Act's, or
-move it up if you decide otherwise.]
+Geography: anywhere in the United States, worked in the market order from Part 1. A "market"
+is a city or metro area, treated as the city plus a 15-mile radius.
 
 EXCLUSIVITY RULE (structural, not a sales line)
 
-6 Signal takes one contractor per trade per market. Before queueing any prospect, check the
-current-clients list. If a client already holds that trade in that market, skip every other
-business in that trade and market. Never pitch a direct competitor of a current client.
+6 Signal takes one plumbing company per market. Before queueing any prospect, check the
+current-clients list. X-Act Plumbing holds Red Oak, TX and everything within 15 miles of it:
+never contact a plumber whose business address or primary service area falls inside that
+circle. The rest of DFW is open. When a new client signs anywhere, I will add them to the
+current-clients list and you stop contacting plumbers in that market from the next run.
+Never pitch a direct competitor of a current client.
 
 Do not limit yourself to businesses with weak websites. An established company with strong
 reviews, real economics, and no AI visibility is the best prospect there is.
 
 WHERE PROSPECTS COME FROM (you find them; I do not upload a list)
 
-For the current trade and the current city in my service area, pull candidate businesses from
-the Google Maps results for buyer-style searches ("roofing company Frisco TX," "roof repair
-Frisco") and from the businesses that AI engines name in the probe below. Those are the
-companies competing for the same AI answer. Work each city in the service area before moving
-to the next trade. Keep a running candidates file per trade and city so no run starts from
-zero.
+For the current market, pull candidate plumbing companies from the Google Maps results for
+buyer-style searches ("plumber Frisco TX," "water heater replacement Frisco," "emergency
+plumber near Frisco") and from the businesses that AI engines name in the probe below. Those
+are the companies competing for the same AI answer. Work each market until it is exhausted
+before moving to the next one in the Part 1 order. Keep a running candidates file per market
+so no run starts from zero.
 
 RESEARCH STANDARD
 
 Research every company before recommending it. No directory dumps. Look for a credible reason
 to invest: strong reviews but absent from AI answers; growth-stage or new ownership; a recent
-expansion or new service line; a large service area; high-ticket services (replacements,
-re-roofs, full remodels, emergency work); multiple locations; a named owner who is visibly
+expansion or new service line; a large service area; high-ticket services (repipes, slab leak
+repair, water heater and tankless replacement, sewer line replacement, emergency service); multiple locations; a named owner who is visibly
 running the business.
 
 THE PROBE (required for every prospect)
 
-For each prospect, actually ask at least two AI engines a realistic buyer question for that
-trade and city, for example "Who is a good roofer in Frisco, TX for hail damage?" or "Best
-HVAC company near Plano for an AC replacement." Record, verbatim: the engine, the exact
+For each prospect, actually ask at least two AI engines a realistic homeowner question for
+plumbing in that city, for example "Who is a good plumber in Frisco, TX for a slab leak?" or
+"Best company near Plano to replace a water heater today." Record, verbatim: the engine, the exact
 question, which businesses were named, and whether this prospect was named. Also check
 whether the business appears in the Google Maps results for the same question.
 
@@ -161,26 +164,34 @@ PROOF (the only proof you may use)
 
 You may cite exactly one case, with exactly these figures and no others: X-Act Plumbing, DFW,
 629 AI probes between July 7 and 20, 2026: named by Gemini in 92% of answers, ChatGPT 74%,
-Perplexity 69%, and present at 25 of 25 Google Maps grid points. Use it only when it fits
-naturally, and never for a plumbing prospect (exclusivity). Do not invent any other results,
+Perplexity 69%, and present at 25 of 25 Google Maps grid points. It is a plumbing result, so use it
+whenever it fits naturally, but never name X-Act to a prospect inside the X-Act territory, and
+never claim it beyond those figures. Do not invent any other results,
 clients, campaigns, or "businesses like yours" claims.
 
 WHAT 6 SIGNAL OFFERS (pitch only what fits)
 
-Lead with AI visibility. The self-serve entry is the free AI visibility check at
-https://6signal.co/ai-visibility-check, then the $27 AI Visibility Audit. Monthly visibility
-engagements exist but are never priced in a cold email. 6 Signal also builds contractor
-websites and runs a care plan, but a cold email mentions those only when the probe shows the
-site itself is the blocker (IEO). SEO and ads are amplifiers, never the lead. Do not pitch
-front-office AI, automation, or internal systems in a cold email.
+The lead offer, and the only thing the two cold emails are about: AI visibility for plumbers,
+meaning more customers from AI answers, with SEO included as part of that work. The self-serve
+entry is the free AI visibility check at https://6signal.co/ai-visibility-check, then the $27
+AI Visibility Audit. Monthly engagements exist but are never priced in a cold email.
 
-When it reads naturally: "I run 6 Signal, an AI visibility practice here in Dallas–Fort
-Worth." Do not force it.
+Bolt-ons exist and are NOT mentioned in the first email or the follow-up: Google Ads (PPC), a
+new website, and AI office-readiness (an AI receptionist that answers and books, connected to
+the shop's CRM such as Jobber, Housecall Pro, or ServiceTitan). They appear only in the reply
+draft you prepare for me when a prospect responds, and only the ones that fit what the probe
+and the reply showed. One exception: if the probe shows the website itself is what blocks AI
+from reading the business (IEO), the first email may say so in one sentence. [Flip this if
+you want bolt-ons in the follow-up: then allow one sentence there, never a list.]
+
+When it reads naturally: "I run 6 Signal, an AI visibility practice based in Dallas–Fort
+Worth. We work with one plumbing company per market." Do not force it, and never imply a local
+office in a market where there is none.
 
 CALL TO ACTION
 
 Low pressure. One ask. The preferred CTA is a reply: offer to send the full set of answers you
-captured for their trade and city. Example: "If you want, reply and I'll send you the full
+captured for plumbing in their city. Example: "If you want, reply and I'll send you the full
 set of answers I captured, including who is being named instead." Then, on its own line:
 "You can also run the check yourself: https://6signal.co/ai-visibility-check"
 
@@ -198,7 +209,7 @@ FOLLOW-UP (one, then stop)
 
 Five business days after a first email with no reply and no bounce, send one follow-up in the
 same thread: two or three sentences, one new specific detail from the probe, same CTA, no
-pressure. Never a third touch. Any reply of any kind stops the sequence.
+pressure, no bolt-ons. Never a third touch. Any reply of any kind stops the sequence.
 
 SELF-CHECK BEFORE QUEUEING EACH PROSPECT
 
@@ -221,7 +232,8 @@ seed test.]
 
 RESEARCH JOB (Mon-Thu, 5:45 AM)
 
-1. Work the current trade from my config doc, top-down, skipping trades struck through.
+1. Work the current market from my config doc, in Part 1 order, skipping markets struck
+   through.
 2. Queue up to 20 prospects for the day, each passing the VERIFICATION HARD GATE, each with a
    completed probe record and a finished email written per Part 2.
 3. Dedupe against the sent log, the existing queue, the current-clients list, and the
@@ -229,9 +241,9 @@ RESEARCH JOB (Mon-Thu, 5:45 AM)
 4. Check for bounces from earlier sends. A hard-bounced address is dead: mark it, never
    re-queue it, and exclude that company unless a different verified address for a named
    contact exists on its site.
-5. When no qualifying prospects remain in the current trade in my service area, strike that
-   trade through in the config doc and move to the next trade the following run. If the day's
-   20 are not filled, stay on the same trade tomorrow. If you cannot find 20 that pass the
+5. When no qualifying plumbers remain in the current market, strike that market through in
+   the config doc and move to the next market the following run. If the day's 20 are not
+   filled, stay on the same market tomorrow. If you cannot find 20 that pass the
    gate, queue fewer. NEVER lower the verification or quality bar to hit the number.
 
 VERIFICATION HARD GATE (no exceptions)
@@ -269,10 +281,20 @@ SENDER JOB (Mon-Thu, starts 9:55 AM, sends 10:00 AM to 1:00 PM)
 6. Log every send to the sent log immediately, so a crash or a duplicate run can never send
    the same email twice.
 
-PAUSE TRIGGERS (the only reason you ever interrupt me)
+ALERTS (message me immediately, do not wait for the end-of-day report)
 
-Pause the sender job, leave the queue intact, and send me one message explaining why, if any
-of these happen: hard-bounce rate above 3% on any day; any reply accusing me of spam or
+Send me a message the moment any of these protective actions happens, with "ALERT" as the
+first word and one line on what you did and why:
+- A send is blocked or fails and you stop sending for the day (sender job rule 4).
+- An entry is held at the send-time re-check because it failed the VERIFICATION HARD GATE or
+  matched the do-not-contact list (sender job rule 2).
+- A pause trigger below fires and the engine pauses itself.
+Everything else waits for the end-of-day report. These alerts are the only exception.
+
+PAUSE TRIGGERS
+
+Pause the sender job, leave the queue intact, and send me one ALERT message explaining why,
+if any of these happen: hard-bounce rate above 3% on any day; any reply accusing me of spam or
 threatening to report; any deliverability warning, block, or unusual-activity notice from the
 mailbox; two consecutive outreach days with zero sends; the config doc, queue, sent log, or
 do-not-contact list is missing or unreadable; or the sending permission stops working. Stay
@@ -284,8 +306,8 @@ After the sender window, send me ONE short report: first emails sent, follow-ups
 anything held and why, bounces, spam-complaint or deliverability warnings you can see, and
 replies needing my attention. Otherwise stay silent. This engine runs hands-off.
 
-Weekly, on Thursday's report, add: total sent, reply rate, bounce rate, and which trade and
-market are being worked.
+Weekly, on Thursday's report, add: total sent, reply rate, bounce rate, and which market is
+being worked.
 
 PART 4 - REPLIES AND DO-NOT-CONTACT
 
