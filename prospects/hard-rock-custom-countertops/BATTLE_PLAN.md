@@ -312,7 +312,7 @@ Yelp showing the business they actually are; baseline measured.
 |---|---|---|---|
 | 1 | Baseline: tracked prompt set (Appendix A) loaded, first probe sweep run, maps grid at both addresses, town scan on 8 towns, citation leaderboard. Client baseline report generated. | 6Signal | all |
 | 2 | Entity decision memo: confirm legal name, whether the rebrand is a DBA, which address is the primary GBP (Southlake front office vs Arlington shop), and the single canonical email. Owner signs off. | 6Signal + Client | LEO |
-| 3 | Google Business Profile, Southlake: full hours, secondary categories (Granite supplier, Marble supplier, Kitchen remodeler, Cabinet store if applicable), services with descriptions, products (quartzite, granite, marble, quartz, porcelain), 20+ geotagged job photos, Q&A seeded with the 10 buyer questions, weekly posts, booking link. Arlington profile reconciled or verified as the shop with "by appointment" **[decide after verify]**. | 6Signal | LEO/VEO |
+| 3 | Google Business Profile, Southlake: full hours, secondary categories (Granite supplier, Marble supplier, Kitchen remodeler, Cabinet store if applicable), services with descriptions, products (quartzite, granite, marble, quartz, porcelain), 20+ geotagged job photos, Q&A seeded with the 10 buyer questions, booking link, and a 52-week posting kit (calendar, 52 market-tuned prompts, photo checklist, one-page routine) so posting never depends on a retainer. Optional GBP Autopilot at $97/month (four posts from their photos, review-reply drafts on approval, Q&A monitoring, monthly snapshot), included during the 90-day Sprint. Arlington profile reconciled or verified as the shop with "by appointment" **[decide after verify]**. | 6Signal | LEO/VEO |
 | 4 | Review migration campaign: SMS/email to the Angi, Houzz, and Birdeye reviewer base asking for a Google review (and a Yelp review from Yelp users). Script in Appendix C. Target: 8 → 40+ Google reviews by day 30, Yelp 1 → 10. No incentives, no gating. | Client sends, 6Signal builds | LEO/GEO |
 | 5 | Angi: claim both listings, remove the "may not be in business" state, update name, address, years. Houzz: rename, re-city to Southlake, add 2024–2026 projects. Yelp: fix category to Countertop Installation / Kitchen & Bath, add Southlake and Arlington, 49 photos stay. BBB: update name and address. Nextdoor: consolidate the three pages. D&B/MapQuest/Yahoo: correct. | 6Signal | LEO |
 | 6 | Site fixes: 301 the old domain page-for-page; fix the Frisco title; purge the legacy query-string URLs with redirects; one email everywhere; LocalBusiness (or HomeAndConstructionBusiness) JSON-LD for both locations with sameAs to every profile; Organization with founding date 2010 and the Best of Houzz awards; sitemap; robots check for AI bots. | 6Signal (Client grants access) | IEO |
@@ -391,6 +391,8 @@ Business metrics the client will actually care about, reported monthly:
 
 ## 7. Offer structure for this prospect
 
+- **GBP build, $1,000 one-time**, includes the 52-week posting kit; folded into the Sprint at no extra cost.
+- **GBP Autopilot, $97/month**, optional, included during the Sprint, month to month after. Build the posting job (background worker + LocalPosts API or Ayrshare) before selling it standalone.
 - **Scale retainer, $1,500/month, 90-day minimum**, exclusivity: one countertop fabricator in the
   Southlake/Northeast Tarrant market. Everything in Days 1–90 above except the items marked Client.
 - **Website:** if the crawl confirms a legacy CMS, offer the $1,500 flat rebuild in month 1 and run
