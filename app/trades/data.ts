@@ -58,7 +58,7 @@ export const tradesBySlug: Record<string, TradeData> = {
   roofers: {
     slug: "roofers",
     tradePlural: "Roofers",
-    metaTitle: "6Signal: AI Visibility Audit for Roofers",
+    metaTitle: "AI Visibility for Roofers in Dallas–Fort Worth",
     metaDescription: "AI visibility audits for roofers in Dallas/Fort Worth and North Texas. See where your roofing company appears across AI, Maps, and search.",
     ogTitle: "Be the roofer AI recommends after the storm.",
     ogDescription: "6 Signal helps roofing contractors own the AI shortlist in their market. AI Visibility Audit — $27.",
@@ -157,7 +157,7 @@ export const tradesBySlug: Record<string, TradeData> = {
   plumbers: {
     slug: "plumbers",
     tradePlural: "Plumbers",
-    metaTitle: "6Signal: AI Visibility Audit for Plumbers",
+    metaTitle: "AI Visibility for Plumbers in Dallas–Fort Worth",
     metaDescription: "AI visibility audits for plumbers in Dallas/Fort Worth and North Texas. See where your plumbing company appears across AI, Maps, and search.",
     ogTitle: "When the pipe bursts, the buyer asks their phone who to call.",
     ogDescription: "Emergency plumbing creates the purest AI-search moment in home services. 6 Signal gets your company onto that shortlist.",
@@ -252,7 +252,7 @@ export const tradesBySlug: Record<string, TradeData> = {
   hvac: {
     slug: "hvac",
     tradePlural: "HVAC Companies",
-    metaTitle: "6Signal: AI Visibility Audit for HVAC Companies",
+    metaTitle: "AI Visibility for HVAC Companies in Dallas–Fort Worth",
     metaDescription: "AI visibility audits for HVAC companies in Dallas/Fort Worth and North Texas. See where your company appears across AI, Maps, and search.",
     ogTitle: "When the AC dies in July, the shortlist is set before your phone rings.",
     ogDescription: "Seasonal failure drives compressed, urgent search behavior. 6 Signal gets HVAC companies onto the AI shortlist before competitors answer first.",
@@ -347,7 +347,7 @@ export const tradesBySlug: Record<string, TradeData> = {
   electricians: {
     slug: "electricians",
     tradePlural: "Electricians",
-    metaTitle: "6Signal: AI Visibility Audit for Electricians",
+    metaTitle: "AI Visibility for Electricians in Dallas–Fort Worth",
     metaDescription: "AI visibility audits for electricians in Dallas/Fort Worth and North Texas. See where your company appears across AI, Maps, and search.",
     ogTitle: "Emergency, remodel, panel upgrade — if the systems don't name you, the homeowner never calls.",
     ogDescription: "License signals, credential visibility, and AI search position determine which electrician gets the call. 6 Signal builds that infrastructure.",
@@ -441,7 +441,7 @@ export const tradesBySlug: Record<string, TradeData> = {
   remodelers: {
     slug: "remodelers",
     tradePlural: "Remodelers",
-    metaTitle: "6Signal: AI Visibility Audit for Remodelers",
+    metaTitle: "AI Visibility for Remodelers in Dallas–Fort Worth",
     metaDescription: "AI visibility audits for remodelers in Dallas/Fort Worth and North Texas. See where your company appears across AI, Maps, and search.",
     ogTitle: "High-ticket projects are won before the estimate. Buyers verify before they trust.",
     ogDescription: "Homeowners research remodelers for weeks using AI, Maps, and reviews before calling anyone. 6 Signal gets your company into that research process.",
@@ -536,7 +536,7 @@ export const tradesBySlug: Record<string, TradeData> = {
   "garage-doors": {
     slug: "garage-doors",
     tradePlural: "Garage Door Companies",
-    metaTitle: "6Signal: AI Visibility Audit for Garage Door Companies",
+    metaTitle: "AI Visibility for Garage Door Companies in Dallas–Fort Worth",
     metaDescription: "AI visibility audits for garage door companies in Dallas/Fort Worth and North Texas. See where your company appears across AI, Maps, and search.",
     ogTitle: "A stuck garage door is an urgent search. Three companies get named. Everyone else disappears.",
     ogDescription: "Voice search, AI tools, and Maps determine which garage door company gets called in an emergency. 6 Signal gets your company onto that shortlist.",
@@ -630,7 +630,7 @@ export const tradesBySlug: Record<string, TradeData> = {
   landscaping: {
     slug: "landscaping",
     tradePlural: "Landscaping Companies",
-    metaTitle: "6Signal: AI Visibility Audit for Landscaping Companies",
+    metaTitle: "AI Visibility for Landscaping Companies in Dallas–Fort Worth",
     metaDescription: "AI visibility audits for landscaping companies in Dallas/Fort Worth and North Texas. See where your company appears across AI, Maps, and search.",
     ogTitle: "The best work in the neighborhood doesn't help if they can't find you.",
     ogDescription: "Landscaping buyers research before they call. AI tools, Maps, and search shape who makes the shortlist. 6 Signal gets your company there.",
@@ -724,7 +724,7 @@ export const tradesBySlug: Record<string, TradeData> = {
   "tree-service": {
     slug: "tree-service",
     tradePlural: "Tree Service Companies",
-    metaTitle: "6Signal: AI Visibility Audit for Tree Service Companies",
+    metaTitle: "AI Visibility for Tree Service Companies in Dallas–Fort Worth",
     metaDescription: "AI visibility audits for tree service companies in Dallas/Fort Worth and North Texas. See where your company appears across AI, Maps, and search.",
     ogTitle: "After the storm, homeowners don't build a long list. They ask who can handle it now.",
     ogDescription: "Storm surge search behavior is compressed and urgent. 6 Signal gets tree service companies onto the AI shortlist before the first call goes to a competitor.",
@@ -818,7 +818,7 @@ export const tradesBySlug: Record<string, TradeData> = {
   "pest-control": {
     slug: "pest-control",
     tradePlural: "Pest Control Companies",
-    metaTitle: "6Signal: AI Visibility Audit for Pest Control Companies",
+    metaTitle: "AI Visibility for Pest Control Companies in Dallas–Fort Worth",
     metaDescription: "AI visibility audits for pest control companies in Dallas/Fort Worth and North Texas. See where your company appears across AI, Maps, and search.",
     ogTitle: "When the problem feels urgent or unsafe, buyers want a trusted name fast.",
     ogDescription: "Pest control buyers research aggressively before letting anyone spray their home. 6 Signal gets your company onto the AI shortlist buyers check first.",
@@ -912,7 +912,7 @@ export const tradesBySlug: Record<string, TradeData> = {
   "foundation-concrete": {
     slug: "foundation-concrete",
     tradePlural: "Foundation & Concrete Contractors",
-    metaTitle: "6Signal: AI Visibility Audit for Foundation Contractors",
+    metaTitle: "AI Visibility for Foundation Contractors in Dallas–Fort Worth",
     metaDescription: "AI visibility audits for foundation and concrete companies in North Texas. See where your company appears across AI, Maps, and search.",
     ogTitle: "High-trust structural work requires confidence before the first call.",
     ogDescription: "Foundation buyers research for weeks using AI, Maps, and search before calling anyone. 6 Signal builds the visibility infrastructure that gets your company found throughout that process.",
@@ -1008,7 +1008,7 @@ export const tradesBySlug: Record<string, TradeData> = {
   "commercial-contractors": {
     slug: "commercial-contractors",
     tradePlural: "Commercial Contractors",
-    metaTitle: "6Signal: AI Visibility Audit for Commercial Contractors",
+    metaTitle: "AI Visibility for Commercial Contractors in Dallas–Fort Worth",
     metaDescription: "AI visibility audits for commercial contractors in Dallas/Fort Worth and North Texas. See where your company appears across AI and search.",
     ogTitle: "Prequalification, vendor selection, and bid decisions now start with what buyers can verify online.",
     ogDescription: "Commercial contractors are evaluated before outreach. 6 Signal builds the digital credibility infrastructure that survives that scrutiny.",

@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Reach the Operator | 6Signal",
+  alternates: { canonical: "https://6signal.co/inquire" },
+  title: "Reach the Operator",
   description:
     "Tell us where you are on the climb — Start, Stabilize, Scale, or Systemize. Goes directly to the operator; same-day reply.",
   openGraph: {
-    title: "Reach the Operator | 6Signal",
+    title: "Reach the Operator | 6 Signal",
     description:
       "Tell us where you are on the climb. Goes directly to the operator; same-day reply.",
     type: "website",

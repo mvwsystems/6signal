@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Radar, Ring, SignalBars, LineChart, Donut, Sparkline, MapHeatGrid } from "../components/charts";
 import ProposalsTab from "./ProposalsTab";
+import NewsletterTab from "./NewsletterTab";
 import { T, alpha, MONO, DISP, BODY, useDbTheme } from "./theme";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -2097,7 +2098,7 @@ function RevenueTab() {
 export default function DashboardPage() {
   const [state, setState] = useState<"loading" | "locked" | "in">("loading");
   const [configured, setConfigured] = useState(true);
-  const [tab, setTab] = useState<"overview" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "proposals" | "ads" | "revenue">("overview");
+  const [tab, setTab] = useState<"overview" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "proposals" | "newsletter" | "ads" | "revenue">("overview");
   const [data, setData] = useState<Overview | null>(null);
   const [dataErr, setDataErr] = useState<string | null>(null);
 
@@ -2137,6 +2138,7 @@ export default function DashboardPage() {
     { id: "content", label: "Content" },
     { id: "prospects", label: "Prospects" },
     { id: "proposals", label: "Proposals" },
+    { id: "newsletter", label: "Newsletter" },
     { id: "ads", label: "Ads" },
     { id: "revenue", label: "Revenue" },
   ];
@@ -2177,6 +2179,7 @@ export default function DashboardPage() {
         {tab === "content" && <ContentTab businesses={data?.businesses ?? []} />}
         {tab === "prospects" && <ProspectsTab />}
         {tab === "proposals" && <ProposalsTab businesses={data?.businesses ?? []} />}
+        {tab === "newsletter" && <NewsletterTab />}
         {tab === "ads" && <AdsTab businesses={data?.businesses ?? []} />}
         {tab === "revenue" && <RevenueTab />}
         <div style={{ marginTop: 32, paddingTop: 20, borderTop: `1px solid ${T.border}`, textAlign: "center", ...eyebrow }}>

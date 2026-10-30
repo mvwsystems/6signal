@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Systemize — AI Infrastructure for Contractor Operations | 6Signal",
+  alternates: { canonical: "https://6signal.co/systemize" },
+  title: "Systemize — AI Infrastructure for Contractor Operations",
   description:
     "Custom AI infrastructure for the business behind the business — bookkeeping automation, field-to-office communication, fleet and job tracking, estimating support. Scoped per operation, built and run by one operator.",
   openGraph: {
-    title: "Systemize — AI Infrastructure for Contractor Operations | 6Signal",
+    title: "Systemize — AI Infrastructure for Contractor Operations | 6 Signal",
     description:
       "Run the operation on systems, not willpower. Custom AI infrastructure integrated with the tools you already run.",
     type: "website",

@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import Nav from "./components/Nav";
-import Footer from "./components/Footer";
-import AuditExamplesSection from "./components/proof/AuditExamplesSection";
-import { useMicroInteractions } from "./hooks/useMicroInteractions";
-import AuditPopupButton from "./components/AuditPopupButton";
+import Nav from "../components/Nav";
+import Footer from "../components/Footer";
+import AuditExamplesSection from "../components/proof/AuditExamplesSection";
+import { useMicroInteractions } from "../hooks/useMicroInteractions";
+import AuditPopupButton from "../components/AuditPopupButton";
+import { HOME_FAQS as faqs } from "./faqs";
 
 const layers = [
   {
@@ -108,36 +109,6 @@ const outcomes = [
   },
 ];
 
-const faqs = [
-  {
-    q: "Isn't this just SEO?",
-    a: "SEO is one input into one system. It was never designed for ChatGPT, voice search, or answer engines — and it doesn't affect any of them. 6 Signal works across six layers: generative AI recommendations, prompt visibility, answer engines, index structure, local entity data, and voice. If your SEO is strong, this adds the five channels it doesn't touch.",
-  },
-  {
-    q: "How is this different from a website audit?",
-    a: "A website audit looks at your site. The 6 Signal audit looks at what homeowners actually see — what AI tools say about your company when someone asks for a contractor like you, where competitors appear in your place, whether your Maps listing matches your website, and whether you're visible in voice and answer-engine results. Your website is one input. We audit all six layers.",
-  },
-  {
-    q: "Do you work with every trade?",
-    a: "We work with residential service contractors — roofers, plumbers, HVAC companies, electricians, remodelers, garage door companies, landscapers, pest control, foundation contractors, and others. If your business serves homeowners locally and the phone call is the goal, the six-layer framework applies. If it's not a fit, your audit will make that clear.",
-  },
-  {
-    q: "What if I already have an SEO company?",
-    a: "Most SEO companies are working on blue-link rankings and on-page optimization. That's real work — it's just one layer. We're not replacing your SEO firm. We're working the five layers most SEO firms don't touch. If they're already doing GEO, prompt visibility, answer engine work, and local entity cleanup, you don't need us. If they're not, you do.",
-  },
-  {
-    q: "How long until I see movement?",
-    a: "Local cleanup and answer structure are visible inside thirty days. Real movement inside AI recommendations — the part that puts your name on shortlists — typically starts compounding between month two and month four. Anyone promising faster either doesn't understand how these systems work or is lying.",
-  },
-  {
-    q: "Do you guarantee rankings or leads?",
-    a: "No. Anyone who guarantees AI recommendations or specific rankings is making promises they cannot keep — the systems update constantly and no one controls the output. What we do commit to: you see the full audit before anything gets signed, the first 90 days are the minimum commitment, and the priority list is yours to keep regardless of what you decide. The risk is low. The upside is structural.",
-  },
-  {
-    q: "Why only one contractor per market and trade?",
-    a: "Because the shortlist has three names. If we're building your company into that shortlist, we can't simultaneously build your direct competitor into the same shortlist in the same city. One roofer per market. One HVAC company per market. One plumber per market. The exclusivity is structural, not a sales tactic — it means the engagement never works against itself.",
-  },
-];
 
 export default function Home() {
   useMicroInteractions();
@@ -195,6 +166,66 @@ export default function Home() {
         </div>
       </header>
 
+      {/* TWO DOORS — self-sort before the deep read. Exclusivity means most
+          visitors can never buy the retainer; door 02 keeps them instead of
+          losing them. Door 01 stays visually dominant — this is a sort, not a
+          menu, and the practice is still the point. */}
+      <section className="doors-section rule">
+        <div className="wrap">
+          <div className="doors-head">
+            <span className="idx">Two ways in</span>
+          </div>
+          <div className="doors">
+            <article className="door door--primary reveal">
+              <div className="door-num">01</div>
+              <h3 className="door-title">Have us do it</h3>
+              <p className="door-body">
+                One operator, one contractor per market per trade. The audit shows you
+                exactly where you stand across all six signals and what to fix first. The
+                sprint closes the gaps and reports the numbers every month.
+              </p>
+              <AuditPopupButton className="door-cta">
+                Get the AI Visibility Audit
+                <svg
+                  className="arrow"
+                  viewBox="0 0 16 10"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.2"
+                >
+                  <path d="M0 5h14M10 1l4 4-4 4" />
+                </svg>
+              </AuditPopupButton>
+              <div className="door-sig">$27 · No call required · Priority list yours to keep</div>
+            </article>
+
+            <article className="door reveal">
+              <div className="door-num">02</div>
+              <h3 className="door-title">Learn to run it yourself</h3>
+              <p className="door-body">
+                Every market has one slot, and most of them aren&rsquo;t ours. The
+                Intelligence Brief publishes what the engines actually answered this week,
+                what moved the numbers, and the method behind it — specific enough to run
+                in-house.
+              </p>
+              <Link href="/briefings" className="door-cta">
+                Read the Intelligence Brief
+                <svg
+                  className="arrow"
+                  viewBox="0 0 16 10"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.2"
+                >
+                  <path d="M0 5h14M10 1l4 4-4 4" />
+                </svg>
+              </Link>
+              <div className="door-sig">Free · Published by Matt Vincent Walker</div>
+            </article>
+          </div>
+        </div>
+      </section>
+
       {/* §02 THE MOMENT */}
       <section className="shift rule">
         <div className="wrap">
@@ -215,20 +246,70 @@ export default function Home() {
 
           <div className="shift-scene">
             <div className="caption">A real path to a home service call — 2026</div>
-            <p>
-              <strong>Tuesday. 9:47 p.m.</strong> The water heater is leaking. The AC stops
-              cooling. The ceiling stain reappears after rain. She grabs her phone and asks
-              ChatGPT: <em>&ldquo;Who do I call for [problem] in [her city]?&rdquo;</em> She
-              gets three names in a paragraph.
-            </p>
-            <p className="dim">
-              She pulls up Maps — two of the three have recent reviews and photos. She asks
-              Siri for the closest one&rsquo;s number. She calls one. She books one.
-            </p>
-            <p>
-              <strong>You were never in the conversation.</strong> Not because your work is
-              worse. Because the systems she checked never learned your name.
-            </p>
+            <div className="shift-grid">
+              <div className="shift-prose">
+                <p>
+                  <strong>Tuesday. 9:47 p.m.</strong> The water heater is leaking. The AC stops
+                  cooling. The ceiling stain reappears after rain. She grabs her phone and asks
+                  ChatGPT: <em>&ldquo;Who do I call for [problem] in [her city]?&rdquo;</em> She
+                  gets three names in a paragraph.
+                </p>
+                <p className="dim">
+                  She pulls up Maps — two of the three have recent reviews and photos. She asks
+                  Siri for the closest one&rsquo;s number. She calls one. She books one.
+                </p>
+                <p>
+                  <strong>You were never in the conversation.</strong> Not because your work is
+                  worse. Because the systems she checked never learned your name.
+                </p>
+              </div>
+
+              {/* ILLUSTRATIVE AI ANSWER — the shortlist, with the visitor's slot
+                  visibly empty. Fictional names; labeled illustrative because the
+                  site never shows an engine answer it didn't actually record. */}
+              <aside className="ai-panel reveal" aria-label="Illustrative AI assistant answer">
+                <div className="ai-panel-bar">
+                  <span className="ai-panel-dot"></span>
+                  <span>AI assistant</span>
+                  <span className="ai-panel-time">Tue · 9:47 p.m.</span>
+                </div>
+                <div className="ai-panel-q">
+                  Who do I call for a leaking water heater near me? It&rsquo;s late.
+                </div>
+                <div className="ai-panel-a">
+                  <p>
+                    Here are three well-reviewed plumbers near you that handle emergency
+                    water heater repair:
+                  </p>
+                  <ol className="ai-panel-list">
+                    <li>
+                      <span className="ai-panel-name">Northline Plumbing</span>
+                      <span className="ai-panel-meta">4.9 · 312 reviews · 24/7</span>
+                    </li>
+                    <li>
+                      <span className="ai-panel-name">Caldwell &amp; Sons</span>
+                      <span className="ai-panel-meta">4.8 · 188 reviews · same-day</span>
+                    </li>
+                    <li>
+                      <span className="ai-panel-name">Rapid Rooter</span>
+                      <span className="ai-panel-meta">4.7 · 241 reviews · emergency</span>
+                    </li>
+                    <li className="ai-panel-missing">
+                      <span className="ai-panel-name">Your company</span>
+                      <span className="ai-panel-meta">not named</span>
+                    </li>
+                  </ol>
+                  <p>
+                    Want me to pull up the closest one&rsquo;s number?
+                    <span className="ai-panel-caret" aria-hidden="true"></span>
+                  </p>
+                </div>
+                <div className="ai-panel-foot">
+                  <span>Illustrative. Real answers vary by engine, user, and day.</span>
+                  <Link href="/ai-visibility-check">Run yours free →</Link>
+                </div>
+              </aside>
+            </div>
           </div>
 
           <div className="shift-flow">
@@ -499,22 +580,60 @@ export default function Home() {
       {/* RESULTS NOTE */}
       <section className="results-section">
         <div className="wrap">
+          <div className="results-head reveal">
+            <span className="idx">On outcomes</span>
+            <h2 className="results-claim display">
+              We don&rsquo;t publish outcomes
+              <br />
+              <em>we can&rsquo;t verify.</em>
+            </h2>
+          </div>
+
+          <div className="proof-strip reveal">
+            <div className="pm">
+              <div className="pm-fig">
+                92<span className="pm-unit">%</span>
+              </div>
+              <div className="pm-label">Gemini</div>
+              <div className="pm-sub">named in 103 of 112 checks</div>
+            </div>
+            <div className="pm">
+              <div className="pm-fig">
+                74<span className="pm-unit">%</span>
+              </div>
+              <div className="pm-label">ChatGPT</div>
+              <div className="pm-sub">named in 62 of 84 checks</div>
+            </div>
+            <div className="pm">
+              <div className="pm-fig">
+                69<span className="pm-unit">%</span>
+              </div>
+              <div className="pm-label">Perplexity</div>
+              <div className="pm-sub">named in 88 of 128 checks</div>
+            </div>
+            <div className="pm">
+              <div className="pm-fig">
+                25<span className="pm-unit">/25</span>
+              </div>
+              <div className="pm-label">Google Maps</div>
+              <div className="pm-sub">grid points, market-wide scan</div>
+            </div>
+            <div className="pm pm--total">
+              <div className="pm-fig">629</div>
+              <div className="pm-label">Automated checks</div>
+              <div className="pm-sub">12 buyer prompts · Jul 7&ndash;20, 2026</div>
+            </div>
+          </div>
+
           <div className="results-inner">
             <div className="results-statement">
-              <strong>We don&rsquo;t publish outcomes we can&rsquo;t verify.</strong> Every
-              number below comes from our own tracking system — automated daily checks of
-              real buyer questions — and is published with the client&rsquo;s permission.
-              The first documented client:{" "}
-              <em>
-                X-Act Plumbing (Red Oak, TX) — named in 92% of tracked Gemini
-                recommendation checks, 74% of ChatGPT checks, and 69% of Perplexity
-                checks, across 629 automated checks of 12 real buyer questions in
-                July 2026.
-              </em>{" "}
-              Want to speak with someone who&rsquo;s been through the process? Email
+              Every number above comes from our own tracking system — automated daily
+              checks of real buyer questions, published with the client&rsquo;s permission.
+              The first documented client: <em>X-Act Plumbing, Red Oak, TX.</em> Want to
+              speak with someone who&rsquo;s been through the process? Email
               hello@6signal.co and we&rsquo;ll facilitate the introduction.
             </div>
-            <div className="results-right-label">On outcomes</div>
+            <div className="results-right-label">Provenance</div>
           </div>
         </div>
       </section>

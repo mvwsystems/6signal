@@ -35,7 +35,7 @@ The **current, canonical** six signals (used in the audit engine, homepage, /met
 | PEO | Prompt Engine Optimization | Surfacing inside the real query language buyers type/ask |
 | IEO | Index Engine Optimization | Whether AI crawlers can access, parse, and extract the site (schema, structure) |
 
-Canonical definitions live in [app/page.tsx](app/page.tsx) (~lines 12–50, duplicated verbatim in
+Canonical definitions live in [app/(home)/page.tsx](app/(home)/page.tsx) (~lines 12–50, duplicated verbatim in
 [app/method/page.tsx](app/method/page.tsx), [app/visibility/page.tsx](app/visibility/page.tsx))
 and in the audit prompt in [app/api/generate-audit/route.ts](app/api/generate-audit/route.ts).
 
@@ -170,7 +170,19 @@ regenerates the brief on any device. Completed briefs also get a permalink
   was deliberately eliminated. The funnel is fully self-serve until the paid $197 call; never
   write copy promising a free call, intake→readout flow, or "priced on your call". (The brand
   brief's "Book the Visibility Audit" rules predate the $27 self-serve funnel.)
-- JSON-LD: Person + Organization in root layout; trade pages add BreadcrumbList/Service/FAQPage.
+- **Entity + metadata (added 2026-10-26):** [app/lib/site.ts](app/lib/site.ts) is the single
+  source for the organization (name, logo, sameAs, service area, offers) and the operator's
+  profile URLs. Root layout renders one `@graph` (Organization+ProfessionalService, Person,
+  WebSite) with stable `@id`s; every page-level JSON-LD references `{ "@id": ORG_ID }` /
+  `PERSON_ID` instead of re-declaring "6Signal". Root `title.template` appends `| 6 Signal`, so
+  page metadata exports a **bare** title (no brand suffix); use `title: { absolute }` to opt out.
+  Never set `alternates.canonical` in the root layout — child routes would inherit "/". Every
+  indexable route carries its own canonical. Client pages get metadata from a sibling
+  `layout.tsx`; the homepage lives in `app/(home)/` for the same reason (its FAQ data is in
+  `app/(home)/faqs.ts`, shared with the FAQPage schema). `/llms.txt` is a route handler
+  (`app/llms.txt/route.ts`) rebuilt hourly from the blog index; `/dallas-fort-worth` is the
+  local-intent page. GBP-sourced fields (`ADDRESS_LOCALITY`, `PHONE`, canonical Maps URL) in
+  site.ts are null until read off the profile — fill them, never guess them.
 - Author byline: always "Matt Vincent Walker".
 
 ## 9. Companion docs

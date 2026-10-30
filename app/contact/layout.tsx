@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact — 6 Signal",
+  alternates: { canonical: "https://6signal.co/contact" },
+  title: "Contact",
   description:
     "Get the AI Visibility Audit or send a message. We run your company through all six layers — AI tools, Maps, voice, answer engines, and directories. Based in the Dallas/Fort Worth area, working with contractors in DFW and select markets beyond Texas.",
   openGraph: {

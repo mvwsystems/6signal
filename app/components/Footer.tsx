@@ -12,13 +12,19 @@ export default function Footer() {
             <p className="f-line">
               A specialized visibility practice for residential and commercial
               contractors who intend to own their local market — not rent leads
-              from it. Based in Dallas/Fort Worth.
+              from it. Based in Dallas–Fort Worth, Texas.
+            </p>
+            <p className="f-line">
+              <a href="mailto:hello@6signal.co" style={{ color: "inherit" }}>hello@6signal.co</a>
+              {" · "}
+              <Link href="/dallas-fort-worth" style={{ color: "inherit" }}>Dallas–Fort Worth</Link>
             </p>
           </div>
           <div className="footer-right">
             <div className="footer-col">
               <div className="head">Site</div>
               <Link href="/method">The Method</Link>
+              <Link href="/dallas-fort-worth">Dallas–Fort Worth</Link>
               <Link href="/#framework">The Six Layers</Link>
               <Link href="/#engagement">The Audit</Link>
               <Link href="/#pricing">Retainer</Link>

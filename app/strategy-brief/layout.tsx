@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Your Strategy Brief | 6Signal",
+  title: "Your Strategy Brief",
   description: "Your Strategy Brief from 6Signal — content architecture, schema plan, signal-by-signal action plan, and 90-day calendar.",
   robots: { index: false, follow: false },
   openGraph: {

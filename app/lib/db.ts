@@ -1076,3 +1076,201 @@ export async function getSerpRankings(businessId: string, sinceDays = 90): Promi
     return [];
   }
 }
+
+// ── Newsletter issues ────────────────────────────────────────────────────────
+// Composed in /dashboard, sent as Resend broadcasts, archived at /briefings.
+// Not to be confused with app/lib/briefing.ts (the private owner briefing).
+
+export interface Briefing {
+  id: string;
+  slug: string;
+  subject: string;
+  preview: string | null;
+  body: string;
+  status: "draft" | "scheduled" | "sent";
+  resend_broadcast_id: string | null;
+  recipients: number | null;
+  scheduled_at: string | null;
+  sent_at: string | null;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+const BRIEFING_COLS =
+  "id, slug, subject, preview, body, status, resend_broadcast_id, recipients, scheduled_at, sent_at, published_at, created_at, updated_at";
+
+export async function createBriefing(args: { slug: string; subject: string }): Promise<string | null> {
+  const s = db();
+  if (!s) return null;
+  try {
+    const { data, error } = await s
+      .from("briefings")
+      .insert({ slug: args.slug, subject: args.subject })
+      .select("id")
+      .single();
+    if (error) throw error;
+    return data?.id ?? null;
+  } catch (e) {
+    console.error("[db] createBriefing failed:", e);
+    return null;
+  }
+}
+
+export async function listBriefings(): Promise<Briefing[]> {
+  const s = db();
+  if (!s) return [];
+  try {
+    const { data, error } = await s
+      .from("briefings")
+      .select(BRIEFING_COLS)
+      .order("created_at", { ascending: false })
+      .limit(200);
+    if (error) throw error;
+    return (data ?? []) as Briefing[];
+  } catch (e) {
+    console.error("[db] listBriefings failed:", e);
+    return [];
+  }
+}
+
+export async function getBriefing(id: string): Promise<Briefing | null> {
+  const s = db();
+  if (!s) return null;
+  try {
+    const { data, error } = await s.from("briefings").select(BRIEFING_COLS).eq("id", id).single();
+    if (error) throw error;
+    return (data as Briefing) ?? null;
+  } catch (e) {
+    console.error("[db] getBriefing failed:", e);
+    return null;
+  }
+}
+
+export async function updateBriefing(id: string, fields: Record<string, unknown>): Promise<boolean> {
+  const s = db();
+  if (!s) return false;
+  try {
+    const { error } = await s
+      .from("briefings")
+      .update({ ...fields, updated_at: new Date().toISOString() })
+      .eq("id", id);
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error("[db] updateBriefing failed:", e);
+    return false;
+  }
+}
+
+export async function deleteBriefing(id: string): Promise<boolean> {
+  const s = db();
+  if (!s) return false;
+  try {
+    const { error } = await s.from("briefings").delete().eq("id", id);
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error("[db] deleteBriefing failed:", e);
+    return false;
+  }
+}
+
+// Public archive: only issues with a published_at are visible.
+export async function listPublishedBriefings(): Promise<
+  Array<{ slug: string; subject: string; preview: string | null; published_at: string }>
+> {
+  const s = db();
+  if (!s) return [];
+  try {
+    const { data, error } = await s
+      .from("briefings")
+      .select("slug, subject, preview, published_at")
+      .not("published_at", "is", null)
+      .order("published_at", { ascending: false })
+      .limit(200);
+    if (error) throw error;
+    return (data ?? []) as Array<{ slug: string; subject: string; preview: string | null; published_at: string }>;
+  } catch (e) {
+    console.error("[db] listPublishedBriefings failed:", e);
+    return [];
+  }
+}
+
+export async function getPublishedBriefing(slug: string): Promise<Briefing | null> {
+  const s = db();
+  if (!s) return null;
+  try {
+    const { data, error } = await s
+      .from("briefings")
+      .select(BRIEFING_COLS)
+      .eq("slug", slug)
+      .not("published_at", "is", null)
+      .maybeSingle();
+    if (error) throw error;
+    return (data as Briefing) ?? null;
+  } catch (e) {
+    console.error("[db] getPublishedBriefing failed:", e);
+    return null;
+  }
+}
+
+// ── Resend contact sync ──────────────────────────────────────────────────────
+
+// Distinct emails never pushed to Resend. Deduped here because the same person
+// can appear in leads several times (one row per form submission).
+export async function unsyncedLeadEmails(limit = 500): Promise<string[]> {
+  const s = db();
+  if (!s) return [];
+  try {
+    const { data, error } = await s
+      .from("leads")
+      .select("email")
+      .is("resend_synced_at", null)
+      .order("created_at", { ascending: true })
+      .limit(limit);
+    if (error) throw error;
+    const seen = new Set<string>();
+    for (const r of data ?? []) {
+      const e = String((r as { email: string }).email || "").trim().toLowerCase();
+      if (e) seen.add(e);
+    }
+    return [...seen];
+  } catch (e) {
+    console.error("[db] unsyncedLeadEmails failed:", e);
+    return [];
+  }
+}
+
+export async function markLeadsSynced(emails: string[]): Promise<number> {
+  const s = db();
+  if (!s || emails.length === 0) return 0;
+  try {
+    const { data, error } = await s
+      .from("leads")
+      .update({ resend_synced_at: new Date().toISOString() })
+      .in("email", emails)
+      .is("resend_synced_at", null)
+      .select("id");
+    if (error) throw error;
+    return (data ?? []).length;
+  } catch (e) {
+    console.error("[db] markLeadsSynced failed:", e);
+    return 0;
+  }
+}
+
+export async function newsletterCounts(): Promise<{ total: number; synced: number }> {
+  const s = db();
+  if (!s) return { total: 0, synced: 0 };
+  try {
+    const [all, synced] = await Promise.all([
+      s.from("leads").select("id", { count: "exact", head: true }),
+      s.from("leads").select("id", { count: "exact", head: true }).not("resend_synced_at", "is", null),
+    ]);
+    return { total: all.count ?? 0, synced: synced.count ?? 0 };
+  } catch (e) {
+    console.error("[db] newsletterCounts failed:", e);
+    return { total: 0, synced: 0 };
+  }
+}

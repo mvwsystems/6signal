@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { insertLead } from "../../lib/db";
 import { pushToKit, KIT_TAG_MASTER, KIT_TAG_SERIES } from "../../lib/kit";
+import { pushToResend } from "../../lib/newsletter";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -19,7 +20,12 @@ export async function POST(req: Request) {
 
   const source = body.source === "intelligent-contractor" ? body.source : "subscribe";
   await insertLead({ businessId: null, email, source });
-  await pushToKit({ email, tagIds: [KIT_TAG_MASTER, KIT_TAG_SERIES] });
+  // Dual-written during the Kit -> Resend migration. Both are best-effort and
+  // neither sends on its own, so a subscriber landing in both costs nothing.
+  await Promise.all([
+    pushToKit({ email, tagIds: [KIT_TAG_MASTER, KIT_TAG_SERIES] }),
+    pushToResend({ email, source }),
+  ]);
 
   return NextResponse.json({ ok: true });
 }

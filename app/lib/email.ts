@@ -9,6 +9,11 @@ export async function sendEmail(args: {
   html: string;
   replyTo?: string;
   cc?: string[];
+  // Overrides EMAIL_FROM. Used by newsletter test sends so the preview goes out
+  // over the marketing subdomain it will really ship from, which is what makes
+  // the test worth running (it exercises that domain's DNS, not the root's).
+  from?: string;
+  text?: string;
 }): Promise<boolean> {
   const key = process.env.RESEND_API_KEY;
   if (!key) {
@@ -23,10 +28,11 @@ export async function sendEmail(args: {
         Authorization: `Bearer ${key}`,
       },
       body: JSON.stringify({
-        from: process.env.EMAIL_FROM || FROM_FALLBACK,
+        from: args.from || process.env.EMAIL_FROM || FROM_FALLBACK,
         to: [args.to],
         subject: args.subject,
         html: args.html,
+        ...(args.text ? { text: args.text } : {}),
         ...(args.replyTo ? { reply_to: args.replyTo } : {}),
         ...(args.cc?.length ? { cc: args.cc } : {}),
       }),

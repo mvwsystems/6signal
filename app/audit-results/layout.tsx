@@ -4,11 +4,11 @@ const BASE = "https://6signal.co";
 const ROUTE = "/audit-results";
 
 export const metadata: Metadata = {
-  title: "Your AI Visibility Audit | 6Signal",
+  title: "Your AI Visibility Audit",
   description:
     "Your AI Visibility Audit — 8 slides covering buyer journey, signal scores, citation landscape, content gaps, and a 90-day action roadmap.",
   openGraph: {
-    title: "Your AI Visibility Audit | 6Signal",
+    title: "Your AI Visibility Audit | 6 Signal",
     description: "Your 8-slide AI Visibility Audit from 6Signal.",
     type: "website",
     url: `${BASE}${ROUTE}`,
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Your AI Visibility Audit | 6Signal",
+    title: "Your AI Visibility Audit | 6 Signal",
     images: ["/6SIG_SOCIAL_SHARE.png"],
   },
   robots: { index: false, follow: false },

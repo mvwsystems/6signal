@@ -4,11 +4,12 @@ import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import BlogPageClient from "../components/BlogPageClient";
 import AuditPopupButton from "../components/AuditPopupButton";
+import { OPERATOR_SAME_AS, PERSON_ID } from "../lib/site";
 
 const BASE = "https://6signal.co";
 
 export const metadata: Metadata = {
-  title: "The Operator — Matt Vincent Walker | 6 Signal",
+  title: "The Operator — Matt Vincent Walker",
   description:
     "6 Signal is not an agency. It is a specialized practice run by one operator — the person you talk to is the person who does the work. Who that person is, how the practice runs, and the rules it runs on.",
   openGraph: {
@@ -29,6 +30,7 @@ const PROFILE_SCHEMA = {
   url: `${BASE}/operator`,
   mainEntity: {
     "@type": "Person",
+    "@id": PERSON_ID,
     name: "Matt Vincent Walker",
     url: "https://mattvincentwalker.com",
     jobTitle: "Founder & Operator",
@@ -40,11 +42,7 @@ const PROFILE_SCHEMA = {
       "Local SEO for contractors",
       "AI infrastructure for construction companies",
     ],
-    sameAs: [
-      BASE,
-      "https://www.linkedin.com/in/mattvincentwalker",
-      "https://www.youtube.com/@mattvincentwalker",
-    ],
+    sameAs: [BASE, ...OPERATOR_SAME_AS],
   },
 };
 
@@ -194,7 +192,7 @@ export default function OperatorPage() {
                 — covers what AI should and should not do inside a construction
                 company. Elsewhere:{" "}
                 <a
-                  href="https://www.linkedin.com/in/mattvincentwalker"
+                  href="https://www.linkedin.com/in/mattvwalker/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -202,7 +200,7 @@ export default function OperatorPage() {
                 </a>{" "}
                 and{" "}
                 <a
-                  href="https://www.youtube.com/@mattvincentwalker"
+                  href="https://www.youtube.com/@MattVincentWalker"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

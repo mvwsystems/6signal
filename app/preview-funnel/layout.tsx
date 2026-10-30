@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Funnel Preview | 6Signal Internal",
+  title: "Funnel Preview | 6 Signal Internal",
   robots: { index: false, follow: false, noarchive: true },
 };
 

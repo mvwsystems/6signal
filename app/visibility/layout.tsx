@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contractor Visibility Audit — Six Layers, Live — 6 Signal",
+  alternates: { canonical: "https://6signal.co/visibility" },
+  title: "Contractor Visibility Audit — Six Layers, Live",
   description:
     "The 6 Signal visibility audit examines your contractor company across six search and AI layers: generative AI, prompt engines, answer engines, indexing, local entity data, and voice. See exactly where you appear — and where competitors are showing up instead.",
   openGraph: {

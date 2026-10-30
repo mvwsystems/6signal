@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Apple Maps Readiness Checklist | 6Signal",
+  title: "Apple Maps Readiness Checklist",
   description:
     "A practical checklist for contractors and local service businesses preparing their Apple Business Connect profile before Apple Maps Ads reach their market.",
   alternates: { canonical: "https://6signal.co/apple-checklist" },

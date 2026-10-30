@@ -28,7 +28,7 @@ const SERIES_SLUGS = [
 ];
 
 export const metadata: Metadata = {
-  title: "The Intelligent Contractor — a 15-part series | 6Signal Research",
+  title: "The Intelligent Contractor — a 15-part series",
   description:
     "How AI becomes the connective infrastructure of a construction company: revenue, operations, control, and learning. Fifteen essays on financial intelligence, safety scope, jurisdictional provenance, governance, and the 90-day build order.",
   openGraph: {
