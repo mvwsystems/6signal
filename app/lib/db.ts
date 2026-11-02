@@ -1013,6 +1013,38 @@ export async function recordPurchase(args: {
   }
 }
 
+export interface ManualPayment {
+  paid_at: string;
+  amount: number; // cents, like purchases.amount_total and Stripe
+  method: string;
+  client: string;
+  email: string | null;
+  description: string | null;
+}
+
+// Revenue that never touched Stripe: ACH straight to the business account,
+// checks, wires. The Revenue tab reads charges live from the Stripe API, so
+// these rows are the ONLY record of that money — app/api/dashboard/revenue
+// merges them into the same totals, by-month chart and by-source breakdown.
+// Year bounds are UTC to match how that route buckets Stripe charges.
+export async function getManualPayments(year: number): Promise<ManualPayment[]> {
+  const s = db();
+  if (!s) return [];
+  try {
+    const { data, error } = await s
+      .from("manual_payments")
+      .select("paid_at, amount, method, client, email, description")
+      .gte("paid_at", new Date(Date.UTC(year, 0, 1)).toISOString())
+      .lt("paid_at", new Date(Date.UTC(year + 1, 0, 1)).toISOString())
+      .order("paid_at", { ascending: false });
+    if (error) throw error;
+    return (data ?? []) as ManualPayment[];
+  } catch (e) {
+    console.error("[db] getManualPayments failed:", e);
+    return [];
+  }
+}
+
 // Archive/restore a tracked prompt as an ARTICLE TOPIC (does not affect probe
 // tracking) — keeps the "Write the next article" list to topics still wanted.
 export async function setPromptArticleDismissed(promptId: string, dismissed: boolean): Promise<boolean> {

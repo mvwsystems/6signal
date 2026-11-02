@@ -1953,7 +1953,7 @@ function ContentTab({ businesses }: { businesses: Biz[] }) {
 
 // ─── Revenue tab ─────────────────────────────────────────────────────────────
 interface RevSource { label: string; amount: number; count: number }
-interface RevPayment { date: string; amount: number; source: string; email: string | null; description: string | null }
+interface RevPayment { date: string; amount: number; source: string; label?: string; email: string | null; description: string | null }
 interface RevData { configured: boolean; note?: string; year?: number; years?: number[]; total?: number; count?: number; byMonth?: number[]; bySource?: RevSource[]; payments?: RevPayment[] }
 
 const REV_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -2024,6 +2024,11 @@ function RevenueTab() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       {picker}
+      {rev.note && (
+        <div style={card({ borderColor: `${alpha(T.warn, 40)}` })}>
+          <span style={{ color: T.warn, fontSize: 13 }}>{rev.note}</span>
+        </div>
+      )}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: 16 }}>
         <Stat label={`${rev.year} revenue`} value={fmtMoney(total)} accent />
         {isCurrentYear
@@ -2034,7 +2039,7 @@ function RevenueTab() {
       </div>
 
       <div style={card()}>
-        <span style={eyebrow}>Revenue by month — {rev.year} (net of refunds)</span>
+        <span style={eyebrow}>Revenue by month — {rev.year} (net of refunds, incl. off-Stripe)</span>
         <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 8 }}>
           {REV_MONTHS.map((m, i) => (
             <div key={m} style={{ display: "grid", gridTemplateColumns: "40px 1fr 92px", alignItems: "center", gap: 12 }}>
@@ -2072,7 +2077,7 @@ function RevenueTab() {
               <div key={`${p.date}-${i}`} style={{ display: "grid", gridTemplateColumns: "72px 1fr 84px", alignItems: "baseline", gap: 10, padding: "9px 0", borderBottom: `1px solid ${T.border}` }}>
                 <span style={{ fontFamily: MONO, fontSize: 11, color: T.muted }}>{fmtDate(p.date)}</span>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: 13, color: T.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.source}</div>
+                  <div style={{ fontSize: 13, color: T.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.label ?? p.source}</div>
                   {p.email && <div style={{ fontFamily: MONO, fontSize: 11, color: T.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.email}</div>}
                 </div>
                 <span style={{ fontFamily: MONO, fontWeight: 700, fontSize: 13, textAlign: "right" }}>{fmtMoney(p.amount)}</span>
