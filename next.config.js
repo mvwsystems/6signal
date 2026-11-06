@@ -46,6 +46,13 @@ const nextConfig = {
         destination: "/visibility-check",
         permanent: true,
       },
+      {
+        // Short, speakable link for the free 15-minute consult (business
+        // cards, voicemail, ads). Points off-site to Calendly.
+        source: "/call",
+        destination: "https://calendly.com/mvw-mattvincentwalker/6-signal-free-15-min-consult",
+        permanent: true,
+      },
     ];
   },
 };
