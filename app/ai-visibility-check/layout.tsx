@@ -4,11 +4,11 @@ const BASE = "https://6signal.co";
 const ROUTE = "/ai-visibility-check";
 
 export const metadata: Metadata = {
-  title: "Free AI Visibility Check — Is Your Business Getting Found? | 6Signal",
+  title: "Free AI Visibility Check — Is Your Business Getting Found?",
   description:
     "Find out in 60 seconds if AI recommends your business or your competitor. Free instant check for contractors and local service businesses.",
   openGraph: {
-    title: "Free AI Visibility Check — Is Your Business Getting Found? | 6Signal",
+    title: "Free AI Visibility Check — Is Your Business Getting Found? | 6 Signal",
     description:
       "Find out in 60 seconds if AI recommends your business or your competitor. Free instant check for contractors and local service businesses.",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free AI Visibility Check — Is Your Business Getting Found? | 6Signal",
+    title: "Free AI Visibility Check — Is Your Business Getting Found? | 6 Signal",
     description:
       "Find out in 60 seconds if AI recommends your business or your competitor. Free instant check.",
     images: ["/6SIG_SOCIAL_SHARE.png"],
@@ -29,18 +29,10 @@ const schema = {
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "Organization",
-      "@id": `${BASE}/#organization`,
-      name: "6Signal",
-      url: BASE,
-      logo: { "@type": "ImageObject", url: `${BASE}/6SIGDashboardLogo.png` },
-      sameAs: [BASE],
-    },
-    {
       "@type": "WebPage",
       "@id": `${BASE}${ROUTE}/#webpage`,
       url: `${BASE}${ROUTE}`,
-      name: "The AI Visibility Shift | Get Found in AI Search | 6Signal",
+      name: "The AI Visibility Shift | Get Found in AI Search | 6 Signal",
       description:
         "Customers are asking AI who to call. 6Signal helps local businesses see whether they get found, skipped, or replaced across Google, AI search, Maps, voice, reviews, and directories.",
       isPartOf: { "@id": `${BASE}/#website` },

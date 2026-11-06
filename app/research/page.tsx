@@ -10,16 +10,16 @@ import { getAllPosts, formatDate } from "../lib/blog";
 const BASE = "https://6signal.co";
 
 export const metadata: Metadata = {
-  title: "6Signal Research | AI Visibility, AEO, GEO, and Contractor Search Intelligence",
+  title: "Research — AI Visibility, AEO, GEO, and Contractor Search Intelligence",
   description:
     "Research, white papers, field notes, and insights on AI visibility, AEO, GEO, local SEO, and how contractors get found across search and AI answers.",
   openGraph: {
-    title: "6Signal Research | AI Visibility, AEO, GEO, and Contractor Search Intelligence",
+    title: "6 Signal Research | AI Visibility, AEO, GEO, and Contractor Search Intelligence",
     description:
       "Research, white papers, field notes, and insights on AI visibility, AEO, GEO, local SEO, and how contractors get found across search and AI answers.",
     type: "website",
     url: `${BASE}/research`,
-    images: [{ url: "/6SIG_SOCIAL_SHARE.png", width: 1200, height: 630, alt: "6Signal Research" }],
+    images: [{ url: "/6SIG_SOCIAL_SHARE.png", width: 1200, height: 630, alt: "6 Signal Research" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -53,7 +53,7 @@ export default function ResearchIndexPage() {
   const collectionSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: "6Signal Research",
+    name: "6 Signal Research",
     description:
       "Research, white papers, field notes, and insights on AI visibility, AEO, GEO, and contractor search intelligence.",
     url: `${BASE}/research`,
@@ -78,7 +78,7 @@ export default function ResearchIndexPage() {
         <div className="wrap">
           <div className="research-hub-hero-inner">
             <div className="research-hub-kicker">
-              <span className="idx">6Signal Research</span>
+              <span className="idx">6 Signal Research</span>
             </div>
             <h1 className="display reveal">
               Research &amp;<br />

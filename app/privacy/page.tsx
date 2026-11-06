@@ -3,7 +3,8 @@ import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | 6 Signal",
+  alternates: { canonical: "https://6signal.co/privacy" },
+  title: "Privacy Policy",
   description:
     "How 6 Signal collects, uses, and protects your information — including SMS consent, analytics, and your rights.",
 };

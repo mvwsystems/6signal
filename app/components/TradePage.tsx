@@ -6,6 +6,7 @@ import Footer from "./Footer";
 import AuditExamplesSection from "./proof/AuditExamplesSection";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
 import { TradeData, BASE_LAYERS } from "../trades/data";
+import { ORG_ID } from "../lib/site";
 import AuditPopupButton from "./AuditPopupButton";
 
 const BASE_URL = "https://6signal.co";
@@ -25,7 +26,7 @@ function TradeJsonLd({ data }: { data: TradeData }) {
     "@type": "Service",
     name: `AI Visibility Audit for ${data.tradePlural}`,
     description: `6Signal audits ${data.tradePlural.toLowerCase()} across six AI and search visibility layers — GEO, PEO, AEO, IEO, LEO, and VEO — delivering a prioritized fix list for your local market.`,
-    provider: { "@type": "ProfessionalService", name: "6Signal", url: BASE_URL },
+    provider: { "@id": ORG_ID },
     areaServed: "Dallas-Fort Worth and North Texas",
     serviceType: "AI Visibility Audit",
   };

@@ -4,11 +4,11 @@ const BASE = "https://6signal.co";
 const ROUTE = "/visibility-check";
 
 export const metadata: Metadata = {
-  title: "AI Visibility Audit — $27 | 6Signal",
+  title: "AI Visibility Audit — $27",
   description:
     "Find out if AI recommends your business or your competitor. Enter your info, pay $27, and get your full AI Visibility Audit in under 60 seconds.",
   openGraph: {
-    title: "AI Visibility Audit — $27 | 6Signal",
+    title: "AI Visibility Audit — $27 | 6 Signal",
     description:
       "Find out if AI recommends your business or your competitor. Full 8-slide audit specific to your trade, your city, your market.",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI Visibility Audit — $27 | 6Signal",
+    title: "AI Visibility Audit — $27 | 6 Signal",
     description: "Find out if AI recommends your business or your competitor. Your full audit in under 60 seconds.",
     images: ["/6SIG_SOCIAL_SHARE.png"],
   },

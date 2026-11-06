@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "The Climb — Start, Stabilize, Scale, Systemize | 6 Signal",
+  alternates: { canonical: "https://6signal.co/capabilities" },
+  title: "The Climb — Start, Stabilize, Scale, Systemize",
   description:
     "The four-rung practice map for contractor businesses: Start (brand + web), Stabilize (front-office AI), Scale (visibility-led growth), Systemize (AI infrastructure for internal ops). One operator, hands-on.",
   openGraph: {

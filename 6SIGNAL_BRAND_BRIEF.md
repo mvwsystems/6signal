@@ -431,9 +431,9 @@ The 6Signal logo consists of three stacked chevrons pointing right, fading back:
 ## SECTION 8 — TECHNICAL STACK
 
 ### Framework
-- **Next.js 15.5.18** — App Router, SSG/SSR
+- **Next.js 15.5.28+** — App Router, SSG/SSR
 - **React** with TypeScript
-- **Tailwind CSS** (used for base reset only — site uses custom CSS in `globals.css`)
+- **No Tailwind** (removed 2026-10-22 — the base reset it provided is now inlined at the top of `globals.css`)
 - **Deployed on Netlify**
 
 ### Key files

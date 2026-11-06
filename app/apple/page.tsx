@@ -4,7 +4,7 @@ import AppleMapsReadinessPage from "../components/AppleMapsReadinessPage";
 const canonical = "https://6signal.co/apple";
 
 export const metadata: Metadata = {
-  title: "Apple Maps Readiness Setup for Contractors | 6Signal",
+  title: "Apple Maps Readiness Setup for Contractors",
   description:
     "Apple Maps is becoming a local ad platform. 6Signal claims, cleans up, and optimizes your Apple Business Connect profile so contractors and local service businesses are ready before Apple Maps Ads get crowded. $500 one-time setup.",
   alternates: { canonical },

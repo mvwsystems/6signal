@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Radar, Ring, SignalBars, LineChart, Donut, Sparkline, MapHeatGrid } from "../components/charts";
 import ProposalsTab from "./ProposalsTab";
+import NewsletterTab from "./NewsletterTab";
 import { T, alpha, MONO, DISP, BODY, useDbTheme } from "./theme";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1952,7 +1953,7 @@ function ContentTab({ businesses }: { businesses: Biz[] }) {
 
 // ─── Revenue tab ─────────────────────────────────────────────────────────────
 interface RevSource { label: string; amount: number; count: number }
-interface RevPayment { date: string; amount: number; source: string; email: string | null; description: string | null }
+interface RevPayment { date: string; amount: number; source: string; label?: string; email: string | null; description: string | null }
 interface RevData { configured: boolean; note?: string; year?: number; years?: number[]; total?: number; count?: number; byMonth?: number[]; bySource?: RevSource[]; payments?: RevPayment[] }
 
 const REV_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -2023,6 +2024,11 @@ function RevenueTab() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       {picker}
+      {rev.note && (
+        <div style={card({ borderColor: `${alpha(T.warn, 40)}` })}>
+          <span style={{ color: T.warn, fontSize: 13 }}>{rev.note}</span>
+        </div>
+      )}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: 16 }}>
         <Stat label={`${rev.year} revenue`} value={fmtMoney(total)} accent />
         {isCurrentYear
@@ -2033,7 +2039,7 @@ function RevenueTab() {
       </div>
 
       <div style={card()}>
-        <span style={eyebrow}>Revenue by month — {rev.year} (net of refunds)</span>
+        <span style={eyebrow}>Revenue by month — {rev.year} (net of refunds, incl. off-Stripe)</span>
         <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 8 }}>
           {REV_MONTHS.map((m, i) => (
             <div key={m} style={{ display: "grid", gridTemplateColumns: "40px 1fr 92px", alignItems: "center", gap: 12 }}>
@@ -2071,7 +2077,7 @@ function RevenueTab() {
               <div key={`${p.date}-${i}`} style={{ display: "grid", gridTemplateColumns: "72px 1fr 84px", alignItems: "baseline", gap: 10, padding: "9px 0", borderBottom: `1px solid ${T.border}` }}>
                 <span style={{ fontFamily: MONO, fontSize: 11, color: T.muted }}>{fmtDate(p.date)}</span>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: 13, color: T.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.source}</div>
+                  <div style={{ fontSize: 13, color: T.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.label ?? p.source}</div>
                   {p.email && <div style={{ fontFamily: MONO, fontSize: 11, color: T.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.email}</div>}
                 </div>
                 <span style={{ fontFamily: MONO, fontWeight: 700, fontSize: 13, textAlign: "right" }}>{fmtMoney(p.amount)}</span>
@@ -2097,7 +2103,7 @@ function RevenueTab() {
 export default function DashboardPage() {
   const [state, setState] = useState<"loading" | "locked" | "in">("loading");
   const [configured, setConfigured] = useState(true);
-  const [tab, setTab] = useState<"overview" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "proposals" | "ads" | "revenue">("overview");
+  const [tab, setTab] = useState<"overview" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "proposals" | "newsletter" | "ads" | "revenue">("overview");
   const [data, setData] = useState<Overview | null>(null);
   const [dataErr, setDataErr] = useState<string | null>(null);
 
@@ -2137,6 +2143,7 @@ export default function DashboardPage() {
     { id: "content", label: "Content" },
     { id: "prospects", label: "Prospects" },
     { id: "proposals", label: "Proposals" },
+    { id: "newsletter", label: "Newsletter" },
     { id: "ads", label: "Ads" },
     { id: "revenue", label: "Revenue" },
   ];
@@ -2177,6 +2184,7 @@ export default function DashboardPage() {
         {tab === "content" && <ContentTab businesses={data?.businesses ?? []} />}
         {tab === "prospects" && <ProspectsTab />}
         {tab === "proposals" && <ProposalsTab businesses={data?.businesses ?? []} />}
+        {tab === "newsletter" && <NewsletterTab />}
         {tab === "ads" && <AdsTab businesses={data?.businesses ?? []} />}
         {tab === "revenue" && <RevenueTab />}
         <div style={{ marginTop: 32, paddingTop: 20, borderTop: `1px solid ${T.border}`, textAlign: "center", ...eyebrow }}>

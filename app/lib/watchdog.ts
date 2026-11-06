@@ -8,9 +8,22 @@ import { sendEmail, emailShell, heading, paragraph, monoLabel } from "./email";
 
 const ALERT_TO = () => process.env.LEAD_ALERT_TO || "hello@6signal.co";
 
-export async function runWatchdog(): Promise<{ ok: boolean; problems: string[]; warnings: string[]; healthy: string[]; emailed: boolean }> {
+export async function runWatchdog(): Promise<{
+  ok: boolean;
+  problems: string[];
+  degradations: string[];
+  transient: string[];
+  warnings: string[];
+  healthy: string[];
+  emailed: boolean;
+}> {
+  // Three severities, and only the first may interrupt anyone:
+  //   problems     — config faults that stay broken until a human fixes them.
+  //   degradations — real but non-urgent (model fallback, no probe data yet).
+  //   transient    — upstream capacity or slowness that clears by itself.
   const problems: string[] = [];
-  const warnings: string[] = [];
+  const degradations: string[] = [];
+  const transient: string[] = [];
   const ok: string[] = [];
 
   // 1) Database reachable?
@@ -30,12 +43,12 @@ export async function runWatchdog(): Promise<{ ok: boolean; problems: string[]; 
         engines.map((e) => probeEngine(e, "Who is a good plumber in Dallas, TX?", controller.signal))
       );
       for (const r of results) {
-        // An engine that 503s under load is not a broken key. It already got
-        // retried inside probeEngine; report it as degraded so a capacity blip
-        // upstream does not page as a system failure.
-        if (!r.ok && r.transient) warnings.push(`Engine ${r.engine}: upstream busy after retries (not a key problem) — ${r.error}`);
+        // An engine that 503s or times out under load is not a broken key. It
+        // already got retried inside probeEngine, so a blip here says nothing
+        // actionable — it rides the Monday heartbeat instead of paging.
+        if (!r.ok && r.transient) transient.push(`Engine ${r.engine}: upstream busy or slow after retries — ${r.error}`);
         else if (!r.ok) problems.push(`Engine ${r.engine}: FAILING — ${r.error}`);
-        else if (r.note) warnings.push(`Engine ${r.engine}: ${r.note}`);
+        else if (r.note) degradations.push(`Engine ${r.engine}: ${r.note}`);
         else ok.push(`Engine ${r.engine}: OK`);
       }
     } finally {
@@ -51,7 +64,7 @@ export async function runWatchdog(): Promise<{ ok: boolean; problems: string[]; 
       const lastTimes = Object.values(await getLastProbeTimes());
       const newest = lastTimes.sort().pop();
       const ageDays = newest ? (Date.now() - new Date(newest).getTime()) / 86400000 : Infinity;
-      if (!newest) warnings.push(`Probe cron: ${tracked.length} prompts tracked but no probe results yet (first scheduled run pending?).`);
+      if (!newest) degradations.push(`Probe cron: ${tracked.length} prompts tracked but no probe results yet (first scheduled run pending?).`);
       else if (ageDays > 16) problems.push(`Probe cron: newest probe result is ${Math.round(ageDays)} days old — the biweekly run is not firing.`);
       else ok.push(`Probe cron: last run ${ageDays.toFixed(1)} days ago.`);
     } else {
@@ -61,25 +74,37 @@ export async function runWatchdog(): Promise<{ ok: boolean; problems: string[]; 
     problems.push(`Probe-freshness check failed: ${String(e).slice(0, 200)}`);
   }
 
-  // 4) Email the verdict. Alerts always; green heartbeat only on Mondays.
+  // 4) Email the verdict. Only a real fault earns an unscheduled email; every
+  //    other state waits for the Monday heartbeat. A slow upstream day used to
+  //    send a "System degraded" alert whose own body said to ignore it.
   const isMonday = new Date().getUTCDay() === 1;
   const broken = problems.length > 0;
-  const degraded = warnings.length > 0;
+  const warnings = [...degradations, ...transient];
   let emailed = false;
 
-  if (broken || degraded || isMonday) {
-    const status = broken ? "SYSTEM ALERT" : degraded ? "System degraded" : "All systems green";
+  if (broken || isMonday) {
+    // Transient items never set the headline — that was the false alarm.
+    const status = broken
+      ? "SYSTEM ALERT"
+      : degradations.length
+        ? "Green, with known degradations"
+        : "All systems green";
     const items = [
       ...problems.map((p) => `<span style="color:#ef4444;">✗ ${p}</span>`),
-      ...warnings.map((w) => `<span style="color:#f97316;">△ ${w}</span>`),
+      ...degradations.map((d) => `<span style="color:#f97316;">△ ${d}</span>`),
       ...ok.map((o) => `<span style="color:#22c55e;">✓ ${o}</span>`),
+      ...transient.map((t) => `<span style="color:#9ca3af;">· ${t}</span>`),
     ];
     emailed = await sendEmail({
       to: ALERT_TO(),
-      subject: broken ? "🔴 6 Signal watchdog: something is broken" : degraded ? "🟠 6 Signal watchdog: degraded" : "🟢 6 Signal watchdog: all green",
+      subject: broken
+        ? "🔴 6 Signal watchdog: something is broken"
+        : degradations.length
+          ? "🟠 6 Signal watchdog: weekly check, running degraded"
+          : "🟢 6 Signal watchdog: weekly check, all green",
       html: emailShell(
         [
-          monoLabel("Watchdog · daily self-test"),
+          monoLabel(broken ? "Watchdog · fault" : "Watchdog · weekly check"),
           heading(status),
           paragraph(items.join("<br/>")),
           paragraph(
@@ -87,16 +112,21 @@ export async function runWatchdog(): Promise<{ ok: boolean; problems: string[]; 
             (problems.length
               ? `Red items are configuration faults — fix keys in Netlify env, then redeploy. `
               : "") +
-            `Orange items are upstream capacity and clear on their own; only chase one that persists across several days. ` +
-            `The "Test engines" button in the dashboard shows live detail.`
+            (degradations.length
+              ? `Orange items still work but run on a fallback — worth fixing, not urgent. `
+              : "") +
+            (transient.length
+              ? `Grey items were upstream capacity or slowness on the day of this check and need no action; they matter only if the same engine keeps appearing week after week. `
+              : "") +
+            `This email sends on a fault, or weekly on Monday. The "Test engines" button in the dashboard shows live detail.`
           ),
         ].join("")
       ),
     });
-    if ((broken || degraded) && !emailed) {
-      console.error("[watchdog] ALERT COULD NOT BE EMAILED:", { problems, warnings });
+    if (broken && !emailed) {
+      console.error("[watchdog] ALERT COULD NOT BE EMAILED:", { problems, degradations, transient });
     }
   }
 
-  return { ok: !broken, problems, warnings, healthy: ok, emailed };
+  return { ok: !broken, problems, degradations, transient, warnings, healthy: ok, emailed };
 }

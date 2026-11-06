@@ -1,0 +1,180 @@
+---
+title: "Your Labor Burden Is Not 35%. The BLS Says the Floor Is 44%."
+slug: "labor-burden-rate-contractors-calculate"
+description: "BLS data puts benefits at 44% of wages for construction employers — before trucks, phones, small tools, or training, and before anyone corrects the divisor. A worked calculation from the government's own numbers, why a wrong burden rate never fails loudly, and the one-employee test that takes an afternoon."
+date: "2026-10-08"
+category: "AI Infrastructure"
+contentType: "Insight"
+track: "operations"
+author: "Matt Vincent Walker"
+readTime: "11 min read"
+featured: false
+tags:
+  - AI Infrastructure
+  - Labor Burden
+  - Estimating
+  - Job Costing
+  - Self-Perform
+  - Margin
+faq:
+  - q: "What is the real labor burden rate in construction?"
+    a: "There is no single right answer, which is the point. The Bureau of Labor Statistics puts employer benefit costs for full-time construction workers at $16.17 per hour against $36.56 in wages as of June 2026 — about 44% — and that covers only payroll taxes, workers' compensation, insurance, retirement, paid leave, and supplemental pay. It does not include the truck, the phone, small tools, consumables, training, or certifications, and it says nothing about how many of the paid hours actually get charged to a job. Add those and most self-perform contractors land well above 60%. The number you should use is the one you calculate from your own payroll."
+  - q: "What is included in labor burden?"
+    a: "Three tiers. First, what BLS measures: FICA, federal and state unemployment, workers' compensation at your experience modifier, general liability allocation, health and other insurance, retirement contributions, paid leave, and supplemental pay. Second, what BLS does not: the truck and fuel, the phone or tablet, small tools and consumables, PPE, training, certifications, and safety time. Third, the divisor — whether you spread all of that over payroll hours or over hours actually charged to jobs."
+  - q: "Should labor burden be divided by billable hours or payroll hours?"
+    a: "Billable hours — the hours that actually get charged to a job. Dividing by total payroll hours spreads the cost over time nobody is paying you for, which systematically understates the rate. In the worked example in this article, a 2,080-hour divisor produces a 59% burden and an 1,806-hour divisor produces 83% from exactly the same annual cost. The hours are the same hours. One version is what you spent; the other is what you can recover."
+  - q: "Why does a wrong burden rate never show up as a problem?"
+    a: "Because the job does not fail. It comes in at 9% instead of the 14% you bid, and weather, a hard inspector, or a rough month will always be available to explain the difference. Those explanations are plausible, so the actual cause — one rate applied identically for six years — is never the suspect. The rate lives in estimating, the actuals live in accounting, and nobody owns the road between them."
+  - q: "How often should a contractor recalculate labor burden?"
+    a: "Annually, in the month your workers' compensation policy renews, from last year's actual payroll register rather than from the estimating template. That timing matters because the experience modifier and the comp rate are usually the largest single moving part, and recalculating in the same month means the new number and the new premium arrive together. Then push the result into the estimating template the same week — a recalculation sitting in a spreadsheet changes nothing."
+---
+
+Ask a contractor his labor burden and you will get a round number. Thirty-five percent. Forty. It arrives immediately, with confidence, and it is almost never the output of a calculation anyone has run recently.
+
+Here is the uncomfortable part. The federal government publishes what employers in this industry actually spend, every quarter, for free, and the number is higher than the round one.
+
+<div className="wp-tiles">
+  <div className="wp-tile">
+    <div className="wp-tile-label">BLS BENEFITS, CONSTRUCTION</div>
+    <div className="wp-tile-num">44%</div>
+    <div className="wp-tile-cap">$16.17 of benefits on $36.56 of wages, June 2026</div>
+  </div>
+  <div className="wp-tile">
+    <div className="wp-tile-label">WHAT THAT FIGURE EXCLUDES</div>
+    <div className="wp-tile-num">4</div>
+    <div className="wp-tile-cap">truck, phone, small tools, training — none are in it</div>
+  </div>
+  <div className="wp-tile">
+    <div className="wp-tile-label">DIVISOR EFFECT, WORKED EXAMPLE</div>
+    <div className="wp-tile-num">24 pts</div>
+    <div className="wp-tile-cap">billable hours vs payroll hours, same annual cost</div>
+  </div>
+</div>
+
+<h2 id="the-floor">What does the government say an hour costs?</h2>
+
+The Bureau of Labor Statistics publishes Employer Costs for Employee Compensation quarterly. For full-time workers in the construction industry, the June 2026 reference period looks like this:
+
+| Component | Per hour worked |
+|---|---|
+| Wages and salaries | $36.56 |
+| Paid leave | $2.69 |
+| Supplemental pay | $2.55 |
+| Insurance | $4.00 |
+| Retirement and savings | $2.46 |
+| Legally required benefits | $4.47 |
+| **Total benefits** | **$16.17** |
+| **Total compensation** | **$52.73** |
+
+Sixteen dollars and seventeen cents of benefits against thirty-six fifty-six of wages is a **44.2% burden**. That is the industry average across every construction employer in the country, union and open shop, every region, every trade.
+
+And it is a floor, not an answer, because of what it leaves out.
+
+<h2 id="whats-missing">What the 44% does not include</h2>
+
+ECEC measures compensation. It does not measure the cost of putting a person on a job site. Four categories ride on every self-perform hour and appear nowhere in that table:
+
+- **The truck and the fuel.** Lease or depreciation, insurance, fuel, maintenance, tires.
+- **The phone or tablet**, and the software seats attached to it.
+- **Small tools, consumables, and PPE** — the blades, bits, gloves, and replacements that get expensed to overhead and never traced to an hour.
+- **Training, certifications, and safety time** — OSHA 30, confined space, competent person, the toolbox talk, the annual refresher.
+
+None of those is exotic and all of them are real. On a field employee who costs roughly $110,000 a year in wages and benefits, a conservative stack of truck, phone, tools, and training lands somewhere around $11,000 — call it $7,200 for the truck, $900 for the phone and seat, $1,800 for tools and consumables, $1,100 for training and certifications. Your numbers will differ. The category will not.
+
+<h2 id="the-divisor">The divisor is the part nobody argues about and everybody gets wrong</h2>
+
+Here is the move that quietly does the most damage: taking the total annual cost and dividing by 2,080.
+
+A field employee is paid for 2,080 hours. He does not charge 2,080 hours to jobs. Holidays, PTO, training days, weather standby, yard time, shop time, and the morning somebody spent waiting on an inspector all come out of the top. What is left is the only denominator that can actually recover the cost.
+
+Run the whole thing end to end, with every assumption stated:
+
+<svg viewBox="0 0 720 330" role="img" aria-label="Chart: the same annual employee cost produces two very different burden rates depending on the divisor. Total annual cost of 120,678 dollars. Divided by 2,080 payroll hours, the rate is 58.02 dollars per hour, a 59 percent burden over a 36.56 dollar base wage. Divided by 1,806 hours actually charged to jobs, the rate is 66.82 dollars per hour, an 83 percent burden. An assumed 35 percent burden would have priced the hour at 49.36 dollars, a gap of 17.46 dollars per charged hour." className="wp-fig">
+  <text x="24" y="34" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">One employee, one annual cost, three different hourly rates</text>
+  <text x="24" y="52" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">BASE WAGE $36.56/HR · TOTAL ANNUAL COST $120,678 · ILLUSTRATIVE, BUILT FROM STATED ASSUMPTIONS</text>
+  <text x="24" y="104" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">ASSUMED 35% BURDEN</text>
+  <rect x="236" y="92" width="246" height="16" rx="2" fill="#3a3a35" />
+  <text x="494" y="104" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">$49.36 / hr</text>
+  <text x="24" y="150" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">ACTUAL COST ÷ 2,080 PAYROLL HRS</text>
+  <rect x="236" y="138" width="290" height="16" rx="2" fill="#9caa00" />
+  <text x="538" y="150" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">$58.02 / hr — 59% burden</text>
+  <text x="24" y="196" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">ACTUAL COST ÷ 1,806 CHARGED HRS</text>
+  <rect x="236" y="184" width="334" height="16" rx="2" fill="#E6FF00" />
+  <text x="582" y="196" fill="#E6FF00" fontSize="11" fontFamily="JetBrains Mono, monospace">$66.82 / hr — 83% burden</text>
+  <rect x="24" y="224" width="672" height="1" fill="#2a2a26" />
+  <text x="24" y="252" fill="#f5f5f3" fontSize="11" fontFamily="JetBrains Mono, monospace">Gap between the assumed rate and the real one</text>
+  <text x="582" y="252" fill="#E6FF00" fontSize="20" fontFamily="Chakra Petch, sans-serif">$17.46 / hr</text>
+  <text x="24" y="282" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">ACROSS 12 FIELD EMPLOYEES AT 1,800 CHARGED HOURS EACH (21,600 HOURS)</text>
+  <text x="560" y="282" fill="#f5f5f3" fontSize="13" fontFamily="JetBrains Mono, monospace">≈ $377,000 / yr</text>
+  <text x="24" y="314" fill="#55554f" fontSize="9" fontFamily="JetBrains Mono, monospace">Wages and benefits from BLS ECEC, construction, full-time, June 2026. Vehicle, phone, tools and training are our assumptions.</text>
+</svg>
+
+The arithmetic, line by line:
+
+| Line | Value |
+|---|---|
+| Wages — 2,080 hrs × $36.56 | $76,045 |
+| Benefits at the BLS rate — 2,080 × $16.17 | $33,634 |
+| Truck, fuel, phone, tools, training (not in ECEC) | $11,000 |
+| **Total annual cost** | **$120,678** |
+| Less PTO and holidays | −120 hrs |
+| Less training and certification days | −24 hrs |
+| Less weather, standby, shop and yard time | −130 hrs |
+| **Hours actually charged to jobs** | **1,806** |
+| **True cost per charged hour** | **$66.82** |
+| Priced at an assumed 35% burden | $49.36 |
+| **Gap** | **$17.46 per charged hour** |
+
+Twelve field employees at 1,800 charged hours each is 21,600 hours. At $17.46 a hour that is roughly **$377,000 a year** — given away silently, on work you won precisely because your number was lower than the number used by the contractor who calculated his.
+
+Every input above is arguable and you should argue with them. Change the vehicle allowance, change the non-productive hours, change the wage to your actual rate, and the answer moves. That is the feature. The useful output of this exercise is not a number to adopt; it is finding out which line you cannot fill in for your own shop.
+
+<h2 id="why-invisible">Why a wrong burden rate never gets caught</h2>
+
+Because the job does not fail.
+
+It comes in at 9% instead of the 14% you bid, and the explanation is always available: weather, a hard inspector, a difficult super, a rough month. Those explanations are plausible and often partly true, which is what makes them so effective at hiding the real cause. One rate, applied identically for six years, is never the suspect, because a suspect requires an event and there was never an event.
+
+The structural version of the problem is the one we keep finding everywhere: **the rate lives in estimating and the actuals live in accounting, and nobody owns the road between them.** The bid gets priced from an assumption. The job gets costed from reality. The two documents describe the same hour and are never compared, so the assumption survives another year and gets repriced into every job you win.
+
+This is exactly what [the margin being gone before the job closed](/research/margin-gone-before-the-job-closed) looks like from the estimating side rather than the field side, and it is the same shape as the [95.5% of construction data that gets captured and never used](/research/construction-data-thrown-away). The information exists. It just never travels.
+
+<BlogCTA label="Field Guide No. 01" headline="Seven leaks. One question each." subheadline="The burden rate is leak number six in the Contractor Profit Leak Audit — seven places general contractors lose money that never appear as a line item. Score the twenty-one questions in about fifteen minutes, or download the full field guide." buttonText="Run the Profit Leak Audit" buttonHref="/profit-leak" />
+
+<h2 id="the-test">The one-employee test</h2>
+
+You do not need a consultant or a software purchase for this. You need one afternoon and a payroll register.
+
+1. **Pick one field employee** — ideally a mid-level, fully typical one, not your best and not your newest.
+2. **Add every dollar your company spent on him last year.** Wages. Payroll taxes. Workers' comp at your *current* experience modifier, not last year's. General liability allocation. Health and benefits. Retirement match. PTO and holidays. Training and certifications. Small tools and consumables. Truck, fuel, maintenance, insurance. Phone and software seats.
+3. **Pull the hours he actually charged to jobs** from the job-cost system. Not payroll hours. Charged hours.
+4. **Divide.** That is what the hour cost you.
+5. **Compare it to the rate in your estimating template.** The difference is what you have been giving away, per hour, on every self-perform hour you bid.
+
+If step 3 is the one you cannot complete — if the job-cost system cannot tell you how many hours a specific person charged to jobs last year — stop. That is a bigger finding than the burden rate, and it is the thing to fix first.
+
+<h2 id="the-fix">What to change, and when</h2>
+
+**Recalculate annually, in the month your comp policy renews.** The experience modifier and the comp rate are usually the largest moving part, and recalculating when the new premium lands means the number and its biggest input arrive together.
+
+**Divide by billable hours, always.** If you change nothing else, change the divisor.
+
+**Push last year's actual productivity back into the estimating database.** Not just the rate — the units. The crew that took four days on a two-day phase is information the estimating template has never seen. This is the step that almost never happens, and it is the one that compounds.
+
+**Separate the rate by crew type.** A single company-wide burden hides the same averaging problem that a single company-wide bid hit rate hides. Your concrete crew and your finish carpenters do not carry the same vehicle cost, the same comp class, or the same non-productive ratio.
+
+**Put the recalculation on the calendar as an owner.** Give it a name and a date. Otherwise it is nobody's job, which is how it became a 2019 number in the first place.
+
+<h2 id="the-pattern">The pattern underneath</h2>
+
+Every item above is measurement, not effort. Nobody is being asked to work harder, buy software, or change how they build. The request is that a number which already exists — in the payroll register, in the comp policy, in the job-cost system — arrive somewhere it can be acted on before the next bid goes out.
+
+That is the same argument as [the carrying cost on retainage](/research/slow-payment-is-a-tax-on-your-margin), the same argument as [the rental line nobody reconciled](/research/equipment-and-rental-control-tower), and the same argument as [the company that learns from every job](/research/the-company-that-learns-from-every-job). Discipline is hard to change. Visibility is an engineering problem, and engineering problems have solutions.
+
+If you want the build order rather than the diagnosis, it is in [the first system and the ninety-day order to build it in](/research/the-first-system-90-day-build-order).
+
+<h2 id="sources">Sources</h2>
+
+- U.S. Bureau of Labor Statistics. *Employer Costs for Employee Compensation,* June 2026 reference period, Table 5 (private industry, full-time workers, by industry). Construction: total compensation $52.73 per hour worked, wages and salaries $36.56, total benefits $16.17 (paid leave $2.69, supplemental pay $2.55, insurance $4.00, retirement and savings $2.46, legally required $4.47). [News release](https://www.bls.gov/news.release/ecec.htm) · [Table 5](https://www.bls.gov/news.release/ecec.t05.htm).
+- CFMA. *2026 Construction Financial Benchmarker,* released September 2026; 1,359 verified financial statements. [CFMA Benchmarker](https://cfma.org/benchmarker).
+- The worked example — the $11,000 vehicle, phone, tools and training stack, the 274 non-charged hours, the 1,806-hour divisor, and the twelve-employee extrapolation — is ours. It is illustrative, built from stated assumptions, and describes no specific company. Nothing here is accounting, tax, or insurance advice; confirm your own figures with your CPA and your agent.

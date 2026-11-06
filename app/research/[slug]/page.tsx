@@ -8,6 +8,7 @@ import Footer from "../../components/Footer";
 import BlogPageClient from "../../components/BlogPageClient";
 import AuditPopupButton from "../../components/AuditPopupButton";
 import { getAllPosts, getPostBySlug, getRelatedPosts, formatDate } from "../../lib/blog";
+import { ORG_ID, PERSON_ID, SOCIAL_IMAGE_URL, WEBSITE_ID } from "../../lib/site";
 import BlogCTA from "../../components/BlogCTA";
 import LeversQuiz from "../../components/LeversQuiz";
 
@@ -63,7 +64,7 @@ export async function generateMetadata({
   const post = getPostBySlug(slug);
   if (!post) return {};
   return {
-    title: `${post.title} | 6 Signal`,
+    title: post.title,
     description: post.description,
     authors: [{ name: post.author }],
     openGraph: {
@@ -72,6 +73,8 @@ export async function generateMetadata({
       type: "article",
       publishedTime: post.date,
       authors: [post.author],
+      url: `${BASE}/research/${post.slug}`,
+      images: [{ url: "/6SIG_SOCIAL_SHARE.png", width: 1200, height: 630, alt: post.title }],
     },
     twitter: {
       card: "summary_large_image",
@@ -98,14 +101,15 @@ export default async function BlogPostPage({
       "@type": "Article",
       headline: post.title,
       description: post.description,
-      author: { "@type": "Person", name: post.author, url: "https://mattvincentwalker.com" },
+      "@id": `${BASE}/research/${post.slug}#article`,
+      author: { "@id": PERSON_ID },
       datePublished: post.date,
-      publisher: {
-        "@type": "Organization",
-        name: "6 Signal",
-        url: BASE,
-        logo: { "@type": "ImageObject", url: `${BASE}/6SIGNAL2.png` },
-      },
+      dateModified: post.date,
+      publisher: { "@id": ORG_ID },
+      isPartOf: { "@id": WEBSITE_ID },
+      mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE}/research/${post.slug}` },
+      image: SOCIAL_IMAGE_URL,
+      inLanguage: "en-US",
       url: `${BASE}/research/${post.slug}`,
       keywords: post.tags.join(", "),
       articleSection: post.category,

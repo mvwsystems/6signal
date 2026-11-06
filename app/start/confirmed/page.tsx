@@ -3,7 +3,7 @@ import Nav from "../../components/Nav";
 import Footer from "../../components/Footer";
 
 export const metadata: Metadata = {
-  title: "Deposit Received — Build Greenlit | 6Signal",
+  title: "Deposit Received — Build Greenlit",
   robots: { index: false, follow: false },
 };
 

@@ -8,11 +8,11 @@ import { AI_VISIBILITY_TOOLS, TOOL_CATEGORIES } from "../../data/aiVisibilityToo
 const BASE = "https://6signal.co";
 
 export const metadata: Metadata = {
-  title: "The AI Visibility Tools Index | AEO, GEO, and AI Search Tools | 6Signal",
+  title: "The AI Visibility Tools Index | AEO, GEO, and AI Search Tools",
   description:
     "A field guide to AEO, GEO, and AI visibility tools for tracking brand mentions, citations, prompts, competitors, and answer-engine visibility.",
   openGraph: {
-    title: "The AI Visibility Tools Index | AEO, GEO, and AI Search Tools | 6Signal",
+    title: "The AI Visibility Tools Index | AEO, GEO, and AI Search Tools | 6 Signal",
     description:
       "A field guide to AEO, GEO, and AI visibility tools for tracking brand mentions, citations, prompts, competitors, and answer-engine visibility.",
     type: "website",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "The AI Visibility Tools Index | 6Signal",
+    title: "The AI Visibility Tools Index | 6 Signal",
     description:
       "A field guide to AEO, GEO, and AI visibility tools for tracking brand mentions, citations, prompts, and answer-engine visibility.",
     images: ["/6SIG_SOCIAL_SHARE.png"],

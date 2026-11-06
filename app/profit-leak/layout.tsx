@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 const BASE = "https://6signal.co";
 const ROUTE = "/profit-leak";
-const TITLE = "The Contractor Profit Leak Audit — Free Field Guide | 6Signal";
+const TITLE = "The Contractor Profit Leak Audit — Free Field Guide";
 const DESC =
   "Seven places general contractors lose money that never show up as a line item, and the one question that exposes each of them. Score the 21-question audit online or download the field guide.";
 
@@ -28,14 +28,6 @@ export const metadata: Metadata = {
 const schema = {
   "@context": "https://schema.org",
   "@graph": [
-    {
-      "@type": "Organization",
-      "@id": `${BASE}/#organization`,
-      name: "6Signal",
-      url: BASE,
-      logo: { "@type": "ImageObject", url: `${BASE}/6SIGDashboardLogo.png` },
-      sameAs: [BASE],
-    },
     {
       "@type": "WebPage",
       "@id": `${BASE}${ROUTE}/#webpage`,

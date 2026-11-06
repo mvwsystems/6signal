@@ -35,7 +35,7 @@ The **current, canonical** six signals (used in the audit engine, homepage, /met
 | PEO | Prompt Engine Optimization | Surfacing inside the real query language buyers type/ask |
 | IEO | Index Engine Optimization | Whether AI crawlers can access, parse, and extract the site (schema, structure) |
 
-Canonical definitions live in [app/page.tsx](app/page.tsx) (~lines 12–50, duplicated verbatim in
+Canonical definitions live in [app/(home)/page.tsx](app/(home)/page.tsx) (~lines 12–50, duplicated verbatim in
 [app/method/page.tsx](app/method/page.tsx), [app/visibility/page.tsx](app/visibility/page.tsx))
 and in the audit prompt in [app/api/generate-audit/route.ts](app/api/generate-audit/route.ts).
 
@@ -122,13 +122,13 @@ testimonials, client logos, before/after screenshots, and the full 90-day case s
 
 | Layer | Reality |
 |---|---|
-| Framework | **Next.js 15.5.18, App Router**, React 19, TypeScript (README says Next 14 + "roofing operators" — stale) |
-| Styling | Single ~7,000-line [app/globals.css](app/globals.css). Tailwind installed but **zero utility classes used** — never add them |
+| Framework | **Next.js ^15.5.28, App Router**, React 19, TypeScript (README says Next 14 + "roofing operators" — stale). Pinned ≥15.5.28 for the Image Optimization RCE fixes; keep `npm audit` at zero |
+| Styling | Single ~10,000-line [app/globals.css](app/globals.css). **No Tailwind** (removed 2026-10-22 — it was unused; its preflight reset is inlined at the top of globals.css and `.italic` is the one utility defined by hand). No PostCSS config — Next's defaults apply. Never reintroduce utility classes |
 | Content | MDX/MD blog in `content/blog/` via gray-matter + next-mdx-remote, rendered at `/research/[slug]` |
 | AI | Claude API (`claude-haiku-4-5`) called via **raw fetch** (no @anthropic-ai SDK) in 3 routes: [app/api/free-check/route.ts](app/api/free-check/route.ts), [app/api/generate-audit/route.ts](app/api/generate-audit/route.ts), [app/api/generate-strategy/route.ts](app/api/generate-strategy/route.ts). Requires `ANTHROPIC_API_KEY` |
 | Hosting | Netlify (`@netlify/plugin-nextjs`), `main` auto-deploys |
 | Payments | Stripe via external buy-links (no SDK) + webhook at [app/api/stripe-webhook/route.ts](app/api/stripe-webhook/route.ts) recording `checkout.session.completed` |
-| Database | **Supabase** project `6signal` (ref `syysezikhdmqbagfaqrf`, us-east-2) via `@supabase/supabase-js`, server-side only ([app/lib/db.ts](app/lib/db.ts)). Tables: businesses, leads, intakes, purchases, audits, signal_scores, ai_probes, site_snapshots, gbp_snapshots. RLS on, no public policies — service role only. All writes best-effort: missing env = persistence off, funnel unaffected |
+| Database | **Supabase** project `6signal` (ref `syysezikhdmqbagfaqrf`, us-east-2) via `@supabase/supabase-js`, server-side only ([app/lib/db.ts](app/lib/db.ts)). Tables: businesses, leads, intakes, purchases, audits, signal_scores, ai_probes, site_snapshots, gbp_snapshots, manual_payments (off-Stripe revenue — ACH/check/wire, hand-entered, merged into the Revenue tab by [app/api/dashboard/revenue/route.ts](app/api/dashboard/revenue/route.ts)). RLS on, no public policies — service role only. All writes best-effort: missing env = persistence off, funnel unaffected |
 | Email | **Resend** via [app/lib/email.ts](app/lib/email.ts) (free-check results, purchase recovery links). Degrades to a logged warning without `RESEND_API_KEY` |
 | Analytics | **Plausible** (traffic + referrers/AI engines, `NEXT_PUBLIC_PLAUSIBLE_SRC`), **Meta Pixel** (ads). Conversion events fan out to Meta + Plausible from `app/lib/fbq.ts`. First-touch attribution (`app/lib/attribution.ts`) rides every funnel POST into `leads.attribution` / `intakes.attribution` |
 
@@ -170,7 +170,19 @@ regenerates the brief on any device. Completed briefs also get a permalink
   was deliberately eliminated. The funnel is fully self-serve until the paid $197 call; never
   write copy promising a free call, intake→readout flow, or "priced on your call". (The brand
   brief's "Book the Visibility Audit" rules predate the $27 self-serve funnel.)
-- JSON-LD: Person + Organization in root layout; trade pages add BreadcrumbList/Service/FAQPage.
+- **Entity + metadata (added 2026-10-26):** [app/lib/site.ts](app/lib/site.ts) is the single
+  source for the organization (name, logo, sameAs, service area, offers) and the operator's
+  profile URLs. Root layout renders one `@graph` (Organization+ProfessionalService, Person,
+  WebSite) with stable `@id`s; every page-level JSON-LD references `{ "@id": ORG_ID }` /
+  `PERSON_ID` instead of re-declaring "6Signal". Root `title.template` appends `| 6 Signal`, so
+  page metadata exports a **bare** title (no brand suffix); use `title: { absolute }` to opt out.
+  Never set `alternates.canonical` in the root layout — child routes would inherit "/". Every
+  indexable route carries its own canonical. Client pages get metadata from a sibling
+  `layout.tsx`; the homepage lives in `app/(home)/` for the same reason (its FAQ data is in
+  `app/(home)/faqs.ts`, shared with the FAQPage schema). `/llms.txt` is a route handler
+  (`app/llms.txt/route.ts`) rebuilt hourly from the blog index; `/dallas-fort-worth` is the
+  local-intent page. GBP-sourced fields (`ADDRESS_LOCALITY`, `PHONE`, canonical Maps URL) in
+  site.ts are null until read off the profile — fill them, never guess them.
 - Author byline: always "Matt Vincent Walker".
 
 ## 9. Companion docs
