@@ -40,8 +40,6 @@ const ORG_SCHEMA = {
   "@type": "Organization",
   "name": "6 Signal",
   "url": "https://6signal.co",
-  "telephone": "+1-817-623-6399",
-  "email": "hello@6signal.co",
   "founder": {
     "@type": "Person",
     "name": "Matt Vincent Walker",
