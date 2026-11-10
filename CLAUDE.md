@@ -15,7 +15,7 @@ commercial GCs. Based in Dallas–Fort Worth; serves DFW and select markets beyo
 
 - Owner/operator: **Matt Vincent Walker** (always full name, never "Matt Walker"). One operator
   per account, one client per market per trade (exclusivity model).
-- Site: https://6signal.co · GitHub: `mvwsystems/6signal` · Contact: hello@6signal.co
+- Site: https://6signal.co · GitHub: `mvwsystems/6signal` · Contact: hello@6signal.co · +1 (817) 623-6399
 - Calendly: https://calendly.com/mvw-mattvincentwalker/ai-audit
 - **Stated goal:** become #1 globally for AI visibility in residential construction and home
   services. (This is the owner's ambition — the claim does not appear on the site, and the site
@@ -67,6 +67,19 @@ Mechanics: form data → `localStorage` (`6sig_audit_data`, `6sig_audit_result`,
 success URLs configured in the Stripe dashboard) → results generated client-initiated via the API
 routes below. **There is no server-side record of purchases, audits, or leads.**
 
+**Revenue reconciliation (fixed 2026-11-09).** The Revenue tab counts money from three
+sources, and all three are needed: Stripe **charges**, Stripe **invoice payment records**, and
+Supabase **manual_payments**. An invoice marked *paid out of band* creates an `invoice_payment`
+whose payment is a `payment_record` and **no charge at all** — it appears in the Stripe Payments
+list but `/v1/charges` never returns it. The route read only charges until 2026-11-09, so
+$5,722 of 2026 revenue was silently missing (SR Equipment $4,875 + $750 C & C Roofing + $97
+X-Act Plumbing; a 4th, SR Equipment $1,450, was caught only because it had been hand-entered).
+2026 went from a reported $32,114 to a true **$37,836**. Because records (2) and (3) overlap
+whenever the operator both closes the Stripe invoice and hand-enters the payment, the route
+drops a hand-entered row that matches an out-of-band Stripe payment on exact amount within 7
+days, keeps Stripe's (authoritative settlement date), and says so in the response `note`.
+**Never add a second pass over invoices without deduping against manual_payments.**
+
 **⚠️ Takeoff Copilot pricing ($197/job or $497/month founding rate, up to 8 jobs) is NOT in this
 repo.** Takeoff Copilot appears on /capabilities as a Labs item ("Beta · Active") linking to
 TakeoffCopilot.com with no pricing. The second Labs product is "BidCore" (the old BidForge
@@ -90,6 +103,15 @@ naming is fully gone; /services was deleted 2026-07-22 and 301s to /capabilities
   revenue) → paid **scoping**: $500 remote / $1,000 on-site (DFW), 100% credited toward the
   build within 30 days → fixed-scope proposal from the dashboard proposal builder. Every rung
   prices as **build fee + monthly run fee**; project pricing never published.
+- **Booking (added 2026-11-01):** `/book` is the only on-site booking page — an iframe of the
+  Calendly "6 Signal — Book an Appointment" event (`/6signal`: 30 min, free, Zoom/phone/on-site),
+  no widget.js, fixed iframe height per breakpoint. It is the Stabilize/Systemize door-opener,
+  **not** a funnel step: the $27/$97/$197 ladder stays self-serve and the page routes
+  visibility-only visitors to /visibility-check. A `Schedule` conversion fires from Calendly's
+  `calendly.event_scheduled` postMessage, not on page view. /care and /websites CTAs point here
+  (they linked a deleted Calendly event, `business-growth-audit`, and 404ed until 2026-11-01).
+  The $197 call still schedules via the Stripe success URL (Calendly `/ai-audit`), set in the
+  Stripe dashboard, not in this repo.
 - Voice: intelligence-briefing tone — direct, precise, economical, no hype, no exclamation points.
   See [6SIGNAL_BRAND_BRIEF.md](6SIGNAL_BRAND_BRIEF.md) §2 (still authoritative for voice).
 - /services was deleted 2026-07-22 (was an unreachable duplicate of /capabilities behind a 301).
@@ -128,7 +150,7 @@ testimonials, client logos, before/after screenshots, and the full 90-day case s
 | AI | Claude API (`claude-haiku-4-5`) called via **raw fetch** (no @anthropic-ai SDK) in 3 routes: [app/api/free-check/route.ts](app/api/free-check/route.ts), [app/api/generate-audit/route.ts](app/api/generate-audit/route.ts), [app/api/generate-strategy/route.ts](app/api/generate-strategy/route.ts). Requires `ANTHROPIC_API_KEY` |
 | Hosting | Netlify (`@netlify/plugin-nextjs`), `main` auto-deploys |
 | Payments | Stripe via external buy-links (no SDK) + webhook at [app/api/stripe-webhook/route.ts](app/api/stripe-webhook/route.ts) recording `checkout.session.completed` |
-| Database | **Supabase** project `6signal` (ref `syysezikhdmqbagfaqrf`, us-east-2) via `@supabase/supabase-js`, server-side only ([app/lib/db.ts](app/lib/db.ts)). Tables: businesses, leads, intakes, purchases, audits, signal_scores, ai_probes, site_snapshots, gbp_snapshots, manual_payments (off-Stripe revenue — ACH/check/wire, hand-entered, merged into the Revenue tab by [app/api/dashboard/revenue/route.ts](app/api/dashboard/revenue/route.ts)). RLS on, no public policies — service role only. All writes best-effort: missing env = persistence off, funnel unaffected |
+| Database | **Supabase** project `6signal` (ref `syysezikhdmqbagfaqrf`, us-east-2) via `@supabase/supabase-js`, server-side only ([app/lib/db.ts](app/lib/db.ts)). Tables: businesses, leads, intakes, purchases, audits, signal_scores, ai_probes, site_snapshots, gbp_snapshots, manual_payments (off-Stripe revenue — ACH/check/wire, hand-entered, merged into the Revenue tab by [app/api/dashboard/revenue/route.ts](app/api/dashboard/revenue/route.ts); see the Revenue reconciliation note in §3). RLS on, no public policies — service role only. All writes best-effort: missing env = persistence off, funnel unaffected |
 | Email | **Resend** via [app/lib/email.ts](app/lib/email.ts) (free-check results, purchase recovery links). Degrades to a logged warning without `RESEND_API_KEY` |
 | Analytics | **Plausible** (traffic + referrers/AI engines, `NEXT_PUBLIC_PLAUSIBLE_SRC`), **Meta Pixel** (ads). Conversion events fan out to Meta + Plausible from `app/lib/fbq.ts`. First-touch attribution (`app/lib/attribution.ts`) rides every funnel POST into `leads.attribution` / `intakes.attribution` |
 
@@ -181,8 +203,17 @@ regenerates the brief on any device. Completed briefs also get a permalink
   `layout.tsx`; the homepage lives in `app/(home)/` for the same reason (its FAQ data is in
   `app/(home)/faqs.ts`, shared with the FAQPage schema). `/llms.txt` is a route handler
   (`app/llms.txt/route.ts`) rebuilt hourly from the blog index; `/dallas-fort-worth` is the
-  local-intent page. GBP-sourced fields (`ADDRESS_LOCALITY`, `PHONE`, canonical Maps URL) in
-  site.ts are null until read off the profile — fill them, never guess them.
+  local-intent page. The remaining GBP-sourced fields (`ADDRESS_LOCALITY`, canonical Maps
+  URL) in site.ts are null until read off the profile — fill them, never guess them.
+- **Phone (added 2026-11-03):** the company line is **+1 (817) 623-6399**, held only in
+  site.ts as `PHONE` (schema, `+1-817-623-6399`), `PHONE_HREF` (`tel:+18176236399`) and
+  `PHONE_DISPLAY` (`(817) 623-6399`) — never hardcode it in a page. Setting `PHONE`
+  turns on `telephone` in the Organization node and its `contactPoint`, so every page's
+  `@graph` carries it. Rendered click-to-call: the footer (site-wide), /contact's contact-ways,
+  /book (fallback line + closing CTA button), the `.f-call` line on /websites, /care and
+  /dallas-fort-worth, and the form-failure fallbacks on /contact, /inquire and /start.
+  It must match the GBP digit for digit — a second number across listings is the LEO
+  citation inconsistency the practice charges to fix.
 - Author byline: always "Matt Vincent Walker".
 
 ## 9. Companion docs
