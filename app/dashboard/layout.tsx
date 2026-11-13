@@ -21,8 +21,8 @@ export const viewport: Viewport = {
 };
 
 // Applies the saved light/dark choice before first paint so a light-mode user
-// never sees a black flash. Dark is the default; the toggle lives in the header.
-const THEME_BOOT = `try{var t=localStorage.getItem("6sig_db_theme");document.documentElement.setAttribute("data-db-theme",t==="light"?"light":"dark")}catch(e){}`;
+// never sees a flash. Light is the default (matches the Manus CRM look); the toggle lives in the header.
+const THEME_BOOT = `try{var t=localStorage.getItem("6sig_db_theme");document.documentElement.setAttribute("data-db-theme",t==="dark"?"dark":"light")}catch(e){}`;
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (

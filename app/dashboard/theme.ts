@@ -4,8 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 // One theme for the whole dashboard. Every color is a CSS custom property
 // scoped to .dash-root (defined in globals.css), so the ~360 inline-style
 // usages across page.tsx and ProposalsTab.tsx stay exactly as written and the
-// light/dark switch is a single attribute flip on <html>. Dark is the default
-// and the brand; light is for the operator's eyes in daylight.
+// light/dark switch is a single attribute flip on <html>. Light is the default
+// (since 2026-11-13, matching the Manus CRM look); dark stays one tap away.
 
 export const T = {
   bg: "var(--db-bg)",
@@ -37,9 +37,9 @@ export const DB_THEME_KEY = "6sig_db_theme";
 
 export function readDbTheme(): DbTheme {
   try {
-    return localStorage.getItem(DB_THEME_KEY) === "light" ? "light" : "dark";
+    return localStorage.getItem(DB_THEME_KEY) === "dark" ? "dark" : "light";
   } catch {
-    return "dark";
+    return "light";
   }
 }
 
@@ -50,7 +50,7 @@ export function applyDbTheme(t: DbTheme): void {
 // The layout's inline script sets the attribute before first paint; this hook
 // only syncs React state to it and handles the toggle.
 export function useDbTheme(): [DbTheme, () => void] {
-  const [theme, setTheme] = useState<DbTheme>("dark");
+  const [theme, setTheme] = useState<DbTheme>("light");
   useEffect(() => {
     const t = readDbTheme();
     setTheme(t);

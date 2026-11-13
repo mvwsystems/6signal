@@ -4,6 +4,7 @@ import { Radar, Ring, SignalBars, LineChart, Donut, Sparkline, MapHeatGrid } fro
 import ProposalsTab from "./ProposalsTab";
 import NewsletterTab from "./NewsletterTab";
 import CrmTab from "./CrmTab";
+import Shell, { NavGroup } from "./Shell";
 import { T, alpha, MONO, DISP, BODY, useDbTheme } from "./theme";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -2105,6 +2106,23 @@ export default function DashboardPage() {
   const [state, setState] = useState<"loading" | "locked" | "in">("loading");
   const [configured, setConfigured] = useState(true);
   const [tab, setTab] = useState<"overview" | "crm" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "proposals" | "newsletter" | "ads" | "revenue">("overview");
+  // The open tab lives in the URL hash (#crm), so a reload or a bookmark
+  // lands on the same section.
+  const TAB_IDS = ["overview", "crm", "scan", "battle", "exec", "track", "content", "prospects", "proposals", "newsletter", "ads", "revenue"] as const;
+  useEffect(() => {
+    const fromHash = () => {
+      const h = window.location.hash.replace("#", "");
+      if ((TAB_IDS as readonly string[]).includes(h)) setTab(h as typeof tab);
+    };
+    fromHash();
+    window.addEventListener("hashchange", fromHash);
+    return () => window.removeEventListener("hashchange", fromHash);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const selectTab = (t: typeof tab) => {
+    setTab(t);
+    if (window.location.hash !== `#${t}`) window.history.replaceState(null, "", `#${t}`);
+  };
   const [data, setData] = useState<Overview | null>(null);
   const [dataErr, setDataErr] = useState<string | null>(null);
 
@@ -2135,65 +2153,56 @@ export default function DashboardPage() {
   if (state === "loading") return <div className="dash-root" style={{ minHeight: "100vh", background: T.bg, color: T.muted, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 13 }}>Loading…</div>;
   if (state === "locked") return <Login configured={configured} onAuthed={() => { setState("in"); loadData(); }} />;
 
-  const TABS: { id: typeof tab; label: string }[] = [
-    { id: "overview", label: "Overview" },
-    { id: "crm", label: "CRM" },
-    { id: "scan", label: "Quick Scan" },
-    { id: "battle", label: "Battle Plan" },
-    { id: "exec", label: "90-Day Plan" },
-    { id: "track", label: "Tracking" },
-    { id: "content", label: "Content" },
-    { id: "prospects", label: "Prospects" },
-    { id: "proposals", label: "Proposals" },
-    { id: "newsletter", label: "Newsletter" },
-    { id: "ads", label: "Ads" },
-    { id: "revenue", label: "Revenue" },
+  type Tab = typeof tab;
+  const GROUPS: NavGroup<Tab>[] = [
+    { label: "Sales", items: [
+      { id: "crm", label: "CRM", icon: "users" },
+      { id: "proposals", label: "Proposals", icon: "file" },
+      { id: "revenue", label: "Revenue", icon: "dollar" },
+    ] },
+    { label: "Clients", items: [
+      { id: "overview", label: "Overview", icon: "grid" },
+      { id: "scan", label: "Quick Scan", icon: "scan" },
+      { id: "battle", label: "Battle Plan", icon: "target" },
+      { id: "exec", label: "90-Day Plan", icon: "calendar" },
+      { id: "track", label: "Tracking", icon: "chart" },
+      { id: "content", label: "Content", icon: "pen" },
+      { id: "ads", label: "Ads", icon: "megaphone" },
+    ] },
+    { label: "Marketing", items: [
+      { id: "prospects", label: "Batch Scan", icon: "list" },
+      { id: "newsletter", label: "Newsletter", icon: "mail" },
+    ] },
   ];
+  const current = GROUPS.flatMap((g) => g.items).find((i) => i.id === tab);
 
   return (
-    <div className="dash-root" style={{ minHeight: "100vh", background: T.bg, color: T.text, fontFamily: BODY }}>
-      <div style={{ borderBottom: `1px solid ${T.border}`, padding: "14px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, background: T.surface, zIndex: 10 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <img src="/6SIGDashboardLogo.png" alt="6 Signal" style={{ height: 26, width: "auto", display: "block" }} />
-          <div>
-            <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 15 }}>6 Signal</div>
-            <div style={{ ...eyebrow, fontSize: 10 }}>Command Center</div>
-          </div>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          {tab === "overview" && <button style={{ ...btn(), padding: "7px 14px" }} onClick={loadData}>Refresh</button>}
-          <button aria-label="Toggle light or dark mode" title={dbTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"} style={{ background: "none", border: `1px solid ${T.border}`, color: T.muted, cursor: "pointer", fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.12em", padding: "6px 10px", borderRadius: 2 }} onClick={toggleDbTheme}>{dbTheme === "dark" ? "LIGHT" : "DARK"}</button>
-          <button style={{ background: "none", border: "none", color: T.muted, cursor: "pointer", fontFamily: MONO, fontSize: 12 }} onClick={logout}>Log out</button>
-        </div>
+    <Shell
+      groups={GROUPS}
+      active={tab}
+      onSelect={selectTab}
+      title={current?.label ?? "Command Center"}
+      theme={dbTheme}
+      onToggleTheme={toggleDbTheme}
+      onLogout={logout}
+      actions={tab === "overview" ? <button style={{ ...btn(), padding: "7px 14px" }} onClick={loadData}>Refresh</button> : undefined}
+    >
+      {dataErr && <div style={card({ borderColor: `${alpha(T.danger, 40)}`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{dataErr}</span></div>}
+      {tab === "overview" && (data ? <OverviewTab data={data} /> : <div style={{ color: T.muted, fontFamily: MONO, fontSize: 13, padding: 40, textAlign: "center" }}>Loading data…</div>)}
+      {tab === "crm" && <CrmTab />}
+      {tab === "scan" && <ScanTab businesses={data?.businesses ?? []} />}
+      {tab === "battle" && <BattlePlanTab businesses={data?.businesses ?? []} />}
+      {tab === "exec" && <ExecPlanTab businesses={data?.businesses ?? []} />}
+      {tab === "track" && <TrackingTab businesses={data?.businesses ?? []} />}
+      {tab === "content" && <ContentTab businesses={data?.businesses ?? []} />}
+      {tab === "prospects" && <ProspectsTab />}
+      {tab === "proposals" && <ProposalsTab businesses={data?.businesses ?? []} />}
+      {tab === "newsletter" && <NewsletterTab />}
+      {tab === "ads" && <AdsTab businesses={data?.businesses ?? []} />}
+      {tab === "revenue" && <RevenueTab />}
+      <div style={{ marginTop: 32, paddingTop: 20, borderTop: `1px solid ${T.border}`, textAlign: "center", ...eyebrow }}>
+        6 Signal Command Center · Internal
       </div>
-
-      <div className="dash-tabs" style={{ borderBottom: `1px solid ${T.border}`, padding: "0 24px", display: "flex", background: T.surface }}>
-        {TABS.map((t) => (
-          <button key={t.id} onClick={() => setTab(t.id)}
-            style={{ background: "none", border: "none", color: tab === t.id ? T.accent : T.muted, fontFamily: DISP, fontWeight: 700, fontSize: 13, cursor: "pointer", padding: "14px 18px", borderBottom: `2px solid ${tab === t.id ? T.accent : "transparent"}`, textTransform: "uppercase", letterSpacing: "0.04em" }}>
-            {t.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="dash-main" style={{ padding: 24, maxWidth: 1320, margin: "0 auto" }}>
-        {dataErr && <div style={card({ borderColor: `${alpha(T.danger, 40)}`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{dataErr}</span></div>}
-        {tab === "overview" && (data ? <OverviewTab data={data} /> : <div style={{ color: T.muted, fontFamily: MONO, fontSize: 13, padding: 40, textAlign: "center" }}>Loading data…</div>)}
-        {tab === "crm" && <CrmTab />}
-        {tab === "scan" && <ScanTab businesses={data?.businesses ?? []} />}
-        {tab === "battle" && <BattlePlanTab businesses={data?.businesses ?? []} />}
-        {tab === "exec" && <ExecPlanTab businesses={data?.businesses ?? []} />}
-        {tab === "track" && <TrackingTab businesses={data?.businesses ?? []} />}
-        {tab === "content" && <ContentTab businesses={data?.businesses ?? []} />}
-        {tab === "prospects" && <ProspectsTab />}
-        {tab === "proposals" && <ProposalsTab businesses={data?.businesses ?? []} />}
-        {tab === "newsletter" && <NewsletterTab />}
-        {tab === "ads" && <AdsTab businesses={data?.businesses ?? []} />}
-        {tab === "revenue" && <RevenueTab />}
-        <div style={{ marginTop: 32, paddingTop: 20, borderTop: `1px solid ${T.border}`, textAlign: "center", ...eyebrow }}>
-          6 Signal Command Center · Internal
-        </div>
-      </div>
-    </div>
+    </Shell>
   );
 }
