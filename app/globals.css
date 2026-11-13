@@ -9839,8 +9839,6 @@ svg {
   .dash-root .mcite .mhide { display: none !important; }
   .dash-root .trow { min-width: 620px; }
   .dash-main { padding: 14px !important; }
-  .dash-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .dash-tabs button { padding: 12px 10px !important; white-space: nowrap; }
   .dash-root input, .dash-root select, .dash-root textarea { max-width: 100%; }
 }
 
