@@ -4,7 +4,7 @@
 -- the dashboard is written to crm_activity so nothing changes silently.
 -- Apply by hand in the Supabase SQL editor (project 6signal) after review.
 
-create extension if not exists pg_trgm;
+create extension if not exists pg_trgm with schema extensions;
 
 create table if not exists crm_prospects (
   id                  uuid primary key default gen_random_uuid(),
@@ -50,9 +50,9 @@ create index if not exists crm_prospects_angle_idx on crm_prospects(service_angl
 create index if not exists crm_prospects_tags_idx on crm_prospects using gin(tags);
 create index if not exists crm_prospects_email_idx on crm_prospects(lower(email));
 create index if not exists crm_prospects_domain_idx on crm_prospects(website_domain);
-create index if not exists crm_prospects_company_trgm on crm_prospects using gin(company gin_trgm_ops);
-create index if not exists crm_prospects_contact_trgm on crm_prospects using gin(contact_name gin_trgm_ops);
-create index if not exists crm_prospects_city_trgm on crm_prospects using gin(city gin_trgm_ops);
+create index if not exists crm_prospects_company_trgm on crm_prospects using gin(company extensions.gin_trgm_ops);
+create index if not exists crm_prospects_contact_trgm on crm_prospects using gin(contact_name extensions.gin_trgm_ops);
+create index if not exists crm_prospects_city_trgm on crm_prospects using gin(city extensions.gin_trgm_ops);
 alter table crm_prospects enable row level security;
 
 -- Verified decision makers per prospect (Manus "contacts").
