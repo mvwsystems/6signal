@@ -56,7 +56,7 @@ function ErrorLine({ msg }: { msg: string | null }) {
 const fmtDate = (s?: string | null) => (s ? new Date(s).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—");
 
 export default function CrmTab() {
-  const [view, setView] = useState<"dashboard" | "prospects" | "import" | "duplicates">("dashboard");
+  const [view, setView] = useState<"dashboard" | "hitlist" | "pipeline" | "prospects" | "customers" | "import" | "duplicates">("dashboard");
   // A count card's arrow opens Prospects already filtered; the key remounts
   // the list so it starts from that filter.
   const [preset, setPreset] = useState<{ key: number; filters: Partial<ListFilters> }>({ key: 0, filters: {} });
@@ -64,12 +64,15 @@ export default function CrmTab() {
   return (
     <div>
       <div role="tablist" aria-label="CRM sections" style={{ display: "flex", gap: 6, marginBottom: 20, flexWrap: "wrap" }}>
-        {([["dashboard", "Dashboard"], ["prospects", "Prospects"], ["import", "Import"], ["duplicates", "Duplicates"]] as const).map(([id, l]) => (
+        {([["dashboard", "Dashboard"], ["hitlist", "Hit List"], ["pipeline", "Pipeline"], ["prospects", "Prospects"], ["customers", "Customers"], ["import", "Import"], ["duplicates", "Duplicates"]] as const).map(([id, l]) => (
           <button key={id} role="tab" aria-selected={view === id} className="dash-pill" style={{ ...pill(view === id), fontSize: 13, padding: "6px 14px" }} onClick={() => { if (id === "prospects" && view !== "prospects") setPreset((p) => ({ key: p.key + 1, filters: {} })); setView(id); }}>{l}</button>
         ))}
       </div>
       {view === "dashboard" && <DashboardView onOpenList={openList} />}
+      {view === "hitlist" && <HitListView />}
+      {view === "pipeline" && <PipelineView />}
       {view === "prospects" && <ProspectsView key={preset.key} initial={preset.filters} />}
+      {view === "customers" && <CustomersView />}
       {view === "import" && <ImportView />}
       {view === "duplicates" && <DuplicatesView />}
     </div>
@@ -199,6 +202,266 @@ function DashboardView({ onOpenList }: { onOpenList: (f: Partial<ListFilters>) =
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+// ─── C2: Hit List, Pipeline, Customers ──────────────────────────────────────
+
+const money = (v: number) => v.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+const idleDays = (iso: string) => Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 86400000));
+const sectionTitle: React.CSSProperties = { fontFamily: BODY, fontSize: 16, fontWeight: 600, color: T.text };
+
+interface HitPerson { id: string; company: string; contact_name: string | null; phone: string | null; email: string | null; status: string; city?: string | null; state?: string | null; priority_call_rank?: number | null; last_contact_at?: string | null; updated_at?: string }
+interface HitData {
+  followUps: { id: string; content: string; scheduled_at: string; prospect: HitPerson | null }[];
+  replies: HitPerson[];
+  calls: HitPerson[];
+}
+
+function HitListView() {
+  const [d, setD] = useState<HitData | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [busy, setBusy] = useState<string | null>(null);
+  const load = useCallback(async () => {
+    const end = new Date(); end.setHours(23, 59, 59, 999);
+    try { setD(await api<HitData>(`/api/dashboard/crm/hitlist?until=${encodeURIComponent(end.toISOString())}`)); setErr(null); }
+    catch (e) { setErr((e as Error).message); }
+  }, []);
+  useEffect(() => { load(); }, [load]);
+  const post = async (key: string, body: Record<string, unknown>) => {
+    setBusy(key);
+    try { await api("/api/dashboard/crm/hitlist", { method: "POST", body: JSON.stringify(body) }); await load(); }
+    catch (e) { setErr((e as Error).message); }
+    finally { setBusy(null); }
+  };
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const who = (p: HitPerson | null) => p ? [p.contact_name, p.phone || p.email].filter(Boolean).join(" · ") : "";
+
+  return (
+    <div>
+      <ErrorLine msg={err} />
+      <div className="dash-split" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+        <div style={card({ padding: 0 })}>
+          <div style={{ padding: "20px 20px 12px" }}>
+            <div style={sectionTitle}>Follow-ups due today</div>
+            <div style={{ ...muted, fontSize: 12, marginTop: 2 }}>Set one from any prospect's details.</div>
+          </div>
+          {d?.followUps.length ? d.followUps.map((f) => {
+            const overdue = new Date(f.scheduled_at) < today;
+            return (
+              <div key={f.id} style={{ display: "flex", gap: 10, alignItems: "center", padding: "12px 20px", borderTop: `1px solid ${T.border}` }}>
+                <button onClick={() => f.prospect && setOpenId(f.prospect.id)} style={{ flex: 1, minWidth: 0, background: "none", border: "none", padding: 0, textAlign: "left", cursor: "pointer", color: T.text, fontFamily: BODY }}>
+                  <div style={{ fontWeight: 600, fontSize: 14 }}>{f.prospect?.company ?? "—"}</div>
+                  <div style={{ ...muted, fontSize: 12 }}>{f.content}{who(f.prospect) ? ` · ${who(f.prospect)}` : ""}</div>
+                </button>
+                {overdue && <span className="dash-pill" style={{ fontSize: 11, padding: "2px 8px", borderRadius: 999, background: alpha(T.danger, 12), color: T.danger, border: `1px solid ${alpha(T.danger, 30)}`, whiteSpace: "nowrap" }}>Overdue {fmtDate(f.scheduled_at)}</span>}
+                <button style={btn(false, { height: 30, padding: "0 10px", fontSize: 12 })} disabled={busy === f.id} onClick={() => post(f.id, { action: "done", noteId: f.id })}>{busy === f.id ? "Saving…" : "Mark done"}</button>
+              </div>
+            );
+          }) : <div style={{ ...muted, padding: "24px 20px", borderTop: `1px solid ${T.border}` }}>{d ? "Nothing due today." : "Loading…"}</div>}
+        </div>
+
+        <div style={card({ padding: 0 })}>
+          <div style={{ padding: "20px 20px 12px" }}>
+            <div style={sectionTitle}>Replies to work</div>
+            <div style={{ ...muted, fontSize: 12, marginTop: 2 }}>Prospects marked Replied. Change their status once handled.</div>
+          </div>
+          {d?.replies.length ? d.replies.map((r) => (
+            <button key={r.id} onClick={() => setOpenId(r.id)} style={{ display: "block", width: "100%", textAlign: "left", background: "none", border: "none", borderTop: `1px solid ${T.border}`, padding: "12px 20px", cursor: "pointer", color: T.text, fontFamily: BODY }}>
+              <div style={{ fontWeight: 600, fontSize: 14 }}>{r.company}</div>
+              <div style={{ ...muted, fontSize: 12 }}>{who(r) || "No contact on file"} · waiting {idleDays(r.updated_at!)} days</div>
+            </button>
+          )) : <div style={{ ...muted, padding: "24px 20px", borderTop: `1px solid ${T.border}` }}>{d ? "No unworked replies." : "Loading…"}</div>}
+        </div>
+      </div>
+
+      <div style={card({ padding: 0 })}>
+        <div style={{ padding: "20px 20px 12px", display: "flex", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
+          <div>
+            <div style={sectionTitle}>Priority call list</div>
+            <div style={{ ...muted, fontSize: 12, marginTop: 2 }}>{d ? `${d.calls.length} companies, in your order.` : ""} Add more from any prospect's details.</div>
+          </div>
+        </div>
+        <div className="xscroll">
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, minWidth: 720 }}>
+            <thead><tr>{["#", "Company", "Contact", "Phone", "Status", "Last contact", ""].map((h) => <th key={h} style={th}>{h}</th>)}</tr></thead>
+            <tbody>
+              {(d?.calls ?? []).map((c, i, arr) => (
+                <tr key={c.id} style={{ borderBottom: `1px solid ${T.border}`, cursor: "pointer" }} onClick={() => setOpenId(c.id)}>
+                  <td style={{ padding: 10, fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>{c.priority_call_rank}</td>
+                  <td style={{ padding: 10, fontWeight: 600 }}>{c.company}<div style={{ ...muted, fontSize: 12, fontWeight: 400 }}>{[c.city, c.state].filter(Boolean).join(", ")}</div></td>
+                  <td style={{ padding: 10 }}>{c.contact_name ?? "—"}</td>
+                  <td style={{ padding: 10, whiteSpace: "nowrap" }}>{c.phone ? <a href={`tel:${c.phone.replace(/[^\d+]/g, "")}`} onClick={(e) => e.stopPropagation()} style={{ color: T.text }}>{c.phone}</a> : "—"}</td>
+                  <td style={{ padding: 10 }}><StatusPill status={c.status} /></td>
+                  <td style={{ padding: 10, color: T.textSub }}>{fmtDate(c.last_contact_at)}</td>
+                  <td style={{ padding: 10, whiteSpace: "nowrap" }} onClick={(e) => e.stopPropagation()}>
+                    <button aria-label={`Move ${c.company} up`} style={btn(false, { height: 28, padding: "0 8px", fontSize: 12 })} disabled={i === 0 || !!busy} onClick={() => post(c.id + "up", { action: "rank", prospectId: c.id, op: "up" })}>↑</button>{" "}
+                    <button aria-label={`Move ${c.company} down`} style={btn(false, { height: 28, padding: "0 8px", fontSize: 12 })} disabled={i === arr.length - 1 || !!busy} onClick={() => post(c.id + "down", { action: "rank", prospectId: c.id, op: "down" })}>↓</button>{" "}
+                    <button style={btn(false, { height: 28, padding: "0 8px", fontSize: 12, color: T.muted })} disabled={!!busy} onClick={() => post(c.id + "rm", { action: "rank", prospectId: c.id, op: "remove" })}>Remove</button>
+                  </td>
+                </tr>
+              ))}
+              {d && !d.calls.length && <tr><td colSpan={7} style={{ ...muted, padding: 24, textAlign: "center" }}>The call list is empty.</td></tr>}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {openId && <ProspectDrawer id={openId} onClose={() => setOpenId(null)} onChanged={load} />}
+    </div>
+  );
+}
+
+type Stage = (typeof DEAL_STAGES)[number];
+interface PipeCard { id: string; company: string; contact_name: string | null; city: string | null; state: string | null; status: string; service_angle: string | null; deal_stage: Stage; deal_value: number; updated_at: string }
+interface PipeData { totals: Record<string, { count: number; value: number }>; cards: Record<string, PipeCard[]> }
+
+function PipelineView() {
+  const [angle, setAngle] = useState("");
+  const [d, setD] = useState<PipeData | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [dragId, setDragId] = useState<string | null>(null);
+  const [over, setOver] = useState<string | null>(null);
+  const [openId, setOpenId] = useState<string | null>(null);
+  const load = useCallback(async () => {
+    try { setD(await api<PipeData>(`/api/dashboard/crm/pipeline${angle ? `?angle=${encodeURIComponent(angle)}` : ""}`)); setErr(null); }
+    catch (e) { setErr((e as Error).message); }
+  }, [angle]);
+  useEffect(() => { load(); }, [load]);
+
+  const more = async (stage: string) => {
+    if (!d) return;
+    const offset = d.cards[stage]?.length ?? 0;
+    try {
+      const r = await api<PipeData>(`/api/dashboard/crm/pipeline?stage=${encodeURIComponent(stage)}&offset=${offset}${angle ? `&angle=${encodeURIComponent(angle)}` : ""}`);
+      setD((cur) => cur && ({ ...cur, cards: { ...cur.cards, [stage]: [...(cur.cards[stage] ?? []), ...(r.cards[stage] ?? [])] } }));
+    } catch (e) { setErr((e as Error).message); }
+  };
+
+  const move = async (c: PipeCard, stage: string) => {
+    if (c.deal_stage === stage) return;
+    try {
+      const r = await api<{ moved: boolean; statusChanged?: boolean }>("/api/dashboard/crm/pipeline", { method: "POST", body: JSON.stringify({ id: c.id, stage }) });
+      setNotice(`Moved ${c.company} to ${stage}${r.statusChanged ? " and set its status to Customer" : ""}.`);
+      await load();
+    } catch (e) { setErr((e as Error).message); }
+  };
+
+  return (
+    <div>
+      <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", marginBottom: 16 }}>
+        <select aria-label="Service angle" style={{ ...inputStyle, width: "auto" }} value={angle} onChange={(e) => setAngle(e.target.value)}>
+          <option value="">All service angles</option>
+          {SERVICE_ANGLES.map((a) => <option key={a}>{a}</option>)}
+        </select>
+        <span style={{ ...muted, fontSize: 12 }}>Drag a card to another column, or use its Move menu.</span>
+      </div>
+      <ErrorLine msg={err} />
+      {notice && <div style={card({ borderColor: alpha(T.ok, 40), color: T.ok, fontSize: 13, marginBottom: 12, padding: "10px 16px" })}>{notice}</div>}
+      <div className="xscroll" style={{ display: "grid", gridTemplateColumns: `repeat(${DEAL_STAGES.length}, minmax(240px, 1fr))`, gap: 12, paddingBottom: 8 }}>
+        {DEAL_STAGES.map((st) => {
+          const t = d?.totals[st];
+          const cards = d?.cards[st] ?? [];
+          const won = st === "Closed Won";
+          return (
+            <div key={st}
+              onDragOver={(e) => { e.preventDefault(); setOver(st); }} onDragLeave={() => setOver((o) => (o === st ? null : o))}
+              onDrop={(e) => { e.preventDefault(); setOver(null); const c = Object.values(d?.cards ?? {}).flat().find((x) => x.id === dragId); if (c) move(c, st); setDragId(null); }}
+              style={{ background: over === st ? alpha(T.brand, 14) : T.panel2, border: `1px solid ${over === st ? T.brand : T.border}`, borderRadius: 10, padding: 10, minHeight: 320, display: "flex", flexDirection: "column", gap: 8 }}>
+              <div style={{ padding: "4px 4px 8px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 6 }}>
+                  <span style={{ fontWeight: 600, fontSize: 14 }}>{st}</span>
+                  <span className="dash-pill" style={{ fontSize: 11, fontWeight: 600, padding: "1px 8px", borderRadius: 999, background: won ? T.brand : T.panel, color: won ? T.onBrand : T.textSub }}>{t ? t.count.toLocaleString() : "—"}</span>
+                </div>
+                <div style={{ fontFamily: DISP, fontSize: 18, fontWeight: 700, marginTop: 4 }}>{t ? money(t.value) : "—"}</div>
+              </div>
+              {cards.map((c) => {
+                const idle = idleDays(c.updated_at);
+                return (
+                  <div key={c.id} draggable onDragStart={() => setDragId(c.id)} onDragEnd={() => { setDragId(null); setOver(null); }}
+                    onClick={() => setOpenId(c.id)}
+                    style={card({ padding: 12, cursor: "grab", opacity: dragId === c.id ? 0.5 : 1 })}>
+                    <div style={{ fontWeight: 600, fontSize: 13, lineHeight: 1.3 }}>{c.company}</div>
+                    <div style={{ ...muted, fontSize: 12, marginTop: 2 }}>{[c.contact_name, [c.city, c.state].filter(Boolean).join(", ")].filter(Boolean).join(" · ") || "—"}</div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6, marginTop: 8 }}>
+                      <span style={{ fontSize: 13, fontWeight: 600, fontVariantNumeric: "tabular-nums" }}>{c.deal_value ? money(c.deal_value) : "—"}</span>
+                      <span title="Days since this deal was last touched" style={{ fontSize: 11, color: idle > 14 ? T.warn : T.muted }}>{idle}d idle</span>
+                    </div>
+                    <select aria-label={`Move ${c.company}`} value="" onClick={(e) => e.stopPropagation()} onChange={(e) => { if (e.target.value) move(c, e.target.value); }}
+                      style={{ ...inputStyle, marginTop: 8, height: 30, padding: "0 8px", fontSize: 12 }}>
+                      <option value="">Move to…</option>
+                      {DEAL_STAGES.filter((x) => x !== c.deal_stage).map((x) => <option key={x} value={x}>{x}</option>)}
+                    </select>
+                  </div>
+                );
+              })}
+              {t && cards.length < t.count && <button style={btn(false, { height: 30, fontSize: 12 })} onClick={() => more(st)}>Show more ({(t.count - cards.length).toLocaleString()} left)</button>}
+              {d && !cards.length && <div style={{ ...muted, fontSize: 12, textAlign: "center", padding: 16 }}>No deals here.</div>}
+            </div>
+          );
+        })}
+      </div>
+      {openId && <ProspectDrawer id={openId} onClose={() => setOpenId(null)} onChanged={load} />}
+    </div>
+  );
+}
+
+interface CustomerRow { id: string; company: string; contact_name: string | null; email: string | null; primary_service: string | null; primary_sub_service: string | null; addon_services: string[]; deal_value: number; last_contact_at: string | null; next: { content: string; scheduled_at: string } | null }
+interface PayClient { email: string | null; total_paid: number; open_amount: number; open_count: number; past_due: boolean; delinquent: boolean }
+
+function CustomersView() {
+  const [rows, setRows] = useState<CustomerRow[] | null>(null);
+  const [pay, setPay] = useState<{ configured: boolean; clients: PayClient[] } | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const [openId, setOpenId] = useState<string | null>(null);
+  const load = useCallback(async () => {
+    try { setRows((await api<{ customers: CustomerRow[] }>("/api/dashboard/crm/customers")).customers); setErr(null); }
+    catch (e) { setErr((e as Error).message); }
+  }, []);
+  useEffect(() => {
+    load();
+    api<{ configured: boolean; clients: PayClient[] }>("/api/dashboard/payments").then(setPay).catch(() => setPay({ configured: false, clients: [] }));
+  }, [load]);
+  // Billing comes from Stripe, matched on the customer's email. No match → "Unknown"; never guessed.
+  const billing = (r: CustomerRow): { text: string; tone: string } => {
+    const m = r.email && pay?.clients.find((c) => c.email && c.email.toLowerCase() === r.email!.toLowerCase());
+    if (!m) return { text: "Unknown", tone: T.muted };
+    if (m.past_due || m.delinquent) return { text: `Past due ${money(m.open_amount / 100)}`, tone: T.danger };
+    if (m.open_count) return { text: `Open invoice ${money(m.open_amount / 100)}`, tone: T.warn };
+    return { text: `Paid up · ${money(m.total_paid / 100)} lifetime`, tone: T.ok };
+  };
+  const services = (r: CustomerRow) => [r.primary_sub_service || r.primary_service, ...(r.addon_services ?? [])].filter(Boolean).join(", ") || "—";
+
+  return (
+    <div>
+      <ErrorLine msg={err} />
+      <div style={{ ...muted, fontSize: 12, marginBottom: 12 }}>
+        Prospects with status Customer. Moving a deal to Closed Won puts it here. {pay && !pay.configured ? "Billing shows Unknown until Stripe is connected." : "Billing is read from Stripe by email."}
+      </div>
+      <div className="xscroll" style={card({ padding: 0 })}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, minWidth: 760 }}>
+          <thead><tr>{["Company", "Services active", "Billing", "Last contact", "Next deliverable"].map((h) => <th key={h} style={th}>{h}</th>)}</tr></thead>
+          <tbody>
+            {(rows ?? []).map((r) => {
+              const b = billing(r);
+              return (
+                <tr key={r.id} style={{ borderBottom: `1px solid ${T.border}`, cursor: "pointer" }} onClick={() => setOpenId(r.id)}>
+                  <td style={{ padding: 10, fontWeight: 600 }}>{r.company}<div style={{ ...muted, fontSize: 12, fontWeight: 400 }}>{r.contact_name ?? ""}</div></td>
+                  <td style={{ padding: 10, color: T.textSub }}>{services(r)}</td>
+                  <td style={{ padding: 10, color: b.tone, whiteSpace: "nowrap" }}>{b.text}</td>
+                  <td style={{ padding: 10, color: T.textSub }}>{fmtDate(r.last_contact_at)}</td>
+                  <td style={{ padding: 10, color: T.textSub }}>{r.next ? `${fmtDate(r.next.scheduled_at)} · ${r.next.content}` : "—"}</td>
+                </tr>
+              );
+            })}
+            {rows && !rows.length && <tr><td colSpan={5} style={{ ...muted, padding: 32, textAlign: "center" }}>No customers yet. Move a deal to Closed Won on the Pipeline and it shows up here.</td></tr>}
+            {!rows && !err && <tr><td colSpan={5} style={{ ...muted, padding: 32, textAlign: "center" }}>Loading…</td></tr>}
+          </tbody>
+        </table>
+      </div>
+      {openId && <ProspectDrawer id={openId} onClose={() => setOpenId(null)} onChanged={load} />}
     </div>
   );
 }
@@ -478,7 +741,7 @@ const DRAWER_FIELDS: { key: EditableField; label: string; kind: FieldKind }[] = 
 interface DrawerData {
   prospect: Prospect;
   contacts: { id: string; name: string | null; title: string | null; email: string | null; phone: string | null; linkedin: string | null; is_primary: boolean; confidence: string | null }[];
-  notes: { id: string; type: string; content: string; created_at: string }[];
+  notes: { id: string; type: string; content: string; created_at: string; scheduled_at?: string | null; completed_at?: string | null }[];
   activity: { id: string; action: string; summary: string; changes: Record<string, { from: unknown; to: unknown }> | null; created_at: string }[];
   merges: { id: string; company: string | null; reason: string | null; created_at: string }[];
 }
@@ -521,6 +784,20 @@ function ProspectDrawer({ id, onClose, onChanged }: { id: string; onClose: () =>
       setEditing(null); await load(); onChanged();
     } catch (e) { setErr((e as Error).message); }
     finally { setSaving(false); }
+  };
+
+  const [fuDate, setFuDate] = useState("");
+  const [fuNote, setFuNote] = useState("");
+  const scheduleFollowUp = async () => {
+    if (!fuDate) { setErr("Pick a follow-up date"); return; }
+    try {
+      await api("/api/dashboard/crm/hitlist", { method: "POST", body: JSON.stringify({ action: "followup", prospectId: id, at: new Date(`${fuDate}T09:00:00`).toISOString(), content: fuNote }) });
+      setFuDate(""); setFuNote(""); await load(); onChanged();
+    } catch (e) { setErr((e as Error).message); }
+  };
+  const callList = async (op: "add" | "remove") => {
+    try { await api("/api/dashboard/crm/hitlist", { method: "POST", body: JSON.stringify({ action: "rank", prospectId: id, op }) }); await load(); onChanged(); }
+    catch (e) { setErr((e as Error).message); }
   };
 
   const addNote = async () => {
@@ -580,6 +857,16 @@ function ProspectDrawer({ id, onClose, onChanged }: { id: string; onClose: () =>
               })}
             </div>
 
+            <div style={{ ...eyebrow, marginBottom: 8 }}>Follow-up and call list</div>
+            <div style={card({ marginBottom: 14, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" })}>
+              <input type="date" aria-label="Follow-up date" style={{ ...inputStyle, width: 160 }} value={fuDate} onChange={(e) => setFuDate(e.target.value)} />
+              <input aria-label="Follow-up note" placeholder="What to follow up on" style={{ ...inputStyle, flex: "1 1 180px", width: "auto" }} value={fuNote} onChange={(e) => setFuNote(e.target.value)} />
+              <button style={btn(true)} onClick={scheduleFollowUp}>Set follow-up</button>
+              {p.priority_call_rank != null
+                ? <button style={btn(false)} onClick={() => callList("remove")}>On call list #{p.priority_call_rank} · Remove</button>
+                : <button style={btn(false)} onClick={() => callList("add")}>Add to call list</button>}
+            </div>
+
             <div style={{ ...eyebrow, marginBottom: 8 }}>Decision makers ({data!.contacts.length})</div>
             <div style={card({ marginBottom: 14 })}>
               {data!.contacts.length ? data!.contacts.map((c) => (
@@ -598,7 +885,7 @@ function ProspectDrawer({ id, onClose, onChanged }: { id: string; onClose: () =>
               </div>
               {data!.notes.map((n) => (
                 <div key={n.id} style={{ padding: "6px 0", borderBottom: `1px solid ${T.border}` }}>
-                  <div style={{ ...muted, fontSize: 11 }}>{fmtDate(n.created_at)} · {n.type}</div>
+                  <div style={{ ...muted, fontSize: 11 }}>{fmtDate(n.created_at)} · {n.type === "follow_up" ? `follow-up for ${fmtDate(n.scheduled_at)}${n.completed_at ? " · done" : ""}` : n.type}</div>
                   <div style={{ whiteSpace: "pre-wrap" }}>{n.content}</div>
                 </div>
               ))}
