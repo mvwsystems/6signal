@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkPassword, dashboardToken, isAuthed, DASH_COOKIE } from "../../../lib/dashboard-auth";
+import { checkPassword, dashboardToken, sessionRole, tokenFor, actorName, DASH_COOKIE } from "../../../lib/dashboard-auth";
 
-// GET  → current auth state (and whether a password is even configured)
-// POST → { password } sets the gate cookie on success
+// GET  → current auth state, the signed-in account (role + name), and whether
+//        a password is even configured
+// POST → { password } sets the gate cookie for whichever account it opens
 // DELETE → log out
 
 export async function GET(req: NextRequest) {
-  return NextResponse.json({ authed: isAuthed(req), configured: !!dashboardToken() });
+  const role = sessionRole(req);
+  return NextResponse.json({
+    authed: !!role, configured: !!dashboardToken(), role, name: role ? actorName(role) : null,
+    ownerName: actorName("owner"), operatorName: actorName("operator"),
+  });
 }
 
 export async function POST(req: NextRequest) {
@@ -17,18 +22,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Bad request" }, { status: 400 });
   }
 
-  const token = dashboardToken();
-  if (!token) {
+  if (!dashboardToken()) {
     return NextResponse.json(
       { error: "Dashboard password is not configured on the server." },
       { status: 503 }
     );
   }
-  if (!checkPassword(body?.password ?? "")) {
+  const role = checkPassword(body?.password ?? "");
+  const token = role ? tokenFor(role) : null;
+  if (!role || !token) {
     return NextResponse.json({ error: "Incorrect password." }, { status: 401 });
   }
 
-  const res = NextResponse.json({ ok: true });
+  const res = NextResponse.json({ ok: true, role, name: actorName(role) });
   res.cookies.set(DASH_COOKIE, token, {
     httpOnly: true,
     secure: true,

@@ -15,7 +15,7 @@ export interface NavGroup<Id extends string> { label: string; items: NavItem<Id>
 
 type IconName =
   | "grid" | "users" | "scan" | "target" | "calendar" | "chart" | "pen" | "list"
-  | "file" | "mail" | "megaphone" | "dollar";
+  | "file" | "mail" | "megaphone" | "dollar" | "check";
 
 // Simple 24×24 stroke icons (no icon library in this repo).
 const PATHS: Record<IconName, string> = {
@@ -31,6 +31,7 @@ const PATHS: Record<IconName, string> = {
   mail: "M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM22 6l-10 7L2 6",
   megaphone: "M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1zM15 9a3 3 0 0 1 0 6M18 6a7 7 0 0 1 0 12",
   dollar: "M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6",
+  check: "M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11",
 };
 
 function Icon({ name, size = 18 }: { name: IconName | "menu" | "panel" | "sun" | "moon" | "logout" | "close"; size?: number }) {
@@ -56,8 +57,10 @@ const S = { bg: "#111111", hover: "#1f1f1f", active: "#222222", border: "#222222
 const COLLAPSE_KEY = "6sig_db_nav_collapsed";
 
 export default function Shell<Id extends string>({
-  groups, active, onSelect, title, subtitle, actions, theme, onToggleTheme, onLogout, children,
+  groups, active, onSelect, title, subtitle, actions, theme, onToggleTheme, onLogout, children, userName = "Matt Walker", userRole,
 }: {
+  userName?: string;
+  userRole?: string;
   groups: NavGroup<Id>[];
   active: Id;
   onSelect: (id: Id) => void;
@@ -140,11 +143,11 @@ export default function Shell<Id extends string>({
         </div>
         <button onClick={() => setUserMenu((m) => !m)} className="dash-nav-item" aria-haspopup="menu" aria-expanded={userMenu} title={compact ? "Account" : undefined}
           style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", padding: compact ? "8px 0" : 8, justifyContent: compact ? "center" : "flex-start", background: "none", border: "none", borderRadius: 8, color: S.text, textAlign: "left" }}>
-          <span style={{ width: 32, height: 32, borderRadius: "50%", background: S.accent, color: "#0b0d02", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 600, flexShrink: 0 }}>M</span>
+          <span style={{ width: 32, height: 32, borderRadius: "50%", background: S.accent, color: "#0b0d02", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 600, flexShrink: 0 }}>{(userName.trim()[0] || "?").toUpperCase()}</span>
           {!compact && (
             <span style={{ minWidth: 0, flex: 1 }}>
-              <span style={{ display: "block", fontSize: 12, fontWeight: 500, lineHeight: 1 }}>Matt Walker</span>
-              <span style={{ display: "block", fontSize: 12, color: S.sub, marginTop: 4, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>6 Signal Command Center</span>
+              <span style={{ display: "block", fontSize: 12, fontWeight: 500, lineHeight: 1 }}>{userName}</span>
+              <span style={{ display: "block", fontSize: 12, color: S.sub, marginTop: 4, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{userRole ? `${userRole} · 6 Signal` : "6 Signal Command Center"}</span>
             </span>
           )}
         </button>

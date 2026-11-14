@@ -1,4 +1,5 @@
 import { db } from "./db";
+import { currentActor } from "./actor";
 import {
   ListFilters, Prospect, EditableField, EDITABLE_FIELDS, DedupeKey, ImportRecord, RowVerdict,
   companyDomain, diff, mergeRecords, findClusters, Cluster, DEAL_STAGES,
@@ -95,6 +96,7 @@ export async function facets(): Promise<{ states: string[]; tags: string[]; cate
 export async function logActivity(a: { entityType: string; entityId?: string | null; action: string; summary: string; changes?: unknown }) {
   const { error } = await client().from("crm_activity").insert({
     entity_type: a.entityType, entity_id: a.entityId ?? null, action: a.action, summary: a.summary, changes: a.changes ?? null,
+    actor: currentActor()?.name ?? "dashboard",
   });
   if (error) throw new CrmError(`Activity log write failed: ${error.message}`);
 }

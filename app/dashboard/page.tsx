@@ -4,6 +4,7 @@ import { Radar, Ring, SignalBars, LineChart, Donut, Sparkline, MapHeatGrid } fro
 import ProposalsTab from "./ProposalsTab";
 import NewsletterTab from "./NewsletterTab";
 import CrmTab from "./CrmTab";
+import TodayTab, { Me } from "./TodayTab";
 import Shell, { NavGroup } from "./Shell";
 import { T, alpha, MONO, DISP, BODY, useDbTheme } from "./theme";
 
@@ -2101,13 +2102,24 @@ function RevenueTab() {
 }
 
 // ─── Main ────────────────────────────────────────────────────────────────────────
+// The signed-in account from /api/dashboard/auth (owner = Matt, operator = Casey).
+function meFrom(d: { role?: string; name?: string; ownerName?: string; operatorName?: string }): Me {
+  return {
+    role: d.role === "operator" ? "operator" : "owner",
+    name: d.name || "Matt",
+    ownerName: d.ownerName || "Matt",
+    operatorName: d.operatorName || "Casey",
+  };
+}
+
 export default function DashboardPage() {
   const [state, setState] = useState<"loading" | "locked" | "in">("loading");
   const [configured, setConfigured] = useState(true);
-  const [tab, setTab] = useState<"overview" | "crm" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "proposals" | "newsletter" | "ads" | "revenue">("overview");
+  const [tab, setTab] = useState<"today" | "overview" | "crm" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "proposals" | "newsletter" | "ads" | "revenue">("today");
+  const [me, setMe] = useState<Me | null>(null);
   // The open tab lives in the URL hash (#crm), so a reload or a bookmark
   // lands on the same section.
-  const TAB_IDS = ["overview", "crm", "scan", "battle", "exec", "track", "content", "prospects", "proposals", "newsletter", "ads", "revenue"] as const;
+  const TAB_IDS = ["today", "overview", "crm", "scan", "battle", "exec", "track", "content", "prospects", "proposals", "newsletter", "ads", "revenue"] as const;
   useEffect(() => {
     const fromHash = () => {
       const h = window.location.hash.replace("#", "");
@@ -2141,7 +2153,7 @@ export default function DashboardPage() {
         const r = await fetch("/api/dashboard/auth");
         const d = await r.json();
         setConfigured(!!d.configured);
-        if (d.authed) { setState("in"); loadData(); } else setState("locked");
+        if (d.authed) { setMe(meFrom(d)); setState("in"); loadData(); } else setState("locked");
       } catch { setState("locked"); }
     })();
   }, [loadData]);
@@ -2150,10 +2162,16 @@ export default function DashboardPage() {
   const logout = async () => { await fetch("/api/dashboard/auth", { method: "DELETE" }); setState("locked"); setData(null); };
 
   if (state === "loading") return <div className="dash-root" style={{ minHeight: "100vh", background: T.bg, color: T.muted, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 13 }}>Loading…</div>;
-  if (state === "locked") return <Login configured={configured} onAuthed={() => { setState("in"); loadData(); }} />;
+  if (state === "locked") return <Login configured={configured} onAuthed={async () => {
+    try { const d = await (await fetch("/api/dashboard/auth")).json(); setMe(meFrom(d)); } catch { /* chip falls back to defaults */ }
+    setState("in"); loadData();
+  }} />;
 
   type Tab = typeof tab;
   const GROUPS: NavGroup<Tab>[] = [
+    { label: "Command", items: [
+      { id: "today", label: "Today", icon: "check" },
+    ] },
     { label: "Sales", items: [
       { id: "crm", label: "CRM", icon: "users" },
       { id: "proposals", label: "Proposals", icon: "file" },
@@ -2175,6 +2193,7 @@ export default function DashboardPage() {
   ];
   const current = GROUPS.flatMap((g) => g.items).find((i) => i.id === tab);
   const SUBTITLES: Partial<Record<Tab, string>> = {
+    today: "Approvals, tasks and what's due today.",
     crm: "Your prospects, decision makers and imports in one place.",
     proposals: "Build and track client proposals.",
     revenue: "Revenue across your clients.",
@@ -2199,10 +2218,13 @@ export default function DashboardPage() {
       theme={dbTheme}
       onToggleTheme={toggleDbTheme}
       onLogout={logout}
+      userName={me?.name}
+      userRole={me ? (me.role === "owner" ? "Owner" : "Operator") : undefined}
       actions={tab === "overview" ? <button style={btn()} onClick={loadData}>Refresh</button> : undefined}
     >
       {dataErr && <div style={card({ borderColor: `${alpha(T.danger, 40)}`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{dataErr}</span></div>}
       {tab === "overview" && (data ? <OverviewTab data={data} /> : <div style={{ color: T.muted, fontFamily: MONO, fontSize: 13, padding: 40, textAlign: "center" }}>Loading data…</div>)}
+      {tab === "today" && (me ? <TodayTab me={me} /> : <div style={{ color: T.muted, fontFamily: MONO, fontSize: 13, padding: 40, textAlign: "center" }}>Loading…</div>)}
       {tab === "crm" && <CrmTab />}
       {tab === "scan" && <ScanTab businesses={data?.businesses ?? []} />}
       {tab === "battle" && <BattlePlanTab businesses={data?.businesses ?? []} />}
