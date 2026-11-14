@@ -51,19 +51,26 @@ function applyFilters(query: any, f: ListFilters) {
   if (f.state) qy = qy.eq("state", f.state);
   if (f.angle) qy = qy.eq("service_angle", f.angle);
   if (f.tags?.length) qy = qy.overlaps("tags", f.tags);
+  if (f.has?.includes("email")) qy = qy.not("email", "is", null);
+  if (f.has?.includes("phone")) qy = qy.not("phone", "is", null);
   return qy;
 }
+
+// "Has decision makers" is an inner join on crm_contacts: PostgREST then keeps
+// only prospects with at least one contact, and the count follows.
+const withContacts = (f: ListFilters, cols: string) => (f.has?.includes("contacts") ? `${cols}, crm_contacts!inner(id)` : cols);
 
 export async function listProspects(f: ListFilters): Promise<{ rows: Prospect[]; total: number }> {
   const s = client();
   const page = f.page ?? 1;
   const size = f.pageSize ?? 50;
-  let q = s.from("crm_prospects").select("*", { count: "exact" });
+  let q = s.from("crm_prospects").select(withContacts(f, "*"), { count: "exact" });
   q = applyFilters(q, f);
   q = q.order(f.sort ?? "company", { ascending: (f.dir ?? "asc") === "asc", nullsFirst: false }).order("id");
   const { data, error, count } = await q.range((page - 1) * size, page * size - 1);
   if (error) throw new CrmError(error.message);
-  return { rows: (data ?? []) as Prospect[], total: count ?? 0 };
+  const rows = ((data ?? []) as unknown as (Prospect & { crm_contacts?: unknown })[]).map(({ crm_contacts: _c, ...r }) => r as Prospect); // eslint-disable-line @typescript-eslint/no-unused-vars
+  return { rows, total: count ?? 0 };
 }
 
 // Ids of every prospect matching the filter (for "select all matching").
@@ -71,7 +78,7 @@ export async function matchingIds(f: ListFilters): Promise<string[]> {
   const s = client();
   const ids: string[] = [];
   for (let from = 0; ; from += 1000) {
-    const { data, error } = await applyFilters(s.from("crm_prospects").select("id"), f).order("id").range(from, from + 999);
+    const { data, error } = await applyFilters(s.from("crm_prospects").select(withContacts(f, "id")), f).order("id").range(from, from + 999);
     if (error) throw new CrmError(error.message);
     ids.push(...(data ?? []).map((r: { id: string }) => r.id));
     if (!data || data.length < 1000) break;
@@ -366,7 +373,7 @@ export async function crmStats() {
     count("crm_prospects", (q) => q.neq("status", "Never contacted")),
     count("crm_prospects", (q) => q.eq("status", "Customer")),
   ]);
-  const { data: activity, error } = await s.from("crm_activity").select("id, entity_type, action, summary, created_at").order("created_at", { ascending: false }).limit(25);
+  const { data: activity, error } = await s.from("crm_activity").select("id, entity_type, action, summary, created_at").order("created_at", { ascending: false }).limit(100);
   if (error) throw new CrmError(error.message);
   return { total, withEmail, withPhone, decisionMakers, contacted, customers, activity: activity ?? [] };
 }

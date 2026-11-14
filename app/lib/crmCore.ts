@@ -364,6 +364,7 @@ export interface ListFilters {
   state?: string;
   tags?: string[];
   angle?: string;
+  has?: ("email" | "phone" | "contacts")[]; // only prospects that have these
   sort?: "company" | "lead_score" | "last_contact_at" | "created_at" | "updated_at";
   dir?: "asc" | "desc";
   page?: number;
@@ -381,6 +382,7 @@ export function filtersFromParams(p: URLSearchParams): ListFilters {
     state: p.get("state") || undefined,
     tags: list("tags"),
     angle: p.get("angle") || undefined,
+    has: list("has").filter((h): h is "email" | "phone" | "contacts" => h === "email" || h === "phone" || h === "contacts"),
     sort: (sortOk.includes(sort) ? sort : "company") as ListFilters["sort"],
     dir: p.get("dir") === "desc" ? "desc" : "asc",
     page: Math.max(1, Number(p.get("page")) || 1),

@@ -10733,6 +10733,11 @@ html[data-db-theme="light"] .dash-root {
 /* Manus cards have no drawn border, only the glow ring; cards with a
    colored border (alerts, selections) keep theirs. */
 .dash-shell .dash-main [style*="background: var(--db-panel)"][style*="border: 1px solid var(--db-border)"] { border-color: transparent !important; }
+/* The page's one yellow hero card (2026-11-14). */
+.dash-shell .dash-main .dash-hero { box-shadow: 0 0 0 1px #d4ec00, 0 4px 18px rgba(230,255,0,0.16) !important; }
+.dash-shell .dash-main .dash-hero:hover { box-shadow: 0 0 0 1px #d4ec00, 0 8px 26px rgba(230,255,0,0.24) !important; }
+.dash-shell .dash-main .dash-arrow { transition: transform 0.15s ease; }
+.dash-shell .dash-main .dash-arrow:hover { transform: rotate(45deg); }
 .dash-shell .dash-lift { transition: box-shadow 0.2s ease, transform 0.2s ease; }
 .dash-shell .dash-lift:hover { box-shadow: var(--db-glow-h) !important; transform: translateY(-2px); }
 .dash-shell .dash-main button, .dash-shell .dash-main input,

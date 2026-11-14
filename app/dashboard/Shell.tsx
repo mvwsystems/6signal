@@ -44,7 +44,7 @@ function Icon({ name, size = 18 }: { name: IconName | "menu" | "panel" | "sun" |
   };
   const d = (PATHS as Record<string, string>)[name] ?? extra[name];
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
       <path d={d} />
     </svg>
   );
@@ -123,7 +123,7 @@ export default function Shell<Id extends string>({
                 background: on ? S.active : "transparent", border: "none", borderRadius: 6,
                 color: on ? S.text : "rgba(232,234,238,0.8)", fontFamily: BODY, fontSize: 15, fontWeight: on ? 500 : 400, textAlign: "left",
               }}>
-              <span style={{ color: on ? S.accent : S.dim, display: "flex" }}><Icon name={it.icon} size={16} /></span>
+              <span style={{ color: on ? S.accent : S.dim, display: "flex" }}><Icon name={it.icon} size={18} /></span>
               {!compact && <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{it.label}</span>}
             </button>
           );
