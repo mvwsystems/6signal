@@ -195,7 +195,7 @@ function DashboardView({ onOpenList }: { onOpenList: (f: Partial<ListFilters>) =
               {activity.length > 8 && <div style={{ ...muted, fontSize: 12, padding: "8px 24px 16px" }}>Showing the latest 8 of {activity.length}.</div>}
             </div>
           ) : (
-            <div style={{ padding: "48px 24px", textAlign: "center", ...muted, fontSize: 14 }}>{stats ? "No activity in this period." : "Loading…"}</div>
+            <div style={{ padding: "48px 24px", textAlign: "center", ...muted, fontSize: 14 }}>{stats ? "No activity in this period." : err ? "Couldn't load activity." : "Loading…"}</div>
           )}
         </div>
       </div>
