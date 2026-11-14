@@ -4,12 +4,15 @@ import { today } from "../../../../lib/commandCenter";
 
 export const dynamic = "force-dynamic";
 
-// GET ?until=<ISO end of the person's day> → approvals waiting, tasks due
-// (today and overdue), undated open tasks, CRM follow-ups due, recent activity.
+const iso = (v: string | null, fallback: Date) => (v && !Number.isNaN(new Date(v).getTime()) ? new Date(v) : fallback).toISOString();
+
+// GET ?until=<end of the person's today>&since=<start of their yesterday>
+// → Decide, Exceptions, Happening today, Watching, Done since yesterday.
 export async function GET(req: NextRequest) {
   return guarded(req, async () => {
-    const until = req.nextUrl.searchParams.get("until");
-    const end = until && !Number.isNaN(new Date(until).getTime()) ? new Date(until) : new Date(new Date().setUTCHours(23, 59, 59, 999));
-    return today(end.toISOString());
+    const p = req.nextUrl.searchParams;
+    const end = new Date(); end.setUTCHours(23, 59, 59, 999);
+    const start = new Date(Date.now() - 2 * 86400000);
+    return today(iso(p.get("until"), end), iso(p.get("since"), start));
   });
 }

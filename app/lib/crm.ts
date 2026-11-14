@@ -94,9 +94,11 @@ export async function facets(): Promise<{ states: string[]; tags: string[]; cate
 }
 
 export async function logActivity(a: { entityType: string; entityId?: string | null; action: string; summary: string; changes?: unknown }) {
-  const { error } = await client().from("crm_activity").insert({
-    entity_type: a.entityType, entity_id: a.entityId ?? null, action: a.action, summary: a.summary, changes: a.changes ?? null,
-    actor: currentActor()?.name ?? "dashboard",
+  // One Activity table for the whole Command Center (spec §2 rule 5). The CRM
+  // keeps calling these "entity" fields; the table calls them "target".
+  const { error } = await client().from("activity").insert({
+    target_type: a.entityType, target_id: a.entityId ?? null, action: a.action, summary: a.summary, changes: a.changes ?? null,
+    actor: currentActor()?.name ?? "system",
   });
   if (error) throw new CrmError(`Activity log write failed: ${error.message}`);
 }
@@ -112,7 +114,7 @@ export async function getProspect(id: string) {
   if (merges.error) throw new CrmError(merges.error.message);
   // A merged record's history stays under its own id; show it here too.
   const ids = [id, ...(merges.data ?? []).map((m: { merged_id: string }) => m.merged_id)];
-  const activity = await s.from("crm_activity").select("*").eq("entity_type", "prospect").in("entity_id", ids).order("created_at", { ascending: false }).limit(100);
+  const activity = await s.from("activity").select("id, entity_type:target_type, entity_id:target_id, action, summary, changes, actor, created_at").eq("target_type", "prospect").in("target_id", ids).order("created_at", { ascending: false }).limit(100);
   for (const r of [p, contacts, notes, activity, merges]) if (r.error) throw new CrmError(r.error.message);
   if (!p.data) return null;
   return { prospect: p.data as Prospect, contacts: contacts.data ?? [], notes: notes.data ?? [], activity: activity.data ?? [], merges: merges.data ?? [] };
@@ -375,7 +377,7 @@ export async function crmStats() {
     count("crm_prospects", (q) => q.neq("status", "Never contacted")),
     count("crm_prospects", (q) => q.eq("status", "Customer")),
   ]);
-  const { data: activity, error } = await s.from("crm_activity").select("id, entity_type, action, summary, created_at").order("created_at", { ascending: false }).limit(100);
+  const { data: activity, error } = await s.from("activity").select("id, entity_type:target_type, action, summary, created_at").order("created_at", { ascending: false }).limit(100);
   if (error) throw new CrmError(error.message);
   return { total, withEmail, withPhone, decisionMakers, contacted, customers, activity: activity ?? [] };
 }
