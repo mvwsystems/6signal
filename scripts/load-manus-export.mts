@@ -12,7 +12,7 @@
 
 import { readFileSync } from "node:fs";
 import { createClient } from "@supabase/supabase-js";
-import { STATUSES, DEAL_STAGES, companyDomain } from "../app/lib/crmCore.ts";
+import { transformManusExport, type ManusExport } from "../app/lib/crmCore.ts";
 
 type Row = Record<string, unknown>;
 
@@ -23,101 +23,17 @@ if (!file) {
   process.exit(1);
 }
 
-const exp = JSON.parse(readFileSync(file, "utf8")) as {
-  manifest?: { counts?: Record<string, number> };
-  prospects: Row[];
-  contacts: Record<string, Row[]>;
-  notes: Record<string, Row[]>;
-  sequences?: Row[];
-};
+const exp = JSON.parse(readFileSync(file, "utf8")) as ManusExport & { contacts?: Record<string, Row[]> };
+// Same mapping the dashboard's "Load Manus export" panel uses.
+const { prospects, contacts: contactRows, notes: noteRows, problems, stats } = transformManusExport(exp);
 
-const ANGLE: Record<string, string> = {
-  "AI-Generated Website": "Website Lead",
-  "AI Visibility": "AI Visibility Lead",
-  "AI Infrastructure": "AI Infrastructure Lead",
-};
-
-const str = (v: unknown): string | null => {
-  if (v == null) return null;
-  const s = String(v).trim();
-  return s === "" ? null : s;
-};
-const num = (v: unknown, d = 0): number => {
-  const n = Number(v);
-  return Number.isFinite(n) ? n : d;
-};
-const date = (v: unknown): string | null => (v ? new Date(String(v)).toISOString() : null);
-
-const problems: string[] = [];
-
-const prospects = exp.prospects.map((p) => {
-  const status = str(p.contactStatus) ?? "Never contacted";
-  if (!(STATUSES as readonly string[]).includes(status)) problems.push(`Manus #${p.id}: unknown status "${status}"`);
-  const stage = str(p.dealStage) ?? "New Lead";
-  if (!(DEAL_STAGES as readonly string[]).includes(stage)) problems.push(`Manus #${p.id}: unknown deal stage "${stage}"`);
-  const tags = Array.isArray(p.tags) ? (p.tags as unknown[]).map(String) : [];
-  const importTag = tags.find((t) => t.startsWith("Imported: "));
-  if (!str(p.companyName)) problems.push(`Manus #${p.id}: no company name`);
-  return {
-    legacy_id: num(p.id),
-    company: str(p.companyName) ?? "Unknown",
-    contact_name: str(p.contactName),
-    contact_title: str(p.contactTitle),
-    email: str(p.email),
-    phone: str(p.phone),
-    city: str(p.city),
-    state: str(p.state),
-    zip: str(p.zipCode),
-    website: str(p.website),
-    website_domain: companyDomain(str(p.website), str(p.email)),
-    linkedin: str(p.linkedinUrl),
-    category: str(p.category),
-    service_angle: ANGLE[String(p.primaryService)] ?? null,
-    primary_service: str(p.primaryService),
-    primary_sub_service: str(p.primarySubService),
-    addon_services: Array.isArray(p.addonServices) ? (p.addonServices as unknown[]).map(String) : [],
-    status,
-    tags,
-    lead_score: num(p.leadScore),
-    priority_call_rank: p.priorityCallRank == null ? null : num(p.priorityCallRank),
-    estimated_revenue: str(p.estimatedRevenue),
-    company_size: str(p.companySize),
-    source: importTag ? `Manus: ${importTag.slice("Imported: ".length)}` : "Manus CRM",
-    notes: str(p.notes),
-    deal_stage: stage,
-    deal_value: num(p.dealValue),
-    follow_up_count: num(p.followUpCount),
-    last_contact_at: date(p.lastContactDate),
-    created_at: date(p.createdAt) ?? new Date().toISOString(),
-    updated_at: date(p.updatedAt) ?? new Date().toISOString(),
-  };
-});
-
-const contactRows = Object.entries(exp.contacts ?? {}).flatMap(([pid, list]) => list.map((c) => ({ pid: Number(pid), c })));
-const noteRows = Object.entries(exp.notes ?? {}).flatMap(([pid, list]) => list.map((n) => ({ pid: Number(pid), n })));
-
-const legacyIds = new Set(prospects.map((p) => p.legacy_id));
-if (legacyIds.size !== prospects.length) problems.push(`${prospects.length - legacyIds.size} repeated Manus ids in the export`);
-for (const { pid } of [...contactRows, ...noteRows]) if (!legacyIds.has(pid)) problems.push(`Contact or note points at missing Manus #${pid}`);
-
-const count = (pred: (p: (typeof prospects)[number]) => boolean) => prospects.filter(pred).length;
 console.log("Export summary");
-console.log(`  prospects        ${prospects.length}`);
-console.log(`  decision makers  ${contactRows.length} on ${Object.keys(exp.contacts ?? {}).length} prospects`);
-console.log(`  notes            ${noteRows.length}`);
-console.log(`  sequences        ${exp.sequences?.length ?? 0} (not loaded; C4)`);
-console.log(`  Do Not Contact   ${count((p) => p.status === "Do Not Contact")}`);
-console.log(`  with email       ${count((p) => !!p.email)}, phone ${count((p) => !!p.phone)}, website ${count((p) => !!p.website)}, LinkedIn ${count((p) => !!p.linkedin)}, ZIP ${count((p) => !!p.zip)}`);
-if (exp.manifest?.counts) {
-  const m = exp.manifest.counts;
-  const check = (name: string, got: number, want?: number) => {
-    if (want != null && want !== got) problems.push(`${name}: export manifest says ${want}, file has ${got}`);
-  };
-  check("prospects", prospects.length, m.prospects);
-  check("contacts", contactRows.length, m.contacts);
-  check("notes", noteRows.length, m.notes);
-  check("sequences", exp.sequences?.length ?? 0, m.sequences);
-}
+console.log(`  prospects        ${stats.prospects}`);
+console.log(`  decision makers  ${stats.contacts} on ${Object.keys(exp.contacts ?? {}).length} prospects`);
+console.log(`  notes            ${stats.notes}`);
+console.log(`  sequences        ${stats.sequences} (not loaded; C4)`);
+console.log(`  Do Not Contact   ${stats.doNotContact}`);
+console.log(`  with email       ${stats.withEmail}, phone ${stats.withPhone}`);
 if (problems.length) {
   console.error(`\n${problems.length} problem(s), nothing loaded:`);
   for (const p of problems.slice(0, 50)) console.error(`  - ${p}`);
@@ -155,30 +71,9 @@ for (let from = 0; ; from += 1000) {
   if (!data || data.length < 1000) break;
 }
 
-await upsert("crm_contacts", contactRows.map(({ pid, c }) => ({
-  legacy_id: num(c.id),
-  prospect_id: idByLegacy.get(pid),
-  name: str(c.name),
-  title: str(c.title),
-  email: str(c.email),
-  phone: str(c.phone),
-  linkedin: str(c.linkedinUrl),
-  source_urls: Array.isArray(c.sourceUrls) ? (c.sourceUrls as unknown[]).map(String) : c.sourceUrls ? [String(c.sourceUrls)] : [],
-  confidence: str(c.confidence),
-  is_primary: !!c.isPrimary,
-  created_at: date(c.createdAt) ?? new Date().toISOString(),
-  updated_at: date(c.updatedAt) ?? new Date().toISOString(),
-})), "decision makers");
-
-await upsert("crm_notes", noteRows.map(({ pid, n }) => ({
-  legacy_id: num(n.id),
-  prospect_id: idByLegacy.get(pid),
-  type: str(n.type) ?? "note",
-  content: str(n.content) ?? "",
-  scheduled_at: date(n.scheduledAt),
-  completed_at: date(n.completedAt),
-  created_at: date(n.createdAt) ?? new Date().toISOString(),
-})), "notes");
+const withProspect = (rows: (Row & { pid: number })[]) => rows.map(({ pid, ...r }) => ({ ...r, prospect_id: idByLegacy.get(pid) }));
+await upsert("crm_contacts", withProspect(contactRows), "decision makers");
+await upsert("crm_notes", withProspect(noteRows), "notes");
 
 const { count: loaded } = await s.from("crm_prospects").select("id", { count: "exact", head: true }).not("legacy_id", "is", null);
 const { count: dnc } = await s.from("crm_prospects").select("id", { count: "exact", head: true }).eq("status", "Do Not Contact");

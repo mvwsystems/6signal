@@ -288,3 +288,62 @@ export async function deleteView(id: string) {
   const { error } = await client().from("crm_saved_views").delete().eq("id", id);
   if (error) throw new CrmError(error.message);
 }
+
+// ─── One-time Manus export load ────────────────────────────────────────────
+// Batches come from the browser (the file is read and mapped there with
+// transformManusExport). Rows upsert on legacy_id, the Manus id, so a re-run
+// updates instead of duplicating. Only known columns are written.
+
+const LEGACY_COLUMNS = {
+  prospects: ["legacy_id", "company", "contact_name", "contact_title", "email", "phone", "city", "state", "zip", "website", "website_domain", "linkedin", "category", "service_angle", "primary_service", "primary_sub_service", "addon_services", "status", "tags", "lead_score", "priority_call_rank", "estimated_revenue", "company_size", "source", "notes", "deal_stage", "deal_value", "follow_up_count", "last_contact_at", "created_at", "updated_at"],
+  contacts: ["legacy_id", "name", "title", "email", "phone", "linkedin", "source_urls", "confidence", "is_primary", "created_at", "updated_at"],
+  notes: ["legacy_id", "type", "content", "scheduled_at", "completed_at", "created_at"],
+} as const;
+type LegacyKind = keyof typeof LEGACY_COLUMNS;
+const LEGACY_TABLE: Record<LegacyKind, string> = { prospects: "crm_prospects", contacts: "crm_contacts", notes: "crm_notes" };
+
+export async function loadLegacyBatch(kind: string, rows: Record<string, unknown>[]) {
+  if (!(kind in LEGACY_COLUMNS)) throw new CrmError("Unknown batch kind", 400);
+  const k = kind as LegacyKind;
+  if (!Array.isArray(rows) || !rows.length) throw new CrmError("No rows", 400);
+  if (rows.length > 1000) throw new CrmError("Send at most 1,000 rows per batch", 400);
+  const s = client();
+  let pidMap = new Map<number, string>();
+  if (k !== "prospects") {
+    const pids = Array.from(new Set(rows.map((r) => Number(r.pid))));
+    const { data, error } = await s.from("crm_prospects").select("id, legacy_id").in("legacy_id", pids);
+    if (error) throw new CrmError(error.message);
+    pidMap = new Map((data ?? []).map((d) => [d.legacy_id as number, d.id as string]));
+    const missing = pids.filter((p) => !pidMap.has(p));
+    if (missing.length) throw new CrmError(`Load prospects first: Manus #${missing.slice(0, 5).join(", #")} not found`, 409);
+  }
+  const clean = rows.map((r) => {
+    if (!Number.isInteger(Number(r.legacy_id))) throw new CrmError("A row has no Manus id", 400);
+    const o: Record<string, unknown> = {};
+    for (const c of LEGACY_COLUMNS[k]) if (c in r) o[c] = r[c];
+    if (k !== "prospects") o.prospect_id = pidMap.get(Number(r.pid));
+    return o;
+  });
+  const { error } = await s.from(LEGACY_TABLE[k]).upsert(clean, { onConflict: "legacy_id" });
+  if (error) throw new CrmError(`${k}: ${error.message}`);
+  return { written: clean.length };
+}
+
+export async function finishLegacyLoad(expected: { prospects: number; contacts: number; notes: number }) {
+  const s = client();
+  const countOf = async (table: string, extra?: (q: any) => any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+    let q = s.from(table).select("id", { count: "exact", head: true }).not("legacy_id", "is", null);
+    if (extra) q = extra(q);
+    const { count, error } = await q;
+    if (error) throw new CrmError(error.message);
+    return count ?? 0;
+  };
+  const got = {
+    prospects: await countOf("crm_prospects"),
+    contacts: await countOf("crm_contacts"),
+    notes: await countOf("crm_notes"),
+    doNotContact: await countOf("crm_prospects", (q) => q.eq("status", "Do Not Contact")),
+  };
+  await logActivity({ entityType: "import", action: "imported", summary: `Loaded the Manus CRM export: ${got.prospects} prospects, ${got.contacts} decision makers, ${got.notes} notes (expected ${expected.prospects}, ${expected.contacts}, ${expected.notes})` });
+  return { got, ok: got.prospects === expected.prospects && got.contacts === expected.contacts && got.notes === expected.notes };
+}
