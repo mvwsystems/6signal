@@ -1,7 +1,7 @@
 import { db } from "./db";
 import {
   ListFilters, Prospect, EditableField, EDITABLE_FIELDS, DedupeKey, ImportRecord, RowVerdict,
-  companyDomain, diff, mergeRecords, findClusters, Cluster,
+  companyDomain, diff, mergeRecords, findClusters, Cluster, DEAL_STAGES,
 } from "./crmCore";
 
 // Server-side CRM data access (Supabase, service role). Unlike the funnel
@@ -376,4 +376,142 @@ export async function crmStats() {
   const { data: activity, error } = await s.from("crm_activity").select("id, entity_type, action, summary, created_at").order("created_at", { ascending: false }).limit(100);
   if (error) throw new CrmError(error.message);
   return { total, withEmail, withPhone, decisionMakers, contacted, customers, activity: activity ?? [] };
+}
+
+// ─── C2: pipeline, customers, Hit List ─────────────────────────────────────
+
+const CARD_COLS = "id, company, contact_name, city, state, status, service_angle, deal_stage, deal_value, updated_at, last_contact_at, priority_call_rank";
+export type PipelineCard = Pick<Prospect, "id" | "company" | "contact_name" | "city" | "state" | "status" | "service_angle" | "deal_stage" | "deal_value" | "updated_at" | "last_contact_at" | "priority_call_rank">;
+
+// Stage totals for the whole board plus the first page of cards per stage
+// (most recently touched first). New Lead holds thousands, so cards page.
+export async function pipeline(angle: string | null, stage: string | null, offset: number, limit = 40) {
+  const s = client();
+  const stages = stage ? [stage] : [...DEAL_STAGES];
+  const all = await selectAll<{ id: string; deal_stage: string; deal_value: number; service_angle: string | null }>("crm_prospects", "id, deal_stage, deal_value, service_angle");
+  const totals: Record<string, { count: number; value: number }> = {};
+  for (const st of DEAL_STAGES) totals[st] = { count: 0, value: 0 };
+  for (const r of all) {
+    if (angle && r.service_angle !== angle) continue;
+    const t = totals[r.deal_stage];
+    if (t) { t.count += 1; t.value += Number(r.deal_value) || 0; }
+  }
+  const cards: Record<string, PipelineCard[]> = {};
+  await Promise.all(stages.map(async (st) => {
+    let q = s.from("crm_prospects").select(CARD_COLS).eq("deal_stage", st);
+    if (angle) q = q.eq("service_angle", angle);
+    const { data, error } = await q.order("updated_at", { ascending: false }).order("id").range(offset, offset + limit - 1);
+    if (error) throw new CrmError(error.message);
+    cards[st] = (data ?? []) as PipelineCard[];
+  }));
+  return { totals, cards };
+}
+
+// Moves a deal to another stage. Status follows only where the mapping is
+// unambiguous: Closed Won → Customer. The move resets the idle clock
+// (updated_at) and is written to the activity log with both changes.
+export async function moveStage(id: string, stage: string) {
+  if (!(DEAL_STAGES as readonly string[]).includes(stage)) throw new CrmError("Unknown stage", 400);
+  const s = client();
+  const { data: before, error: e1 } = await s.from("crm_prospects").select("id, company, deal_stage, status").eq("id", id).maybeSingle();
+  if (e1) throw new CrmError(e1.message);
+  if (!before) throw new CrmError("Prospect not found", 404);
+  if (before.deal_stage === stage) return { moved: false };
+  const patch: Record<string, unknown> = { deal_stage: stage, updated_at: new Date().toISOString() };
+  const changes: Record<string, { from: unknown; to: unknown }> = { deal_stage: { from: before.deal_stage, to: stage } };
+  if (stage === "Closed Won" && before.status !== "Customer") {
+    patch.status = "Customer";
+    changes.status = { from: before.status, to: "Customer" };
+  }
+  const { error } = await s.from("crm_prospects").update(patch).eq("id", id);
+  if (error) throw new CrmError(error.message, 400);
+  await logActivity({
+    entityType: "prospect", entityId: id, action: "stage_moved", changes,
+    summary: `Moved ${before.company} from ${before.deal_stage} to ${stage}${changes.status ? " (status set to Customer)" : ""}`,
+  });
+  return { moved: true, statusChanged: !!changes.status };
+}
+
+// Customers = status Customer. Next deliverable is the earliest open dated
+// note or follow-up; billing comes from Stripe on the client, matched by email.
+export async function customers() {
+  const s = client();
+  const { data, error } = await s.from("crm_prospects")
+    .select("id, company, contact_name, email, primary_service, primary_sub_service, addon_services, deal_stage, deal_value, last_contact_at, updated_at")
+    .eq("status", "Customer").order("company");
+  if (error) throw new CrmError(error.message);
+  const rows = data ?? [];
+  const next: Record<string, { content: string; scheduled_at: string }> = {};
+  if (rows.length) {
+    const { data: notes, error: e2 } = await s.from("crm_notes").select("prospect_id, content, scheduled_at")
+      .in("prospect_id", rows.map((r) => r.id)).is("completed_at", null).not("scheduled_at", "is", null).order("scheduled_at");
+    if (e2) throw new CrmError(e2.message);
+    for (const n of notes ?? []) if (!next[n.prospect_id]) next[n.prospect_id] = { content: n.content, scheduled_at: n.scheduled_at };
+  }
+  return { customers: rows.map((r) => ({ ...r, next: next[r.id] ?? null })) };
+}
+
+// The daily queue: follow-ups due by `until` (end of the operator's day),
+// replies nobody has worked yet (status Replied), and the hand-curated
+// priority call list (priority_call_rank, 1 = first).
+export async function hitList(until: string) {
+  const s = client();
+  const [fu, replies, calls] = await Promise.all([
+    s.from("crm_notes").select("id, content, scheduled_at, prospect:crm_prospects(id, company, contact_name, phone, email, status)")
+      .eq("type", "follow_up").is("completed_at", null).lte("scheduled_at", until).order("scheduled_at"),
+    s.from("crm_prospects").select("id, company, contact_name, phone, email, status, updated_at").eq("status", "Replied").order("updated_at"),
+    s.from("crm_prospects").select("id, company, contact_name, phone, email, status, city, state, priority_call_rank, last_contact_at")
+      .not("priority_call_rank", "is", null).order("priority_call_rank"),
+  ]);
+  for (const r of [fu, replies, calls]) if (r.error) throw new CrmError(r.error.message);
+  return { followUps: fu.data ?? [], replies: replies.data ?? [], calls: calls.data ?? [] };
+}
+
+export async function scheduleFollowUp(prospectId: string, at: string, content: string) {
+  const when = new Date(at);
+  if (Number.isNaN(when.getTime())) throw new CrmError("Pick a follow-up date", 400);
+  const { data, error } = await client().from("crm_notes")
+    .insert({ prospect_id: prospectId, type: "follow_up", content: content?.trim() || "Follow up", scheduled_at: when.toISOString() })
+    .select("id").single();
+  if (error) throw new CrmError(error.message, 400);
+  await logActivity({ entityType: "prospect", entityId: prospectId, action: "follow_up_set", summary: `Follow-up set for ${when.toISOString().slice(0, 10)}` });
+  return data;
+}
+
+export async function completeFollowUp(noteId: string) {
+  const s = client();
+  const { data, error } = await s.from("crm_notes").update({ completed_at: new Date().toISOString() }).eq("id", noteId).is("completed_at", null).select("prospect_id").maybeSingle();
+  if (error) throw new CrmError(error.message, 400);
+  if (!data) throw new CrmError("Already done or not found", 404);
+  await logActivity({ entityType: "prospect", entityId: data.prospect_id, action: "follow_up_done", summary: "Follow-up marked done" });
+  return { done: true };
+}
+
+// Call list order: add (to the end), remove, or swap with the neighbour.
+export async function changeCallRank(prospectId: string, op: "add" | "remove" | "up" | "down") {
+  const s = client();
+  const { data: list, error } = await s.from("crm_prospects").select("id, company, priority_call_rank").not("priority_call_rank", "is", null).order("priority_call_rank");
+  if (error) throw new CrmError(error.message);
+  const rows = list ?? [];
+  const i = rows.findIndex((r) => r.id === prospectId);
+  const set = async (id: string, rank: number | null) => {
+    const { error: e } = await s.from("crm_prospects").update({ priority_call_rank: rank, updated_at: new Date().toISOString() }).eq("id", id);
+    if (e) throw new CrmError(e.message, 400);
+  };
+  if (op === "add") {
+    if (i >= 0) return { changed: false };
+    await set(prospectId, (rows.at(-1)?.priority_call_rank ?? 0) + 1);
+    await logActivity({ entityType: "prospect", entityId: prospectId, action: "updated", summary: "Added to the priority call list" });
+  } else if (op === "remove") {
+    if (i < 0) return { changed: false };
+    await set(prospectId, null);
+    await logActivity({ entityType: "prospect", entityId: prospectId, action: "updated", summary: "Removed from the priority call list" });
+  } else {
+    const j = op === "up" ? i - 1 : i + 1;
+    if (i < 0 || j < 0 || j >= rows.length) return { changed: false };
+    await set(rows[i].id, rows[j].priority_call_rank);
+    await set(rows[j].id, rows[i].priority_call_rank);
+    await logActivity({ entityType: "prospect", entityId: prospectId, action: "updated", summary: `Moved ${op} the priority call list to #${rows[j].priority_call_rank}` });
+  }
+  return { changed: true };
 }
