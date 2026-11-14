@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Radar, Ring, SignalBars, LineChart, Donut, Sparkline, MapHeatGrid } from "../components/charts";
 import ProposalsTab from "./ProposalsTab";
 import NewsletterTab from "./NewsletterTab";
+import CrmTab from "./CrmTab";
 import { T, alpha, MONO, DISP, BODY, useDbTheme } from "./theme";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -2103,7 +2104,7 @@ function RevenueTab() {
 export default function DashboardPage() {
   const [state, setState] = useState<"loading" | "locked" | "in">("loading");
   const [configured, setConfigured] = useState(true);
-  const [tab, setTab] = useState<"overview" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "proposals" | "newsletter" | "ads" | "revenue">("overview");
+  const [tab, setTab] = useState<"overview" | "crm" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "proposals" | "newsletter" | "ads" | "revenue">("overview");
   const [data, setData] = useState<Overview | null>(null);
   const [dataErr, setDataErr] = useState<string | null>(null);
 
@@ -2136,6 +2137,7 @@ export default function DashboardPage() {
 
   const TABS: { id: typeof tab; label: string }[] = [
     { id: "overview", label: "Overview" },
+    { id: "crm", label: "CRM" },
     { id: "scan", label: "Quick Scan" },
     { id: "battle", label: "Battle Plan" },
     { id: "exec", label: "90-Day Plan" },
@@ -2177,6 +2179,7 @@ export default function DashboardPage() {
       <div className="dash-main" style={{ padding: 24, maxWidth: 1320, margin: "0 auto" }}>
         {dataErr && <div style={card({ borderColor: `${alpha(T.danger, 40)}`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{dataErr}</span></div>}
         {tab === "overview" && (data ? <OverviewTab data={data} /> : <div style={{ color: T.muted, fontFamily: MONO, fontSize: 13, padding: 40, textAlign: "center" }}>Loading data…</div>)}
+        {tab === "crm" && <CrmTab />}
         {tab === "scan" && <ScanTab businesses={data?.businesses ?? []} />}
         {tab === "battle" && <BattlePlanTab businesses={data?.businesses ?? []} />}
         {tab === "exec" && <ExecPlanTab businesses={data?.businesses ?? []} />}

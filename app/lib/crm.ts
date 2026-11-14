@@ -1,0 +1,290 @@
+import { db } from "./db";
+import {
+  ListFilters, Prospect, EditableField, EDITABLE_FIELDS, DedupeKey, ImportRecord, RowVerdict,
+  companyDomain, diff, mergeRecords, findClusters, Cluster,
+} from "./crmCore";
+
+// Server-side CRM data access (Supabase, service role). Unlike the funnel
+// helpers in db.ts, these return errors instead of swallowing them: the CRM is
+// an operator tool and a silent empty list would read as "no prospects".
+
+export class CrmError extends Error {
+  constructor(message: string, public status = 500) { super(message); }
+}
+
+function client() {
+  const s = db();
+  if (!s) throw new CrmError("Database not configured (SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY).", 503);
+  return s;
+}
+
+// PostgREST caps a select at 1,000 rows, so whole-table reads page through.
+async function selectAll<T>(table: string, columns: string): Promise<T[]> {
+  const s = client();
+  const out: T[] = [];
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await s.from(table).select(columns).order("id").range(from, from + 999);
+    if (error) throw new CrmError(error.message);
+    out.push(...((data ?? []) as T[]));
+    if (!data || data.length < 1000) break;
+  }
+  return out;
+}
+
+// Characters that would break a PostgREST or() expression are stripped from
+// free-text search rather than escaped.
+const safeTerm = (q: string) => q.replace(/[,()*%"\\]/g, " ").replace(/\s+/g, " ").trim();
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function applyFilters(query: any, f: ListFilters) {
+  let qy = query;
+  if (f.q) {
+    const t = safeTerm(f.q);
+    const digits = t.replace(/\D/g, "");
+    const parts = ["company", "contact_name", "email", "city", "website"].map((c) => `${c}.ilike."*${t}*"`);
+    if (digits.length >= 4) parts.push(`phone.ilike.*${digits.split("").join("*")}*`);
+    else parts.push(`phone.ilike.*${t}*`);
+    if (t) qy = qy.or(parts.join(","));
+  }
+  if (f.status?.length) qy = qy.in("status", f.status);
+  if (f.category) qy = qy.eq("category", f.category);
+  if (f.state) qy = qy.eq("state", f.state);
+  if (f.angle) qy = qy.eq("service_angle", f.angle);
+  if (f.tags?.length) qy = qy.overlaps("tags", f.tags);
+  return qy;
+}
+
+export async function listProspects(f: ListFilters): Promise<{ rows: Prospect[]; total: number }> {
+  const s = client();
+  const page = f.page ?? 1;
+  const size = f.pageSize ?? 50;
+  let q = s.from("crm_prospects").select("*", { count: "exact" });
+  q = applyFilters(q, f);
+  q = q.order(f.sort ?? "company", { ascending: (f.dir ?? "asc") === "asc", nullsFirst: false }).order("id");
+  const { data, error, count } = await q.range((page - 1) * size, page * size - 1);
+  if (error) throw new CrmError(error.message);
+  return { rows: (data ?? []) as Prospect[], total: count ?? 0 };
+}
+
+// Ids of every prospect matching the filter (for "select all matching").
+export async function matchingIds(f: ListFilters): Promise<string[]> {
+  const s = client();
+  const ids: string[] = [];
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await applyFilters(s.from("crm_prospects").select("id"), f).order("id").range(from, from + 999);
+    if (error) throw new CrmError(error.message);
+    ids.push(...(data ?? []).map((r: { id: string }) => r.id));
+    if (!data || data.length < 1000) break;
+  }
+  return ids;
+}
+
+export async function facets(): Promise<{ states: string[]; tags: string[]; categories: string[]; total: number }> {
+  const rows = await selectAll<{ id: string; state: string | null; tags: string[]; category: string | null }>("crm_prospects", "id, state, tags, category");
+  const uniq = (v: (string | null)[]) => Array.from(new Set(v.filter((x): x is string => !!x))).sort();
+  return { states: uniq(rows.map((r) => r.state)), tags: uniq(rows.flatMap((r) => r.tags ?? [])), categories: uniq(rows.map((r) => r.category)), total: rows.length };
+}
+
+export async function logActivity(a: { entityType: string; entityId?: string | null; action: string; summary: string; changes?: unknown }) {
+  const { error } = await client().from("crm_activity").insert({
+    entity_type: a.entityType, entity_id: a.entityId ?? null, action: a.action, summary: a.summary, changes: a.changes ?? null,
+  });
+  if (error) throw new CrmError(`Activity log write failed: ${error.message}`);
+}
+
+export async function getProspect(id: string) {
+  const s = client();
+  const [p, contacts, notes, merges] = await Promise.all([
+    s.from("crm_prospects").select("*").eq("id", id).maybeSingle(),
+    s.from("crm_contacts").select("*").eq("prospect_id", id).order("is_primary", { ascending: false }),
+    s.from("crm_notes").select("*").eq("prospect_id", id).order("created_at", { ascending: false }),
+    s.from("crm_merge_log").select("id, merged_id, reason, created_at, company:merged_snapshot->>company").eq("survivor_id", id),
+  ]);
+  if (merges.error) throw new CrmError(merges.error.message);
+  // A merged record's history stays under its own id; show it here too.
+  const ids = [id, ...(merges.data ?? []).map((m: { merged_id: string }) => m.merged_id)];
+  const activity = await s.from("crm_activity").select("*").eq("entity_type", "prospect").in("entity_id", ids).order("created_at", { ascending: false }).limit(100);
+  for (const r of [p, contacts, notes, activity, merges]) if (r.error) throw new CrmError(r.error.message);
+  if (!p.data) return null;
+  return { prospect: p.data as Prospect, contacts: contacts.data ?? [], notes: notes.data ?? [], activity: activity.data ?? [], merges: merges.data ?? [] };
+}
+
+function cleanPatch(input: Record<string, unknown>): Partial<Record<EditableField, unknown>> {
+  const patch: Partial<Record<EditableField, unknown>> = {};
+  for (const k of EDITABLE_FIELDS) {
+    if (!(k in input)) continue;
+    let v = input[k];
+    if (typeof v === "string") v = v.trim() === "" ? null : v.trim();
+    if (k === "tags") v = Array.isArray(v) ? (v as unknown[]).map(String).map((t) => t.trim()).filter(Boolean) : [];
+    if (k === "lead_score" || k === "deal_value" || k === "priority_call_rank") v = v == null ? (k === "priority_call_rank" ? null : 0) : Number(v);
+    patch[k] = v;
+  }
+  return patch;
+}
+
+export async function updateProspect(id: string, input: Record<string, unknown>) {
+  const s = client();
+  const { data: before, error: e1 } = await s.from("crm_prospects").select("*").eq("id", id).maybeSingle();
+  if (e1) throw new CrmError(e1.message);
+  if (!before) throw new CrmError("Prospect not found", 404);
+  const patch: Record<string, unknown> = cleanPatch(input);
+  if ("company" in patch && !patch.company) throw new CrmError("Company can't be blank", 400);
+  if ("website" in patch || "email" in patch) {
+    patch.website_domain = companyDomain((patch.website ?? before.website) as string | null, (patch.email ?? before.email) as string | null);
+  }
+  const changes = diff(before, patch);
+  if (!Object.keys(changes).length) return { prospect: before as Prospect, changed: 0 };
+  const { data, error } = await s.from("crm_prospects").update({ ...patch, updated_at: new Date().toISOString() }).eq("id", id).select("*").single();
+  if (error) throw new CrmError(error.message, 400);
+  const fields = Object.keys(changes).filter((k) => k !== "website_domain");
+  await logActivity({ entityType: "prospect", entityId: id, action: "updated", summary: `Edited ${fields.join(", ")}`, changes });
+  return { prospect: data as Prospect, changed: fields.length };
+}
+
+export async function createProspect(input: Record<string, unknown>) {
+  const patch: Record<string, unknown> = cleanPatch(input);
+  if (!patch.company) throw new CrmError("Company is required", 400);
+  patch.website_domain = companyDomain(patch.website as string | null, patch.email as string | null);
+  const { data, error } = await client().from("crm_prospects").insert(patch).select("*").single();
+  if (error) throw new CrmError(error.message, 400);
+  await logActivity({ entityType: "prospect", entityId: data.id, action: "created", summary: `Added ${data.company}` });
+  return data as Prospect;
+}
+
+export async function addNote(prospectId: string, content: string, type = "note") {
+  const { data, error } = await client().from("crm_notes").insert({ prospect_id: prospectId, content, type }).select("*").single();
+  if (error) throw new CrmError(error.message, 400);
+  await logActivity({ entityType: "prospect", entityId: prospectId, action: "noted", summary: `Added a ${type}` });
+  return data;
+}
+
+// Bulk status/tag changes. The caller states the count it showed the operator;
+// a mismatch (the filter matched more or fewer rows since) refuses the change.
+export async function bulkUpdate(ids: string[], expectedCount: number, op: { status?: string; addTag?: string; removeTag?: string }) {
+  if (ids.length !== expectedCount) throw new CrmError(`Selection changed: expected ${expectedCount}, found ${ids.length}. Nothing was changed.`, 409);
+  if (!op.status && !op.addTag && !op.removeTag) throw new CrmError("Nothing to change", 400);
+  const s = client();
+  let done = 0;
+  for (let i = 0; i < ids.length; i += 200) {
+    const chunk = ids.slice(i, i + 200);
+    if (op.status) {
+      const { error } = await s.from("crm_prospects").update({ status: op.status, updated_at: new Date().toISOString() }).in("id", chunk);
+      if (error) throw new CrmError(`${error.message} (after ${done} of ${ids.length})`, 400);
+    }
+    if (op.addTag || op.removeTag) {
+      const { data, error } = await s.from("crm_prospects").select("id, tags").in("id", chunk);
+      if (error) throw new CrmError(error.message);
+      for (const r of data ?? []) {
+        let tags: string[] = r.tags ?? [];
+        if (op.addTag && !tags.includes(op.addTag)) tags = [...tags, op.addTag];
+        if (op.removeTag) tags = tags.filter((t) => t !== op.removeTag);
+        const { error: e2 } = await s.from("crm_prospects").update({ tags, updated_at: new Date().toISOString() }).eq("id", r.id);
+        if (e2) throw new CrmError(`${e2.message} (after ${done} of ${ids.length})`);
+      }
+    }
+    done += chunk.length;
+  }
+  const what = [op.status && `status → ${op.status}`, op.addTag && `added tag "${op.addTag}"`, op.removeTag && `removed tag "${op.removeTag}"`].filter(Boolean).join(", ");
+  await logActivity({ entityType: "prospect", action: "bulk_updated", summary: `Bulk: ${what} on ${done} prospects`, changes: { ids, op } });
+  return done;
+}
+
+export async function dedupeKeys(): Promise<DedupeKey[]> {
+  return selectAll<DedupeKey>("crm_prospects", "id, company, email, website, phone");
+}
+
+// Inserts only rows whose verdict is "new"; everything else is reported on
+// the import record, never written to prospects.
+export async function commitImport(args: { filename: string; source: string | null; mapping: unknown; records: ImportRecord[]; verdicts: RowVerdict[] }) {
+  const s = client();
+  const toInsert = args.records
+    .map((r, i) => ({ r, v: args.verdicts[i] }))
+    .filter(({ v }) => v?.verdict === "new")
+    .map(({ r }) => {
+      const p = cleanPatch(r as Record<string, unknown>) as Record<string, unknown>;
+      p.website_domain = companyDomain(p.website as string | null, p.email as string | null);
+      if (!p.source && args.source) p.source = args.source;
+      if (args.source) p.tags = Array.from(new Set([...((p.tags as string[]) ?? []), `Imported: ${args.source}`]));
+      return p;
+    });
+  const count = (v: string) => args.verdicts.filter((x) => x.verdict === v).length;
+  const candidates = args.verdicts.filter((v) => v.verdict === "duplicate-in-db").map((v) => ({ row: v.row, existingId: v.existingId, existingCompany: v.existingCompany, reason: v.reason, record: args.records[v.row - 1] }));
+  const { data: imp, error: e1 } = await s.from("crm_imports").insert({
+    filename: args.filename, source: args.source, mapping: args.mapping, row_count: args.records.length,
+    added: 0, duplicates_in_file: count("duplicate-in-file"), duplicates_in_db: count("duplicate-in-db"), invalid: count("invalid"), merge_candidates: candidates,
+  }).select("id").single();
+  if (e1) throw new CrmError(e1.message);
+  let added = 0;
+  for (let i = 0; i < toInsert.length; i += 500) {
+    const { error } = await s.from("crm_prospects").insert(toInsert.slice(i, i + 500));
+    if (error) {
+      await s.from("crm_imports").update({ added }).eq("id", imp.id);
+      throw new CrmError(`Import stopped after ${added} of ${toInsert.length} new rows: ${error.message}`);
+    }
+    added += Math.min(500, toInsert.length - i);
+  }
+  await s.from("crm_imports").update({ added }).eq("id", imp.id);
+  await logActivity({ entityType: "import", entityId: imp.id, action: "imported", summary: `Imported ${args.filename}: ${added} added, ${candidates.length} possible duplicates held for review, ${count("duplicate-in-file")} repeated rows and ${count("invalid")} invalid rows skipped` });
+  return { importId: imp.id as string, added, candidates: candidates.length };
+}
+
+export async function listImports() {
+  const { data, error } = await client().from("crm_imports").select("*").order("created_at", { ascending: false }).limit(50);
+  if (error) throw new CrmError(error.message);
+  return data ?? [];
+}
+
+export async function duplicateClusters(): Promise<{ clusters: (Cluster & { rows: Prospect[] })[] }> {
+  const all = await selectAll<Prospect>("crm_prospects", "*");
+  const byId = new Map(all.map((p) => [p.id, p]));
+  const clusters = findClusters(all).map((c) => ({ ...c, rows: c.ids.map((id) => byId.get(id)!).filter(Boolean) }));
+  return { clusters };
+}
+
+// Merge `mergedId` into `survivorId`: fill blanks, union tags, append notes,
+// move contacts and notes, snapshot the merged record, then delete it.
+export async function mergeProspects(survivorId: string, mergedId: string, reason: string) {
+  if (survivorId === mergedId) throw new CrmError("Pick two different records", 400);
+  const s = client();
+  const [a, b] = await Promise.all([
+    s.from("crm_prospects").select("*").eq("id", survivorId).maybeSingle(),
+    s.from("crm_prospects").select("*").eq("id", mergedId).maybeSingle(),
+  ]);
+  if (a.error || b.error) throw new CrmError((a.error ?? b.error)!.message);
+  if (!a.data || !b.data) throw new CrmError("One of the records no longer exists", 404);
+  const survivor = a.data as Prospect;
+  const merged = b.data as Prospect;
+  const patch = mergeRecords(survivor, merged);
+
+  const { error: logErr } = await s.from("crm_merge_log").insert({ survivor_id: survivorId, merged_id: mergedId, merged_snapshot: merged, reason });
+  if (logErr) throw new CrmError(`Merge log write failed, nothing merged: ${logErr.message}`);
+  if (Object.keys(patch).length) {
+    const { error } = await s.from("crm_prospects").update({ ...patch, updated_at: new Date().toISOString() }).eq("id", survivorId);
+    if (error) throw new CrmError(error.message);
+  }
+  for (const t of ["crm_contacts", "crm_notes"]) {
+    const { error } = await s.from(t).update({ prospect_id: survivorId }).eq("prospect_id", mergedId);
+    if (error) throw new CrmError(error.message);
+  }
+  const { error: delErr } = await s.from("crm_prospects").delete().eq("id", mergedId);
+  if (delErr) throw new CrmError(delErr.message);
+  await logActivity({ entityType: "prospect", entityId: survivorId, action: "merged", summary: `Merged "${merged.company}" into this record (${reason})`, changes: diff(survivor as unknown as Record<string, unknown>, patch as Record<string, unknown>) });
+  return { patchFields: Object.keys(patch) };
+}
+
+export async function listViews() {
+  const { data, error } = await client().from("crm_saved_views").select("*").order("name");
+  if (error) throw new CrmError(error.message);
+  return data ?? [];
+}
+
+export async function saveView(name: string, filters: unknown) {
+  const { data, error } = await client().from("crm_saved_views").insert({ name, filters }).select("*").single();
+  if (error) throw new CrmError(error.message, 400);
+  return data;
+}
+
+export async function deleteView(id: string) {
+  const { error } = await client().from("crm_saved_views").delete().eq("id", id);
+  if (error) throw new CrmError(error.message);
+}
