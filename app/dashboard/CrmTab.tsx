@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { T, alpha, MONO, DISP, BODY } from "./theme";
 import {
   STATUSES, DEAL_STAGES, SERVICE_ANGLES, CATEGORIES, IMPORT_FIELDS, parseCsv, suggestMapping,
-  Mapping, Prospect, ListFilters, RowVerdict, Verdict, EditableField,
+  transformManusExport, ManusExport, Mapping, Prospect, ListFilters, RowVerdict, Verdict, EditableField,
 } from "../lib/crmCore";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -598,6 +598,8 @@ function ImportView() {
         </div>
       )}
 
+      <ManusLoadPanel onDone={loadHistory} />
+
       <div style={{ ...eyebrow, margin: "18px 0 8px" }}>Recent imports</div>
       <div style={card()}>
         {history.length ? history.map((h) => (
@@ -607,6 +609,84 @@ function ImportView() {
           </div>
         )) : <div style={muted}>No imports yet.</div>}
       </div>
+    </div>
+  );
+}
+
+// ─── One-time Manus export load ─────────────────────────────────────────────
+// Reads the Manus export JSON in the browser, shows what it holds, then sends
+// it to the server in batches. Safe to run again: rows upsert on the Manus id.
+
+type ManusParsed = ReturnType<typeof transformManusExport>;
+
+function ManusLoadPanel({ onDone }: { onDone: () => void }) {
+  const [parsed, setParsed] = useState<ManusParsed | null>(null);
+  const [fileName, setFileName] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [progress, setProgress] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const [result, setResult] = useState<string | null>(null);
+
+  const onFile = async (f: File | undefined) => {
+    if (!f) return;
+    setErr(null); setResult(null); setProgress(null); setParsed(null);
+    try {
+      const exp = JSON.parse(await f.text()) as ManusExport;
+      setFileName(f.name); setParsed(transformManusExport(exp));
+    } catch {
+      setErr("That file isn't readable JSON. Choose the Manus export file (manus-crm-export-….json).");
+    }
+  };
+
+  const run = async () => {
+    if (!parsed) return;
+    const { stats } = parsed;
+    if (!window.confirm(`Load ${stats.prospects.toLocaleString()} prospects, ${stats.contacts.toLocaleString()} decision makers and ${stats.notes} notes into the CRM? Running it again updates the same records instead of adding copies.`)) return;
+    setBusy(true); setErr(null); setResult(null);
+    try {
+      const send = async (kind: string, rows: unknown[], label: string) => {
+        for (let i = 0; i < rows.length; i += 250) {
+          setProgress(`${label}: ${Math.min(i + 250, rows.length).toLocaleString()} of ${rows.length.toLocaleString()}`);
+          await api("/api/dashboard/crm/manus-load", { method: "POST", body: JSON.stringify({ kind, rows: rows.slice(i, i + 250) }) });
+        }
+      };
+      await send("prospects", parsed.prospects, "Prospects");
+      await send("contacts", parsed.contacts, "Decision makers");
+      await send("notes", parsed.notes, "Notes");
+      setProgress("Checking counts…");
+      const d = await api<{ ok: boolean; got: { prospects: number; contacts: number; notes: number; doNotContact: number } }>("/api/dashboard/crm/manus-load", { method: "POST", body: JSON.stringify({ kind: "finish", expected: { prospects: stats.prospects, contacts: stats.contacts, notes: stats.notes } }) });
+      const line = `${d.got.prospects.toLocaleString()} prospects, ${d.got.contacts.toLocaleString()} decision makers and ${d.got.notes} notes are in the CRM (${d.got.doNotContact} Do Not Contact).`;
+      setResult(d.ok ? `Loaded. ${line} Counts match the file.` : `Counts don't match the file: ${line} The file has ${stats.prospects}, ${stats.contacts} and ${stats.notes}.`);
+      setProgress(null);
+      onDone();
+    } catch (e) {
+      setErr(`Load stopped (${progress ?? "starting"}): ${(e as Error).message}. Running it again is safe; it picks up the same records.`);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div style={card({ marginTop: 18 })}>
+      <div style={{ fontFamily: DISP, fontSize: 18, fontWeight: 700, marginBottom: 4 }}>Load Manus export</div>
+      <div style={{ ...muted, marginBottom: 12 }}>One-time move of the Manus CRM: prospects, decision makers and notes, with their Manus ids kept. Repeats inside Manus are loaded as they are and can be merged on the Duplicates page.</div>
+      <ErrorLine msg={err} />
+      <input type="file" accept=".json,application/json" aria-label="Manus export file" onChange={(e) => onFile(e.target.files?.[0])} />
+      {parsed && (
+        <div style={{ marginTop: 12 }}>
+          <div style={{ fontSize: 13, marginBottom: 8 }}>{fileName}: {parsed.stats.prospects?.toLocaleString()} prospects, {parsed.stats.contacts?.toLocaleString()} decision makers, {parsed.stats.notes} notes, {parsed.stats.doNotContact} Do Not Contact. Sequences ({parsed.stats.sequences}) are not loaded yet.</div>
+          {parsed.problems.length > 0 ? (
+            <div style={card({ borderColor: alpha(T.danger, 40), color: T.danger, fontSize: 13 })}>
+              {parsed.problems.length} problem(s), nothing will load:
+              {parsed.problems.slice(0, 20).map((p) => <div key={p}>· {p}</div>)}
+            </div>
+          ) : (
+            <button style={btn(true)} disabled={busy} onClick={run}>{busy ? "Loading…" : `Load ${parsed.stats.prospects?.toLocaleString()} prospects`}</button>
+          )}
+        </div>
+      )}
+      {progress && <div style={{ ...muted, marginTop: 8 }}>{progress}</div>}
+      {result && <div style={{ marginTop: 10, fontSize: 13, color: result.startsWith("Loaded") ? T.ok : T.danger }}>{result}</div>}
     </div>
   );
 }

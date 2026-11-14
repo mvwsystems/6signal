@@ -387,3 +387,132 @@ export function filtersFromParams(p: URLSearchParams): ListFilters {
     pageSize: Math.min(200, Math.max(10, Number(p.get("pageSize")) || 50)),
   };
 }
+
+// ─── Manus CRM export → CRM rows ───────────────────────────────────────────
+// One shared mapping of the Manus export file, used by the dashboard's one-time
+// "Load Manus export" panel and by scripts/load-manus-export.mts. Contacts and
+// notes keep the Manus prospect id (pid); the server swaps it for our uuid.
+
+export type ManusExport = {
+  manifest?: { counts?: Record<string, number> };
+  prospects: Record<string, unknown>[];
+  contacts?: Record<string, Record<string, unknown>[]>;
+  notes?: Record<string, Record<string, unknown>[]>;
+  sequences?: unknown[];
+};
+
+const MANUS_ANGLE: Record<string, string> = {
+  "AI-Generated Website": "Website Lead",
+  "AI Visibility": "AI Visibility Lead",
+  "AI Infrastructure": "AI Infrastructure Lead",
+};
+
+export function transformManusExport(exp: ManusExport) {
+  const str = (v: unknown): string | null => {
+    if (v == null) return null;
+    const s = String(v).trim();
+    return s === "" ? null : s;
+  };
+  const num = (v: unknown, d = 0): number => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : d;
+  };
+  const date = (v: unknown): string | null => {
+    if (!v) return null;
+    const t = new Date(String(v));
+    return Number.isNaN(t.getTime()) ? null : t.toISOString();
+  };
+  const now = new Date().toISOString();
+  const problems: string[] = [];
+  if (!Array.isArray(exp?.prospects)) return { prospects: [], contacts: [], notes: [], problems: ["This file has no prospects list. Is it the Manus export?"], stats: {} as Record<string, number> };
+
+  const prospects = exp.prospects.map((p) => {
+    const status = str(p.contactStatus) ?? "Never contacted";
+    if (!(STATUSES as readonly string[]).includes(status)) problems.push(`Manus #${p.id}: unknown status "${status}"`);
+    const stage = str(p.dealStage) ?? "New Lead";
+    if (!(DEAL_STAGES as readonly string[]).includes(stage)) problems.push(`Manus #${p.id}: unknown deal stage "${stage}"`);
+    const tags = Array.isArray(p.tags) ? (p.tags as unknown[]).map(String) : [];
+    const importTag = tags.find((t) => t.startsWith("Imported: "));
+    if (!str(p.companyName)) problems.push(`Manus #${p.id}: no company name`);
+    return {
+      legacy_id: num(p.id),
+      company: str(p.companyName) ?? "Unknown",
+      contact_name: str(p.contactName),
+      contact_title: str(p.contactTitle),
+      email: str(p.email),
+      phone: str(p.phone),
+      city: str(p.city),
+      state: str(p.state),
+      zip: str(p.zipCode),
+      website: str(p.website),
+      website_domain: companyDomain(str(p.website), str(p.email)),
+      linkedin: str(p.linkedinUrl),
+      category: str(p.category),
+      service_angle: MANUS_ANGLE[String(p.primaryService)] ?? null,
+      primary_service: str(p.primaryService),
+      primary_sub_service: str(p.primarySubService),
+      addon_services: Array.isArray(p.addonServices) ? (p.addonServices as unknown[]).map(String) : [],
+      status,
+      tags,
+      lead_score: num(p.leadScore),
+      priority_call_rank: p.priorityCallRank == null ? null : num(p.priorityCallRank),
+      estimated_revenue: str(p.estimatedRevenue),
+      company_size: str(p.companySize),
+      source: importTag ? `Manus: ${importTag.slice("Imported: ".length)}` : "Manus CRM",
+      notes: str(p.notes),
+      deal_stage: stage,
+      deal_value: num(p.dealValue),
+      follow_up_count: num(p.followUpCount),
+      last_contact_at: date(p.lastContactDate),
+      created_at: date(p.createdAt) ?? now,
+      updated_at: date(p.updatedAt) ?? now,
+    };
+  });
+
+  const contacts = Object.entries(exp.contacts ?? {}).flatMap(([pid, list]) => list.map((c) => ({
+    pid: Number(pid),
+    legacy_id: num(c.id),
+    name: str(c.name),
+    title: str(c.title),
+    email: str(c.email),
+    phone: str(c.phone),
+    linkedin: str(c.linkedinUrl),
+    source_urls: Array.isArray(c.sourceUrls) ? (c.sourceUrls as unknown[]).map(String) : c.sourceUrls ? [String(c.sourceUrls)] : [],
+    confidence: str(c.confidence),
+    is_primary: !!c.isPrimary,
+    created_at: date(c.createdAt) ?? now,
+    updated_at: date(c.updatedAt) ?? now,
+  })));
+  const notes = Object.entries(exp.notes ?? {}).flatMap(([pid, list]) => list.map((n) => ({
+    pid: Number(pid),
+    legacy_id: num(n.id),
+    type: str(n.type) ?? "note",
+    content: str(n.content) ?? "",
+    scheduled_at: date(n.scheduledAt),
+    completed_at: date(n.completedAt),
+    created_at: date(n.createdAt) ?? now,
+  })));
+
+  const ids = new Set(prospects.map((p) => p.legacy_id));
+  if (ids.size !== prospects.length) problems.push(`${prospects.length - ids.size} repeated Manus ids in the export`);
+  for (const r of [...contacts, ...notes]) if (!ids.has(r.pid)) problems.push(`Contact or note points at missing Manus #${r.pid}`);
+  const m = exp.manifest?.counts;
+  const check = (name: string, got: number, want?: number) => { if (want != null && want !== got) problems.push(`${name}: export manifest says ${want}, file has ${got}`); };
+  if (m) {
+    check("prospects", prospects.length, m.prospects);
+    check("contacts", contacts.length, m.contacts);
+    check("notes", notes.length, m.notes);
+    check("sequences", exp.sequences?.length ?? 0, m.sequences);
+  }
+  const count = (pred: (p: (typeof prospects)[number]) => boolean) => prospects.filter(pred).length;
+  const stats = {
+    prospects: prospects.length,
+    contacts: contacts.length,
+    notes: notes.length,
+    sequences: exp.sequences?.length ?? 0,
+    doNotContact: count((p) => p.status === "Do Not Contact"),
+    withEmail: count((p) => !!p.email),
+    withPhone: count((p) => !!p.phone),
+  };
+  return { prospects, contacts, notes, problems, stats };
+}
