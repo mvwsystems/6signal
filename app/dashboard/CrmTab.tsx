@@ -57,15 +57,19 @@ const fmtDate = (s?: string | null) => (s ? new Date(s).toLocaleDateString("en-U
 
 export default function CrmTab() {
   const [view, setView] = useState<"dashboard" | "prospects" | "import" | "duplicates">("dashboard");
+  // A count card's arrow opens Prospects already filtered; the key remounts
+  // the list so it starts from that filter.
+  const [preset, setPreset] = useState<{ key: number; filters: Partial<ListFilters> }>({ key: 0, filters: {} });
+  const openList = (filters: Partial<ListFilters>) => { setPreset((p) => ({ key: p.key + 1, filters })); setView("prospects"); };
   return (
     <div>
       <div role="tablist" aria-label="CRM sections" style={{ display: "flex", gap: 6, marginBottom: 20, flexWrap: "wrap" }}>
         {([["dashboard", "Dashboard"], ["prospects", "Prospects"], ["import", "Import"], ["duplicates", "Duplicates"]] as const).map(([id, l]) => (
-          <button key={id} role="tab" aria-selected={view === id} className="dash-pill" style={{ ...pill(view === id), fontSize: 13, padding: "6px 14px" }} onClick={() => setView(id)}>{l}</button>
+          <button key={id} role="tab" aria-selected={view === id} className="dash-pill" style={{ ...pill(view === id), fontSize: 13, padding: "6px 14px" }} onClick={() => { if (id === "prospects" && view !== "prospects") setPreset((p) => ({ key: p.key + 1, filters: {} })); setView(id); }}>{l}</button>
         ))}
       </div>
-      {view === "dashboard" && <DashboardView onOpen={setView} />}
-      {view === "prospects" && <ProspectsView />}
+      {view === "dashboard" && <DashboardView onOpenList={openList} />}
+      {view === "prospects" && <ProspectsView key={preset.key} initial={preset.filters} />}
       {view === "import" && <ImportView />}
       {view === "duplicates" && <DuplicatesView />}
     </div>
@@ -100,44 +104,65 @@ function StatIcon({ name, size = 16 }: { name: string; size?: number }) {
   );
 }
 
-const ACTIVITY_FILTERS = [["all", "All"], ["import", "Imports"], ["prospect", "Edits"], ["merge", "Merges"]] as const;
+const ACTIVITY_RANGES = [["all", "All", 0], ["week", "Week", 7], ["month", "Month", 30], ["year", "Year", 365]] as const;
 
-function DashboardView({ onOpen }: { onOpen: (v: "prospects" | "import" | "duplicates") => void }) {
+function ArrowCircle({ onClick, label, onBrand }: { onClick: () => void; label: string; onBrand?: boolean }) {
+  return (
+    <button className="dash-pill dash-arrow" aria-label={label} title={label} onClick={(e) => { e.stopPropagation(); onClick(); }}
+      style={{ width: 32, height: 32, borderRadius: 999, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+        background: onBrand ? "#0b0d02" : "transparent", color: onBrand ? "#E6FF00" : T.text, border: `1px solid ${onBrand ? "#0b0d02" : T.border}` }}>
+      <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
+    </button>
+  );
+}
+
+function DashboardView({ onOpenList }: { onOpenList: (f: Partial<ListFilters>) => void }) {
   const [stats, setStats] = useState<CrmStats | null>(null);
   const [err, setErr] = useState<string | null>(null);
-  const [filter, setFilter] = useState<(typeof ACTIVITY_FILTERS)[number][0]>("all");
+  const [range, setRange] = useState<(typeof ACTIVITY_RANGES)[number][0]>("all");
   useEffect(() => {
     api<CrmStats>("/api/dashboard/crm/stats").then(setStats).catch((e) => setErr((e as Error).message));
   }, []);
   const n = (v?: number) => (v == null ? "—" : v.toLocaleString());
-  const cards = [
-    { icon: "users", value: n(stats?.total), label: "Total Prospects", go: "prospects" as const },
-    { icon: "mail", value: n(stats?.withEmail), label: "With Email", go: "prospects" as const },
-    { icon: "phone", value: n(stats?.withPhone), label: "With Phone", go: "prospects" as const },
-    { icon: "id", value: n(stats?.decisionMakers), label: "Decision Makers", go: "prospects" as const },
-    { icon: "send", value: n(stats?.contacted), label: "Contacted", go: "prospects" as const },
-    { icon: "handshake", value: n(stats?.customers), label: "Customers", go: "prospects" as const },
+  const contactedStatuses = STATUSES.filter((x) => x !== "Never contacted");
+  // The first card is the page's one yellow hero card; the rest stay neutral.
+  const cards: { icon: string; value: string; label: string; open: Partial<ListFilters> }[] = [
+    { icon: "users", value: n(stats?.total), label: "Total Prospects", open: {} },
+    { icon: "mail", value: n(stats?.withEmail), label: "With Email", open: { has: ["email"] } },
+    { icon: "phone", value: n(stats?.withPhone), label: "With Phone", open: { has: ["phone"] } },
+    { icon: "id", value: n(stats?.decisionMakers), label: "Decision Makers", open: { has: ["contacts"] } },
+    { icon: "send", value: n(stats?.contacted), label: "Contacted", open: { status: [...contactedStatuses] } },
+    { icon: "handshake", value: n(stats?.customers), label: "Customers", open: { status: ["Customer"] } },
   ];
-  const activity = (stats?.activity ?? []).filter((a) => filter === "all" || a.entity_type === filter);
+  const days = ACTIVITY_RANGES.find((r) => r[0] === range)?.[2] ?? 0;
+  const since = days ? Date.now() - days * 86400000 : 0;
+  const activity = (stats?.activity ?? []).filter((a) => !since || new Date(a.created_at).getTime() >= since);
   const cardTitle: React.CSSProperties = { display: "flex", alignItems: "center", gap: 8, fontFamily: BODY, fontSize: 16, fontWeight: 600, color: T.text };
   return (
     <div>
       <ErrorLine msg={err} />
       <div className="dash-stats" style={{ display: "grid", gridTemplateColumns: "repeat(6, minmax(0, 1fr))", gap: 16, marginBottom: 24 }}>
-        {cards.map((c, i) => (
-          <div key={c.label} className="dash-lift dash-fade" role="button" tabIndex={0} onClick={() => onOpen(c.go)} onKeyDown={(e) => e.key === "Enter" && onOpen(c.go)}
-            style={card({ padding: 16, cursor: "pointer", animationDelay: `${(i + 1) * 60}ms` })}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <span style={{ width: 36, height: 36, borderRadius: 2, background: T.iconBg, color: T.iconFg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <StatIcon name={c.icon} />
-              </span>
-              <span style={{ minWidth: 0 }}>
-                <span style={{ display: "block", fontSize: 20, fontWeight: 700, lineHeight: 1, color: T.text, fontVariantNumeric: "tabular-nums" }}>{c.value}</span>
-                <span style={{ display: "block", fontSize: 12, color: T.muted, marginTop: 4, lineHeight: 1.2 }}>{c.label}</span>
-              </span>
+        {cards.map((c, i) => {
+          const hero = i === 0;
+          const fg = hero ? "#0b0d02" : T.text;
+          return (
+            <div key={c.label} className={`dash-lift dash-fade${hero ? " dash-hero" : ""}`}
+              style={card({ padding: 16, display: "flex", flexDirection: "column", gap: 14, minHeight: 132, animationDelay: `${(i + 1) * 60}ms`,
+                ...(hero ? { background: T.brand, borderColor: T.brand, color: fg } : {}) })}>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8 }}>
+                <span style={{ width: 32, height: 32, borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                  background: hero ? "rgba(11,13,2,0.10)" : T.iconBg, color: hero ? fg : T.iconFg }}>
+                  <StatIcon name={c.icon} />
+                </span>
+                <ArrowCircle onBrand={hero} label={`Open ${c.label.toLowerCase()} in the prospect list`} onClick={() => onOpenList(c.open)} />
+              </div>
+              <div style={{ marginTop: "auto" }}>
+                <div style={{ fontFamily: DISP, fontSize: 34, fontWeight: 700, lineHeight: 1, letterSpacing: "-0.02em", color: fg, fontVariantNumeric: "tabular-nums" }}>{c.value}</div>
+                <div style={{ fontSize: 12, marginTop: 6, lineHeight: 1.2, color: hero ? "rgba(11,13,2,0.72)" : T.muted }}>{c.label}</div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="dash-split" style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 24 }}>
@@ -150,9 +175,9 @@ function DashboardView({ onOpen }: { onOpen: (v: "prospects" | "import" | "dupli
         <div className="dash-fade" style={card({ padding: 0, minHeight: 280, animationDelay: "480ms" })}>
           <div style={{ padding: "24px 24px 8px" }}>
             <div style={cardTitle}><span style={{ color: T.muted, display: "flex" }}><StatIcon name="chat" /></span>Recent Activity</div>
-            <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 12 }}>
-              {ACTIVITY_FILTERS.map(([id, l]) => (
-                <button key={id} className="dash-pill" aria-pressed={filter === id} onClick={() => setFilter(id)} style={{ ...pill(filter === id), padding: "2px 8px" }}>{l}</button>
+            <div role="group" aria-label="Activity period" style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 12 }}>
+              {ACTIVITY_RANGES.map(([id, l]) => (
+                <button key={id} className="dash-pill" aria-pressed={range === id} onClick={() => setRange(id)} style={{ ...pill(range === id), padding: "2px 10px" }}>{l}</button>
               ))}
             </div>
           </div>
@@ -167,9 +192,10 @@ function DashboardView({ onOpen }: { onOpen: (v: "prospects" | "import" | "dupli
                   </span>
                 </div>
               ))}
+              {activity.length > 8 && <div style={{ ...muted, fontSize: 12, padding: "8px 24px 16px" }}>Showing the latest 8 of {activity.length}.</div>}
             </div>
           ) : (
-            <div style={{ padding: "48px 24px", textAlign: "center", ...muted, fontSize: 14 }}>{stats ? "No activity for this filter yet." : "Loading…"}</div>
+            <div style={{ padding: "48px 24px", textAlign: "center", ...muted, fontSize: 14 }}>{stats ? "No activity in this period." : "Loading…"}</div>
           )}
         </div>
       </div>
@@ -189,6 +215,7 @@ function toQuery(f: ListFilters): string {
   if (f.state) p.set("state", f.state);
   if (f.tags?.length) p.set("tags", f.tags.join(","));
   if (f.angle) p.set("angle", f.angle);
+  if (f.has?.length) p.set("has", f.has.join(","));
   p.set("sort", f.sort ?? "company");
   p.set("dir", f.dir ?? "asc");
   p.set("page", String(f.page ?? 1));
@@ -198,8 +225,10 @@ function toQuery(f: ListFilters): string {
 
 interface SavedView { id: string; name: string; filters: ListFilters }
 
-function ProspectsView() {
-  const [filters, setFilters] = useState<ListFilters>(EMPTY_FILTERS);
+const HAS_LABEL: Record<string, string> = { email: "Has email", phone: "Has phone", contacts: "Has decision makers" };
+
+function ProspectsView({ initial }: { initial?: Partial<ListFilters> }) {
+  const [filters, setFilters] = useState<ListFilters>({ ...EMPTY_FILTERS, ...initial });
   const [qInput, setQInput] = useState("");
   const [rows, setRows] = useState<Prospect[]>([]);
   const [total, setTotal] = useState<number | null>(null);
@@ -302,6 +331,9 @@ function ProspectsView() {
       <div style={card({ marginBottom: 12 })}>
         <input style={{ ...inputStyle, marginBottom: 10 }} placeholder="Search company, contact, email, city, website or phone" value={qInput} onChange={(e) => setQInput(e.target.value)} />
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 10 }}>
+          {(filters.has ?? []).map((h) => (
+            <button key={h} className="dash-pill" aria-label={`Remove filter ${HAS_LABEL[h]}`} onClick={() => set({ has: (filters.has ?? []).filter((x) => x !== h) })} style={pill(true)}>{HAS_LABEL[h]} ✕</button>
+          ))}
           {STATUSES.map((s) => {
             const on = filters.status?.includes(s);
             return <button key={s} className="dash-pill" aria-pressed={!!on} onClick={() => toggleStatus(s)} style={pill(!!on)}>{s}</button>;
