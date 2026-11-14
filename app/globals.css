@@ -10730,6 +10730,9 @@ html[data-db-theme="light"] .dash-root {
   border-radius: 10px !important;
   box-shadow: var(--db-glow);
 }
+/* Manus cards have no drawn border, only the glow ring; cards with a
+   colored border (alerts, selections) keep theirs. */
+.dash-shell .dash-main [style*="background: var(--db-panel)"][style*="border: 1px solid var(--db-border)"] { border-color: transparent !important; }
 .dash-shell .dash-lift { transition: box-shadow 0.2s ease, transform 0.2s ease; }
 .dash-shell .dash-lift:hover { box-shadow: var(--db-glow-h) !important; transform: translateY(-2px); }
 .dash-shell .dash-main button, .dash-shell .dash-main input,
