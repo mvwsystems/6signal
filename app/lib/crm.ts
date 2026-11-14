@@ -347,3 +347,26 @@ export async function finishLegacyLoad(expected: { prospects: number; contacts: 
   await logActivity({ entityType: "import", action: "imported", summary: `Loaded the Manus CRM export: ${got.prospects} prospects, ${got.contacts} decision makers, ${got.notes} notes (expected ${expected.prospects}, ${expected.contacts}, ${expected.notes})` });
   return { got, ok: got.prospects === expected.prospects && got.contacts === expected.contacts && got.notes === expected.notes };
 }
+
+// ─── CRM dashboard numbers (Manus-style overview) ──────────────────────────
+export async function crmStats() {
+  const s = client();
+  const count = async (table: string, f?: (q: any) => any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+    let q = s.from(table).select("id", { count: "exact", head: true });
+    if (f) q = f(q);
+    const { count: n, error } = await q;
+    if (error) throw new CrmError(error.message);
+    return n ?? 0;
+  };
+  const [total, withEmail, withPhone, decisionMakers, contacted, customers] = await Promise.all([
+    count("crm_prospects"),
+    count("crm_prospects", (q) => q.not("email", "is", null)),
+    count("crm_prospects", (q) => q.not("phone", "is", null)),
+    count("crm_contacts"),
+    count("crm_prospects", (q) => q.neq("status", "Never contacted")),
+    count("crm_prospects", (q) => q.eq("status", "Customer")),
+  ]);
+  const { data: activity, error } = await s.from("crm_activity").select("id, entity_type, action, summary, created_at").order("created_at", { ascending: false }).limit(25);
+  if (error) throw new CrmError(error.message);
+  return { total, withEmail, withPhone, decisionMakers, contacted, customers, activity: activity ?? [] };
+}

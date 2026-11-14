@@ -21,6 +21,10 @@ export const T = {
   danger: "var(--db-danger)",
   warn: "var(--db-warn)",
   ok: "var(--db-ok)",
+  brand: "var(--db-brand)",      // #E6FF00 fill in both modes
+  onBrand: "var(--db-on-brand)", // text on the yellow fill
+  iconBg: "var(--db-icon-bg)",
+  iconFg: "var(--db-icon-fg)",
 };
 
 // Replaces the old `${T.danger}66` hex-alpha string math, which can't work
@@ -28,7 +32,9 @@ export const T = {
 export const alpha = (color: string, pct: number): string =>
   `color-mix(in srgb, ${color} ${pct}%, transparent)`;
 
-export const MONO = "'JetBrains Mono', ui-monospace, monospace";
+// The Manus CRM uses Inter for everything but headings, so the dashboard's
+// former monospace labels now render in Inter too (with tabular numbers).
+export const MONO = "'Inter', sans-serif";
 export const DISP = "'Chakra Petch', sans-serif";
 export const BODY = "'Inter', sans-serif";
 

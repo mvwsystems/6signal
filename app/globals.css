@@ -10692,46 +10692,72 @@ svg {
 
 /* ── /dashboard theme tokens ──────────────────────────────────────────────────
    The dashboard styles itself inline through one T object (app/dashboard/
-   theme.ts) whose values are these variables. Dark is the default and the
-   brand. Light (the default since 2026-11-13, matching the Manus CRM look)
-   swaps the ramp and darkens the accent to #5C6600 so it stays
-   readable as text on white — the brand yellow only survives as a fill. */
+   theme.ts) whose values are these variables. Values match the Manus CRM
+   (mvwsystems/6signal-crm, client/src/index.css) so both look the same:
+   #090909 canvas and #171717 cards in dark, #F5F5F5 canvas and #E5E5E5 cards
+   in light, an always-dark #111 side menu, and #E6FF00 as the brand fill.
+   --db-accent is the accent used as TEXT, so it darkens to #5C6600 in light
+   mode to stay readable; --db-brand is the yellow FILL in both modes. */
 .dash-root {
-  --db-bg: #090909; --db-surface: #0f0f0f; --db-panel: #161616; --db-panel2: #1d1d1d;
-  --db-border: rgba(255,255,255,0.08); --db-border-h: rgba(255,255,255,0.18);
-  --db-accent: #E6FF00; --db-text: #f5f5f3; --db-text-sub: #a8a8a3; --db-muted: #6a6a64;
+  --db-bg: #090909; --db-surface: #0f0f0f; --db-panel: #171717; --db-panel2: #1f1f1f;
+  --db-border: #242424; --db-border-h: #333333;
+  --db-accent: #E6FF00; --db-brand: #E6FF00; --db-on-brand: #0b0d02;
+  --db-text: #eceef1; --db-text-sub: #b4b8bf; --db-muted: #858a93;
   --db-danger: #ef4444; --db-warn: #f97316; --db-ok: #22c55e;
+  --db-icon-bg: rgba(230,255,0,0.12); --db-icon-fg: #E6FF00;
+  --db-glow: 0 0 0 1px #242424, 0 2px 16px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.65);
+  --db-glow-h: 0 0 0 1px #333333, 0 6px 24px rgba(0,0,0,0.65), 0 2px 8px rgba(0,0,0,0.7);
   color-scheme: dark;
 }
 html[data-db-theme="light"] .dash-root {
-  --db-bg: #F5F5F5; --db-surface: #FFFFFF; --db-panel: #EBEBEB; --db-panel2: #E2E2E2;
-  --db-border: rgba(17,17,16,0.10); --db-border-h: rgba(17,17,16,0.24);
-  --db-accent: #5C6600; --db-text: #111110; --db-text-sub: #4a4a44; --db-muted: #6E6E63;
+  --db-bg: #F5F5F5; --db-surface: #FAFAFA; --db-panel: #E5E5E5; --db-panel2: #EDEDED;
+  --db-border: #D4D4D6; --db-border-h: #C2C2C5;
+  --db-accent: #5C6600; --db-brand: #E6FF00; --db-on-brand: #0b0d02;
+  --db-text: #0b0d10; --db-text-sub: #3d434c; --db-muted: #646a74;
   --db-danger: #B42318; --db-warn: #B54708; --db-ok: #1F7A3F;
+  --db-icon-bg: rgba(11,13,16,0.08); --db-icon-fg: #0b0d10;
+  --db-glow: 0 0 0 1px #D4D4D6, 0 2px 12px rgba(11,13,16,0.06), 0 1px 3px rgba(11,13,16,0.08);
+  --db-glow-h: 0 0 0 1px #C8C8CB, 0 6px 20px rgba(11,13,16,0.12), 0 2px 6px rgba(11,13,16,0.10);
   color-scheme: light;
 }
 
-/* ── Command Center shell (side menu, 2026-11-13) ─────────────────────────────
-   Layout modeled on the Manus CRM: always-dark left menu, grey canvas, cards
-   with soft corners and a light shadow. Cards are styled inline with the panel
-   token, so they are picked up here by that token rather than a class. */
+/* ── Command Center shell (Manus look, 2026-11-14) ────────────────────────────
+   Always-dark left menu, page title in the content area, cards with 10px
+   corners and the Manus "card glow" (a 1px ring plus a soft shadow). Cards
+   are styled inline with the panel token, so they are picked up here by that
+   token rather than a class. Stat cards (.dash-lift) also lift on hover. */
 .dash-shell .dash-main [style*="background: var(--db-panel)"] {
-  border-radius: 8px !important;
-  box-shadow: 0 1px 3px rgba(17,17,16,0.06), 0 2px 12px rgba(17,17,16,0.05);
+  border-radius: 10px !important;
+  box-shadow: var(--db-glow);
 }
-html[data-db-theme="dark"] .dash-shell .dash-main [style*="background: var(--db-panel)"] {
-  box-shadow: 0 1px 2px rgba(0,0,0,0.4);
-}
+/* Manus cards have no drawn border, only the glow ring; cards with a
+   colored border (alerts, selections) keep theirs. */
+.dash-shell .dash-main [style*="background: var(--db-panel)"][style*="border: 1px solid var(--db-border)"] { border-color: transparent !important; }
+.dash-shell .dash-lift { transition: box-shadow 0.2s ease, transform 0.2s ease; }
+.dash-shell .dash-lift:hover { box-shadow: var(--db-glow-h) !important; transform: translateY(-2px); }
 .dash-shell .dash-main button, .dash-shell .dash-main input,
 .dash-shell .dash-main select, .dash-shell .dash-main textarea { border-radius: 6px !important; }
-.dash-shell .dash-nav-item:hover { background: #1c1c1c !important; }
-.dash-shell .dash-nav-collapse:hover, .dash-shell .dash-nav-close:hover { background: #1c1c1c !important; }
+.dash-shell .dash-main .dash-pill { border-radius: 999px !important; }
+.dash-shell .dash-main button:not(:disabled):hover { filter: brightness(0.97); }
+html[data-db-theme="dark"] .dash-shell .dash-main button:not(:disabled):hover { filter: brightness(1.15); }
+.dash-shell .dash-main tbody tr:hover td { background: color-mix(in srgb, var(--db-panel2) 60%, transparent); }
+.dash-shell .dash-nav-item:hover { background: #1f1f1f !important; }
+.dash-shell .dash-nav-collapse:hover, .dash-shell .dash-nav-close:hover, .dash-shell .dash-theme-btn:hover { background: #222222 !important; }
+.dash-shell .dash-theme-btn:focus-visible { box-shadow: 0 0 0 2px #E6FF00; outline: none; }
+@keyframes dash-fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.dash-shell .dash-fade { animation: dash-fade-up 0.4s ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  .dash-shell .dash-fade { animation: none; }
+  .dash-shell .dash-lift:hover { transform: none; }
+}
 @media (max-width: 900px) {
   .dash-shell .dash-sidebar { display: none !important; }
-  .dash-shell .dash-menu-btn { display: flex !important; }
+  .dash-shell .dash-mobilebar { display: flex !important; }
   .dash-shell .dash-drawer .dash-nav-collapse { display: none !important; }
   .dash-shell .dash-drawer .dash-nav-close { display: flex !important; }
-  .dash-shell .dash-topbar { padding: 0 14px !important; }
+  .dash-shell .dash-main { padding: 16px !important; }
+  .dash-shell .dash-stats { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .dash-shell .dash-split { grid-template-columns: 1fr !important; }
 }
 
 /* The single Tailwind utility the markup ever used (<p className="italic"> on

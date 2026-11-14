@@ -55,14 +55,13 @@ interface Overview { businesses: Biz[]; audits: AuditRow[]; signalScores: ScoreR
 // in app/components/charts.tsx — imported at the top of this file.
 
 // ─── Shared bits ───────────────────────────────────────────────────────────────
-const card = (extra?: React.CSSProperties): React.CSSProperties => ({ background: T.panel, border: `1px solid ${T.border}`, borderRadius: 2, padding: 20, ...extra });
+const card = (extra?: React.CSSProperties): React.CSSProperties => ({ background: T.panel, border: `1px solid ${T.border}`, borderRadius: 10, padding: 24, ...extra });
 const btn = (primary?: boolean): React.CSSProperties => ({
-  display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "10px 18px", borderRadius: 2, cursor: "pointer",
-  fontFamily: DISP, fontSize: 13, fontWeight: 700, letterSpacing: "0.02em", textTransform: "uppercase",
-  border: `1px solid ${primary ? T.accent : T.border}`, background: primary ? T.accent : "transparent", color: primary ? "#060606" : T.text,
+  display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, height: 36, padding: "0 16px", borderRadius: 6, cursor: "pointer", fontFamily: BODY, fontWeight: 500, fontSize: 14, whiteSpace: "nowrap",
+  border: `1px solid ${primary ? T.brand : T.border}`, background: primary ? T.brand : "transparent", color: primary ? T.onBrand : T.text,
 });
-const inputStyle: React.CSSProperties = { background: T.bg, border: `1px solid ${T.border}`, color: T.text, fontFamily: BODY, fontSize: 14, padding: "11px 14px", borderRadius: 2, outline: "none", width: "100%" };
-const eyebrow: React.CSSProperties = { fontFamily: MONO, fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: T.muted };
+const inputStyle: React.CSSProperties = { background: T.surface, border: `1px solid ${T.border}`, color: T.text, fontFamily: BODY, fontSize: 14, padding: "8px 12px", borderRadius: 6, outline: "none", width: "100%" };
+const eyebrow: React.CSSProperties = { fontFamily: BODY, fontSize: 13, fontWeight: 600, letterSpacing: 0, color: T.textSub };
 
 function Stat({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
   return (
@@ -2175,6 +2174,20 @@ export default function DashboardPage() {
     ] },
   ];
   const current = GROUPS.flatMap((g) => g.items).find((i) => i.id === tab);
+  const SUBTITLES: Partial<Record<Tab, string>> = {
+    crm: "Your prospects, decision makers and imports in one place.",
+    proposals: "Build and track client proposals.",
+    revenue: "Revenue across your clients.",
+    overview: "Overview of your clients and their visibility.",
+    scan: "Run a quick visibility scan on a client.",
+    battle: "Each client's battle plan.",
+    exec: "Each client's 90-day plan.",
+    track: "Tracking across your clients.",
+    content: "Content for your clients.",
+    ads: "Ads for your clients.",
+    prospects: "Scan a batch of businesses at once.",
+    newsletter: "Write and send your newsletter.",
+  };
 
   return (
     <Shell
@@ -2182,10 +2195,11 @@ export default function DashboardPage() {
       active={tab}
       onSelect={selectTab}
       title={current?.label ?? "Command Center"}
+      subtitle={SUBTITLES[tab]}
       theme={dbTheme}
       onToggleTheme={toggleDbTheme}
       onLogout={logout}
-      actions={tab === "overview" ? <button style={{ ...btn(), padding: "7px 14px" }} onClick={loadData}>Refresh</button> : undefined}
+      actions={tab === "overview" ? <button style={btn()} onClick={loadData}>Refresh</button> : undefined}
     >
       {dataErr && <div style={card({ borderColor: `${alpha(T.danger, 40)}`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{dataErr}</span></div>}
       {tab === "overview" && (data ? <OverviewTab data={data} /> : <div style={{ color: T.muted, fontFamily: MONO, fontSize: 13, padding: 40, textAlign: "center" }}>Loading data…</div>)}

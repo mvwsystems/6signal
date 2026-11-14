@@ -15,16 +15,31 @@ import {
 // activity log. Self-contained inline styling, like the other dashboard tabs.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const card = (extra?: React.CSSProperties): React.CSSProperties => ({ background: T.panel, border: `1px solid ${T.border}`, borderRadius: 2, padding: 16, ...extra });
-const eyebrow: React.CSSProperties = { fontFamily: MONO, fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: T.muted };
+const card = (extra?: React.CSSProperties): React.CSSProperties => ({ background: T.panel, border: `1px solid ${T.border}`, borderRadius: 10, padding: 20, ...extra });
+const eyebrow: React.CSSProperties = { fontFamily: BODY, fontSize: 13, fontWeight: 600, letterSpacing: 0, color: T.textSub };
 const btn = (primary?: boolean, extra?: React.CSSProperties): React.CSSProperties => ({
-  background: primary ? T.accent : "transparent", color: primary ? "#060606" : T.text,
-  border: `1px solid ${primary ? T.accent : T.border}`, borderRadius: 2, padding: "9px 14px",
-  fontFamily: DISP, fontWeight: 700, fontSize: 13, cursor: "pointer", whiteSpace: "nowrap", ...extra,
+  display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, height: 36, padding: "0 16px", borderRadius: 6, cursor: "pointer", fontFamily: BODY, fontWeight: 500, fontSize: 14, whiteSpace: "nowrap",
+  border: `1px solid ${primary ? T.brand : T.border}`, background: primary ? T.brand : "transparent", color: primary ? T.onBrand : T.text, ...extra,
 });
-const inputStyle: React.CSSProperties = { background: T.bg, border: `1px solid ${T.border}`, color: T.text, fontFamily: BODY, fontSize: 14, padding: "9px 12px", borderRadius: 2, outline: "none", width: "100%" };
-const label: React.CSSProperties = { ...eyebrow, fontSize: 10, marginBottom: 5, display: "block" };
-const muted: React.CSSProperties = { color: T.muted, fontFamily: MONO, fontSize: 12 };
+const inputStyle: React.CSSProperties = { background: T.surface, border: `1px solid ${T.border}`, color: T.text, fontFamily: BODY, fontSize: 14, padding: "8px 12px", borderRadius: 6, outline: "none", width: "100%" };
+const label: React.CSSProperties = { ...eyebrow, fontSize: 12, fontWeight: 500, marginBottom: 6, display: "block" };
+const muted: React.CSSProperties = { color: T.muted, fontFamily: BODY, fontSize: 13 };
+// Manus-style rounded pill: filter chips and the CRM's own section switcher.
+const pill = (on: boolean): React.CSSProperties => ({
+  fontFamily: BODY, fontSize: 12, fontWeight: 500, padding: "4px 10px", borderRadius: 999, cursor: "pointer", whiteSpace: "nowrap",
+  border: `1px solid ${on ? T.brand : T.border}`, background: on ? T.brand : "transparent", color: on ? T.onBrand : T.textSub,
+});
+// Status colors from the Manus CRM's prospect list.
+const STATUS_HUE: Record<string, string> = {
+  "Never contacted": "#64748b", "Not now": "#64748b", "Dead": "#64748b",
+  Contacted: "#2563eb", Replied: "#d97706", Interested: "#16a34a", Customer: "#16a34a", "Do Not Contact": "#dc2626",
+};
+function StatusPill({ status }: { status: string }) {
+  if (status === "Closed") return <span className="dash-pill" style={{ fontSize: 12, padding: "3px 10px", borderRadius: 999, background: T.text, color: T.bg, border: `1px solid ${T.text}`, whiteSpace: "nowrap" }}>{status}</span>;
+  const hue = STATUS_HUE[status] ?? "#64748b";
+  return <span className="dash-pill" style={{ fontSize: 12, padding: "3px 10px", borderRadius: 999, background: alpha(hue, 12), color: hue, border: `1px solid ${alpha(hue, 30)}`, whiteSpace: "nowrap" }}>{status}</span>;
+}
+const th: React.CSSProperties = { fontFamily: BODY, fontSize: 13, fontWeight: 500, color: T.text, padding: "0 10px", height: 40, textAlign: "left", whiteSpace: "nowrap", borderBottom: `1px solid ${T.border}` };
 
 async function api<T>(url: string, init?: RequestInit): Promise<T> {
   const r = await fetch(url, { ...init, headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) } });
@@ -41,17 +56,123 @@ function ErrorLine({ msg }: { msg: string | null }) {
 const fmtDate = (s?: string | null) => (s ? new Date(s).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—");
 
 export default function CrmTab() {
-  const [view, setView] = useState<"prospects" | "import" | "duplicates">("prospects");
+  const [view, setView] = useState<"dashboard" | "prospects" | "import" | "duplicates">("dashboard");
   return (
     <div>
-      <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
-        {([["prospects", "Prospects"], ["import", "Import CSV"], ["duplicates", "Duplicates"]] as const).map(([id, l]) => (
-          <button key={id} style={btn(view === id)} onClick={() => setView(id)}>{l}</button>
+      <div role="tablist" aria-label="CRM sections" style={{ display: "flex", gap: 6, marginBottom: 20, flexWrap: "wrap" }}>
+        {([["dashboard", "Dashboard"], ["prospects", "Prospects"], ["import", "Import"], ["duplicates", "Duplicates"]] as const).map(([id, l]) => (
+          <button key={id} role="tab" aria-selected={view === id} className="dash-pill" style={{ ...pill(view === id), fontSize: 13, padding: "6px 14px" }} onClick={() => setView(id)}>{l}</button>
         ))}
       </div>
+      {view === "dashboard" && <DashboardView onOpen={setView} />}
       {view === "prospects" && <ProspectsView />}
       {view === "import" && <ImportView />}
       {view === "duplicates" && <DuplicatesView />}
+    </div>
+  );
+}
+
+// ─── CRM dashboard (Manus look) ──────────────────────────────────────────────
+// Six stat cards with icon badges and a Recent Activity card with filter
+// pills, laid out like the Manus CRM dashboard. Numbers come from the live
+// tables; email and campaign numbers arrive with sequences (C4).
+
+interface CrmStats {
+  total: number; withEmail: number; withPhone: number; decisionMakers: number; contacted: number; customers: number;
+  activity: { id: string; entity_type: string; action: string; summary: string; created_at: string }[];
+}
+
+const STAT_ICONS: Record<string, string> = {
+  users: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75",
+  mail: "M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM22 6l-10 7L2 6",
+  phone: "M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z",
+  id: "M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M9 2h6v4H9zM12 11a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM8 19c.6-1.7 2.2-3 4-3s3.4 1.3 4 3",
+  send: "M22 2 11 13M22 2l-7 20-4-9-9-4z",
+  handshake: "M11 17l2 2a1 1 0 1 0 3-3M14 14l2.5 2.5a1 1 0 1 0 3-3l-3.9-3.9a2 2 0 0 0-2.8 0l-.9.9a1 1 0 1 1-3-3l2.8-2.8a3.7 3.7 0 0 1 4.2-.7l.6.3a2 2 0 0 0 1.6.1L21 4M21 3l1 11h-2M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3M3 4h8",
+  activity: "M3 21h18M5 21V10M10 21V4M15 21v-7M20 21V8",
+  chat: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z",
+};
+function StatIcon({ name, size = 16 }: { name: string; size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d={STAT_ICONS[name]} />
+    </svg>
+  );
+}
+
+const ACTIVITY_FILTERS = [["all", "All"], ["import", "Imports"], ["prospect", "Edits"], ["merge", "Merges"]] as const;
+
+function DashboardView({ onOpen }: { onOpen: (v: "prospects" | "import" | "duplicates") => void }) {
+  const [stats, setStats] = useState<CrmStats | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const [filter, setFilter] = useState<(typeof ACTIVITY_FILTERS)[number][0]>("all");
+  useEffect(() => {
+    api<CrmStats>("/api/dashboard/crm/stats").then(setStats).catch((e) => setErr((e as Error).message));
+  }, []);
+  const n = (v?: number) => (v == null ? "—" : v.toLocaleString());
+  const cards = [
+    { icon: "users", value: n(stats?.total), label: "Total Prospects", go: "prospects" as const },
+    { icon: "mail", value: n(stats?.withEmail), label: "With Email", go: "prospects" as const },
+    { icon: "phone", value: n(stats?.withPhone), label: "With Phone", go: "prospects" as const },
+    { icon: "id", value: n(stats?.decisionMakers), label: "Decision Makers", go: "prospects" as const },
+    { icon: "send", value: n(stats?.contacted), label: "Contacted", go: "prospects" as const },
+    { icon: "handshake", value: n(stats?.customers), label: "Customers", go: "prospects" as const },
+  ];
+  const activity = (stats?.activity ?? []).filter((a) => filter === "all" || a.entity_type === filter);
+  const cardTitle: React.CSSProperties = { display: "flex", alignItems: "center", gap: 8, fontFamily: BODY, fontSize: 16, fontWeight: 600, color: T.text };
+  return (
+    <div>
+      <ErrorLine msg={err} />
+      <div className="dash-stats" style={{ display: "grid", gridTemplateColumns: "repeat(6, minmax(0, 1fr))", gap: 16, marginBottom: 24 }}>
+        {cards.map((c, i) => (
+          <div key={c.label} className="dash-lift dash-fade" role="button" tabIndex={0} onClick={() => onOpen(c.go)} onKeyDown={(e) => e.key === "Enter" && onOpen(c.go)}
+            style={card({ padding: 16, cursor: "pointer", animationDelay: `${(i + 1) * 60}ms` })}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <span style={{ width: 36, height: 36, borderRadius: 2, background: T.iconBg, color: T.iconFg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <StatIcon name={c.icon} />
+              </span>
+              <span style={{ minWidth: 0 }}>
+                <span style={{ display: "block", fontSize: 20, fontWeight: 700, lineHeight: 1, color: T.text, fontVariantNumeric: "tabular-nums" }}>{c.value}</span>
+                <span style={{ display: "block", fontSize: 12, color: T.muted, marginTop: 4, lineHeight: 1.2 }}>{c.label}</span>
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="dash-split" style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 24 }}>
+        <div className="dash-fade" style={card({ padding: 24, minHeight: 280, display: "flex", flexDirection: "column", animationDelay: "420ms" })}>
+          <div style={cardTitle}><span style={{ color: T.muted, display: "flex" }}><StatIcon name="activity" /></span>Email Activity — Last 30 Days</div>
+          <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", ...muted, fontSize: 14, padding: 24 }}>
+            No email activity yet. Sequences come over from Manus in the next step.
+          </div>
+        </div>
+        <div className="dash-fade" style={card({ padding: 0, minHeight: 280, animationDelay: "480ms" })}>
+          <div style={{ padding: "24px 24px 8px" }}>
+            <div style={cardTitle}><span style={{ color: T.muted, display: "flex" }}><StatIcon name="chat" /></span>Recent Activity</div>
+            <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 12 }}>
+              {ACTIVITY_FILTERS.map(([id, l]) => (
+                <button key={id} className="dash-pill" aria-pressed={filter === id} onClick={() => setFilter(id)} style={{ ...pill(filter === id), padding: "2px 8px" }}>{l}</button>
+              ))}
+            </div>
+          </div>
+          {activity.length ? (
+            <div>
+              {activity.slice(0, 8).map((a) => (
+                <div key={a.id} style={{ display: "flex", gap: 8, padding: "12px 24px", borderTop: `1px solid ${T.border}` }}>
+                  <span style={{ width: 8, height: 8, borderRadius: "50%", marginTop: 5, flexShrink: 0, background: a.entity_type === "import" ? T.brand : a.entity_type === "merge" ? "#d97706" : "#2563eb" }} />
+                  <span style={{ minWidth: 0 }}>
+                    <span style={{ display: "block", fontSize: 12, fontWeight: 500, color: T.text, lineHeight: 1.35 }}>{a.summary}</span>
+                    <span style={{ display: "block", fontSize: 12, color: T.muted, marginTop: 2 }}>{new Date(a.created_at).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ padding: "48px 24px", textAlign: "center", ...muted, fontSize: 14 }}>{stats ? "No activity for this filter yet." : "Loading…"}</div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
@@ -165,7 +286,7 @@ function ProspectsView() {
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
         <div>
-          <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 18 }}>Prospects</div>
+          <div style={{ fontFamily: BODY, fontWeight: 600, fontSize: 16 }}>Prospects</div>
           <div style={muted}>{total == null ? (loading ? "Loading…" : "—") : `${total.toLocaleString()} matching`}</div>
         </div>
         <button style={btn(true)} onClick={() => setAdding((a) => !a)}>Add prospect</button>
@@ -183,7 +304,7 @@ function ProspectsView() {
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 10 }}>
           {STATUSES.map((s) => {
             const on = filters.status?.includes(s);
-            return <button key={s} onClick={() => toggleStatus(s)} style={{ ...btn(false, { padding: "5px 10px", fontSize: 12, fontFamily: BODY, fontWeight: 500 }), borderColor: on ? T.accent : T.border, color: on ? T.accent : T.textSub }}>{s}</button>;
+            return <button key={s} className="dash-pill" aria-pressed={!!on} onClick={() => toggleStatus(s)} style={pill(!!on)}>{s}</button>;
           })}
         </div>
         <div className="m1col" style={{ display: "grid", gridTemplateColumns: "repeat(5, minmax(0, 1fr))", gap: 8 }}>
@@ -214,15 +335,15 @@ function ProspectsView() {
           </select>
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10, alignItems: "center" }}>
-          <span style={{ ...eyebrow, fontSize: 10 }}>Saved views</span>
+          <span style={{ ...eyebrow, fontSize: 12 }}>Saved views</span>
           {views.map((v) => (
             <span key={v.id} style={{ display: "inline-flex", gap: 2 }}>
-              <button style={btn(false, { padding: "5px 10px", fontSize: 12 })} onClick={() => { setQInput(v.filters.q ?? ""); set({ ...EMPTY_FILTERS, ...v.filters }); }}>{v.name}</button>
-              <button aria-label={`Delete view ${v.name}`} style={btn(false, { padding: "5px 8px", fontSize: 12, color: T.muted })} onClick={() => deleteView(v)}>Delete</button>
+              <button style={btn(false, { height: 30, padding: "0 10px", fontSize: 12 })} onClick={() => { setQInput(v.filters.q ?? ""); set({ ...EMPTY_FILTERS, ...v.filters }); }}>{v.name}</button>
+              <button aria-label={`Delete view ${v.name}`} style={btn(false, { height: 30, padding: "0 8px", fontSize: 12, color: T.muted })} onClick={() => deleteView(v)}>Delete</button>
             </span>
           ))}
-          <button style={btn(false, { padding: "5px 10px", fontSize: 12 })} onClick={saveCurrentView}>Save current view</button>
-          <button style={btn(false, { padding: "5px 10px", fontSize: 12, color: T.muted })} onClick={() => { setQInput(""); set(EMPTY_FILTERS); }}>Clear filters</button>
+          <button style={btn(false, { height: 30, padding: "0 10px", fontSize: 12 })} onClick={saveCurrentView}>Save current view</button>
+          <button style={btn(false, { height: 30, padding: "0 10px", fontSize: 12, color: T.muted })} onClick={() => { setQInput(""); set(EMPTY_FILTERS); }}>Clear filters</button>
         </div>
       </div>
 
@@ -231,9 +352,9 @@ function ProspectsView() {
 
       {selCount > 0 && (
         <div style={card({ marginBottom: 12, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", borderColor: alpha(T.accent, 40) })}>
-          <span style={{ fontFamily: DISP, fontWeight: 700, fontSize: 13 }}>{selCount.toLocaleString()} selected</span>
+          <span style={{ fontWeight: 600, fontSize: 14 }}>{selCount.toLocaleString()} selected</span>
           {!allMatching && total != null && total > selected.size && (
-            <button style={btn(false, { padding: "5px 10px", fontSize: 12 })} onClick={() => setAllMatching(true)}>Select all {total.toLocaleString()} matching</button>
+            <button style={btn(false, { height: 30, padding: "0 10px", fontSize: 12 })} onClick={() => setAllMatching(true)}>Select all {total.toLocaleString()} matching</button>
           )}
           <select style={{ ...inputStyle, width: "auto" }} value={bulkStatus} onChange={(e) => setBulkStatus(e.target.value)} aria-label="Set status">
             <option value="">Set status…</option>
@@ -246,19 +367,19 @@ function ProspectsView() {
       )}
 
       <div className="xscroll" style={card({ padding: 0 })}>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, minWidth: 760 }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, minWidth: 760 }}>
           <thead>
             <tr style={{ textAlign: "left" }}>
-              <th style={{ padding: 10, width: 32 }}>
+              <th style={{ ...th, width: 32 }}>
                 <input type="checkbox" aria-label="Select this page" checked={rows.length > 0 && rows.every((r) => selected.has(r.id))}
                   onChange={(e) => { const s = new Set(selected); rows.forEach((r) => (e.target.checked ? s.add(r.id) : s.delete(r.id))); setSelected(s); setAllMatching(false); }} />
               </th>
-              {["Company", "Contact", "Category", "Location", "Status", "Tags", "Last contact"].map((h) => <th key={h} style={{ ...eyebrow, fontSize: 10, padding: 10 }}>{h}</th>)}
+              {["Company", "Contact", "Category", "Location", "Status", "Tags", "Last contact"].map((h) => <th key={h} style={th}>{h}</th>)}
             </tr>
           </thead>
           <tbody>
             {rows.map((r) => (
-              <tr key={r.id} style={{ borderTop: `1px solid ${T.border}`, cursor: "pointer" }} onClick={() => setOpenId(r.id)}>
+              <tr key={r.id} style={{ borderBottom: `1px solid ${T.border}`, cursor: "pointer" }} onClick={() => setOpenId(r.id)}>
                 <td style={{ padding: 10 }} onClick={(e) => e.stopPropagation()}>
                   <input type="checkbox" aria-label={`Select ${r.company}`} checked={allMatching || selected.has(r.id)}
                     onChange={(e) => { const s = new Set(selected); e.target.checked ? s.add(r.id) : s.delete(r.id); setSelected(s); setAllMatching(false); }} />
@@ -270,8 +391,8 @@ function ProspectsView() {
                 </td>
                 <td style={{ padding: 10, color: T.textSub }}>{r.category ?? "—"}</td>
                 <td style={{ padding: 10, color: T.textSub }}>{[r.city, r.state].filter(Boolean).join(", ") || "—"}</td>
-                <td style={{ padding: 10 }}><span style={{ color: r.status === "Do Not Contact" ? T.danger : T.text }}>{r.status}</span></td>
-                <td style={{ padding: 10, color: T.textSub, fontSize: 12 }}>{(r.tags ?? []).join(", ") || "—"}</td>
+                <td style={{ padding: 10 }}><StatusPill status={r.status} /></td>
+                <td style={{ padding: 10 }}>{(r.tags ?? []).length ? <span style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>{(r.tags ?? []).slice(0, 3).map((t) => <span key={t} className="dash-pill" style={{ fontSize: 10, fontWeight: 600, padding: "2px 6px", borderRadius: 999, background: T.brand, color: T.onBrand, whiteSpace: "nowrap" }}>{t}</span>)}{(r.tags ?? []).length > 3 && <span style={{ ...muted, fontSize: 11 }}>+{(r.tags ?? []).length - 3}</span>}</span> : <span style={{ color: T.muted }}>—</span>}</td>
                 <td style={{ padding: 10, color: T.textSub }}>{fmtDate(r.last_contact_at)}</td>
               </tr>
             ))}
@@ -535,7 +656,7 @@ function ImportView() {
 
   return (
     <div>
-      <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 18, marginBottom: 4 }}>Import CSV</div>
+      <div style={{ fontFamily: BODY, fontWeight: 600, fontSize: 16, marginBottom: 4 }}>Import CSV</div>
       <div style={{ ...muted, marginBottom: 12 }}>Upload, map columns, preview the dedupe report, then commit. Nothing is written until you commit, and only new rows are added.</div>
       <ErrorLine msg={err} />
       {done && <div style={card({ borderColor: alpha(T.ok, 40), color: T.ok, fontSize: 13, marginBottom: 12 })}>{done}</div>}
@@ -668,7 +789,7 @@ function ManusLoadPanel({ onDone }: { onDone: () => void }) {
 
   return (
     <div style={card({ marginTop: 18 })}>
-      <div style={{ fontFamily: DISP, fontSize: 18, fontWeight: 700, marginBottom: 4 }}>Load Manus export</div>
+      <div style={{ fontFamily: BODY, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>Load Manus export</div>
       <div style={{ ...muted, marginBottom: 12 }}>One-time move of the Manus CRM: prospects, decision makers and notes, with their Manus ids kept. Repeats inside Manus are loaded as they are and can be merged on the Duplicates page.</div>
       <ErrorLine msg={err} />
       <input type="file" accept=".json,application/json" aria-label="Manus export file" onChange={(e) => onFile(e.target.files?.[0])} />
@@ -733,7 +854,7 @@ function DuplicatesView() {
 
   return (
     <div>
-      <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 18, marginBottom: 4 }}>Duplicates</div>
+      <div style={{ fontFamily: BODY, fontWeight: 600, fontSize: 16, marginBottom: 4 }}>Duplicates</div>
       <div style={{ ...muted, marginBottom: 12 }}>Groups that share an email, website domain, company name or phone. Nothing merges on its own: pick the record to keep, then merge.</div>
       <ErrorLine msg={err} />
       {!clusters && !err && <div style={muted}>Scanning…</div>}
@@ -741,7 +862,7 @@ function DuplicatesView() {
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12 }}>
           <button style={btn(filter === "all", { padding: "5px 10px", fontSize: 12 })} onClick={() => setFilter("all")}>All {clusters.length}</button>
           {reasons.map((r) => <button key={r} style={btn(filter === r, { padding: "5px 10px", fontSize: 12 })} onClick={() => setFilter(r)}>{r} {clusters.filter((c) => c.reason === r).length}</button>)}
-          <button style={btn(false, { padding: "5px 10px", fontSize: 12 })} onClick={load}>Rescan</button>
+          <button style={btn(false, { height: 30, padding: "0 10px", fontSize: 12 })} onClick={load}>Rescan</button>
         </div>
       )}
       {clusters && !shown.length && <div style={muted}>No duplicate groups found.</div>}
