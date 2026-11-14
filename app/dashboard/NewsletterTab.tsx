@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { T, MONO, DISP, BODY } from "./theme";
+import { T, MONO, DISP, BODY, alpha } from "./theme";
 import { renderBriefingEmail } from "../lib/newsletterHtml";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -11,16 +11,16 @@ import { renderBriefingEmail } from "../lib/newsletterHtml";
 // passing test means that domain's DNS is actually working.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const card = (extra?: React.CSSProperties): React.CSSProperties => ({ background: T.panel, border: `1px solid ${T.border}`, borderRadius: 2, padding: 20, ...extra });
-const eyebrow: React.CSSProperties = { fontFamily: MONO, fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: T.muted };
+const card = (extra?: React.CSSProperties): React.CSSProperties => ({ background: T.panel, border: `1px solid ${T.border}`, borderRadius: 10, padding: 24, ...extra });
+const eyebrow: React.CSSProperties = { fontFamily: BODY, fontSize: 13, fontWeight: 600, letterSpacing: 0, color: T.textSub };
 const btn = (primary?: boolean, danger?: boolean): React.CSSProperties => ({
-  background: primary ? T.accent : "transparent",
-  color: primary ? "#060606" : danger ? T.danger : T.text,
-  border: `1px solid ${primary ? T.accent : danger ? `${T.danger}66` : T.border}`,
-  borderRadius: 2, padding: "9px 15px", fontFamily: DISP, fontWeight: 700, fontSize: 12.5, cursor: "pointer",
+  display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, height: 36, padding: "0 16px", borderRadius: 6, cursor: "pointer", fontFamily: BODY, fontWeight: 500, fontSize: 14, whiteSpace: "nowrap",
+  background: primary ? T.brand : "transparent",
+  color: primary ? T.onBrand : danger ? T.danger : T.text,
+  border: `1px solid ${primary ? T.brand : danger ? alpha(T.danger, 40) : T.border}`,
 });
-const inputStyle: React.CSSProperties = { background: T.bg, border: `1px solid ${T.border}`, color: T.text, fontFamily: BODY, fontSize: 13, padding: "9px 12px", borderRadius: 2, outline: "none", width: "100%" };
-const label: React.CSSProperties = { ...eyebrow, fontSize: 10, marginBottom: 5, display: "block" };
+const inputStyle: React.CSSProperties = { background: T.surface, border: `1px solid ${T.border}`, color: T.text, fontFamily: BODY, fontSize: 14, padding: "8px 12px", borderRadius: 6, outline: "none", width: "100%" };
+const label: React.CSSProperties = { ...eyebrow, fontSize: 12, fontWeight: 500, marginBottom: 6, display: "block" };
 
 interface Issue {
   id: string; slug: string; subject: string; preview: string | null; body: string;
@@ -205,7 +205,7 @@ export default function NewsletterTab() {
   return (
     <div>
       {meta.domainWarning && (
-        <div style={card({ borderColor: `${T.warn}66`, marginBottom: 16 })}>
+        <div style={card({ borderColor: alpha(T.warn, 40), marginBottom: 16 })}>
           <span style={{ ...eyebrow, color: T.warn }}>Sending domain</span>
           <p style={{ color: T.text, fontSize: 13, marginTop: 8, lineHeight: 1.6 }}>{meta.domainWarning}</p>
         </div>
@@ -226,7 +226,7 @@ export default function NewsletterTab() {
       </div>
 
       {msg && (
-        <div style={card({ borderColor: msg.kind === "ok" ? `${T.accent}55` : `${T.danger}66`, marginBottom: 16, padding: "12px 18px" })}>
+        <div style={card({ borderColor: msg.kind === "ok" ? alpha(T.accent, 33) : alpha(T.danger, 40), marginBottom: 16, padding: "12px 18px" })}>
           <span style={{ color: msg.kind === "ok" ? T.text : T.danger, fontSize: 13 }}>{msg.text}</span>
         </div>
       )}

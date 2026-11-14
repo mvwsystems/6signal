@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import { T, MONO, DISP, BODY, alpha } from "./theme";
+import { T, DISP, BODY } from "./theme";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Command Center shell: a left side menu modeled on the Manus CRM layout.
-// Always-dark sidebar with grouped, icon + label items; collapses to icons on
-// desktop (remembered per browser) and becomes a slide-out drawer behind a
-// menu button on phones. The main area keeps the light/dark dashboard theme.
+// Command Center shell, built to match the Manus CRM layout: an always-dark
+// left menu (flat list, brand-yellow active icon, theme toggle and account
+// chip at the bottom), the page title and subtitle at the top of the content
+// area, no top bar on desktop. The menu collapses to icons (remembered per
+// browser) and becomes a slide-out drawer behind a menu button on phones.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export interface NavItem<Id extends string> { id: Id; label: string; icon: IconName }
@@ -49,17 +50,19 @@ function Icon({ name, size = 18 }: { name: IconName | "menu" | "panel" | "sun" |
   );
 }
 
-// Sidebar palette: always dark, like the Manus CRM, in both themes.
-const S = { bg: "#111111", hover: "#1c1c1c", active: "#222222", border: "#222222", text: "#e8e8e6", sub: "#8f8f8a", accent: "#E6FF00" };
+// Sidebar palette: always dark, like the Manus CRM (#111 menu, #222 active
+// row, brand-yellow active icon), in both themes.
+const S = { bg: "#111111", hover: "#1f1f1f", active: "#222222", border: "#222222", text: "#e8eaee", sub: "rgba(232,234,238,0.5)", dim: "rgba(232,234,238,0.7)", accent: "#E6FF00" };
 const COLLAPSE_KEY = "6sig_db_nav_collapsed";
 
 export default function Shell<Id extends string>({
-  groups, active, onSelect, title, actions, theme, onToggleTheme, onLogout, children,
+  groups, active, onSelect, title, subtitle, actions, theme, onToggleTheme, onLogout, children,
 }: {
   groups: NavGroup<Id>[];
   active: Id;
   onSelect: (id: Id) => void;
   title: string;
+  subtitle?: string;
   actions?: React.ReactNode;
   theme: "dark" | "light";
   onToggleTheme: () => void;
@@ -68,90 +71,101 @@ export default function Shell<Id extends string>({
 }) {
   const [collapsed, setCollapsed] = useState(false);
   const [drawer, setDrawer] = useState(false);
+  const [userMenu, setUserMenu] = useState(false);
 
   useEffect(() => {
     try { setCollapsed(localStorage.getItem(COLLAPSE_KEY) === "1"); } catch { /* private mode */ }
   }, []);
   useEffect(() => {
-    if (!drawer) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setDrawer(false);
+    if (!drawer && !userMenu) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") { setDrawer(false); setUserMenu(false); } };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [drawer]);
+  }, [drawer, userMenu]);
 
   const toggleCollapsed = () => setCollapsed((c) => {
     try { localStorage.setItem(COLLAPSE_KEY, c ? "0" : "1"); } catch { /* private mode */ }
     return !c;
   });
   const pick = (id: Id) => { onSelect(id); setDrawer(false); };
+  const items = groups.flatMap((g) => g.items);
 
   const nav = (compact: boolean) => (
     <nav aria-label="Command Center" style={{ display: "flex", flexDirection: "column", height: "100%", background: S.bg, color: S.text, fontFamily: BODY }}>
-      <div style={{ height: 60, display: "flex", alignItems: "center", gap: 10, padding: "0 12px", borderBottom: `1px solid ${S.border}`, flexShrink: 0 }}>
+      <div style={{ height: 64, display: "flex", alignItems: "center", gap: 12, padding: compact ? "0 16px" : "0 16px", borderBottom: `1px solid ${S.border}`, flexShrink: 0 }}>
         <button className="dash-nav-collapse" aria-label={compact ? "Expand menu" : "Collapse menu"} onClick={toggleCollapsed}
-          style={{ background: "none", border: "none", color: S.sub, padding: 6, borderRadius: 6, display: "flex" }}>
-          <Icon name="panel" />
+          style={{ background: "none", border: "none", color: S.dim, width: 32, height: 32, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <Icon name="panel" size={16} />
         </button>
         <button className="dash-nav-close" aria-label="Close menu" onClick={() => setDrawer(false)}
-          style={{ background: "none", border: "none", color: S.sub, padding: 6, borderRadius: 6, display: "none" }}>
-          <Icon name="close" />
+          style={{ background: "none", border: "none", color: S.dim, width: 32, height: 32, borderRadius: 8, display: "none", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <Icon name="close" size={16} />
         </button>
         {!compact && (
           <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
-            <img src="/6SIGDashboardLogo.png" alt="" style={{ height: 20, width: "auto" }} />
-            <span style={{ fontFamily: DISP, fontWeight: 700, fontSize: 14, letterSpacing: "0.04em", whiteSpace: "nowrap" }}>6 SIGNAL</span>
+            <span style={{ width: 24, height: 24, borderRadius: 4, background: "#000", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", flexShrink: 0 }}>
+              <img src="/6SIGDashboardLogo.png" alt="" style={{ height: 16, width: "auto" }} />
+            </span>
+            <span style={{ fontFamily: DISP, fontWeight: 600, fontSize: 15, whiteSpace: "nowrap" }}>6 SIGNAL</span>
           </div>
         )}
       </div>
 
-      <div style={{ flex: 1, overflowY: "auto", padding: "10px 8px" }}>
-        {groups.map((g) => (
-          <div key={g.label} style={{ marginBottom: 10 }}>
-            {!compact && <div style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: S.sub, padding: "8px 10px 6px" }}>{g.label}</div>}
-            {compact && <div style={{ height: 1, background: S.border, margin: "8px 6px" }} />}
-            {g.items.map((it) => {
-              const on = it.id === active;
-              return (
-                <button key={it.id} onClick={() => pick(it.id)} title={compact ? it.label : undefined} aria-current={on ? "page" : undefined}
-                  className="dash-nav-item"
-                  style={{
-                    display: "flex", alignItems: "center", gap: 12, width: "100%", height: 40,
-                    padding: compact ? "0" : "0 10px", justifyContent: compact ? "center" : "flex-start",
-                    background: on ? S.active : "transparent", border: "none", borderRadius: 6,
-                    color: on ? S.text : alpha(S.text, 78), fontFamily: BODY, fontSize: 14, fontWeight: on ? 600 : 400,
-                    position: "relative", textAlign: "left",
-                  }}>
-                  {on && <span style={{ position: "absolute", left: 0, top: 8, bottom: 8, width: 3, borderRadius: 2, background: S.accent }} />}
-                  <span style={{ color: on ? S.accent : S.sub, display: "flex" }}><Icon name={it.icon} /></span>
-                  {!compact && <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{it.label}</span>}
-                </button>
-              );
-            })}
-          </div>
-        ))}
+      <div style={{ flex: 1, overflowY: "auto", padding: "8px 8px" }}>
+        {items.map((it) => {
+          const on = it.id === active;
+          return (
+            <button key={it.id} onClick={() => pick(it.id)} title={compact ? it.label : undefined} aria-current={on ? "page" : undefined}
+              className="dash-nav-item"
+              style={{
+                display: "flex", alignItems: "center", gap: 12, width: "100%", height: 40, marginBottom: 2,
+                padding: compact ? "0" : "0 10px", justifyContent: compact ? "center" : "flex-start",
+                background: on ? S.active : "transparent", border: "none", borderRadius: 6,
+                color: on ? S.text : "rgba(232,234,238,0.8)", fontFamily: BODY, fontSize: 15, fontWeight: on ? 500 : 400, textAlign: "left",
+              }}>
+              <span style={{ color: on ? S.accent : S.dim, display: "flex" }}><Icon name={it.icon} size={16} /></span>
+              {!compact && <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{it.label}</span>}
+            </button>
+          );
+        })}
       </div>
 
-      <div style={{ borderTop: `1px solid ${S.border}`, padding: 8, flexShrink: 0 }}>
-        <button onClick={onToggleTheme} className="dash-nav-item" title={compact ? "Switch theme" : undefined}
-          style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", height: 38, padding: compact ? 0 : "0 10px", justifyContent: compact ? "center" : "flex-start", background: "none", border: "none", borderRadius: 6, color: S.sub, fontFamily: BODY, fontSize: 13 }}>
-          <Icon name={theme === "dark" ? "sun" : "moon"} />
-          {!compact && <span>{theme === "dark" ? "Light mode" : "Dark mode"}</span>}
+      <div style={{ borderTop: `1px solid ${S.border}`, padding: 12, flexShrink: 0, position: "relative" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: compact ? "center" : "space-between", padding: compact ? "6px 0" : "6px 8px", marginBottom: 4 }}>
+          {!compact && <span style={{ fontSize: 12, fontWeight: 500, color: S.sub }}>{theme === "dark" ? "Dark mode" : "Light mode"}</span>}
+          <button onClick={onToggleTheme} className="dash-theme-btn" aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"} title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            style={{ width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center", background: "none", border: "none", borderRadius: 6, color: S.dim }}>
+            <Icon name={theme === "dark" ? "sun" : "moon"} size={16} />
+          </button>
+        </div>
+        <button onClick={() => setUserMenu((m) => !m)} className="dash-nav-item" aria-haspopup="menu" aria-expanded={userMenu} title={compact ? "Account" : undefined}
+          style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", padding: compact ? "8px 0" : 8, justifyContent: compact ? "center" : "flex-start", background: "none", border: "none", borderRadius: 8, color: S.text, textAlign: "left" }}>
+          <span style={{ width: 32, height: 32, borderRadius: "50%", background: S.accent, color: "#0b0d02", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 600, flexShrink: 0 }}>M</span>
+          {!compact && (
+            <span style={{ minWidth: 0, flex: 1 }}>
+              <span style={{ display: "block", fontSize: 12, fontWeight: 500, lineHeight: 1 }}>Matt Walker</span>
+              <span style={{ display: "block", fontSize: 12, color: S.sub, marginTop: 4, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>6 Signal Command Center</span>
+            </span>
+          )}
         </button>
-        <button onClick={onLogout} className="dash-nav-item" title={compact ? "Log out" : undefined}
-          style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", height: 38, padding: compact ? 0 : "0 10px", justifyContent: compact ? "center" : "flex-start", background: "none", border: "none", borderRadius: 6, color: S.sub, fontFamily: BODY, fontSize: 13 }}>
-          <Icon name="logout" />
-          {!compact && <span>Log out</span>}
-        </button>
+        {userMenu && (
+          <div role="menu" style={{ position: "absolute", bottom: "calc(100% - 4px)", left: 12, right: compact ? "auto" : 12, minWidth: 180, background: "#171717", border: `1px solid ${S.border}`, borderRadius: 8, padding: 4, boxShadow: "0 8px 24px rgba(0,0,0,0.5)", zIndex: 5 }}>
+            <button role="menuitem" onClick={() => { setUserMenu(false); onLogout(); }} className="dash-nav-item"
+              style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", height: 34, padding: "0 8px", background: "none", border: "none", borderRadius: 6, color: "#f87171", fontFamily: BODY, fontSize: 13, textAlign: "left" }}>
+              <Icon name="logout" size={16} /> Log out
+            </button>
+          </div>
+        )}
       </div>
     </nav>
   );
 
-  const width = collapsed ? 68 : 240;
+  const width = collapsed ? 64 : 240;
 
   return (
     <div className="dash-root dash-shell" style={{ minHeight: "100vh", background: T.bg, color: T.text, fontFamily: BODY, display: "flex" }}>
       {/* Desktop sidebar */}
-      <aside className="dash-sidebar" style={{ width, flexShrink: 0, position: "sticky", top: 0, height: "100vh", transition: "width 160ms ease", borderRight: `1px solid ${S.border}` }}>
+      <aside className="dash-sidebar" style={{ width, flexShrink: 0, position: "sticky", top: 0, height: "100vh", transition: "width 160ms ease" }}>
         {nav(collapsed)}
       </aside>
 
@@ -164,15 +178,22 @@ export default function Shell<Id extends string>({
       )}
 
       <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
-        <header style={{ height: 60, display: "flex", alignItems: "center", gap: 12, padding: "0 24px", borderBottom: `1px solid ${T.border}`, background: T.surface, position: "sticky", top: 0, zIndex: 10 }} className="dash-topbar">
-          <button className="dash-menu-btn" aria-label="Open menu" onClick={() => setDrawer(true)}
-            style={{ display: "none", background: "none", border: `1px solid ${T.border}`, color: T.text, padding: 7, borderRadius: 6 }}>
+        {/* Phone top bar (hidden on desktop, like the Manus layout) */}
+        <div className="dash-mobilebar" style={{ display: "none", height: 56, alignItems: "center", gap: 12, padding: "0 16px", borderBottom: `1px solid ${T.border}`, background: T.bg, position: "sticky", top: 0, zIndex: 10 }}>
+          <button aria-label="Open menu" onClick={() => setDrawer(true)}
+            style={{ display: "flex", background: "none", border: "none", color: T.text, padding: 8, borderRadius: 8 }}>
             <Icon name="menu" />
           </button>
-          <h1 style={{ fontFamily: DISP, fontWeight: 700, fontSize: 18, margin: 0, flex: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{title}</h1>
-          {actions}
-        </header>
-        <main className="dash-main" style={{ padding: 24, width: "100%", maxWidth: 1320, margin: "0 auto" }}>
+          <span style={{ fontSize: 14, fontWeight: 500 }}>{title}</span>
+        </div>
+        <main className="dash-main" style={{ padding: 24, width: "100%", maxWidth: 1280, margin: "0 auto" }}>
+          <div className="dash-fade" style={{ display: "flex", alignItems: "flex-start", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <h1 style={{ fontFamily: DISP, fontWeight: 700, fontSize: 26, letterSpacing: "-0.01em", margin: 0, lineHeight: 1.2 }}>{title}</h1>
+              {subtitle && <p style={{ fontSize: 14, color: T.muted, margin: "4px 0 0" }}>{subtitle}</p>}
+            </div>
+            {actions}
+          </div>
           {children}
         </main>
       </div>

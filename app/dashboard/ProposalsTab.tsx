@@ -12,15 +12,14 @@ import { T, MONO, DISP, BODY } from "./theme";
 // ─────────────────────────────────────────────────────────────────────────────
 
 
-const card = (extra?: React.CSSProperties): React.CSSProperties => ({ background: T.panel, border: `1px solid ${T.border}`, borderRadius: 2, padding: 20, ...extra });
-const eyebrow: React.CSSProperties = { fontFamily: MONO, fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: T.muted };
+const card = (extra?: React.CSSProperties): React.CSSProperties => ({ background: T.panel, border: `1px solid ${T.border}`, borderRadius: 10, padding: 24, ...extra });
+const eyebrow: React.CSSProperties = { fontFamily: BODY, fontSize: 13, fontWeight: 600, letterSpacing: 0, color: T.textSub };
 const btn = (primary?: boolean): React.CSSProperties => ({
-  background: primary ? T.accent : "transparent", color: primary ? "#060606" : T.text,
-  border: `1px solid ${primary ? T.accent : T.border}`, borderRadius: 2, padding: "10px 16px",
-  fontFamily: DISP, fontWeight: 700, fontSize: 13, cursor: "pointer",
+  display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, height: 36, padding: "0 16px", borderRadius: 6, cursor: "pointer", fontFamily: BODY, fontWeight: 500, fontSize: 14, whiteSpace: "nowrap",
+  border: `1px solid ${primary ? T.brand : T.border}`, background: primary ? T.brand : "transparent", color: primary ? T.onBrand : T.text,
 });
-const inputStyle: React.CSSProperties = { background: T.bg, border: `1px solid ${T.border}`, color: T.text, fontFamily: BODY, fontSize: 13, padding: "9px 12px", borderRadius: 2, outline: "none", width: "100%" };
-const label: React.CSSProperties = { ...eyebrow, fontSize: 10, marginBottom: 5, display: "block" };
+const inputStyle: React.CSSProperties = { background: T.surface, border: `1px solid ${T.border}`, color: T.text, fontFamily: BODY, fontSize: 14, padding: "8px 12px", borderRadius: 6, outline: "none", width: "100%" };
+const label: React.CSSProperties = { ...eyebrow, fontSize: 12, fontWeight: 500, marginBottom: 6, display: "block" };
 
 interface Biz { id: string; name: string; url: string | null; trade: string; city: string }
 
