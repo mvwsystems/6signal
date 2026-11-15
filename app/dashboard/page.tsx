@@ -4,6 +4,7 @@ import { Radar, Ring, SignalBars, LineChart, Donut, Sparkline, MapHeatGrid } fro
 import ProposalsTab from "./ProposalsTab";
 import NewsletterTab from "./NewsletterTab";
 import CrmTab from "./CrmTab";
+import { Me, TodayPanel, ApprovalsPanel, ConnectionsPanel, ComingSoon } from "./CommandCenter";
 import Shell, { NavGroup } from "./Shell";
 import { T, alpha, MONO, DISP, BODY, useDbTheme } from "./theme";
 
@@ -73,10 +74,28 @@ function Stat({ label, value, accent }: { label: string; value: string; accent?:
 }
 
 // ─── Login gate ────────────────────────────────────────────────────────────────
-function Login({ onAuthed, configured }: { onAuthed: () => void; configured: boolean }) {
+// Google sign-in for Matt (owner) and Casey (operator). The old shared
+// password is break-glass only: it still works for Matt, but every use is
+// logged and sends an alert.
+const LOGIN_ERRORS: Record<string, string> = {
+  not_allowed: "That Google account isn't on the Command Center list. Sign in with hello@, mvw@ or casey@.",
+  google_not_set_up: "Google sign-in isn't set up on the server yet (GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET).",
+  expired: "That sign-in took too long or was opened in another tab. Try again.",
+  cancelled: "Sign-in was cancelled.",
+  failed: "Google sign-in didn't go through. Try again.",
+};
+function Login({ onAuthed, google, breakGlass }: { onAuthed: () => void; google: boolean; breakGlass: boolean }) {
   const [pw, setPw] = useState("");
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [showGlass, setShowGlass] = useState(false);
+  useEffect(() => {
+    const code = new URLSearchParams(window.location.search).get("login_error");
+    if (code) {
+      setErr(LOGIN_ERRORS[code] ?? LOGIN_ERRORS.failed);
+      window.history.replaceState(null, "", window.location.pathname + window.location.hash);
+    }
+  }, []);
   const submit = async () => {
     setBusy(true); setErr(null);
     try {
@@ -93,13 +112,29 @@ function Login({ onAuthed, configured }: { onAuthed: () => void; configured: boo
         <img src="/6SIGDashboardLogo.png" alt="6 Signal" style={{ height: 34, width: "auto", display: "block", marginBottom: 14 }} />
         <h1 style={{ fontFamily: DISP, fontSize: 22, fontWeight: 700, color: T.text, margin: "0 0 4px" }}>Command Center</h1>
         <p style={{ fontFamily: BODY, fontSize: 13, color: T.muted, margin: "0 0 20px" }}>Internal access only.</p>
-        {!configured && <p style={{ fontSize: 12, color: T.warn, marginBottom: 12 }}>No dashboard password is set on the server (DASHBOARD_PASSWORD).</p>}
-        <input type="password" value={pw} placeholder="Password" style={inputStyle}
-          onChange={(e) => setPw(e.target.value)} onKeyDown={(e) => e.key === "Enter" && !busy && submit()} />
+        <a href="/api/dashboard/auth/google" style={{ ...btn(true), width: "100%", textDecoration: "none", opacity: google ? 1 : 0.5, pointerEvents: google ? "auto" : "none" }} aria-disabled={!google}>
+          Sign in with Google
+        </a>
+        {!google && <p style={{ fontSize: 12, color: T.warn, margin: "10px 0 0" }}>Google sign-in isn't set up on the server yet.</p>}
         {err && <div style={{ fontSize: 12, color: T.danger, marginTop: 10 }}>{err}</div>}
-        <button style={{ ...btn(true), width: "100%", marginTop: 16, opacity: busy ? 0.5 : 1 }} onClick={submit} disabled={busy}>
-          {busy ? "Checking…" : "Enter"}
-        </button>
+        {breakGlass && (
+          <div style={{ marginTop: 20, borderTop: `1px solid ${T.border}`, paddingTop: 14 }}>
+            {!showGlass ? (
+              <button onClick={() => setShowGlass(true)} style={{ background: "none", border: "none", padding: 0, color: T.muted, fontFamily: BODY, fontSize: 12, cursor: "pointer", textDecoration: "underline" }}>
+                Use the break-glass password
+              </button>
+            ) : (
+              <>
+                <p style={{ fontSize: 12, color: T.warn, margin: "0 0 8px" }}>For emergencies only. Using it is logged and sends an alert.</p>
+                <input type="password" value={pw} placeholder="Break-glass password" aria-label="Break-glass password" style={inputStyle}
+                  onChange={(e) => setPw(e.target.value)} onKeyDown={(e) => e.key === "Enter" && !busy && submit()} />
+                <button style={{ ...btn(false), width: "100%", marginTop: 10, opacity: busy ? 0.5 : 1 }} onClick={submit} disabled={busy}>
+                  {busy ? "Checking…" : "Sign in with break-glass password"}
+                </button>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -2101,13 +2136,24 @@ function RevenueTab() {
 }
 
 // ─── Main ────────────────────────────────────────────────────────────────────────
+// The signed-in account from /api/dashboard/auth (owner = Matt, operator = Casey).
+function meFrom(d: { role?: string; name?: string; ownerName?: string; operatorName?: string }): Me {
+  return {
+    role: d.role === "operator" ? "operator" : "owner",
+    name: d.name || "Matt",
+    ownerName: d.ownerName || "Matt",
+    operatorName: d.operatorName || "Casey",
+  };
+}
+
 export default function DashboardPage() {
   const [state, setState] = useState<"loading" | "locked" | "in">("loading");
-  const [configured, setConfigured] = useState(true);
-  const [tab, setTab] = useState<"overview" | "crm" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "proposals" | "newsletter" | "ads" | "revenue">("overview");
+  const [methods, setMethods] = useState({ google: true, breakGlass: true });
+  const [tab, setTab] = useState<"today" | "approvals" | "money" | "conversations" | "pipeline" | "delivery" | "visibility" | "staff" | "connections" | "overview" | "crm" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "proposals" | "newsletter" | "ads" | "revenue">("today");
+  const [me, setMe] = useState<Me | null>(null);
   // The open tab lives in the URL hash (#crm), so a reload or a bookmark
   // lands on the same section.
-  const TAB_IDS = ["overview", "crm", "scan", "battle", "exec", "track", "content", "prospects", "proposals", "newsletter", "ads", "revenue"] as const;
+  const TAB_IDS = ["today", "approvals", "money", "conversations", "pipeline", "delivery", "visibility", "staff", "connections", "overview", "crm", "scan", "battle", "exec", "track", "content", "prospects", "proposals", "newsletter", "ads", "revenue"] as const;
   useEffect(() => {
     const fromHash = () => {
       const h = window.location.hash.replace("#", "");
@@ -2140,8 +2186,8 @@ export default function DashboardPage() {
       try {
         const r = await fetch("/api/dashboard/auth");
         const d = await r.json();
-        setConfigured(!!d.configured);
-        if (d.authed) { setState("in"); loadData(); } else setState("locked");
+        setMethods({ google: !!d.google, breakGlass: !!d.breakGlass });
+        if (d.authed) { setMe(meFrom(d)); setState("in"); loadData(); } else setState("locked");
       } catch { setState("locked"); }
     })();
   }, [loadData]);
@@ -2150,16 +2196,30 @@ export default function DashboardPage() {
   const logout = async () => { await fetch("/api/dashboard/auth", { method: "DELETE" }); setState("locked"); setData(null); };
 
   if (state === "loading") return <div className="dash-root" style={{ minHeight: "100vh", background: T.bg, color: T.muted, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 13 }}>Loading…</div>;
-  if (state === "locked") return <Login configured={configured} onAuthed={() => { setState("in"); loadData(); }} />;
+  if (state === "locked") return <Login google={methods.google} breakGlass={methods.breakGlass} onAuthed={async () => {
+    try { const d = await (await fetch("/api/dashboard/auth")).json(); setMe(meFrom(d)); } catch { /* chip falls back to defaults */ }
+    setState("in"); loadData();
+  }} />;
 
   type Tab = typeof tab;
   const GROUPS: NavGroup<Tab>[] = [
+    { label: "Command Center", items: [
+      { id: "today", label: "Today", icon: "check" },
+      { id: "approvals", label: "Approvals", icon: "target" },
+      { id: "money", label: "Money", icon: "dollar" },
+      { id: "conversations", label: "Conversations", icon: "mail" },
+      { id: "pipeline", label: "Pipeline & Clients", icon: "users" },
+      { id: "delivery", label: "Delivery", icon: "list" },
+      { id: "visibility", label: "Visibility", icon: "scan" },
+      { id: "staff", label: "Staff", icon: "grid" },
+      { id: "connections", label: "Connections", icon: "chart" },
+    ] },
     { label: "Sales", items: [
       { id: "crm", label: "CRM", icon: "users" },
       { id: "proposals", label: "Proposals", icon: "file" },
       { id: "revenue", label: "Revenue", icon: "dollar" },
     ] },
-    { label: "Clients", items: [
+    { label: "Client tools", items: [
       { id: "overview", label: "Overview", icon: "grid" },
       { id: "scan", label: "Quick Scan", icon: "scan" },
       { id: "battle", label: "Battle Plan", icon: "target" },
@@ -2175,6 +2235,15 @@ export default function DashboardPage() {
   ];
   const current = GROUPS.flatMap((g) => g.items).find((i) => i.id === tab);
   const SUBTITLES: Partial<Record<Tab, string>> = {
+    today: "What needs you, what's on fire, and what's happening today.",
+    approvals: "Every Yellow and Red decision in one list.",
+    money: "Stripe, read-only.",
+    conversations: "Replies and routed calls in one stream.",
+    pipeline: "Is any deal or client quietly slipping?",
+    delivery: "Client setup projects and what each is waiting on.",
+    visibility: "Client visibility checks and reports.",
+    staff: "The AI staff board.",
+    connections: "Every integration and whether it's working.",
     crm: "Your prospects, decision makers and imports in one place.",
     proposals: "Build and track client proposals.",
     revenue: "Revenue across your clients.",
@@ -2199,10 +2268,21 @@ export default function DashboardPage() {
       theme={dbTheme}
       onToggleTheme={toggleDbTheme}
       onLogout={logout}
+      userName={me?.name}
+      userRole={me ? (me.role === "owner" ? "Owner" : "Operator") : undefined}
       actions={tab === "overview" ? <button style={btn()} onClick={loadData}>Refresh</button> : undefined}
     >
       {dataErr && <div style={card({ borderColor: `${alpha(T.danger, 40)}`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{dataErr}</span></div>}
       {tab === "overview" && (data ? <OverviewTab data={data} /> : <div style={{ color: T.muted, fontFamily: MONO, fontSize: 13, padding: 40, textAlign: "center" }}>Loading data…</div>)}
+      {tab === "today" && (me ? <TodayPanel me={me} onOpenTab={(t) => selectTab(t as Tab)} /> : <div style={{ color: T.muted, fontFamily: MONO, fontSize: 13, padding: 40, textAlign: "center" }}>Loading…</div>)}
+      {tab === "approvals" && me && <ApprovalsPanel me={me} />}
+      {tab === "connections" && <ConnectionsPanel />}
+      {tab === "money" && <ComingSoon phase={1} onOpenTab={(t) => selectTab(t as Tab)} what="Stripe, read-only: balance, money in this month, failed or unpaid invoices (each one an exception the day it happens), subscriptions due in the next 14 days, recent payments, and your owner-only personal due-date strip. No payment buttons." links={[{ tab: "revenue", label: "Revenue (today's page)" }]} />}
+      {tab === "conversations" && <ComingSoon phase={2} onOpenTab={(t) => selectTab(t as Tab)} what="One stream for casey@ inbox replies, Quo calls routed to Casey with their 24-hour follow-up, and CallRail missed calls for X-Act, each marked Needs review, Waiting or Handled. Draft replies come here as approvals; sending still happens in Gmail." />}
+      {tab === "pipeline" && <ComingSoon phase={3} onOpenTab={(t) => selectTab(t as Tab)} what="Stage counts and value, deals idle over 7 days, and a client roster with health dots for last contact, last deliverable and billing." links={[{ tab: "crm", label: "CRM" }, { tab: "proposals", label: "Proposals" }, { tab: "overview", label: "Client overview" }]} />}
+      {tab === "delivery" && <ComingSoon phase={3} onOpenTab={(t) => selectTab(t as Tab)} what="Client setup projects (GBP builds, CSR AI, routing, websites) as checklists, each naming what it's waiting on. Anything blocked too long becomes an exception with a nudge drafted for approval." links={[{ tab: "exec", label: "90-Day Plan" }]} />}
+      {tab === "visibility" && <ComingSoon phase={3} onOpenTab={(t) => selectTab(t as Tab)} what="Today's visibility tools folded into one panel. Every client report lands in Approvals, never straight to the client, plus a monthly GBP health sweep per client." links={[{ tab: "scan", label: "Quick Scan" }, { tab: "battle", label: "Battle Plan" }, { tab: "track", label: "Tracking" }]} />}
+      {tab === "staff" && <ComingSoon phase={4} onOpenTab={(t) => selectTab(t as Tab)} what="Each AI staff member with status, current job, last run, spend this week and a Pause button. A failed job becomes an exception automatically." />}
       {tab === "crm" && <CrmTab />}
       {tab === "scan" && <ScanTab businesses={data?.businesses ?? []} />}
       {tab === "battle" && <BattlePlanTab businesses={data?.businesses ?? []} />}
