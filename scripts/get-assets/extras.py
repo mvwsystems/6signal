@@ -13,7 +13,7 @@ CURVE_BANDS = [
 ]
 
 STATIC_OWNERS = ['Web', 'Office manager', 'Office manager', 'PMs at closeout', 'Marketing', 'Precon + marketing',
-                 'Principal', 'Web', 'Marketing', 'Super + marketing', 'Leadership', 'Owner']
+                 'Principal', 'Web', 'Marketing', 'Office manager', 'Leadership', 'Owner']
 
 STACK_LAYERS = {
     'DATA': ('Ops / document control', 'Assistants answer from the wrong revision, or cannot find the record at all.'),
@@ -33,14 +33,14 @@ OVERNIGHT_PAIRINGS = [
 ]
 
 SCHEMA_FIELDS = [
-    ('name, url, logo, image', 'Legal firm name exactly as on your GBP; homepage URL; square logo and an HQ or crew photo', 'GEO'),
-    ('telephone, email, address', 'The same NAP as your GBP footer, character for character', 'LEO'),
-    ('geo', 'Latitude and longitude of the office (the generator can look it up)', 'LEO'),
+    ('name, url, logo, image', 'Legal firm name exactly as on your GBP; homepage URL; square logo and an HQ or crew photo', 'IEO · GEO'),
+    ('telephone, email, address', 'The same NAP as your GBP footer, character for character', 'LEO · VEO'),
+    ('geo', 'Latitude and longitude of the office (the generator can look it up)', 'LEO · VEO'),
     ('areaServed', 'The cities you actually work in, one per entry', 'LEO · GEO'),
     ('foundingDate, numberOfEmployees', 'Year founded and headcount: signals of an established firm', 'GEO'),
-    ('knowsAbout', 'Delivery methods, building types and specialties, written the way buyers say them', 'GEO · AEO'),
-    ('hasOfferCatalog', 'One Service per line item you sell', 'AEO'),
-    ('sameAs', 'GBP, LinkedIn, association member page, YouTube channel', 'PEO · VEO · LEO'),
+    ('knowsAbout', 'Delivery methods, building types and specialties, written the way buyers say them', 'PEO · GEO'),
+    ('hasOfferCatalog', 'One Service per line item you sell', 'AEO · PEO'),
+    ('sameAs', 'GBP, LinkedIn, association member page, YouTube channel', 'LEO · GEO'),
     ('aggregateRating', 'Only if you have five or more public reviews; match the GBP numbers', 'LEO'),
 ]
 

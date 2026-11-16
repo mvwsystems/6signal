@@ -147,7 +147,7 @@ def extras(a):
         out += block('Tool pairings', static_table(['Automation', 'Source', 'Google Workspace', 'Microsoft 365'], OVERNIGHT_PAIRINGS)
                      + '<p class="note">Build order: easiest first. The 11 PM daily report is the one to start with.</p>')
     if kw == 'SCHEMA':
-        out += block('Every field, and the signal it feeds', static_table(['Field', 'What to put there', 'Signal'], SCHEMA_FIELDS)
+        out += block('Every field, and the signal it feeds', '<p class="note" style="margin:0 0 12px">The block as a whole is IEO: it is how crawlers parse the firm. Each field also feeds the signals below.</p>' + static_table(['Field', 'What to put there', 'Signal'], SCHEMA_FIELDS)
                      + '<p class="note">Validation: paste the block at validator.schema.org, fix every error, then check Google Search Console → Enhancements a week after publishing.</p>')
     if kw == 'PROFILE':
         out += block('Thirty-minute fix session', static_table(['When', 'What'], PROFILE_PLAN))
@@ -189,7 +189,7 @@ TOOL_NOTES = {
     'TALK': 'Want this wired to your incident log so the talk writes itself each morning? Leave your email.',
     'BID': 'Send your scorecard and weights to yourself for the Monday meeting.',
 }
-TOOL_TITLES = {'CURVE': 'Score yourself', 'SIGNALS': 'Rate your six signals', 'AUDIT': 'Run the audit', 'LATER': 'Calculate it',
+TOOL_TITLES = {'CURVE': 'Score yourself', 'SIGNALS': 'Rate your six signals', 'AUDIT': 'Run the check', 'LATER': 'Calculate it',
                'SCHEMA': 'Generate your schema', 'TALK': 'Generate today’s talk', 'BID': 'Score an RFP'}
 
 def tool_data(a):

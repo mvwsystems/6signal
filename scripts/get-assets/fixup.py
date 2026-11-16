@@ -111,3 +111,50 @@ json.dump(A, open('assets.json', 'w'), indent=1, ensure_ascii=False)
 for a in A:
     print(a['keyword'].ljust(10), a['name'].ljust(40), a['format'].ljust(22), 'tool' if a['has_tool'] else '    ', 'sheet' if a['has_sheet'] else '')
 print(by['NODE']['sections'][0]['rows'])
+
+# ---------- Canonical six signals (owner decision 2026-11-16) ----------
+# The playbook taught VEO = Video, PEO = Press, IEO = Internal. 6signal.co's canonical spine
+# (app/(home)/page.tsx) is Voice / Prompt / Index. These overrides keep the playbook's order
+# (GEO, AEO, LEO, VEO, PEO, IEO — the order of the SIGNALS video bars) with canonical meanings.
+SIGNAL_DEFS = [
+    ('GEO', 'Generative Engine Optimization: when someone asks ChatGPT, Gemini, Claude or Perplexity for a contractor in your trade and city, is your firm one of the names in the answer?'),
+    ('AEO', 'Answer Engine Optimization: do Google’s AI Overviews and other direct answers cite a page of yours?'),
+    ('LEO', 'Local Entity Optimization: do Google Maps, Apple Maps, Yelp, BBB and the directories all show the same name, address, phone, categories and hours?'),
+    ('VEO', 'Voice Engine Optimization: when someone asks Siri, Alexa or Google Assistant for your trade near them, does your firm come back?'),
+    ('PEO', 'Prompt Engine Optimization: do you surface for the exact phrases buyers type and say ("emergency roof repair", "best commercial GC in {city}"), not only your company name?'),
+    ('IEO', 'Index Engine Optimization: can AI crawlers reach and read your site: schema, clean service pages, and a robots.txt that lets GPTBot, ClaudeBot and PerplexityBot in?'),
+]
+NODE_ROWS = [
+    ['GEO', 'Homepage naming trades, markets and cities in the first 100 words, plus third-party pages that name you (association listings, trade press)', 'Website, AGC/ABC, trade press', 'Marketing; principal for press', 'Quarterly review'],
+    ['AEO', 'One answer page per common buyer question (cost, timeline, permits)', 'Website /answers', 'Precon writes, marketing posts', 'One page per month'],
+    ['LEO', 'Complete Google Business Profile (categories, services, 10+ photos, two reviews a month) and the same NAP on Apple Maps, Yelp, BBB and directories', 'GBP + citations', 'Office manager', 'Weekly'],
+    ['VEO', 'Apple Business Connect and Bing Places claimed with matching NAP and hours; FAQ answers written the way people speak', 'Apple Business Connect, Bing Places, website FAQ', 'Office manager', 'Quarterly'],
+    ['PEO', 'Service and project pages written in buyers’ own phrasing, checked against a tracked list of the prompts buyers use', 'Website service pages', 'Marketing', 'Monthly prompt check'],
+    ['IEO', 'GeneralContractor schema, XML sitemap, robots.txt that admits AI crawlers, service text in HTML rather than images', 'Website code, robots.txt', 'Web', 'Quarterly'],
+]
+for s in by['SIGNALS']['sections']:
+    if s['type'] == 'fields':
+        s['items'] = [f'{c} — {d}' for c, d in SIGNAL_DEFS]
+        s['rows'] = [[c, d] for c, d in SIGNAL_DEFS]
+for s in by['NODE']['sections']:
+    if s['type'] == 'fields':
+        s['items'] = [' — '.join(r) for r in NODE_ROWS]
+        s['rows'] = NODE_ROWS
+for s in by['STATIC']['sections']:
+    if s['type'] == 'checklist':
+        s['items'] = [('Not on Apple Business Connect or Bing Places, so Siri and Alexa have nothing to read — Fix: claim both with the same NAP as your GBP'
+                       if 'YouTube' in it else it) for it in s['items']]
+for s in by['RADAR']['sections']:
+    if s['type'] == 'scope' and not any(x.startswith('Voice check') for x in s['items']):
+        s['items'].insert(1, 'Voice check: what Siri, Alexa and Google Assistant answer for your trade and city')
+
+# ---------- AUDIT renamed (owner decision 2026-11-16) ----------
+# "DIY AI Visibility Audit" collided with the $27 product name "AI Visibility Audit".
+au = by['AUDIT']
+au['name'] = 'DIY AI Visibility Check'
+au['title'] = 'DIY AI VISIBILITY CHECK'
+au['sub'] = au['sub'].replace('The same audit from the video', 'The same check from the video')
+au['dm'] = au['dm'].replace('DIY AI Visibility Audit', 'DIY AI Visibility Check')
+au['dm_line1'] = au['dm_line1'].replace('DIY AI Visibility Audit', 'DIY AI Visibility Check')
+
+json.dump(A, open('assets.json', 'w'), indent=1, ensure_ascii=False)

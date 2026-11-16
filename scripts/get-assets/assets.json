@@ -17,6 +17,7 @@
     "label": "What I deliver",
     "items": [
      "Twelve buyer prompts in ChatGPT, Claude, Perplexity and Google AI Overviews, e.g. \"best commercial general contractor in {city}\", \"who builds {project type} near {city}\", \"is {firm} reputable\"",
+     "Voice check: what Siri, Alexa and Google Assistant answer for your trade and city",
      "Source check: when you do appear, is the citation your site, your Google Business Profile, or a directory?",
      "Entity check: homepage schema, NAP consistency, sameAs links",
      "Review velocity, GBP completeness, recent press mentions",
@@ -199,37 +200,37 @@
     "type": "fields",
     "label": "Template fields",
     "items": [
-     "GEO — Generative engine: does ChatGPT or Claude name you unprompted for your trade and city?",
-     "AEO — Answer engine: do Google AI Overviews and Perplexity cite a page of yours?",
-     "LEO — Local engine: GBP complete, reviews recent, categories right, service area set",
-     "VEO — Video engine: do you have project walk-throughs indexed on YouTube with transcripts?",
-     "PEO — Press engine: trade press, award pages and association listings that mention you by name",
-     "IEO — Internal engine: can your own staff ask your own documents a question and get an answer?"
+     "GEO — Generative Engine Optimization: when someone asks ChatGPT, Gemini, Claude or Perplexity for a contractor in your trade and city, is your firm one of the names in the answer?",
+     "AEO — Answer Engine Optimization: do Google’s AI Overviews and other direct answers cite a page of yours?",
+     "LEO — Local Entity Optimization: do Google Maps, Apple Maps, Yelp, BBB and the directories all show the same name, address, phone, categories and hours?",
+     "VEO — Voice Engine Optimization: when someone asks Siri, Alexa or Google Assistant for your trade near them, does your firm come back?",
+     "PEO — Prompt Engine Optimization: do you surface for the exact phrases buyers type and say (\"emergency roof repair\", \"best commercial GC in {city}\"), not only your company name?",
+     "IEO — Index Engine Optimization: can AI crawlers reach and read your site: schema, clean service pages, and a robots.txt that lets GPTBot, ClaudeBot and PerplexityBot in?"
     ],
     "rows": [
      [
       "GEO",
-      "Generative engine: does ChatGPT or Claude name you unprompted for your trade and city?"
+      "Generative Engine Optimization: when someone asks ChatGPT, Gemini, Claude or Perplexity for a contractor in your trade and city, is your firm one of the names in the answer?"
      ],
      [
       "AEO",
-      "Answer engine: do Google AI Overviews and Perplexity cite a page of yours?"
+      "Answer Engine Optimization: do Google’s AI Overviews and other direct answers cite a page of yours?"
      ],
      [
       "LEO",
-      "Local engine: GBP complete, reviews recent, categories right, service area set"
+      "Local Entity Optimization: do Google Maps, Apple Maps, Yelp, BBB and the directories all show the same name, address, phone, categories and hours?"
      ],
      [
       "VEO",
-      "Video engine: do you have project walk-throughs indexed on YouTube with transcripts?"
+      "Voice Engine Optimization: when someone asks Siri, Alexa or Google Assistant for your trade near them, does your firm come back?"
      ],
      [
       "PEO",
-      "Press engine: trade press, award pages and association listings that mention you by name"
+      "Prompt Engine Optimization: do you surface for the exact phrases buyers type and say (\"emergency roof repair\", \"best commercial GC in {city}\"), not only your company name?"
      ],
      [
       "IEO",
-      "Internal engine: can your own staff ask your own documents a question and get an answer?"
+      "Index Engine Optimization: can AI crawlers reach and read your site: schema, clean service pages, and a robots.txt that lets GPTBot, ClaudeBot and PerplexityBot in?"
      ]
     ]
    },
@@ -376,7 +377,7 @@
      "No press or association mentions since 2021 — Fix: AGC/ABC listings, one trade-press placement a quarter",
      "Site blocks AI crawlers in robots.txt — Fix: check for GPTBot, ClaudeBot, PerplexityBot and allow them",
      "Homepage says \"quality, safety, integrity\" and nothing specific — Fix: trades, markets, cities, project sizes in the first 100 words",
-     "No YouTube presence; the video engine has nothing to index — Fix: one project walk-through a month with a transcript",
+     "Not on Apple Business Connect or Bing Places, so Siri and Alexa have nothing to read — Fix: claim both with the same NAP as your GBP",
      "Leadership has no bylines or profiles that link back — Fix: LinkedIn profiles linking to the site, one article a quarter",
      "Nobody has ever checked — Fix: run the twelve buyer prompts quarterly"
     ]
@@ -501,8 +502,8 @@
   "track": "Light Motion",
   "format": "Prompt script + tool",
   "keyword": "AUDIT",
-  "title": "DIY AI VISIBILITY AUDIT",
-  "sub": "The same audit from the video, run by you. Ten prompts, four engines, a scoring sheet.",
+  "title": "DIY AI VISIBILITY CHECK",
+  "sub": "The same check from the video, run by you. Ten prompts, four engines, a scoring sheet.",
   "get": [
    "Ten buyer prompts with your variables filled in",
    "A scoring sheet: named / cited / absent per engine",
@@ -515,7 +516,7 @@
     "text": "Run each prompt in ChatGPT, Claude, Perplexity and Google (look for the AI Overview). Record for each: NAMED (your firm appears), CITED (a page of yours is the source), or ABSENT.\n\n1 Who are the best {trade} contractors in {city}?\n2 Recommend a general contractor for a {project type} in {city}.\n3 Is {your firm} a reputable contractor?\n4 What does {your firm} specialize in?\n5 How much does a {project type} cost per square foot in {city}?\n6 Which contractors in {city} have experience with {building type, e.g. medical office}?\n7 Who should I call for a {service, e.g. design-build warehouse} near {city}?\n8 Compare {your firm} and {competitor}.\n9 What do reviews say about {your firm}?\n10 Which {city} contractors are members of {AGC chapter or association}?\n\nScoring: NAMED = 1, CITED = 2, ABSENT = 0. Forty prompt-engine pairs; maximum 80. Under 20: invisible. 20–45: emerging. Over 45: visible."
    }
   ],
-  "dm": "Thanks for the AUDIT. Here is the DIY AI Visibility Audit: https://6signal.co/get/audit Forty minutes with four browser tabs. Send me your total and I will tell you what the top three fixes are.",
+  "dm": "Thanks for the AUDIT. Here is the DIY AI Visibility Check: https://6signal.co/get/audit Forty minutes with four browser tabs. Send me your total and I will tell you what the top three fixes are.",
   "loom": [
    "Play the terminal from the post",
    "Screen: run prompt 1 in Perplexity; show who is cited",
@@ -529,8 +530,8 @@
   "has_tool": true,
   "has_sheet": false,
   "cta_kind": "visibility",
-  "name": "DIY AI Visibility Audit",
-  "dm_line1": "Thanks for the AUDIT. Here is the DIY AI Visibility Audit: https://6signal.co/get/audit",
+  "name": "DIY AI Visibility Check",
+  "dm_line1": "Thanks for the AUDIT. Here is the DIY AI Visibility Check: https://6signal.co/get/audit",
   "dm_line2": "Forty minutes with four browser tabs. Send me your total and I will tell you what the top three fixes are."
  },
  {
@@ -703,55 +704,55 @@
     "type": "fields",
     "label": "Template fields",
     "items": [
-     "GEO — Homepage with trades, markets and cities in the first 100 words + schema — Website — Marketing — quarterly review",
-     "AEO — One answer page per common buyer question (cost, timeline, permits) — Website /answers — Precon writes, marketing posts — one page per month",
-     "LEO — Google Business Profile: all categories, services, 10+ photos, two reviews a month — GBP — Office manager — weekly",
-     "VEO — Project walk-through video with transcript and location in the title — YouTube — Super records, marketing uploads — monthly",
-     "PEO — Association member page, award pages, one trade-press mention — AGC/ABC, ENR regional — Principal — quarterly",
-     "IEO — Spec books, standards and past RFIs loaded in a searchable project — Claude Project / NotebookLM — Ops lead — per project"
+     "GEO — Homepage naming trades, markets and cities in the first 100 words, plus third-party pages that name you (association listings, trade press) — Website, AGC/ABC, trade press — Marketing; principal for press — Quarterly review",
+     "AEO — One answer page per common buyer question (cost, timeline, permits) — Website /answers — Precon writes, marketing posts — One page per month",
+     "LEO — Complete Google Business Profile (categories, services, 10+ photos, two reviews a month) and the same NAP on Apple Maps, Yelp, BBB and directories — GBP + citations — Office manager — Weekly",
+     "VEO — Apple Business Connect and Bing Places claimed with matching NAP and hours; FAQ answers written the way people speak — Apple Business Connect, Bing Places, website FAQ — Office manager — Quarterly",
+     "PEO — Service and project pages written in buyers’ own phrasing, checked against a tracked list of the prompts buyers use — Website service pages — Marketing — Monthly prompt check",
+     "IEO — GeneralContractor schema, XML sitemap, robots.txt that admits AI crawlers, service text in HTML rather than images — Website code, robots.txt — Web — Quarterly"
     ],
     "rows": [
      [
       "GEO",
-      "Homepage with trades, markets and cities in the first 100 words + schema",
-      "Website",
-      "Marketing",
-      "quarterly review"
+      "Homepage naming trades, markets and cities in the first 100 words, plus third-party pages that name you (association listings, trade press)",
+      "Website, AGC/ABC, trade press",
+      "Marketing; principal for press",
+      "Quarterly review"
      ],
      [
       "AEO",
       "One answer page per common buyer question (cost, timeline, permits)",
       "Website /answers",
       "Precon writes, marketing posts",
-      "one page per month"
+      "One page per month"
      ],
      [
       "LEO",
-      "Google Business Profile: all categories, services, 10+ photos, two reviews a month",
-      "GBP",
+      "Complete Google Business Profile (categories, services, 10+ photos, two reviews a month) and the same NAP on Apple Maps, Yelp, BBB and directories",
+      "GBP + citations",
       "Office manager",
-      "weekly"
+      "Weekly"
      ],
      [
       "VEO",
-      "Project walk-through video with transcript and location in the title",
-      "YouTube",
-      "Super records, marketing uploads",
-      "monthly"
+      "Apple Business Connect and Bing Places claimed with matching NAP and hours; FAQ answers written the way people speak",
+      "Apple Business Connect, Bing Places, website FAQ",
+      "Office manager",
+      "Quarterly"
      ],
      [
       "PEO",
-      "Association member page, award pages, one trade-press mention",
-      "AGC/ABC, ENR regional",
-      "Principal",
-      "quarterly"
+      "Service and project pages written in buyers’ own phrasing, checked against a tracked list of the prompts buyers use",
+      "Website service pages",
+      "Marketing",
+      "Monthly prompt check"
      ],
      [
       "IEO",
-      "Spec books, standards and past RFIs loaded in a searchable project",
-      "Claude Project / NotebookLM",
-      "Ops lead",
-      "per project"
+      "GeneralContractor schema, XML sitemap, robots.txt that admits AI crawlers, service text in HTML rather than images",
+      "Website code, robots.txt",
+      "Web",
+      "Quarterly"
      ]
     ]
    }

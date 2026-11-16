@@ -95,12 +95,9 @@ save(wb, 'later-6signal.xlsx')
 wb = Workbook(); ws = wb.active; ws.title = 'Content Map'
 sheet_head(ws, 'Recommendation Content Map', 'Signal → asset → where it lives → owner → cadence. Fill the Owner column first.')
 headers(ws, 4, ['Signal', 'Minimum asset', 'Where it lives', 'Owner (name)', 'Cadence', 'Status', 'Last updated'], [9, 52, 26, 24, 18, 14, 14])
-nrows = [('GEO', 'Homepage with trades, markets and cities in the first 100 words + schema', 'Website', 'Marketing', 'Quarterly review'),
-         ('AEO', 'One answer page per common buyer question (cost, timeline, permits)', 'Website /answers', 'Precon writes, marketing posts', 'One page per month'),
-         ('LEO', 'Google Business Profile: all categories, services, 10+ photos, two reviews a month', 'GBP', 'Office manager', 'Weekly'),
-         ('VEO', 'Project walk-through video with transcript and location in the title', 'YouTube', 'Super records, marketing uploads', 'Monthly'),
-         ('PEO', 'Association member page, award pages, one trade-press mention', 'AGC/ABC, ENR regional', 'Principal', 'Quarterly'),
-         ('IEO', 'Spec books, standards and past RFIs loaded in a searchable project', 'Claude Project / NotebookLM', 'Ops lead', 'Per project')]
+import json as _json
+_A = {x['keyword']: x for x in _json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets.json')))}
+nrows = [tuple(r) for r in next(sec for sec in _A['NODE']['sections'] if sec['type'] == 'fields')['rows']]
 for i, r in enumerate(nrows, 5):
     for j, v in enumerate(r, 1): put(ws, i, j, v, BLUE if j == 4 else BLACK, fill=INFILL if j == 4 else None, wrap=True)
     put(ws, i, 6, 'Not started'); put(ws, i, 7, None, BLUE, 'yyyy-mm-dd', INFILL)

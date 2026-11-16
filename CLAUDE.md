@@ -46,12 +46,13 @@ Trust / Content / Conversion) — flag, don't propagate. Canonical priority orde
 both audit articles): LEO → IEO → AEO → GEO/PEO → VEO, with conversion framed as a revenue
 multiplier, not a signal.
 
-**⚠️ Open conflict (flagged 2026-11-16, owner decision pending):** the /get lead-magnet pages
-(`public/get/`, from the "AI Adoption in AEC" playbook) define three signals differently —
-**VEO = Video engine** (YouTube walk-throughs), **PEO = Press engine** (trade press/associations),
-**IEO = Internal engine** (staff asking the firm's own documents). Affected: /get/signals (definitions
-table + tool), /get/node (content map rows), /get/schema (field → signal table), /get/radar, and
-/get/static (item 10). Not resolved in code; regenerate from `scripts/get-assets/` once decided.
+**/get lead magnets (resolved 2026-11-16):** the "AI Adoption in AEC" playbook taught VEO = Video,
+PEO = Press, IEO = Internal. The owner chose the canonical spine; /get/signals, /get/node,
+/get/schema, /get/static and /get/radar were rewritten onto it (overrides in
+`scripts/get-assets/fixup.py`, so a re-parse of the playbook keeps them). The playbook's order
+(GEO, AEO, LEO, VEO, PEO, IEO) is kept on /get pages because it matches the campaign video.
+The playbook's "DIY AI Visibility Audit" (/get/audit) is renamed **DIY AI Visibility Check** to
+avoid colliding with the $27 "AI Visibility Audit"; the keyword and URL stay AUDIT / /get/audit.
 
 When writing new content or code, use **GEO/AEO/LEO/VEO/PEO/IEO**. The brand brief's voice/design
 sections remain authoritative; its six-signal list and "free 30-minute audit" entry offer are stale.

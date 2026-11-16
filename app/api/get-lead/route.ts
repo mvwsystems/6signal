@@ -23,7 +23,7 @@ const ASSETS: Record<string, string> = {
   SIXAM: "6 AM Punch Digest",
   STATIC: "12 Reasons You Render as Static",
   ROADMAP: "24-Month Adoption Roadmap",
-  AUDIT: "DIY AI Visibility Audit",
+  AUDIT: "DIY AI Visibility Check",
   LATER: "Cost of Later Calculator",
   STACK: "AI Infrastructure Stack Checklist",
   SCHEMA: "Contractor Schema Generator",
