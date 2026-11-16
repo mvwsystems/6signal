@@ -4,7 +4,7 @@
 // Starter lists for the Changelog filters and the "Add entry" form. Anything
 // already used in the log also shows up, so a new client appears by using it.
 export const CLIENTS = [
-  "6 Signal", "X-Act Plumbing", "Hill & Wilkinson", "SR Equipment", "OEM Contracting", "NTX Boatworks",
+  "6 Signal", "X-Act Plumbing", "Hill & Wilkinson", "SR Equipment", "Pillar Electric Group", "OEM Contracting", "NTX Boatworks",
 ];
 export const SERVICES = [
   "Command Center", "CRM", "Website", "Visibility (SEO / AEO / GEO)", "Google Business Profile", "Ads",
