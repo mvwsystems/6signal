@@ -6,10 +6,10 @@ import NewsletterTab from "./NewsletterTab";
 import CrmTab from "./CrmTab";
 import { Me, TodayPanel, ApprovalsPanel, ConnectionsPanel, ComingSoon } from "./CommandCenter";
 import { ChangelogPanel } from "./Changelog";
-import CampaignsTab from "./CampaignsTab";
-import SettingsTab from "./SettingsTab";
 import Shell, { NavGroup } from "./Shell";
 import { T, alpha, MONO, DISP, BODY, useDbTheme } from "./theme";
+import CampaignsTab from "./CampaignsTab";
+import SettingsTab from "./SettingsTab";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 6 Signal — internal AI Visibility Command Center (/dashboard)
