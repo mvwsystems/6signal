@@ -30,3 +30,9 @@
   for = "/brand.html"
   [headers.values]
     X-Robots-Tag = "noindex"
+
+# /get lead-magnet pages, PDFs and sheets — reached from DM links, not search.
+[[headers]]
+  for = "/get/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"

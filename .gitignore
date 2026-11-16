@@ -54,3 +54,7 @@ ds-bundle/
 # Finder-duplicate artifact, local only
 app/dashboard/page 2.tsx
 .claude/settings.local.json
+
+# /get generator build output
+scripts/get-assets/site/
+scripts/get-assets/xlsx/

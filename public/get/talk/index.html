@@ -1,0 +1,61 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Toolbox Talk Generator · 6 Signal</title><meta name="description" content="A five-minute safety brief written from what actually happened on your site yesterday and what is scheduled today.">
+<meta name="robots" content="noindex,follow"><link rel="canonical" href="https://6signal.co/get/talk">
+<meta property="og:title" content="Toolbox Talk Generator · 6 Signal"><meta property="og:description" content="A five-minute safety brief written from what actually happened on your site yesterday and what is scheduled today.">
+<link rel="stylesheet" href="/get/assets/get.css"></head><body data-kw="TALK">
+<header class="top"><div class="wrap"><a class="brand" href="https://6signal.co" aria-label="6 Signal home"><img src="/6SIGDashboardLogo.png" alt="6 Signal" width="42" height="30"></a>
+<nav><a href="/get">All free assets</a></nav></div></header><main><section class="hero"><div class="wrap">
+<div class="kicker"><span class="kw">TALK</span><span>5H · Construction Software · Prompt + tool</span></div>
+<h1>Toolbox Talk Generator</h1><p class="lede">A five-minute safety brief written from what actually happened on your site yesterday and what is scheduled today.</p>
+<div class="actions"><a class="btn primary" href="#tool-section">Open the tool</a><a class="btn" href="/get/talk/talk-6signal.pdf" download>Download PDF</a></div></div></section><section class="block"><div class="wrap"><div class="label"><span>What you get</span></div><ul class="get"><li>The generation prompt</li><li>Three example outputs (fall, struck-by, heat)</li><li>Spec for a web version your foremen can use on a phone</li></ul></div></section><script type="application/json" id="tool-data">{"prompt": "Write a five-minute toolbox talk for {project}, {date}. Inputs: yesterday's incidents and near misses {paste or \"none\"}; today's scheduled activities {paste}; weather {paste}; crews on site {trades}.\n\nStructure: 1 One sentence on what happened yesterday (or the nearest relevant hazard to today's work). 2 Today's top three hazards, specific to the activities and location. 3 Three controls, each one line, who does it. 4 One question to ask the crew. 5 Sign-in line.\n\nUnder 220 words. Plain language, eighth-grade reading level, no slogans. Reference the applicable OSHA subpart in brackets at the end of each hazard."}</script><section class="block no-print" id="tool-section"><div class="wrap"><div class="label"><span>Live tool</span></div><h2>Generate today’s talk</h2><div class="tool" id="tool" data-tool="TALK"></div><form class="f" id="result-form" data-lead="tool_result" data-done="Sent. Check your inbox." style="margin-top:24px;border-top:1px solid var(--line);padding-top:20px">
+<input type="hidden" name="keyword" value="TALK"><input type="hidden" name="result" id="result-field">
+<p class="hp" aria-hidden="true"><label>Leave empty <input name="hp" tabindex="-1" autocomplete="off"></label></p>
+<p class="muted" style="margin:0">Want this wired to your incident log so the talk writes itself each morning? Leave your email.</p>
+<div class="row2"><label class="fl">Email<input class="t" type="email" name="email" required></label><label class="fl">Firm (optional)<input class="t" name="firm"></label></div>
+<div><button class="btn primary" type="submit">Send it to me</button> <a class="btn" data-book href="/book">Book a call</a></div><p class="ok" aria-live="polite"></p></form></div></section><section class="block"><div class="wrap"><div class="label"><span>Prompt</span></div><div class="prompt"><div class="bar"><span>Prompt</span><button class="btn small copy" data-copy="#talk-p0">Copy</button></div>
+<pre id="talk-p0">Write a five-minute toolbox talk for <span class="v">{project}</span>, <span class="v">{date}</span>. Inputs: yesterday&#x27;s incidents and near misses <span class="v">{paste or &quot;none&quot;}</span>; today&#x27;s scheduled activities <span class="v">{paste}</span>; weather <span class="v">{paste}</span>; crews on site <span class="v">{trades}</span>.
+
+Structure: 1 One sentence on what happened yesterday (or the nearest relevant hazard to today&#x27;s work). 2 Today&#x27;s top three hazards, specific to the activities and location. 3 Three controls, each one line, who does it. 4 One question to ask the crew. 5 Sign-in line.
+
+Under 220 words. Plain language, eighth-grade reading level, no slogans. Reference the applicable OSHA subpart in brackets at the end of each hazard.</pre></div></div></section><section class="block"><div class="wrap"><div class="label"><span>Example output · Fall</span></div><div class="prompt"><div class="bar"><span>Example · Fall</span><button class="btn small copy" data-copy="#talk-ex0">Copy</button></div>
+<pre id="talk-ex0">TOOLBOX TALK · Level 3 deck edge · Tuesday
+1. Yesterday: a laborer unclipped to reach past the guardrail at the east stair opening. Nobody fell. It was close.
+2. Today&#x27;s hazards:
+ - Leading-edge work while the decking crew finishes bay C [OSHA 1926 Subpart M]
+ - Floor openings at the east and west stairs, covers not yet secured [Subpart M]
+ - Ladder access to the level 3 deck while materials are being hoisted [Subpart X]
+3. Controls:
+ - Every worker inside 6 ft of the edge stays tied off to the beam strap. Foreman checks at 10 and 2.
+ - Hole covers marked &quot;HOLE&quot; and screwed down before 8 AM. Carpenter foreman.
+ - Ladder use pauses during picks. Signal person calls it.
+4. Ask the crew: where on this deck would you be tempted to unclip, and why?
+5. Sign-in below.</pre></div></div></section><section class="block"><div class="wrap"><div class="label"><span>Example output · Struck-by</span></div><div class="prompt"><div class="bar"><span>Example · Struck-by</span><button class="btn small copy" data-copy="#talk-ex1">Copy</button></div>
+<pre id="talk-ex1">TOOLBOX TALK · Steel erection, grid C–F · Thursday
+1. Yesterday: a tag line slipped and a beam swung across the north access path. No one was in the path.
+2. Today&#x27;s hazards:
+ - Suspended loads over the north access path during steel picks [OSHA 1926 Subpart R]
+ - Backing equipment near the laydown yard with two spotters short [Subpart O]
+ - Dropped bolts and tools from the level 2 connectors [Subpart R]
+3. Controls:
+ - North path closed with barricade and a flagger during every pick. Erection foreman.
+ - No backing without a spotter. Equipment operators confirm by radio.
+ - Tool lanyards on every connector, and the area below taped off. Connector lead checks.
+4. Ask the crew: who has the authority to stop a pick, and how do they call it?
+5. Sign-in below.</pre></div></div></section><section class="block"><div class="wrap"><div class="label"><span>Example output · Heat</span></div><div class="prompt"><div class="bar"><span>Example · Heat</span><button class="btn small copy" data-copy="#talk-ex2">Copy</button></div>
+<pre id="talk-ex2">TOOLBOX TALK · Site work and paving · Monday
+1. Yesterday: an operator on the roller felt dizzy at 2:30 and sat out the rest of the shift. Heat index hit 104.
+2. Today&#x27;s hazards:
+ - Heat index forecast 106 by 2 PM, asphalt surface far hotter [OSHA General Duty Clause; heat illness guidance]
+ - Two new crew members not yet acclimatized [General Duty Clause]
+ - Hot mix temperatures at the paver and screed [1926 Subpart D]
+3. Controls:
+ - Water, rest and shade: a 10-minute break every hour after noon. Foreman runs the timer.
+ - New workers on a reduced schedule with a buddy. Superintendent assigns pairs.
+ - Long sleeves and gloves at the screed. Paving foreman checks.
+4. Ask the crew: what does heat exhaustion look like on someone else, before they notice it?
+5. Sign-in below.</pre></div></div></section><section class="cta"><div class="wrap"><div class="label"><span>Next step</span></div><h2>Want this running inside your firm?</h2><p>The prompt is the easy part. 6 Signal builds the automation around it, connects it to Procore or ACC, and trains the people who use it.</p>
+<div class="actions"><a class="btn primary" data-book href="/book">Book a call</a><a class="btn" href="/get">More free assets</a></div>
+<p class="print-only">Book a call: 6signal.co/book</p></div></section></main><footer><div class="wrap"><span>6 SIGNAL · AI visibility and infrastructure for contractors</span>
+<span><a href="https://6signal.co">6signal.co</a> · <a href="mailto:hello@6signal.co">hello@6signal.co</a></span></div></footer>
+<script src="/get/assets/config.js"></script><script src="/get/assets/get.js"></script><script src="/get/assets/tools/talk.js"></script></body></html>

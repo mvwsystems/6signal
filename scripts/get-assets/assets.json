@@ -1,0 +1,1976 @@
+[
+ {
+  "id": "1a",
+  "track": "Concept Loops",
+  "format": "Free mini audit",
+  "keyword": "RADAR",
+  "title": "6-SIGNAL RADAR SCORECARD",
+  "sub": "I run your firm through twelve buyer prompts across four AI engines and send back your radar: where you are cited, where you are invisible.",
+  "get": [
+   "Six scores, 0–100: GEO, AEO, LEO, VEO, PEO, IEO",
+   "The exact prompts and which firms came back instead of you",
+   "Three fixes ranked by effort"
+  ],
+  "sections": [
+   {
+    "type": "scope",
+    "label": "What I deliver",
+    "items": [
+     "Twelve buyer prompts in ChatGPT, Claude, Perplexity and Google AI Overviews, e.g. \"best commercial general contractor in {city}\", \"who builds {project type} near {city}\", \"is {firm} reputable\"",
+     "Voice check: what Siri, Alexa and Google Assistant answer for your trade and city",
+     "Source check: when you do appear, is the citation your site, your Google Business Profile, or a directory?",
+     "Entity check: homepage schema, NAP consistency, sameAs links",
+     "Review velocity, GBP completeness, recent press mentions",
+     "Delivered as a two-page PDF with the radar chart"
+    ]
+   }
+  ],
+  "dm": "Thanks for the RADAR. Here is the 6-Signal Radar Scorecard: https://6signal.co/get/radar Reply with firm name, city and primary trade or project type. Radar back within 48 hours.",
+  "loom": [
+   "Open with the radar graphic from the post: this is the same chart, for your firm",
+   "Show one real prompt result where a competitor is named and you are not",
+   "Close: twelve prompts, four engines, 48 hours, no cost"
+  ],
+  "tool": "",
+  "post_desc": "RADAR SWEEP LIGHTS UP CONTACTS — THE WARNING SHOT",
+  "mp4": "MP4/1A-WARNING-RADAR.MP4",
+  "slug": "radar",
+  "url": "https://6signal.co/get/radar",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "visibility",
+  "name": "6-Signal Radar Scorecard",
+  "dm_line1": "Thanks for the RADAR. Here is the 6-Signal Radar Scorecard: https://6signal.co/get/radar",
+  "dm_line2": "Reply with firm name, city and primary trade or project type. Radar back within 48 hours."
+ },
+ {
+  "id": "1b",
+  "track": "Concept Loops",
+  "format": "Checklist + tool",
+  "keyword": "CURVE",
+  "title": "ADOPTION CURVE SELF-SCORE",
+  "sub": "Twelve yes/no questions. Your score tells you which curve you are on and roughly how many months separate you from the leaders.",
+  "get": [
+   "Twelve questions, one point each",
+   "Three bands with what each band usually looks like on site",
+   "The first move for each band"
+  ],
+  "sections": [
+   {
+    "type": "checklist",
+    "label": "Checklist",
+    "items": [
+     "A written AI use policy exists and the field has read it",
+     "At least one PM drafts RFI responses with an AI assistant",
+     "Daily reports are compiled from sources, not typed from memory",
+     "Meeting recordings become action items without a human typing them",
+     "Spec books are loaded somewhere you can ask a question",
+     "Someone owns AI adoption by name",
+     "A 30-minute monthly review of what is working and what is not",
+     "Your website carries structured data for the firm and its services",
+     "You have checked what ChatGPT says when asked for your trade in your city",
+     "Estimators use AI for takeoff QA or scope-gap review",
+     "Safety briefs are generated from your own incident log",
+     "A 2026 budget line exists for AI tools"
+    ]
+   },
+   {
+    "type": "scoring",
+    "label": "Scoring",
+    "text": "0–4: late curve, 18+ months behind. 5–8: middle, 6–12 months. 9–12: leader curve."
+   }
+  ],
+  "dm": "Thanks for the CURVE. Here is the Adoption Curve Self-Score: https://6signal.co/get/curve Answer the twelve questions honestly; takes four minutes. Reply with your score if you want the first move for your band.",
+  "loom": [
+   "Hold up the two-curve chart; point to the gap",
+   "Walk two questions aloud and answer them for a typical mid-size GC",
+   "Close: twelve questions, your band, your first move"
+  ],
+  "tool": "Build a single-page scorecard at /tools/adoption-curve. Twelve yes/no toggles (list below), a live score 0–12, and a result band: 0–4 Late (18+ months behind), 5–8 Middle (6–12 months), 9–12 Leader. Show the band as a point on a two-curve line chart (leaders vs. laggards). Dark ground #060606, accent #E6FF00, Chakra Petch headings, JetBrains Mono numbers. Below the result: an email field that sends the score and the twelve answers to me, then shows a \"book a call\" link. Questions: [paste checklist].",
+  "post_desc": "TWO CURVES DIVERGE — NEW LEADERS",
+  "mp4": "MP4/1B-NEW-LEADERS.MP4",
+  "slug": "curve",
+  "url": "https://6signal.co/get/curve",
+  "has_tool": true,
+  "has_sheet": false,
+  "cta_kind": "workflow",
+  "name": "Adoption Curve Self-Score",
+  "dm_line1": "Thanks for the CURVE. Here is the Adoption Curve Self-Score: https://6signal.co/get/curve",
+  "dm_line2": "Answer the twelve questions honestly; takes four minutes. Reply with your score if you want the first move for your band."
+ },
+ {
+  "id": "1c",
+  "track": "Concept Loops",
+  "format": "Prompt pack",
+  "keyword": "SCAN",
+  "title": "PLAN REVIEW PROMPT PACK",
+  "sub": "Ten checks to run against a drawing set PDF before the first coordination meeting. One master prompt, ten passes.",
+  "get": [
+   "One master prompt that sets role, inputs and output table",
+   "Ten named passes you can run one at a time",
+   "Works in Claude or ChatGPT with the PDF attached"
+  ],
+  "sections": [
+   {
+    "type": "prompt",
+    "label": "Prompt",
+    "text": "You are a senior preconstruction manager reviewing a drawing set for constructability before the first coordination meeting. The attached PDF is the set. Project: {project name}, {type}, {approx. SF}, {delivery method}.\n\nRun PASS {n} below. For every finding return one row: Sheet | Grid/Location | Finding | Why it matters | Suggested RFI or action | Severity (High/Med/Low). Cite the sheet number for every row. If you cannot verify something from the drawings, say so instead of guessing.\n\nPASSES\n1 Missing or conflicting dimensions between plan, section and detail\n2 Door and window schedule vs. plan tags: count, size, fire rating\n3 Structural vs. architectural: openings, slab depressions, beam depths at ceilings\n4 MEP routing vs. structure: duct mains through beams, no shaft shown\n5 Finish schedule vs. room plan: unlisted rooms, missing floor transitions\n6 Accessibility: clearances, turning radii, ramp slopes, reach ranges\n7 Exterior envelope: flashing, air barrier continuity, control joints\n8 Specified products called out on drawings but absent from the spec index\n9 Phasing and site logistics: crane reach, laydown, temp power, egress during construction\n10 Long-lead items visible on drawings: switchgear, elevators, curtain wall, custom steel\n\nFinish each pass with the three findings you would raise first and why."
+   }
+  ],
+  "dm": "Thanks for the SCAN. Here is the Plan Review Prompt Pack: https://6signal.co/get/scan Attach the drawing PDF, paste the prompt, run passes one at a time. Export each table to your RFI log.",
+  "loom": [
+   "Screen: a drawing set attached in Claude, the prompt pasted",
+   "Run pass 3; scroll the findings table, point to a sheet citation",
+   "Close: ten passes, one meeting, fewer surprises"
+  ],
+  "tool": "",
+  "post_desc": "BLUEPRINT SCAN",
+  "mp4": "MP4/1C-BLUEPRINT-SCAN.MP4",
+  "slug": "scan",
+  "url": "https://6signal.co/get/scan",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "workflow",
+  "name": "Plan Review Prompt Pack",
+  "dm_line1": "Thanks for the SCAN. Here is the Plan Review Prompt Pack: https://6signal.co/get/scan",
+  "dm_line2": "Attach the drawing PDF, paste the prompt, run passes one at a time. Export each table to your RFI log."
+ },
+ {
+  "id": "1d",
+  "track": "Concept Loops",
+  "format": "Checklist",
+  "keyword": "STAKES",
+  "title": "AI TABLE STAKES CHECKLIST",
+  "sub": "Ten things that should already be running in an AEC firm. Not the frontier. The floor.",
+  "get": [
+   "Ten items, each with the tool that covers it",
+   "A one-line test for whether it is actually running",
+   "Printable, one page"
+  ],
+  "sections": [
+   {
+    "type": "checklist",
+    "label": "Checklist",
+    "items": [
+     "Every PM has a paid assistant seat (Claude or ChatGPT Team) with company data controls on",
+     "Meeting recordings produce action items with owner and date, automatically",
+     "Daily reports draw from schedule, manpower and weather, not memory",
+     "RFI responses start as a draft, not a blank field",
+     "Submittals are checked against the spec section before a human reads them",
+     "The spec book answers questions; nobody flips pages for a section number",
+     "Inbox flags change-order language before it is missed",
+     "Your firm has schema markup and a complete Google Business Profile",
+     "You know which three competitors AI names for your trade in your city",
+     "One person reviews adoption monthly and retires what nobody uses"
+    ]
+   }
+  ],
+  "dm": "Thanks for the STAKES. Here is the AI Table Stakes Checklist: https://6signal.co/get/stakes Print it. Tick what is actually running, not what is planned. Anything unticked is the next project.",
+  "loom": [
+   "Show the checklist on screen; read item one and item eight",
+   "Say: if fewer than six are ticked, you are below the floor",
+   "Close: ten items, one page, print it"
+  ],
+  "tool": "",
+  "post_desc": "TABLE STAKES",
+  "mp4": "MP4/1D-TABLE-STAKES.MP4",
+  "slug": "stakes",
+  "url": "https://6signal.co/get/stakes",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "workflow",
+  "name": "AI Table Stakes Checklist",
+  "dm_line1": "Thanks for the STAKES. Here is the AI Table Stakes Checklist: https://6signal.co/get/stakes",
+  "dm_line2": "Print it. Tick what is actually running, not what is planned. Anything unticked is the next project."
+ },
+ {
+  "id": "1e",
+  "track": "Concept Loops",
+  "format": "Template + tool",
+  "keyword": "SIGNALS",
+  "title": "SIX SIGNALS SELF-RATING",
+  "sub": "What each of the six signals means for a contractor, and a 0–5 rating you can give yourself in five minutes.",
+  "get": [
+   "One-paragraph definition per signal, in contractor terms",
+   "Rating rubric 0–5 for each",
+   "Rendered as the same bar chart from the post"
+  ],
+  "sections": [
+   {
+    "type": "fields",
+    "label": "Template fields",
+    "items": [
+     "GEO — Generative Engine Optimization: when someone asks ChatGPT, Gemini, Claude or Perplexity for a contractor in your trade and city, is your firm one of the names in the answer?",
+     "AEO — Answer Engine Optimization: do Google’s AI Overviews and other direct answers cite a page of yours?",
+     "LEO — Local Entity Optimization: do Google Maps, Apple Maps, Yelp, BBB and the directories all show the same name, address, phone, categories and hours?",
+     "VEO — Voice Engine Optimization: when someone asks Siri, Alexa or Google Assistant for your trade near them, does your firm come back?",
+     "PEO — Prompt Engine Optimization: do you surface for the exact phrases buyers type and say (\"emergency roof repair\", \"best commercial GC in {city}\"), not only your company name?",
+     "IEO — Index Engine Optimization: can AI crawlers reach and read your site: schema, clean service pages, and a robots.txt that lets GPTBot, ClaudeBot and PerplexityBot in?"
+    ],
+    "rows": [
+     [
+      "GEO",
+      "Generative Engine Optimization: when someone asks ChatGPT, Gemini, Claude or Perplexity for a contractor in your trade and city, is your firm one of the names in the answer?"
+     ],
+     [
+      "AEO",
+      "Answer Engine Optimization: do Google’s AI Overviews and other direct answers cite a page of yours?"
+     ],
+     [
+      "LEO",
+      "Local Entity Optimization: do Google Maps, Apple Maps, Yelp, BBB and the directories all show the same name, address, phone, categories and hours?"
+     ],
+     [
+      "VEO",
+      "Voice Engine Optimization: when someone asks Siri, Alexa or Google Assistant for your trade near them, does your firm come back?"
+     ],
+     [
+      "PEO",
+      "Prompt Engine Optimization: do you surface for the exact phrases buyers type and say (\"emergency roof repair\", \"best commercial GC in {city}\"), not only your company name?"
+     ],
+     [
+      "IEO",
+      "Index Engine Optimization: can AI crawlers reach and read your site: schema, clean service pages, and a robots.txt that lets GPTBot, ClaudeBot and PerplexityBot in?"
+     ]
+    ]
+   },
+   {
+    "type": "scoring",
+    "label": "Scoring",
+    "text": "0 = absent. 1 = exists, unmanaged. 3 = managed quarterly. 5 = owned, measured monthly."
+   }
+  ],
+  "dm": "Thanks for the SIGNALS. Here is the Six Signals Self-Rating: https://6signal.co/get/signals Rate each signal 0–5 using the rubric. Under 15 total means the warning shot was for you.",
+  "loom": [
+   "Point at the six bars from the post, name each signal in three words",
+   "Rate one signal live for a fictional firm",
+   "Close: five minutes, six numbers, you will know which bar to lift first"
+  ],
+  "tool": "Build /tools/six-signals: six sliders 0–5 (GEO, AEO, LEO, VEO, PEO, IEO) with the definitions below as helper text. Render the result as six horizontal bars on a dark ground (#060606, bars #E6FF00, labels JetBrains Mono uppercase). Total out of 30 with a band: 0–10 Invisible, 11–20 Emerging, 21–26 Visible, 27–30 Dominant. Email capture to send the chart as PNG. Definitions: [paste fields].",
+  "post_desc": "SIGNAL BARS",
+  "mp4": "MP4/1E-SIGNAL-BARS.MP4",
+  "slug": "signals",
+  "url": "https://6signal.co/get/signals",
+  "has_tool": true,
+  "has_sheet": false,
+  "cta_kind": "visibility",
+  "name": "Six Signals Self-Rating",
+  "dm_line1": "Thanks for the SIGNALS. Here is the Six Signals Self-Rating: https://6signal.co/get/signals",
+  "dm_line2": "Rate each signal 0–5 using the rubric. Under 15 total means the warning shot was for you."
+ },
+ {
+  "id": "2a",
+  "track": "Dark Motion",
+  "format": "Automation blueprint",
+  "keyword": "OVERNIGHT",
+  "title": "OVERNIGHT SHIFT BLUEPRINT",
+  "sub": "Five automations that run between 5 PM and 6 AM so the superintendent opens a finished list, not a blank one.",
+  "get": [
+   "Five automations, each as trigger → steps → output",
+   "Tool pairings for Procore/ACC + Google Workspace or Microsoft 365",
+   "Build order: easiest first"
+  ],
+  "sections": [
+   {
+    "type": "steps",
+    "label": "Build steps",
+    "items": [
+     "11:00 PM — Daily report compile. Trigger: schedule. Pull today's manpower log, delivered materials, weather, and photos from Procore/ACC. Assistant drafts the report in your template. Output: draft in the super's inbox for a 6 AM sign-off.",
+     "11:30 PM — Open RFI digest. Query RFIs with no response in 5+ days. Assistant writes one chase email per responsible party with the question restated and the schedule impact. Output: drafts, not sends.",
+     "12:00 AM — Two-week lookahead. Read the schedule export; list activities starting in 14 days that have no submittal approved or no material delivered. Output: a flagged list for the PM.",
+     "4:30 AM — Weather and crew. Pull tomorrow's hourly forecast; if wind, rain or heat thresholds are crossed, draft the crane, concrete or heat-stress notice from your own templates.",
+     "5:30 AM — Inbox pre-sort. Tag overnight email by project and by risk words (delay, extra, backcharge, revised, hold). Output: a short morning brief, highest risk first."
+    ]
+   }
+  ],
+  "dm": "Thanks for the OVERNIGHT. Here is the Overnight Shift Blueprint: https://6signal.co/get/overnight Start with the 11 PM daily report. One automation per two weeks; five in ten weeks.",
+  "loom": [
+   "Show the 24-hour dial; point to the dark hours",
+   "Walk the 11 PM automation end to end in 40 seconds",
+   "Close: build one every two weeks, the gap compounds in your favor"
+  ],
+  "tool": "",
+  "post_desc": "AI ARC RUNS ALL DAY, CREW ARC RUNS 10 H",
+  "mp4": "MP4/2A-SITE-CLOCK.MP4",
+  "slug": "overnight",
+  "url": "https://6signal.co/get/overnight",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "workflow",
+  "name": "Overnight Shift Blueprint",
+  "dm_line1": "Thanks for the OVERNIGHT. Here is the Overnight Shift Blueprint: https://6signal.co/get/overnight",
+  "dm_line2": "Start with the 11 PM daily report. One automation per two weeks; five in ten weeks."
+ },
+ {
+  "id": "2b",
+  "track": "Dark Motion",
+  "format": "Automation blueprint",
+  "keyword": "SIXAM",
+  "title": "6 AM PUNCH DIGEST",
+  "sub": "Every open punch item, grouped by responsible sub, written into one email per sub, sent before the gate opens.",
+  "get": [
+   "Seven steps from Procore export to sent email",
+   "The assistant prompt that writes each sub email",
+   "What to measure: days-open before and after"
+  ],
+  "sections": [
+   {
+    "type": "steps",
+    "label": "Build steps",
+    "items": [
+     "Nightly 9 PM: export open punch items (Procore Punch List or ACC Issues) to a sheet — item, location, trade, responsible company, due date, days open, photo link.",
+     "Group rows by responsible company.",
+     "For each group, send the rows to the assistant with the email prompt below.",
+     "Assistant returns a subject line and a body: items sorted by location, oldest first, with photo links, and one sentence on tomorrow's access window.",
+     "Save as drafts to the super's account (not auto-send for the first two weeks).",
+     "5:45 AM: super reviews and sends; or after two clean weeks, auto-send at 5:45 AM.",
+     "Weekly: chart average days-open per sub. Share it at the OAC."
+    ]
+   },
+   {
+    "type": "prompt",
+    "label": "Prompt inside the automation",
+    "text": "Write a short email to {sub company} from {GC name} listing their open punch items on {project}. Group by floor and room, oldest first. For each item: location, one-line description, days open, photo link. End with tomorrow's access window: {window}. Plain tone, no exclamation marks, under 180 words plus the list."
+   }
+  ],
+  "dm": "Thanks for the SIXAM. Here is the 6 AM Punch Digest: https://6signal.co/get/sixam Start with drafts for two weeks, then auto-send. Measure days-open by sub.",
+  "loom": [
+   "Show the list typing itself from the post",
+   "Screen: the sheet export, then one generated sub email",
+   "Close: before 6 AM, every sub knows their list"
+  ],
+  "tool": "",
+  "post_desc": "LIST TYPES ITSELF, THEN CLEARS — CLOSED BY 6 AM",
+  "mp4": "MP4/2B-PUNCH-LIST.MP4",
+  "slug": "sixam",
+  "url": "https://6signal.co/get/sixam",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "workflow",
+  "name": "6 AM Punch Digest",
+  "dm_line1": "Thanks for the SIXAM. Here is the 6 AM Punch Digest: https://6signal.co/get/sixam",
+  "dm_line2": "Start with drafts for two weeks, then auto-send. Measure days-open by sub."
+ },
+ {
+  "id": "2c",
+  "track": "Dark Motion",
+  "format": "Checklist",
+  "keyword": "STATIC",
+  "title": "12 REASONS YOU RENDER AS STATIC",
+  "sub": "Why an AI answer names your competitor cleanly and dissolves your firm into noise. Twelve causes, each with the fix.",
+  "get": [
+   "Twelve causes ranked by how often we see them",
+   "The fix and who owns it",
+   "The ones you can close this week marked"
+  ],
+  "sections": [
+   {
+    "type": "checklist",
+    "label": "Checklist",
+    "items": [
+     "No schema markup: the engine cannot confirm you are a business, let alone a contractor — Fix: GeneralContractor JSON-LD on the homepage (this week)",
+     "Name, address, phone differ across site, GBP and directories — Fix: one canonical NAP, propagate (this week)",
+     "GBP categories wrong or secondary categories empty — Fix: primary + 4 secondaries matching your trades (this week)",
+     "No reviews in the last 90 days — Fix: ask at every closeout; aim for two a month",
+     "Project pages have photos but no text: no city, no type, no scope — Fix: 150 words per project with place and type",
+     "No page answers the question a buyer asks (\"how long does a tenant improvement take in {city}\") — Fix: one answer page per common question",
+     "No press or association mentions since 2021 — Fix: AGC/ABC listings, one trade-press placement a quarter",
+     "Site blocks AI crawlers in robots.txt — Fix: check for GPTBot, ClaudeBot, PerplexityBot and allow them",
+     "Homepage says \"quality, safety, integrity\" and nothing specific — Fix: trades, markets, cities, project sizes in the first 100 words",
+     "Not on Apple Business Connect or Bing Places, so Siri and Alexa have nothing to read — Fix: claim both with the same NAP as your GBP",
+     "Leadership has no bylines or profiles that link back — Fix: LinkedIn profiles linking to the site, one article a quarter",
+     "Nobody has ever checked — Fix: run the twelve buyer prompts quarterly"
+    ]
+   }
+  ],
+  "dm": "Thanks for the STATIC. Here is the 12 Reasons You Render as Static: https://6signal.co/get/static Work top to bottom. Items 1–3 and 8 are same-week fixes.",
+  "loom": [
+   "Show the glitch split from the post",
+   "Read causes 1, 2 and 8; say these are a Tuesday afternoon",
+   "Close: twelve causes, most are not expensive, all are ignored"
+  ],
+  "tool": "",
+  "post_desc": "THEM: CLEAN. YOU: STATIC",
+  "mp4": "MP4/2C-GLITCH-SPLIT.MP4",
+  "slug": "static",
+  "url": "https://6signal.co/get/static",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "visibility",
+  "name": "12 Reasons You Render as Static",
+  "dm_line1": "Thanks for the STATIC. Here is the 12 Reasons You Render as Static: https://6signal.co/get/static",
+  "dm_line2": "Work top to bottom. Items 1–3 and 8 are same-week fixes."
+ },
+ {
+  "id": "3a",
+  "track": "Light Motion",
+  "format": "Fillable template",
+  "keyword": "ROADMAP",
+  "title": "24-MONTH ADOPTION ROADMAP",
+  "sub": "Eight quarters, one workflow per quarter, an owner and a metric for each. Pre-filled with the sequence that works for mid-size firms.",
+  "get": [
+   "Eight-row template: Quarter / Workflow / Owner / Tool / Metric / Status",
+   "A suggested sequence you can reorder",
+   "Google Sheets and Excel versions"
+  ],
+  "sections": [
+   {
+    "type": "fields",
+    "label": "Template fields",
+    "items": [
+     "Q1 — Meeting notes → action items — Ops lead — hours of PM typing saved",
+     "Q2 — Daily report autopilot — Field ops — reports submitted before 5 PM, %",
+     "Q3 — RFI draft responses — PM lead — median days open",
+     "Q4 — Spec book Q&A — Precon — lookups per week, time per lookup",
+     "Q5 — Submittal pre-review — PM lead — review cycle days",
+     "Q6 — Inbox risk triage — Project exec — change orders caught before notice deadline",
+     "Q7 — Schema, GBP, AI visibility baseline — Marketing — six-signal total",
+     "Q8 — Estimate vs actual review — Estimating — variance %"
+    ],
+    "rows": [
+     [
+      "Q1",
+      "Meeting notes → action items",
+      "Ops lead",
+      "hours of PM typing saved"
+     ],
+     [
+      "Q2",
+      "Daily report autopilot",
+      "Field ops",
+      "reports submitted before 5 PM, %"
+     ],
+     [
+      "Q3",
+      "RFI draft responses",
+      "PM lead",
+      "median days open"
+     ],
+     [
+      "Q4",
+      "Spec book Q&A",
+      "Precon",
+      "lookups per week, time per lookup"
+     ],
+     [
+      "Q5",
+      "Submittal pre-review",
+      "PM lead",
+      "review cycle days"
+     ],
+     [
+      "Q6",
+      "Inbox risk triage",
+      "Project exec",
+      "change orders caught before notice deadline"
+     ],
+     [
+      "Q7",
+      "Schema, GBP, AI visibility baseline",
+      "Marketing",
+      "six-signal total"
+     ],
+     [
+      "Q8",
+      "Estimate vs actual review",
+      "Estimating",
+      "variance %"
+     ]
+    ]
+   }
+  ],
+  "dm": "Thanks for the ROADMAP. Here is the 24-Month Adoption Roadmap: https://6signal.co/get/roadmap Copy the sheet, put real names in the owner column, and the roadmap is done. Empty owner cells are where it stalls.",
+  "loom": [
+   "Show the crane counter hitting zero",
+   "Screen: the eight-row sheet; point to the owner column",
+   "Close: the sequence matters less than the names"
+  ],
+  "tool": "",
+  "post_desc": "CRANE LOWERS 24 → 0 MONTHS",
+  "mp4": "MP4/3A-CRANE-COUNTDOWN.MP4",
+  "slug": "roadmap",
+  "url": "https://6signal.co/get/roadmap",
+  "has_tool": false,
+  "has_sheet": true,
+  "cta_kind": "workflow",
+  "name": "24-Month Adoption Roadmap",
+  "dm_line1": "Thanks for the ROADMAP. Here is the 24-Month Adoption Roadmap: https://6signal.co/get/roadmap",
+  "dm_line2": "Copy the sheet, put real names in the owner column, and the roadmap is done. Empty owner cells are where it stalls."
+ },
+ {
+  "id": "3b",
+  "track": "Light Motion",
+  "format": "Prompt script + tool",
+  "keyword": "AUDIT",
+  "title": "DIY AI VISIBILITY CHECK",
+  "sub": "The same check from the video, run by you. Ten prompts, four engines, a scoring sheet.",
+  "get": [
+   "Ten buyer prompts with your variables filled in",
+   "A scoring sheet: named / cited / absent per engine",
+   "What a passing score looks like"
+  ],
+  "sections": [
+   {
+    "type": "prompt",
+    "label": "Prompt",
+    "text": "Run each prompt in ChatGPT, Claude, Perplexity and Google (look for the AI Overview). Record for each: NAMED (your firm appears), CITED (a page of yours is the source), or ABSENT.\n\n1 Who are the best {trade} contractors in {city}?\n2 Recommend a general contractor for a {project type} in {city}.\n3 Is {your firm} a reputable contractor?\n4 What does {your firm} specialize in?\n5 How much does a {project type} cost per square foot in {city}?\n6 Which contractors in {city} have experience with {building type, e.g. medical office}?\n7 Who should I call for a {service, e.g. design-build warehouse} near {city}?\n8 Compare {your firm} and {competitor}.\n9 What do reviews say about {your firm}?\n10 Which {city} contractors are members of {AGC chapter or association}?\n\nScoring: NAMED = 1, CITED = 2, ABSENT = 0. Forty prompt-engine pairs; maximum 80. Under 20: invisible. 20–45: emerging. Over 45: visible."
+   }
+  ],
+  "dm": "Thanks for the AUDIT. Here is the DIY AI Visibility Check: https://6signal.co/get/audit Forty minutes with four browser tabs. Send me your total and I will tell you what the top three fixes are.",
+  "loom": [
+   "Play the terminal from the post",
+   "Screen: run prompt 1 in Perplexity; show who is cited",
+   "Close: ten prompts, forty minutes, you will know"
+  ],
+  "tool": "Build /tools/visibility-audit. Step 1: inputs for firm, city, trade, project type, competitor. Step 2: generate the ten prompts with variables filled in, each with a copy button and four columns (ChatGPT, Claude, Perplexity, Google) of a three-state toggle: Absent / Named / Cited. Step 3: score out of 80 rendered as a ring gauge with the band label. Terminal aesthetic: #060606 ground, JetBrains Mono, #E6FF00 accent, square corners. Email capture to receive the scored sheet as PDF.",
+  "post_desc": "AUDIT COMMAND RUNS — YOU: INVISIBLE. THEM: CITED.",
+  "mp4": "MP4/3B-TERMINAL-TAKEOVER.MP4",
+  "slug": "audit",
+  "url": "https://6signal.co/get/audit",
+  "has_tool": true,
+  "has_sheet": false,
+  "cta_kind": "visibility",
+  "name": "DIY AI Visibility Check",
+  "dm_line1": "Thanks for the AUDIT. Here is the DIY AI Visibility Check: https://6signal.co/get/audit",
+  "dm_line2": "Forty minutes with four browser tabs. Send me your total and I will tell you what the top three fixes are."
+ },
+ {
+  "id": "3c",
+  "track": "Light Motion",
+  "format": "Tool + template",
+  "keyword": "LATER",
+  "title": "COST OF LATER CALCULATOR",
+  "sub": "What waiting another quarter costs, in hours and dollars, using your own PM count and loaded rate.",
+  "get": [
+   "Five inputs, one number",
+   "The formula, visible, so nobody argues with a black box",
+   "Sheet version for the CFO"
+  ],
+  "sections": [
+   {
+    "type": "fields",
+    "label": "Template fields",
+    "items": [
+     "PMs and supers (count)",
+     "Admin hours per person per week on reports, RFIs, notes, email (typical 9–14)",
+     "Share recoverable with current tools (default 35%)",
+     "Loaded hourly rate (default $85)",
+     "Months of delay"
+    ],
+    "rows": [
+     [
+      "PMs and supers (count)"
+     ],
+     [
+      "Admin hours per person per week on reports, RFIs, notes, email (typical 9–14)"
+     ],
+     [
+      "Share recoverable with current tools (default 35%)"
+     ],
+     [
+      "Loaded hourly rate (default $85)"
+     ],
+     [
+      "Months of delay"
+     ]
+    ]
+   },
+   {
+    "type": "scoring",
+    "label": "Scoring",
+    "text": "Cost of later = people × hours/week × recoverable share × rate × 4.33 × months. Twelve people, 11 hours, 35%, $85, 6 months = $102,000."
+   }
+  ],
+  "dm": "Thanks for the LATER. Here is the Cost of Later Calculator: https://6signal.co/get/later Put in your numbers. Show the result to whoever keeps saying later.",
+  "loom": [
+   "Play the beam snapping",
+   "Screen: enter 12 people, 11 hours; the number appears",
+   "Close: that is one quarter, not a year"
+  ],
+  "tool": "Build /tools/cost-of-later: five numeric inputs (people, admin hours per week, recoverable share %, loaded rate, months of delay) with the defaults 12 / 11 / 35 / 85 / 6. Live output: dollars and hours, large, JetBrains Mono, #E6FF00 on #060606. Show the formula under the number. A \"load-bearing\" meter: a horizontal beam that bends further as the number grows, snapping past $250k. Email capture to send the result and a one-page PDF.",
+  "post_desc": "LATER LANDS ON ADOPTION — THE BEAM SNAPS",
+  "mp4": "MP4/3C-LOAD-BEARING.MP4",
+  "slug": "later",
+  "url": "https://6signal.co/get/later",
+  "has_tool": true,
+  "has_sheet": true,
+  "cta_kind": "workflow",
+  "name": "Cost of Later Calculator",
+  "dm_line1": "Thanks for the LATER. Here is the Cost of Later Calculator: https://6signal.co/get/later",
+  "dm_line2": "Put in your numbers. Show the result to whoever keeps saying later."
+ },
+ {
+  "id": "4a",
+  "track": "Infrastructure",
+  "format": "Checklist",
+  "keyword": "STACK",
+  "title": "AI INFRASTRUCTURE STACK CHECKLIST",
+  "sub": "Six layers, bottom to top. If a lower layer is missing, everything above it is a demo.",
+  "get": [
+   "Six layers with two to three checks each",
+   "What breaks when a layer is skipped",
+   "Owner suggestion per layer"
+  ],
+  "sections": [
+   {
+    "type": "checklist",
+    "label": "Checklist",
+    "items": [
+     "DATA — Project records live in one system with consistent naming; drawings, specs and RFIs are findable by project and number",
+     "DATA — A retention and sharing rule says what can be pasted into an assistant",
+     "ACCESS — Assistant seats are on a business plan with training opt-out; SSO or at least managed logins",
+     "ACCESS — One shared workspace per project for prompts and outputs",
+     "TOOLS — Claude or ChatGPT seats for PMs, supers, estimators; a transcription tool for meetings",
+     "TOOLS — A connector or automation layer (Zapier, Make or n8n) with Procore/ACC and email access",
+     "WORKFLOWS — Five documented, running automations with named owners",
+     "WORKFLOWS — Each has a review step before anything leaves the building",
+     "GOVERNANCE — One-page policy: what is allowed, what is reviewed, what is never pasted",
+     "GOVERNANCE — Monthly 30-minute adoption review; retire what nobody uses",
+     "VISIBILITY — Schema, GBP, NAP consistency, crawler access",
+     "VISIBILITY — Quarterly run of the buyer prompts; score tracked"
+    ]
+   }
+  ],
+  "dm": "Thanks for the STACK. Here is the AI Infrastructure Stack Checklist: https://6signal.co/get/stack Tick from the bottom up. Stop at the first layer with a gap and fix that one.",
+  "loom": [
+   "Play the stack building up",
+   "Point at the bottom two layers: this is where firms skip",
+   "Close: six layers, bottom first"
+  ],
+  "tool": "",
+  "post_desc": "SIX LAYERS STACK INTO A SECTION",
+  "mp4": "MP4/4A-WHITE-STACK.MP4",
+  "slug": "stack",
+  "url": "https://6signal.co/get/stack",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "workflow",
+  "name": "AI Infrastructure Stack Checklist",
+  "dm_line1": "Thanks for the STACK. Here is the AI Infrastructure Stack Checklist: https://6signal.co/get/stack",
+  "dm_line2": "Tick from the bottom up. Stop at the first layer with a gap and fix that one."
+ },
+ {
+  "id": "4b",
+  "track": "Infrastructure",
+  "format": "Tool + template",
+  "keyword": "SCHEMA",
+  "title": "CONTRACTOR SCHEMA GENERATOR",
+  "sub": "Fill in twelve fields, copy one block of JSON-LD, paste it in your site head. The engines can finally confirm who you are.",
+  "get": [
+   "The GeneralContractor JSON-LD template with every field explained",
+   "Which field feeds which signal",
+   "Validation steps"
+  ],
+  "sections": [
+   {
+    "type": "code",
+    "label": "Template: paste in <head>",
+    "text": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"GeneralContractor\",\n  \"name\": \"{Firm legal name}\",\n  \"url\": \"https://{domain}\",\n  \"logo\": \"https://{domain}/logo.png\",\n  \"image\": \"https://{domain}/hq.jpg\",\n  \"telephone\": \"{+1-xxx-xxx-xxxx}\",\n  \"email\": \"{contact@domain}\",\n  \"address\": {\"@type\": \"PostalAddress\", \"streetAddress\": \"{street}\", \"addressLocality\": \"{city}\", \"addressRegion\": \"{state}\", \"postalCode\": \"{zip}\", \"addressCountry\": \"US\"},\n  \"geo\": {\"@type\": \"GeoCoordinates\", \"latitude\": {lat}, \"longitude\": {lng}},\n  \"areaServed\": [{\"@type\": \"City\", \"name\": \"{city 1}\"}, {\"@type\": \"City\", \"name\": \"{city 2}\"}],\n  \"foundingDate\": \"{YYYY}\",\n  \"numberOfEmployees\": {\"@type\": \"QuantitativeValue\", \"value\": {count}},\n  \"knowsAbout\": [\"{design-build}\", \"{tenant improvement}\", \"{tilt-up}\", \"{healthcare construction}\"],\n  \"hasOfferCatalog\": {\"@type\": \"OfferCatalog\", \"name\": \"Services\", \"itemListElement\": [{\"@type\": \"Offer\", \"itemOffered\": {\"@type\": \"Service\", \"name\": \"{Service 1}\"}}]},\n  \"sameAs\": [\"{GBP URL}\", \"{LinkedIn URL}\", \"{AGC/ABC member page}\", \"{YouTube channel}\"],\n  \"aggregateRating\": {\"@type\": \"AggregateRating\", \"ratingValue\": \"{4.8}\", \"reviewCount\": \"{37}\"}\n}\n</script>",
+    "note": "Validate at validator.schema.org, then in Google Search Console → Enhancements. Remove aggregateRating if you have fewer than five public reviews."
+   }
+  ],
+  "dm": "Thanks for the SCHEMA. Here is the Contractor Schema Generator: https://6signal.co/get/schema Fill the template, validate, paste in the head of every page. Fifteen minutes.",
+  "loom": [
+   "Play the schema typing itself",
+   "Screen: paste the block in the validator; zero errors",
+   "Close: fifteen minutes to become a confirmed entity"
+  ],
+  "tool": "Build /tools/schema-generator: a two-column page. Left: a form with fields firm name, URL, logo URL, phone, email, street, city, state, zip, lat/lng (with a \"find from address\" button using a free geocoder), founding year, employee count, up to six knowsAbout tags, up to six services, sameAs URLs (GBP, LinkedIn, association, YouTube), rating value and count. Right: live JSON-LD output in a mono code block that types itself as fields change, with copy and download buttons, and a \"validate\" link to validator.schema.org. Dark ground #060606, accent #E6FF00, square corners. Email capture optional, after copy.",
+  "post_desc": "JSON-LD TYPES ITSELF — EACH FIELD LIGHTS A SIGNAL",
+  "mp4": "MP4/4B-BLACK-SCHEMA.MP4",
+  "slug": "schema",
+  "url": "https://6signal.co/get/schema",
+  "has_tool": true,
+  "has_sheet": false,
+  "cta_kind": "visibility",
+  "name": "Contractor Schema Generator",
+  "dm_line1": "Thanks for the SCHEMA. Here is the Contractor Schema Generator: https://6signal.co/get/schema",
+  "dm_line2": "Fill the template, validate, paste in the head of every page. Fifteen minutes."
+ },
+ {
+  "id": "4c",
+  "track": "Infrastructure",
+  "format": "Fillable template",
+  "keyword": "NODE",
+  "title": "RECOMMENDATION CONTENT MAP",
+  "sub": "Which page, profile or asset feeds each of the six signals, so the lines actually converge on your name.",
+  "get": [
+   "Six rows: signal → asset → where it lives → owner → cadence",
+   "Pre-filled with the minimum viable asset per signal",
+   "Blank rows for your additions"
+  ],
+  "sections": [
+   {
+    "type": "fields",
+    "label": "Template fields",
+    "items": [
+     "GEO — Homepage naming trades, markets and cities in the first 100 words, plus third-party pages that name you (association listings, trade press) — Website, AGC/ABC, trade press — Marketing; principal for press — Quarterly review",
+     "AEO — One answer page per common buyer question (cost, timeline, permits) — Website /answers — Precon writes, marketing posts — One page per month",
+     "LEO — Complete Google Business Profile (categories, services, 10+ photos, two reviews a month) and the same NAP on Apple Maps, Yelp, BBB and directories — GBP + citations — Office manager — Weekly",
+     "VEO — Apple Business Connect and Bing Places claimed with matching NAP and hours; FAQ answers written the way people speak — Apple Business Connect, Bing Places, website FAQ — Office manager — Quarterly",
+     "PEO — Service and project pages written in buyers’ own phrasing, checked against a tracked list of the prompts buyers use — Website service pages — Marketing — Monthly prompt check",
+     "IEO — GeneralContractor schema, XML sitemap, robots.txt that admits AI crawlers, service text in HTML rather than images — Website code, robots.txt — Web — Quarterly"
+    ],
+    "rows": [
+     [
+      "GEO",
+      "Homepage naming trades, markets and cities in the first 100 words, plus third-party pages that name you (association listings, trade press)",
+      "Website, AGC/ABC, trade press",
+      "Marketing; principal for press",
+      "Quarterly review"
+     ],
+     [
+      "AEO",
+      "One answer page per common buyer question (cost, timeline, permits)",
+      "Website /answers",
+      "Precon writes, marketing posts",
+      "One page per month"
+     ],
+     [
+      "LEO",
+      "Complete Google Business Profile (categories, services, 10+ photos, two reviews a month) and the same NAP on Apple Maps, Yelp, BBB and directories",
+      "GBP + citations",
+      "Office manager",
+      "Weekly"
+     ],
+     [
+      "VEO",
+      "Apple Business Connect and Bing Places claimed with matching NAP and hours; FAQ answers written the way people speak",
+      "Apple Business Connect, Bing Places, website FAQ",
+      "Office manager",
+      "Quarterly"
+     ],
+     [
+      "PEO",
+      "Service and project pages written in buyers’ own phrasing, checked against a tracked list of the prompts buyers use",
+      "Website service pages",
+      "Marketing",
+      "Monthly prompt check"
+     ],
+     [
+      "IEO",
+      "GeneralContractor schema, XML sitemap, robots.txt that admits AI crawlers, service text in HTML rather than images",
+      "Website code, robots.txt",
+      "Web",
+      "Quarterly"
+     ]
+    ]
+   }
+  ],
+  "dm": "Thanks for the NODE. Here is the Recommendation Content Map: https://6signal.co/get/node Fill the owner column first. An asset without an owner is a line that never reaches the node.",
+  "loom": [
+   "Play the convergence",
+   "Screen: the six-row map; read the LEO row",
+   "Close: six assets, six owners, one node"
+  ],
+  "tool": "",
+  "post_desc": "SIX LINES ROUTE TO ONE NODE — RECOMMENDED",
+  "mp4": "MP4/4C-YELLOW-CONVERGENCE.MP4",
+  "slug": "node",
+  "url": "https://6signal.co/get/node",
+  "has_tool": false,
+  "has_sheet": true,
+  "cta_kind": "visibility",
+  "name": "Recommendation Content Map",
+  "dm_line1": "Thanks for the NODE. Here is the Recommendation Content Map: https://6signal.co/get/node",
+  "dm_line2": "Fill the owner column first. An asset without an owner is a line that never reaches the node."
+ },
+ {
+  "id": "4d",
+  "track": "Infrastructure",
+  "format": "Fillable checklist",
+  "keyword": "FOOTINGS",
+  "title": "SIX FOOTINGS SELF-CHECK",
+  "sub": "Six foundations under AI visibility. Each gets poured, cured or not started. Thirty minutes to fill in.",
+  "get": [
+   "Six footings, four checks each",
+   "Status per footing: poured / forming / not started",
+   "What to pour first"
+  ],
+  "sections": [
+   {
+    "type": "checklist",
+    "label": "Checklist",
+    "items": [
+     "F1 Google Business Profile — primary + secondary categories set; services listed; 10+ recent photos; a review in the last 30 days",
+     "F2 Website entity — GeneralContractor schema; NAP matches GBP exactly; about page names principals; crawlers allowed",
+     "F3 Reviews — 20+ total; reply to every one; a request step at closeout; two new per month",
+     "F4 Citations — listed on AGC/ABC, BBB, Buildzoom, Houzz or Procore network; same NAP everywhere",
+     "F5 Mentions — one press or association mention in the last 12 months; principal LinkedIn profiles link to the site",
+     "F6 Answers — at least three pages that answer a specific buyer question with a city and a number in them"
+    ]
+   },
+   {
+    "type": "scoring",
+    "label": "Scoring",
+    "text": "Poured = all four checks. Forming = two or three. Not started = one or none. Pour F1 and F2 first; they carry the rest."
+   }
+  ],
+  "dm": "Thanks for the FOOTINGS. Here is the Six Footings Self-Check: https://6signal.co/get/footings Thirty minutes with your website and GBP open. Mark each footing poured, forming or not started.",
+  "loom": [
+   "Play the footings pouring",
+   "Screen: a GBP with empty service fields; mark F1 forming",
+   "Close: F1 and F2 first, the rest sits on them"
+  ],
+  "tool": "",
+  "post_desc": "SIX FOOTINGS POUR IN PLAN — VISIBILITY IS INFRASTRUCTURE",
+  "mp4": "MP4/4D-GREY-FOOTINGS.MP4",
+  "slug": "footings",
+  "url": "https://6signal.co/get/footings",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "visibility",
+  "name": "Six Footings Self-Check",
+  "dm_line1": "Thanks for the FOOTINGS. Here is the Six Footings Self-Check: https://6signal.co/get/footings",
+  "dm_line2": "Thirty minutes with your website and GBP open. Mark each footing poured, forming or not started."
+ },
+ {
+  "id": "5a",
+  "track": "Construction Software",
+  "format": "Prompt + blueprint",
+  "keyword": "RFI",
+  "title": "RFI RESPONSE DRAFTER",
+  "sub": "The RFI arrives with a draft answer already attached. The PM edits instead of starting from a blank field.",
+  "get": [
+   "The drafting prompt with spec and drawing references required",
+   "Five-step Procore/ACC → assistant → review loop",
+   "What to measure: median days open"
+  ],
+  "sections": [
+   {
+    "type": "steps",
+    "label": "Build steps",
+    "items": [
+     "Trigger: new RFI created in Procore or ACC.",
+     "Automation pulls the RFI text plus the referenced sheets and spec sections from the project folder.",
+     "Sends to the assistant with the prompt above.",
+     "Posts the draft as a private comment on the RFI, tagged DRAFT.",
+     "PM edits, then submits the official response. Track median days-open per project on a dashboard."
+    ]
+   },
+   {
+    "type": "prompt",
+    "label": "Prompt inside the automation",
+    "text": "You are the project engineer on {project}. Draft a response to the RFI below for the PM to review. Use only the attached spec sections and drawing sheets; cite them by section and sheet number. If the answer requires the architect or engineer, say so and draft the forwarding note instead.\n\nRFI: {paste RFI question, sheet references, subcontractor}\n\nReturn:\n1 Proposed response (under 150 words, direct, no hedging)\n2 Sources cited (spec section, sheet, detail)\n3 Cost or schedule impact: yes / no / unknown, one line why\n4 Open questions for the PM before sending\n5 Confidence: high / medium / low"
+   }
+  ],
+  "dm": "Thanks for the RFI. Here is the RFI Response Drafter: https://6signal.co/get/rfi Paste one open RFI with its spec section attached. Judge the draft. Then wire the automation.",
+  "loom": [
+   "Play the queue collapsing",
+   "Screen: one RFI in Procore, the draft comment underneath",
+   "Close: the PM edits; nobody starts from blank"
+  ],
+  "tool": "",
+  "post_desc": "EIGHT OPEN RFIS — DAYS OPEN COLLAPSE 11 → 0.4",
+  "mp4": "MP4/WORKFLOWS/5A-RFI-QUEUE.MP4",
+  "slug": "rfi",
+  "url": "https://6signal.co/get/rfi",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "workflow",
+  "name": "RFI Response Drafter",
+  "dm_line1": "Thanks for the RFI. Here is the RFI Response Drafter: https://6signal.co/get/rfi",
+  "dm_line2": "Paste one open RFI with its spec section attached. Judge the draft. Then wire the automation."
+ },
+ {
+  "id": "5b",
+  "track": "Construction Software",
+  "format": "Prompt",
+  "keyword": "STAMP",
+  "title": "SUBMITTAL PRE-REVIEW PROMPT",
+  "sub": "Compare the submittal to the spec section before a human opens it. The reviewer gets a comment list, not a stack.",
+  "get": [
+   "One prompt: submittal PDF + spec section in, deviation table out",
+   "Stamp recommendation with reasons",
+   "Works for product data, shop drawings and samples logs"
+  ],
+  "sections": [
+   {
+    "type": "prompt",
+    "label": "Prompt",
+    "text": "You are reviewing a submittal against the specification. Attached: the submittal ({type: product data / shop drawing / sample}) and spec section {section number and title}.\n\nReturn a table: Spec paragraph | Requirement | Submittal shows | Status (Complies / Deviates / Not shown) | Comment for the submitter.\n\nThen:\n- Count of Deviates and Not shown\n- Recommended stamp: No Exceptions Taken / Make Corrections Noted / Revise and Resubmit / Rejected, with a two-sentence reason\n- Anything that needs the design team, listed separately\n\nDo not infer compliance from a brand name. If the submittal does not show a required value, mark Not shown."
+   }
+  ],
+  "dm": "Thanks for the STAMP. Here is the Submittal Pre-Review Prompt: https://6signal.co/get/stamp Attach the submittal and the spec section. Read the table, then stamp. The reviewer still signs.",
+  "loom": [
+   "Play the stamp",
+   "Screen: the deviation table, two red rows",
+   "Close: three weeks of queue, now the reviewer reads a table"
+  ],
+  "tool": "",
+  "post_desc": "REVIEWED STAMP SLAMS — 3 WEEKS STRUCK, 3 SECONDS",
+  "mp4": "MP4/WORKFLOWS/5B-SUBMITTAL-STAMP.MP4",
+  "slug": "stamp",
+  "url": "https://6signal.co/get/stamp",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "workflow",
+  "name": "Submittal Pre-Review Prompt",
+  "dm_line1": "Thanks for the STAMP. Here is the Submittal Pre-Review Prompt: https://6signal.co/get/stamp",
+  "dm_line2": "Attach the submittal and the spec section. Read the table, then stamp. The reviewer still signs."
+ },
+ {
+  "id": "5c",
+  "track": "Construction Software",
+  "format": "Prompt",
+  "keyword": "CLOUD",
+  "title": "DRAWING CONFLICT FINDER",
+  "sub": "Hand the assistant two sheets that should agree. Get back the places they do not, with grid references, ready to cloud in Bluebeam.",
+  "get": [
+   "Pairwise conflict prompt",
+   "Output formatted as a Bluebeam markup list",
+   "The six sheet pairs worth running on every job"
+  ],
+  "sections": [
+   {
+    "type": "prompt",
+    "label": "Prompt",
+    "text": "Compare the two attached drawing sheets: {Sheet A, e.g. A2.01 Floor Plan} and {Sheet B, e.g. S2.01 Framing Plan}. Find every location where they disagree or where one shows something the other omits.\n\nFor each: Grid reference | What Sheet A shows | What Sheet B shows | Type (dimension / opening / elevation / element missing / annotation) | Suggested RFI wording (one sentence).\n\nList the top five by construction impact first. Keep grid references exact; if a grid line is unreadable, say so.\n\nRun on: A-plan vs S-plan; A-RCP vs M-plan; A-sections vs S-sections; A-door schedule vs A-plan; C-site vs A-site; E-plan vs A-RCP."
+   }
+  ],
+  "dm": "Thanks for the CLOUD. Here is the Drawing Conflict Finder: https://6signal.co/get/cloud Export the two sheets as one PDF from Bluebeam, attach, run. Cloud what comes back.",
+  "loom": [
+   "Play the clouds appearing",
+   "Screen: the result table beside Bluebeam",
+   "Close: the human cursor arrives to a list, not a search"
+  ],
+  "tool": "",
+  "post_desc": "FIVE CONFLICTS CLOUDED BEFORE THE HUMAN CURSOR ARRIVES",
+  "mp4": "MP4/WORKFLOWS/5C-DRAWING-MARKUP.MP4",
+  "slug": "cloud",
+  "url": "https://6signal.co/get/cloud",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "workflow",
+  "name": "Drawing Conflict Finder",
+  "dm_line1": "Thanks for the CLOUD. Here is the Drawing Conflict Finder: https://6signal.co/get/cloud",
+  "dm_line2": "Export the two sheets as one PDF from Bluebeam, attach, run. Cloud what comes back."
+ },
+ {
+  "id": "5d",
+  "track": "Construction Software",
+  "format": "Prompt",
+  "keyword": "CRASH",
+  "title": "SCHEDULE COMPRESSION PROMPT",
+  "sub": "Paste the schedule export. Get candidate crashes and re-sequences ranked by days saved per dollar of risk.",
+  "get": [
+   "Prompt for P6 or MS Project CSV exports",
+   "Output: ranked compression options with the chain they affect",
+   "Guardrails so it never invents a logic tie"
+  ],
+  "sections": [
+   {
+    "type": "prompt",
+    "label": "Prompt",
+    "text": "Attached is a schedule export (CSV: Activity ID, Name, Duration, Start, Finish, Predecessors, Total Float, Resource). Target finish: {date}. Current finish: {date}.\n\n1 Identify the critical path and the near-critical chains (float under 5 days).\n2 Propose up to eight compression options: crash (add crew/shift), fast-track (overlap), re-sequence, or scope split. For each: activities affected, days saved, added cost or risk (low/med/high), what must be true for it to work.\n3 Rank by days saved per unit of risk.\n4 State which options stack and which conflict.\n5 Do not add or remove logic ties you cannot see in the export; flag assumptions.\n\nReturn as a table, then a 100-word recommendation."
+   }
+  ],
+  "dm": "Thanks for the CRASH. Here is the Schedule Compression Prompt: https://6signal.co/get/crash Export to CSV, paste or attach, set the target. Take the top three to the scheduler, not the whole list.",
+  "loom": [
+   "Play the Gantt re-sequencing",
+   "Screen: the ranked table, option 1 highlighted",
+   "Close: eight options in a minute; the scheduler picks"
+  ],
+  "tool": "",
+  "post_desc": "GANTT RE-SEQUENCES — FINISH SLIDES DEC 18 → OCT 27",
+  "mp4": "MP4/WORKFLOWS/5D-SCHEDULE-CRASH.MP4",
+  "slug": "crash",
+  "url": "https://6signal.co/get/crash",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "workflow",
+  "name": "Schedule Compression Prompt",
+  "dm_line1": "Thanks for the CRASH. Here is the Schedule Compression Prompt: https://6signal.co/get/crash",
+  "dm_line2": "Export to CSV, paste or attach, set the target. Take the top three to the scheduler, not the whole list."
+ },
+ {
+  "id": "5e",
+  "track": "Construction Software",
+  "format": "Prompt + template",
+  "keyword": "TAKEOFF",
+  "title": "TAKEOFF QA + ROOM FINISH SCHEDULE",
+  "sub": "The assistant fills the room finish schedule from the plans; the estimator checks it instead of building it.",
+  "get": [
+   "Extraction prompt for finish plans and schedules",
+   "Sheet template: room, floor, base, wall, ceiling, SF, notes",
+   "Variance pass against your own takeoff"
+  ],
+  "sections": [
+   {
+    "type": "fields",
+    "label": "Template fields",
+    "items": [
+     "Room number",
+     "Room name",
+     "Floor finish",
+     "Base",
+     "Wall finish",
+     "Ceiling finish",
+     "Ceiling height",
+     "Area SF (est.)",
+     "Notes / conflicts"
+    ],
+    "rows": [
+     [
+      "Room number"
+     ],
+     [
+      "Room name"
+     ],
+     [
+      "Floor finish"
+     ],
+     [
+      "Base"
+     ],
+     [
+      "Wall finish"
+     ],
+     [
+      "Ceiling finish"
+     ],
+     [
+      "Ceiling height"
+     ],
+     [
+      "Area SF (est.)"
+     ],
+     [
+      "Notes / conflicts"
+     ]
+    ]
+   },
+   {
+    "type": "prompt",
+    "label": "Prompt",
+    "text": "Attached: the architectural finish plan(s) and finish schedule for {project}. Build a complete room finish table with columns: Room number | Room name | Floor finish | Base | Wall finish (N/E/S/W if different) | Ceiling finish | Ceiling height | Area SF (from plan dimensions; mark estimated) | Notes/conflicts.\n\nInclude every room shown on the plan, including unlabeled closets and corridors. Where the schedule and the plan tag disagree, write both and flag it. Then total SF by floor finish type.\n\nSecond pass: here is my takeoff {paste}. List every room where our quantities differ by more than 5% or where a finish differs."
+   }
+  ],
+  "dm": "Thanks for the TAKEOFF. Here is the Takeoff QA + Room Finish Schedule: https://6signal.co/get/takeoff Run the first pass on a job you have already taken off. Compare. That is your confidence number.",
+  "loom": [
+   "Play the race",
+   "Screen: the room table, 24 rows, totals at the bottom",
+   "Close: the estimator checks, not builds"
+  ],
+  "tool": "",
+  "post_desc": "AI FILLS 24 ROOMS WHILE YOU HIGHLIGHT ONE",
+  "mp4": "MP4/WORKFLOWS/5E-TAKEOFF-RACE.MP4",
+  "slug": "takeoff",
+  "url": "https://6signal.co/get/takeoff",
+  "has_tool": false,
+  "has_sheet": true,
+  "cta_kind": "workflow",
+  "name": "Takeoff QA + Room Finish Schedule",
+  "dm_line1": "Thanks for the TAKEOFF. Here is the Takeoff QA + Room Finish Schedule: https://6signal.co/get/takeoff",
+  "dm_line2": "Run the first pass on a job you have already taken off. Compare. That is your confidence number."
+ },
+ {
+  "id": "5f",
+  "track": "Construction Software",
+  "format": "Prompt",
+  "keyword": "CLASH",
+  "title": "CLASH TRIAGE PROMPT",
+  "sub": "Feed the Navisworks clash report in. Get groups, duplicates removed, and the handful that need a human in the room.",
+  "get": [
+   "Triage prompt for Navisworks / ACC Model Coordination CSV exports",
+   "Grouping rules: same pair, same zone, same cause",
+   "Meeting agenda output"
+  ],
+  "sections": [
+   {
+    "type": "prompt",
+    "label": "Prompt",
+    "text": "Attached is a clash report export (CSV: Clash ID, Element A, Element B, Discipline A, Discipline B, Level, Grid, Distance, Status). Triage it:\n\n1 Group clashes that share the same element pair, level and cause into one issue; count how many each group collapses.\n2 Classify each group: tolerance (under {25}mm, ignore), duplicate, resolvable by rule (e.g. pipe below duct per standard, insulation overlap), or needs decision.\n3 For resolvable-by-rule, state the rule and which discipline moves.\n4 For needs decision, write a one-line agenda item with the two disciplines and a proposed option.\n5 Summary: total clashes → groups → needs-decision count.\n\nReturn the agenda items first, then the full grouping table."
+   }
+  ],
+  "dm": "Thanks for the CLASH. Here is the Clash Triage Prompt: https://6signal.co/get/clash Export the report, attach, run before the coordination meeting. Walk in with four items, not 312.",
+  "loom": [
+   "Play the counter",
+   "Screen: the agenda with four items",
+   "Close: 308 handled by rule; four get the room"
+  ],
+  "tool": "",
+  "post_desc": "312 CLASHES — 308 AUTO-RESOLVED, 4 FLAGGED FOR A HUMAN",
+  "mp4": "MP4/WORKFLOWS/5F-BIM-CLASH.MP4",
+  "slug": "clash",
+  "url": "https://6signal.co/get/clash",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "workflow",
+  "name": "Clash Triage Prompt",
+  "dm_line1": "Thanks for the CLASH. Here is the Clash Triage Prompt: https://6signal.co/get/clash",
+  "dm_line2": "Export the report, attach, run before the coordination meeting. Walk in with four items, not 312."
+ },
+ {
+  "id": "5g",
+  "track": "Construction Software",
+  "format": "Automation blueprint",
+  "keyword": "DAILY",
+  "title": "DAILY REPORT AUTOPILOT",
+  "sub": "Six fields of the daily report fill themselves from sources that already exist. The super adds two sentences and submits before five.",
+  "get": [
+   "Source map: which field comes from where",
+   "Eight-step build in Zapier, Make or n8n",
+   "The compile prompt"
+  ],
+  "sections": [
+   {
+    "type": "steps",
+    "label": "Build steps",
+    "items": [
+     "Field 1 Weather: pull hourly observations from a weather API for the site coordinates.",
+     "Field 2 Manpower: read sign-in (Procore Timesheets, ACC, or a Google Form the foremen fill).",
+     "Field 3 Equipment: read the equipment log or yesterday's report plus a one-tap \"same as yesterday\" form.",
+     "Field 4 Deliveries: read delivery tickets photographed to a shared folder (OCR step).",
+     "Field 5 Work performed: read the schedule activities planned for today plus the super's voice memo, transcribed.",
+     "Field 6 Issues/delays: pull RFIs opened today and any inbox email tagged delay.",
+     "4:30 PM: compile all six with the prompt below into your report template; post as draft to the super.",
+     "Super edits two sentences, submits by 5. Measure: percent of reports submitted same day."
+    ]
+   },
+   {
+    "type": "prompt",
+    "label": "Prompt inside the automation",
+    "text": "Compile a daily construction report for {project}, {date} from the sources below. Use the template headings exactly. Plain, factual, past tense, no adjectives. Where a source is empty, write \"None reported\", never invent. Sources: WEATHER {…} MANPOWER {…} EQUIPMENT {…} DELIVERIES {…} PLANNED WORK {…} VOICE MEMO TRANSCRIPT {…} ISSUES {…}"
+   }
+  ],
+  "dm": "Thanks for the DAILY. Here is the Daily Report Autopilot: https://6signal.co/get/daily Build fields 1, 2 and 5 first; those are 80% of the typing.",
+  "loom": [
+   "Play the fields filling",
+   "Screen: the voice memo, then the compiled report",
+   "Close: submitted 4:58, the super went home"
+  ],
+  "tool": "",
+  "post_desc": "SIX FIELDS FILL FROM SOURCES — SUBMITTED 4:58",
+  "mp4": "MP4/WORKFLOWS/5G-DAILY-REPORT.MP4",
+  "slug": "daily",
+  "url": "https://6signal.co/get/daily",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "workflow",
+  "name": "Daily Report Autopilot",
+  "dm_line1": "Thanks for the DAILY. Here is the Daily Report Autopilot: https://6signal.co/get/daily",
+  "dm_line2": "Build fields 1, 2 and 5 first; those are 80% of the typing."
+ },
+ {
+  "id": "5h",
+  "track": "Construction Software",
+  "format": "Prompt + tool",
+  "keyword": "TALK",
+  "title": "TOOLBOX TALK GENERATOR",
+  "sub": "A five-minute safety brief written from what actually happened on your site yesterday and what is scheduled today.",
+  "get": [
+   "The generation prompt",
+   "Three example outputs (fall, struck-by, heat)",
+   "Spec for a web version your foremen can use on a phone"
+  ],
+  "sections": [
+   {
+    "type": "prompt",
+    "label": "Prompt",
+    "text": "Write a five-minute toolbox talk for {project}, {date}. Inputs: yesterday's incidents and near misses {paste or \"none\"}; today's scheduled activities {paste}; weather {paste}; crews on site {trades}.\n\nStructure: 1 One sentence on what happened yesterday (or the nearest relevant hazard to today's work). 2 Today's top three hazards, specific to the activities and location. 3 Three controls, each one line, who does it. 4 One question to ask the crew. 5 Sign-in line.\n\nUnder 220 words. Plain language, eighth-grade reading level, no slogans. Reference the applicable OSHA subpart in brackets at the end of each hazard."
+   }
+  ],
+  "dm": "Thanks for the TALK. Here is the Toolbox Talk Generator: https://6signal.co/get/talk Paste yesterday and today; read it at 6:55. Stop printing the generic PDF.",
+  "loom": [
+   "Play the brief replacing the PDF",
+   "Screen: paste two lines, the talk appears",
+   "Close: specific beats generic, every morning"
+  ],
+  "tool": "Build /tools/toolbox-talk, mobile first. Four fields: yesterday's incidents/near misses (textarea), today's activities (textarea), weather (short text), trades on site (chips). Generate button calls the Claude API with the prompt below and renders the talk in a printable card with a sign-in table of ten blank rows. Buttons: copy, print, save as PDF. Dark ground #060606, accent #E6FF00, Chakra Petch headings, body Inter 16px minimum. Keep a history of the last seven talks in localStorage. Prompt: [paste].",
+  "post_desc": "YESTERDAY'S INCIDENTS → TODAY'S BRIEF. GENERIC PDF REPLACED",
+  "mp4": "MP4/WORKFLOWS/5H-TOOLBOX-TALK.MP4",
+  "slug": "talk",
+  "url": "https://6signal.co/get/talk",
+  "has_tool": true,
+  "has_sheet": false,
+  "cta_kind": "workflow",
+  "name": "Toolbox Talk Generator",
+  "dm_line1": "Thanks for the TALK. Here is the Toolbox Talk Generator: https://6signal.co/get/talk",
+  "dm_line2": "Paste yesterday and today; read it at 6:55. Stop printing the generic PDF."
+ },
+ {
+  "id": "5i",
+  "track": "Construction Software",
+  "format": "Prompt",
+  "keyword": "PUNCH",
+  "title": "PHOTO-TO-PUNCH PROMPT",
+  "sub": "Drop a site photo in. Get located punch items with trade and a one-line description, ready to paste into Procore.",
+  "get": [
+   "Image prompt for Claude or ChatGPT",
+   "CSV output matching Procore punch import columns",
+   "Batch instructions for a full walk"
+  ],
+  "sections": [
+   {
+    "type": "prompt",
+    "label": "Prompt",
+    "text": "Attached is a site photo from {project}, {location: floor / room / grid}. Identify every visible deficiency, incomplete item or damage that would appear on a punch list.\n\nFor each, return one CSV row: Title (under 8 words) | Description (one sentence, what and where in the frame) | Trade (drywall, paint, electrical, mechanical, plumbing, flooring, doors/hardware, glazing, other) | Location ({location} plus position in frame: e.g. north wall, left of door) | Priority (1 life-safety, 2 function, 3 cosmetic).\n\nOnly list what is visible. If an item may be work in progress rather than deficient, add \"(verify)\" to the title. Return the CSV header first."
+   }
+  ],
+  "dm": "Thanks for the PUNCH. Here is the Photo-to-Punch Prompt: https://6signal.co/get/punch One photo per room, paste, collect the CSVs, import. A floor walk becomes a list in the truck.",
+  "loom": [
+   "Play the photo splitting into items",
+   "Screen: upload a photo, three rows appear",
+   "Close: the walk becomes a list before you leave the floor"
+  ],
+  "tool": "",
+  "post_desc": "ONE SITE PHOTO → THREE LOCATED PUNCH ITEMS",
+  "mp4": "MP4/WORKFLOWS/5I-PHOTO-TO-PUNCH.MP4",
+  "slug": "punch",
+  "url": "https://6signal.co/get/punch",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "workflow",
+  "name": "Photo-to-Punch Prompt",
+  "dm_line1": "Thanks for the PUNCH. Here is the Photo-to-Punch Prompt: https://6signal.co/get/punch",
+  "dm_line2": "One photo per room, paste, collect the CSVs, import. A floor walk becomes a list in the truck."
+ },
+ {
+  "id": "5j",
+  "track": "Construction Software",
+  "format": "Prompt + template",
+  "keyword": "PAYAPP",
+  "title": "G703 PERCENT-COMPLETE FILL",
+  "sub": "Percent complete per schedule-of-values line, derived from schedule progress and the daily reports, drafted before the PM opens the pay app.",
+  "get": [
+   "The mapping prompt: SOV lines ↔ schedule activities",
+   "Sheet template matching G703 columns",
+   "Review flags for lines that moved more than 20% in one period"
+  ],
+  "sections": [
+   {
+    "type": "fields",
+    "label": "Template fields",
+    "items": [
+     "Item no.",
+     "Description of work",
+     "Scheduled value",
+     "From previous application",
+     "This period",
+     "Materials presently stored",
+     "Total completed and stored",
+     "%",
+     "Balance to finish",
+     "Retainage"
+    ],
+    "rows": [
+     [
+      "Item no."
+     ],
+     [
+      "Description of work"
+     ],
+     [
+      "Scheduled value"
+     ],
+     [
+      "From previous application"
+     ],
+     [
+      "This period"
+     ],
+     [
+      "Materials presently stored"
+     ],
+     [
+      "Total completed and stored"
+     ],
+     [
+      "%"
+     ],
+     [
+      "Balance to finish"
+     ],
+     [
+      "Retainage"
+     ]
+    ]
+   },
+   {
+    "type": "prompt",
+    "label": "Prompt",
+    "text": "Attached: the schedule of values (G703 columns A–I from last period) and the current schedule export with percent complete per activity. Map each SOV line to the schedule activities that make it up (ask me if a mapping is ambiguous, do not guess). Compute this period's work completed per line, weighted by activity cost if provided, else by duration.\n\nReturn the G703 table: Item | Description | Scheduled value | From previous | This period | Stored materials (leave for me) | Total completed | % | Balance to finish. Then flag: lines that moved more than 20 points, lines at 100% with open punch items, lines with zero movement for two periods."
+   }
+  ],
+  "dm": "Thanks for the PAYAPP. Here is the G703 Percent-Complete Fill: https://6signal.co/get/payapp Run it Friday at 2. The PM reviews the flags, not the arithmetic.",
+  "loom": [
+   "Play the G703 filling",
+   "Screen: three flagged lines",
+   "Close: Friday 3:02, the pay app is a review"
+  ],
+  "tool": "",
+  "post_desc": "G703 % COMPLETE FILLS FROM SCHEDULE — FRIDAY 3:02 PM",
+  "mp4": "MP4/WORKFLOWS/5J-PAY-APP.MP4",
+  "slug": "payapp",
+  "url": "https://6signal.co/get/payapp",
+  "has_tool": false,
+  "has_sheet": true,
+  "cta_kind": "workflow",
+  "name": "G703 Percent-Complete Fill",
+  "dm_line1": "Thanks for the PAYAPP. Here is the G703 Percent-Complete Fill: https://6signal.co/get/payapp",
+  "dm_line2": "Run it Friday at 2. The PM reviews the flags, not the arithmetic."
+ },
+ {
+  "id": "5k",
+  "track": "Construction Software",
+  "format": "Template + tool",
+  "keyword": "BID",
+  "title": "BID / NO-BID SCORECARD",
+  "sub": "Ten weighted criteria scored from the RFP text. The three worth pursuing turn yellow; the rest get a polite decline.",
+  "get": [
+   "Ten criteria with weights you can change",
+   "Scoring prompt that reads the RFP and fills the card",
+   "Sheet version for the Monday meeting"
+  ],
+  "sections": [
+   {
+    "type": "fields",
+    "label": "Template fields",
+    "items": [
+     "Relationship with owner or architect (15)",
+     "Project type matches last five years (15)",
+     "Location within normal radius (10)",
+     "Size within 0.5–2× typical contract (10)",
+     "Competition: number of bidders known (10)",
+     "Schedule realism (10)",
+     "Contract terms: LDs, retainage, payment (10)",
+     "Self-perform share (5)",
+     "Bonding and prequal already in place (10)",
+     "Team capacity on award date (5)"
+    ],
+    "rows": [
+     [
+      "Relationship with owner or architect (15)"
+     ],
+     [
+      "Project type matches last five years (15)"
+     ],
+     [
+      "Location within normal radius (10)"
+     ],
+     [
+      "Size within 0.5–2× typical contract (10)"
+     ],
+     [
+      "Competition: number of bidders known (10)"
+     ],
+     [
+      "Schedule realism (10)"
+     ],
+     [
+      "Contract terms: LDs, retainage, payment (10)"
+     ],
+     [
+      "Self-perform share (5)"
+     ],
+     [
+      "Bonding and prequal already in place (10)"
+     ],
+     [
+      "Team capacity on award date (5)"
+     ]
+    ]
+   },
+   {
+    "type": "prompt",
+    "label": "Prompt",
+    "text": "Attached is an RFP. Score it against the ten criteria below (weights in parentheses), 0–5 each, using only what the RFP states; mark Unknown where it does not say. Return: Criterion | Evidence (quote or page) | Score | Weighted. Then total out of 100 and a recommendation: Pursue (70+), Discuss (50–69), Decline (under 50), with the two factors that drove it.\nCriteria: {paste list}."
+   }
+  ],
+  "dm": "Thanks for the BID. Here is the Bid / No-Bid Scorecard: https://6signal.co/get/bid Score the next ten RFPs. Decline the bottom five and count the estimating hours you got back.",
+  "loom": [
+   "Play three turning yellow",
+   "Screen: the scorecard, weights visible",
+   "Close: ten minutes per RFP; estimating gets its week back"
+  ],
+  "tool": "Build /tools/bid-no-bid: ten criteria rows, each with an editable weight and a 0–5 segmented control; live weighted total out of 100 with a band (Pursue 70+, Discuss 50–69, Decline under 50). Optional: paste RFP text, click \"pre-score\", call the Claude API with the scoring prompt and prefill the controls with evidence tooltips. Save scorecards by project name in localStorage; a list view shows all scored RFPs with the top three highlighted in #E6FF00. Dark ground, JetBrains Mono numbers.",
+  "post_desc": "TEN RFPS SCORED — THREE TURN YELLOW",
+  "mp4": "MP4/WORKFLOWS/5K-BID-NO-BID.MP4",
+  "slug": "bid",
+  "url": "https://6signal.co/get/bid",
+  "has_tool": true,
+  "has_sheet": true,
+  "cta_kind": "workflow",
+  "name": "Bid / No-Bid Scorecard",
+  "dm_line1": "Thanks for the BID. Here is the Bid / No-Bid Scorecard: https://6signal.co/get/bid",
+  "dm_line2": "Score the next ten RFPs. Decline the bottom five and count the estimating hours you got back."
+ },
+ {
+  "id": "5l",
+  "track": "Construction Software",
+  "format": "Prompt + template",
+  "keyword": "VARIANCE",
+  "title": "ESTIMATE VS ACTUAL REVIEW",
+  "sub": "Job by job, the assistant finds which cost codes you keep missing and by how much. Your unit rates get corrected instead of repeated.",
+  "get": [
+   "Review prompt for closed-job cost reports",
+   "Template: cost code, estimated, actual, variance, cause, rate adjustment",
+   "A running unit-rate adjustment log"
+  ],
+  "sections": [
+   {
+    "type": "fields",
+    "label": "Template fields",
+    "items": [
+     "Cost code",
+     "Description",
+     "Estimated",
+     "Actual",
+     "Variance $",
+     "Variance %",
+     "Cause",
+     "Rate adjustment",
+     "Applied (date)"
+    ],
+    "rows": [
+     [
+      "Cost code"
+     ],
+     [
+      "Description"
+     ],
+     [
+      "Estimated"
+     ],
+     [
+      "Actual"
+     ],
+     [
+      "Variance $"
+     ],
+     [
+      "Variance %"
+     ],
+     [
+      "Cause"
+     ],
+     [
+      "Rate adjustment"
+     ],
+     [
+      "Applied (date)"
+     ]
+    ]
+   },
+   {
+    "type": "prompt",
+    "label": "Prompt",
+    "text": "Attached: estimate and actual cost by cost code for {job}, plus the same for the previous {n} closed jobs if available. For each cost code with variance over 5%: Code | Estimated | Actual | Variance % | Likely cause (quantity, unit rate, productivity, scope change, buyout) | Evidence | Recommended adjustment to the unit rate or production factor.\n\nThen: the five codes that recur across jobs, with the average miss. Finally, a 100-word note for the estimating meeting. Treat change orders separately; do not count approved scope changes as estimating error."
+   }
+  ],
+  "dm": "Thanks for the VARIANCE. Here is the Estimate vs Actual Review: https://6signal.co/get/variance Run it at every closeout. The variance narrows because the rates move.",
+  "loom": [
+   "Play the variance narrowing",
+   "Screen: five recurring codes",
+   "Close: the estimate learns from the job"
+  ],
+  "tool": "",
+  "post_desc": "VARIANCE NARROWS JOB BY JOB — 14.2% → 1.5%",
+  "mp4": "MP4/WORKFLOWS/5L-ESTIMATE-VS-ACTUAL.MP4",
+  "slug": "variance",
+  "url": "https://6signal.co/get/variance",
+  "has_tool": false,
+  "has_sheet": true,
+  "cta_kind": "workflow",
+  "name": "Estimate vs Actual Review",
+  "dm_line1": "Thanks for the VARIANCE. Here is the Estimate vs Actual Review: https://6signal.co/get/variance",
+  "dm_line2": "Run it at every closeout. The variance narrows because the rates move."
+ },
+ {
+  "id": "5m",
+  "track": "Construction Software",
+  "format": "Prompt + checklist",
+  "keyword": "PREQUAL",
+  "title": "PREQUAL PACKET ASSEMBLER",
+  "sub": "Forty pages assembled from last year's sources, with every field that changed flagged for a human to update.",
+  "get": [
+   "Source document checklist (what to keep current in one folder)",
+   "Assembly prompt that maps questionnaire fields to sources",
+   "Change-flag output"
+  ],
+  "sections": [
+   {
+    "type": "checklist",
+    "label": "Checklist",
+    "items": [
+     "Last three years financial statements (reviewed or audited)",
+     "Current bonding letter with single and aggregate limits",
+     "EMR letters, three years",
+     "OSHA 300A, three years",
+     "Certificate of insurance template with limits",
+     "Project list: name, owner, contact, value, dates, role",
+     "Key personnel résumés, updated quarterly",
+     "Safety program table of contents and policy statement",
+     "Litigation and claims statement",
+     "Licenses by state, with expiry",
+     "W-9, certificate of good standing",
+     "References: five, with phone numbers confirmed this year"
+    ]
+   },
+   {
+    "type": "prompt",
+    "label": "Prompt",
+    "text": "Attached: the owner's prequalification questionnaire and our source folder (financials, bonding letter, EMR, OSHA logs, project list, résumés, safety program, licenses). Fill every questionnaire field from the sources, citing the source file and page for each. Where a value is older than 12 months or the source is missing, mark [UPDATE] and say what is needed. Return the completed questionnaire text in order, then an UPDATE list for a human. Do not estimate any financial or safety figure."
+   }
+  ],
+  "dm": "Thanks for the PREQUAL. Here is the Prequal Packet Assembler: https://6signal.co/get/prequal Keep the twelve source documents current in one folder. The packet becomes an afternoon.",
+  "loom": [
+   "Play the pages stacking",
+   "Screen: the UPDATE list, four items",
+   "Close: forty pages, four updates, one afternoon"
+  ],
+  "tool": "",
+  "post_desc": "40 PAGES STACK FROM LAST YEAR'S SOURCES",
+  "mp4": "MP4/WORKFLOWS/5M-PREQUAL-PACKET.MP4",
+  "slug": "prequal",
+  "url": "https://6signal.co/get/prequal",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "workflow",
+  "name": "Prequal Packet Assembler",
+  "dm_line1": "Thanks for the PREQUAL. Here is the Prequal Packet Assembler: https://6signal.co/get/prequal",
+  "dm_line2": "Keep the twelve source documents current in one folder. The packet becomes an afternoon."
+ },
+ {
+  "id": "5n",
+  "track": "Construction Software",
+  "format": "Free mini audit",
+  "keyword": "NAMED",
+  "title": "WHO AI NAMES INSTEAD OF YOU",
+  "sub": "I ask the four engines who to hire for your trade in your city, and send you the three names that come back, with why they were chosen.",
+  "get": [
+   "Screenshots of the answers from ChatGPT, Claude, Perplexity, Google",
+   "The three firms named and the sources each engine cited",
+   "What those three have that you do not, in one page"
+  ],
+  "sections": [
+   {
+    "type": "scope",
+    "label": "What I deliver",
+    "items": [
+     "Six buyer-intent prompts for your trade, city and project type",
+     "Screenshots of each answer, dated",
+     "Source trace: which page, profile or directory got each competitor named",
+     "Side-by-side: their GBP, schema, review count and answer pages vs. yours",
+     "One page: the three gaps that explain the result"
+    ]
+   }
+  ],
+  "dm": "Thanks for the NAMED. Here is the Who AI Names Instead of You: https://6signal.co/get/named Reply with firm, city, trade. Results in 48 hours; you will know who is winning your searches and why.",
+  "loom": [
+   "Play the three names appearing",
+   "Screen: a real Perplexity answer with three competitors",
+   "Close: you should know who they are; 48 hours"
+  ],
+  "tool": "",
+  "post_desc": "THE AI ANSWER NAMES THREE FIRMS — NOT YOURS",
+  "mp4": "MP4/WORKFLOWS/5N-BEST-GC-NEAR-ME.MP4",
+  "slug": "named",
+  "url": "https://6signal.co/get/named",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "visibility",
+  "name": "Who AI Names Instead of You",
+  "dm_line1": "Thanks for the NAMED. Here is the Who AI Names Instead of You: https://6signal.co/get/named",
+  "dm_line2": "Reply with firm, city, trade. Results in 48 hours; you will know who is winning your searches and why."
+ },
+ {
+  "id": "5o",
+  "track": "Construction Software",
+  "format": "Checklist",
+  "keyword": "PROFILE",
+  "title": "GBP GAP FIX GUIDE",
+  "sub": "The Google Business Profile fields that AI answers actually read, in the order they stall an answer when empty.",
+  "get": [
+   "Fourteen fields in priority order",
+   "What to put in each, with examples for a GC",
+   "Thirty-minute fix session plan"
+  ],
+  "sections": [
+   {
+    "type": "checklist",
+    "label": "Checklist",
+    "items": [
+     "Primary category: General contractor (or your exact trade), not \"Construction company\"",
+     "Secondary categories: up to four, matching real services",
+     "Service area: the cities you actually travel to, not a 200-mile radius",
+     "Services: one per line item you sell, each with a 300-character description",
+     "Business description: trades, markets, cities, years, project sizes in the first sentence",
+     "Opening date",
+     "Phone and website matching the site footer exactly",
+     "Attributes: identifies-as, veteran-owned, etc. where true",
+     "Photos: exterior, team, ten project photos with captions, updated monthly",
+     "Q&A: seed five questions buyers ask, answer them",
+     "Reviews: reply to all, request at every closeout",
+     "Posts: one per month, a project or a milestone",
+     "Products: use for project types (tenant improvement, ground-up) with photos",
+     "Booking or quote link pointing to a page with schema"
+    ]
+   }
+  ],
+  "dm": "Thanks for the PROFILE. Here is the GBP Gap Fix Guide: https://6signal.co/get/profile Open your GBP next to this list. Thirty minutes. Fields 1–5 are the stall.",
+  "loom": [
+   "Play the empty field stalling the answer",
+   "Screen: a GBP services list, empty, then filled",
+   "Close: fourteen fields, thirty minutes"
+  ],
+  "tool": "",
+  "post_desc": "ONE EMPTY PROFILE FIELD STALLS THE ANSWER",
+  "mp4": "MP4/WORKFLOWS/5O-GBP-VS-AI-ANSWER.MP4",
+  "slug": "profile",
+  "url": "https://6signal.co/get/profile",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "visibility",
+  "name": "GBP Gap Fix Guide",
+  "dm_line1": "Thanks for the PROFILE. Here is the GBP Gap Fix Guide: https://6signal.co/get/profile",
+  "dm_line2": "Open your GBP next to this list. Thirty minutes. Fields 1–5 are the stall."
+ },
+ {
+  "id": "6a",
+  "track": "Real Workflows",
+  "format": "Prompt",
+  "keyword": "NOTES",
+  "title": "OAC MEETING → ACTION ITEMS",
+  "sub": "Record the OAC, drop in the transcript, get minutes in your format with every action item owned and dated.",
+  "get": [
+   "Minutes prompt matching the standard OAC agenda",
+   "Action item table with owner, due date, source timestamp",
+   "Carry-forward logic for old items"
+  ],
+  "sections": [
+   {
+    "type": "prompt",
+    "label": "Prompt",
+    "text": "Attached: the transcript of the {project} OAC meeting on {date}, and last meeting's minutes. Produce minutes in this structure: Attendees | Safety | Schedule (milestones, two-week lookahead, delays) | Submittals and RFIs | Change orders and budget | Quality | Owner items | Old business (carry forward each open item from last minutes with status: open / closed / updated) | New action items.\n\nAction items as a table: # | Item | Owner (name, company) | Due date | Transcript timestamp. If an owner or date was not stated, write TBD and list it under \"Needs assignment\". Neutral tone, no interpretation of intent, no quotes longer than one sentence. Under 900 words."
+   }
+  ],
+  "dm": "Thanks for the NOTES. Here is the OAC Meeting → Action Items: https://6signal.co/get/notes Record with any transcription tool. Paste the transcript and last minutes. Edit for ten minutes, send.",
+  "loom": [
+   "Play the transcript becoming a table",
+   "Screen: action items with owners and dates",
+   "Close: minutes out the same afternoon"
+  ],
+  "tool": "",
+  "post_desc": "OAC RECORDING → TRANSCRIPT → ACTION ITEMS WITH OWNER AND DUE DATE",
+  "mp4": "MP4/WORKFLOWS/6A-MEETING-NOTES.MP4",
+  "slug": "notes",
+  "url": "https://6signal.co/get/notes",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "workflow",
+  "name": "OAC Meeting → Action Items",
+  "dm_line1": "Thanks for the NOTES. Here is the OAC Meeting → Action Items: https://6signal.co/get/notes",
+  "dm_line2": "Record with any transcription tool. Paste the transcript and last minutes. Edit for ten minutes, send."
+ },
+ {
+  "id": "6b",
+  "track": "Real Workflows",
+  "format": "Setup guide + prompts",
+  "keyword": "SPEC",
+  "title": "ASK THE SPEC BOOK SETUP",
+  "sub": "Load the project manual once. Ask it questions for the rest of the job. Setup takes twenty minutes.",
+  "get": [
+   "Setup in Claude Projects or NotebookLM, step by step",
+   "Ten questions PMs ask the spec book every week",
+   "Rules so it cites section and page every time"
+  ],
+  "sections": [
+   {
+    "type": "steps",
+    "label": "Build steps",
+    "items": [
+     "Export the project manual as searchable PDF (OCR it in Bluebeam if scanned). Split into divisions if over 300 pages.",
+     "Create a Claude Project (or NotebookLM notebook) named {project} — Specs. Upload the PDFs plus the addenda.",
+     "Set the project instructions: \"Answer only from the uploaded documents. Cite section number, paragraph and page for every statement. If not found, say not found.\"",
+     "Invite the PMs, supers and the project engineer.",
+     "Pin the ten standing questions below as a note.",
+     "Re-upload when an addendum or ASI is issued; name files with the date."
+    ]
+   },
+   {
+    "type": "prompt",
+    "label": "Prompt inside the automation",
+    "text": "Standing questions:\n1 What is the required cure time and testing for {material} per the spec?\n2 Which section governs {product} and what submittals does it require?\n3 What are the warranty terms for {system}?\n4 What mock-ups are required and who approves them?\n5 List all required third-party inspections in Division {n}.\n6 What tolerances apply to {work}?\n7 What does the spec say about substitutions and the deadline?\n8 Which sections reference {standard, e.g. ASTM C150}?\n9 What closeout documents are required for Section {xx xx xx}?\n10 Are there any conflicts between Section {a} and Section {b}?"
+   }
+  ],
+  "dm": "Thanks for the SPEC. Here is the Ask the Spec Book Setup: https://6signal.co/get/spec Twenty minutes to set up. Then the next spec question takes ninety seconds, with the page number.",
+  "loom": [
+   "Play the section number arriving",
+   "Screen: upload, ask question 2, see the citation",
+   "Close: page 412, ninety seconds"
+  ],
+  "tool": "",
+  "post_desc": "ASK THE SPEC BOOK — 90 MINUTES, SECTION 08 11 13, PAGE 412",
+  "mp4": "MP4/WORKFLOWS/6B-SPEC-SEARCH.MP4",
+  "slug": "spec",
+  "url": "https://6signal.co/get/spec",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "workflow",
+  "name": "Ask the Spec Book Setup",
+  "dm_line1": "Thanks for the SPEC. Here is the Ask the Spec Book Setup: https://6signal.co/get/spec",
+  "dm_line2": "Twenty minutes to set up. Then the next spec question takes ninety seconds, with the page number."
+ },
+ {
+  "id": "6c",
+  "track": "Real Workflows",
+  "format": "Automation blueprint",
+  "keyword": "INBOX",
+  "title": "CHANGE-ORDER RISK INBOX TRIAGE",
+  "sub": "Every incoming project email gets read for change-order language and tagged. The ones that cost money rise to the top of the morning.",
+  "get": [
+   "Gmail or Outlook rules plus one assistant classification step",
+   "Risk vocabulary list you can extend",
+   "Daily digest format"
+  ],
+  "sections": [
+   {
+    "type": "steps",
+    "label": "Build steps",
+    "items": [
+     "Create a label/category per project and one called CO-RISK.",
+     "Rule: any email from a project contact or with the project number in the subject gets the project label.",
+     "Automation (Zapier/Make/n8n or Power Automate): on new labeled email, send subject + body to the assistant with the classification prompt.",
+     "Assistant returns: risk level (none/low/high), the trigger phrase, and a one-line reason.",
+     "High → apply CO-RISK, star it, add to a sheet with date, sender, phrase, and the notice deadline from your contract (e.g. 7 days).",
+     "7:00 AM digest email: all CO-RISK items from the last 24 hours, oldest deadline first."
+    ]
+   },
+   {
+    "type": "prompt",
+    "label": "Prompt inside the automation",
+    "text": "Classify this construction project email for change-order or claim risk. Risk phrases include: extra, additional, not in our scope, revised, delay, impact, backcharge, hold, differing condition, unforeseen, direction to proceed, acceleration, time extension, notice. Return JSON: {\"risk\":\"none|low|high\",\"phrase\":\"…\",\"reason\":\"one sentence\",\"suggested_action\":\"reply / log notice / call PM\"}. High = money or time is being claimed or directed. Low = language suggests it may come."
+   }
+  ],
+  "dm": "Thanks for the INBOX. Here is the Change-Order Risk Inbox Triage: https://6signal.co/get/inbox Set up on one project first. Count how many high-risk emails were not already on someone's radar.",
+  "loom": [
+   "Play the tags rising",
+   "Screen: the 7 AM digest with two items",
+   "Close: the notice deadline no longer sneaks past"
+  ],
+  "tool": "",
+  "post_desc": "INBOX TAGGED — CHANGE-ORDER RISKS RISE TO THE TOP",
+  "mp4": "MP4/WORKFLOWS/6C-EMAIL-TRIAGE.MP4",
+  "slug": "inbox",
+  "url": "https://6signal.co/get/inbox",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "workflow",
+  "name": "Change-Order Risk Inbox Triage",
+  "dm_line1": "Thanks for the INBOX. Here is the Change-Order Risk Inbox Triage: https://6signal.co/get/inbox",
+  "dm_line2": "Set up on one project first. Count how many high-risk emails were not already on someone's radar."
+ },
+ {
+  "id": "6d",
+  "track": "Real Workflows",
+  "format": "Prompt + template",
+  "keyword": "WALK",
+  "title": "360 WALK → PERCENT COMPLETE",
+  "sub": "Frames from the weekly 360 walk become a percent-complete per room per trade, in a sheet the scheduler can import.",
+  "get": [
+   "Image prompt with a fixed stage ladder per trade",
+   "Sheet template: room × trade matrix",
+   "Week-over-week delta"
+  ],
+  "sections": [
+   {
+    "type": "fields",
+    "label": "Template fields",
+    "items": [
+     "Room",
+     "Framing %",
+     "Drywall %",
+     "MEP rough %",
+     "Ceiling %",
+     "Flooring %",
+     "Paint %",
+     "Notes",
+     "Δ vs last week"
+    ],
+    "rows": [
+     [
+      "Room"
+     ],
+     [
+      "Framing %"
+     ],
+     [
+      "Drywall %"
+     ],
+     [
+      "MEP rough %"
+     ],
+     [
+      "Ceiling %"
+     ],
+     [
+      "Flooring %"
+     ],
+     [
+      "Paint %"
+     ],
+     [
+      "Notes"
+     ],
+     [
+      "Δ vs last week"
+     ]
+    ]
+   },
+   {
+    "type": "prompt",
+    "label": "Prompt",
+    "text": "Attached: photos from the weekly walk of {floor/area}, {project}, {date}, labeled by room. For each room estimate percent complete per trade using these stage ladders: Framing (layout 10, top track 30, studs 60, blocking 80, inspected 100). Drywall (hung 40, taped 60, finished 90, primed 100). MEP rough (sleeves 20, mains 50, branches 80, inspected 100). Ceiling grid (wire 30, main runners 60, cross tees 90, tile 100). Flooring (prep 30, installed 90, base 100). Paint (prime 40, first coat 70, final 100).\n\nReturn a table: Room | Framing | Drywall | MEP rough | Ceiling | Flooring | Paint | Notes. Mark any estimate from a partial view with \"~\". Then compare to last week's table {paste} and list rooms with zero movement."
+   }
+  ],
+  "dm": "Thanks for the WALK. Here is the 360 Walk → Percent Complete: https://6signal.co/get/walk One walk a week, same route, same room labels. The matrix fills; the scheduler imports it.",
+  "loom": [
+   "Play the rooms filling",
+   "Screen: the matrix, one room with zero movement highlighted",
+   "Close: the schedule is updated from the walk, not the meeting"
+  ],
+  "tool": "",
+  "post_desc": "360° WALK → PERCENT COMPLETE PER ROOM → SCHEDULE UPDATED",
+  "mp4": "MP4/WORKFLOWS/6D-PHOTO-PROGRESS.MP4",
+  "slug": "walk",
+  "url": "https://6signal.co/get/walk",
+  "has_tool": false,
+  "has_sheet": true,
+  "cta_kind": "workflow",
+  "name": "360 Walk → Percent Complete",
+  "dm_line1": "Thanks for the WALK. Here is the 360 Walk → Percent Complete: https://6signal.co/get/walk",
+  "dm_line2": "One walk a week, same route, same room labels. The matrix fills; the scheduler imports it."
+ },
+ {
+  "id": "6e",
+  "track": "Real Workflows",
+  "format": "Prompt + template",
+  "keyword": "TICKET",
+  "title": "DELIVERY TICKET → LEDGER LINE",
+  "sub": "Photograph the ticket. Fields come out, the PO is matched, and a ledger line is ready for accounting to approve.",
+  "get": [
+   "OCR + extraction prompt for handwritten tickets",
+   "Ledger template with PO match status",
+   "Exception rules: quantity over PO, unknown vendor, missing signature"
+  ],
+  "sections": [
+   {
+    "type": "fields",
+    "label": "Template fields",
+    "items": [
+     "Date",
+     "Vendor",
+     "Ticket no.",
+     "PO no.",
+     "Item",
+     "Qty",
+     "Unit",
+     "Unit price",
+     "Extended",
+     "Cost code",
+     "Status",
+     "Reviewed by"
+    ],
+    "rows": [
+     [
+      "Date"
+     ],
+     [
+      "Vendor"
+     ],
+     [
+      "Ticket no."
+     ],
+     [
+      "PO no."
+     ],
+     [
+      "Item"
+     ],
+     [
+      "Qty"
+     ],
+     [
+      "Unit"
+     ],
+     [
+      "Unit price"
+     ],
+     [
+      "Extended"
+     ],
+     [
+      "Cost code"
+     ],
+     [
+      "Status"
+     ],
+     [
+      "Reviewed by"
+     ]
+    ]
+   },
+   {
+    "type": "prompt",
+    "label": "Prompt",
+    "text": "Attached: a photo of a delivery ticket and our open PO list (CSV: PO number, vendor, item, qty ordered, qty received, unit price, cost code). Extract: Vendor | Ticket number | Date | Items (description, qty, unit) | Received by (name/signature present yes/no) | Truck/plant if shown. Mark any field you are not confident about with \"?\".\n\nMatch to a PO by vendor and item. Return a ledger line: Date | Vendor | PO | Item | Qty | Unit price | Extended | Cost code | Status (Matched / Over PO / No PO / Needs review). Explain the status in one line."
+   }
+  ],
+  "dm": "Thanks for the TICKET. Here is the Delivery Ticket → Ledger Line: https://6signal.co/get/ticket Foreman photographs tickets to one folder. Accounting approves lines, not piles.",
+  "loom": [
+   "Play the fields extracting",
+   "Screen: a handwritten ticket, then the ledger line",
+   "Close: the pile on the dash becomes a column"
+  ],
+  "tool": "",
+  "post_desc": "HANDWRITTEN DELIVERY TICKET → FIELDS → MATCHED PO → LEDGER LINE",
+  "mp4": "MP4/WORKFLOWS/6E-TICKET-OCR.MP4",
+  "slug": "ticket",
+  "url": "https://6signal.co/get/ticket",
+  "has_tool": false,
+  "has_sheet": true,
+  "cta_kind": "workflow",
+  "name": "Delivery Ticket → Ledger Line",
+  "dm_line1": "Thanks for the TICKET. Here is the Delivery Ticket → Ledger Line: https://6signal.co/get/ticket",
+  "dm_line2": "Foreman photographs tickets to one folder. Accounting approves lines, not piles."
+ },
+ {
+  "id": "6f",
+  "track": "Real Workflows",
+  "format": "Prompt pack",
+  "keyword": "PROPOSAL",
+  "title": "PROPOSAL SECTION DRAFTER",
+  "sub": "Five proposal sections drafted from your past proposals, the RFP, and the project list. You review and sharpen, not write.",
+  "get": [
+   "Five section prompts: approach, team, relevant experience, schedule narrative, safety",
+   "Source folder structure so the assistant has your voice",
+   "Compliance matrix check at the end"
+  ],
+  "sections": [
+   {
+    "type": "prompt",
+    "label": "Prompt",
+    "text": "Sources attached: the RFP, our last three winning proposals, the project list, and résumés. Draft Section {n} for {project}:\n\n1 Project approach: restate the owner's stated priorities from the RFP in order, then our approach to each, one paragraph per priority, specific to this site and schedule.\n2 Team: org chart text and a 60-word bio per key person, drawn from résumés; pair each person with the RFP's stated evaluation criteria.\n3 Relevant experience: pick the five most comparable projects from the list by type, size and owner; 80 words each with value, dates, role, and one measurable outcome.\n4 Schedule narrative: milestones from the RFP, our sequencing logic, the two risks and how they are controlled.\n5 Safety: EMR, incident rates and the three program elements most relevant to this project's hazards.\n\nMatch the tone of our past proposals. No superlatives. Flag every claim that needs a number we have not provided. Finish with a compliance matrix: RFP requirement → section and page where it is answered."
+   }
+  ],
+  "dm": "Thanks for the PROPOSAL. Here is the Proposal Section Drafter: https://6signal.co/get/proposal Keep three winning proposals and the project list in one folder. Each new proposal starts 70% written.",
+  "loom": [
+   "Play the sections drafting",
+   "Screen: Section 3 with five projects selected",
+   "Close: review by you, written by the file you already have"
+  ],
+  "tool": "",
+  "post_desc": "FIVE SECTIONS DRAFT THEMSELVES — REVIEW BY: YOU",
+  "mp4": "MP4/WORKFLOWS/6F-PROPOSAL-DRAFT.MP4",
+  "slug": "proposal",
+  "url": "https://6signal.co/get/proposal",
+  "has_tool": false,
+  "has_sheet": false,
+  "cta_kind": "workflow",
+  "name": "Proposal Section Drafter",
+  "dm_line1": "Thanks for the PROPOSAL. Here is the Proposal Section Drafter: https://6signal.co/get/proposal",
+  "dm_line2": "Keep three winning proposals and the project list in one folder. Each new proposal starts 70% written."
+ }
+]
