@@ -2,6 +2,8 @@ import { NextRequest } from "next/server";
 import { guarded, jsonBody } from "../../crm/_util";
 import { decide, listApprovals, perform } from "../../../../lib/commandCenter";
 import { CrmError } from "../../../../lib/crm";
+// Registers the campaign launch action, so approving a campaign runs it.
+import { noteKilled } from "../../../../lib/campaigns";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +19,9 @@ export async function POST(req: NextRequest) {
     const b = await jsonBody<{ op?: string; id?: string; note?: string; tier?: string }>(req);
     if (b.op === "approve" || b.op === "kill") {
       if (!b.id) throw new CrmError("id is required", 400);
-      return decide(b.id, b.op, b.note);
+      const res = await decide(b.id, b.op, b.note);
+      if (b.op === "kill") await noteKilled(b.id);
+      return res;
     }
     if (b.op === "check") {
       if (!["green", "yellow", "red"].includes(b.tier ?? "")) throw new CrmError("tier must be green, yellow or red", 400);
