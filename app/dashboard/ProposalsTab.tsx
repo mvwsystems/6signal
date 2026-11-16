@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
+import { SkeletonLines } from "./Skeleton";
 import { T, MONO, DISP, BODY } from "./theme";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -264,7 +265,7 @@ export default function ProposalsTab({ businesses }: { businesses: Biz[] }) {
         <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 0.8fr", padding: "12px 18px", borderBottom: `1px solid ${T.border}`, ...eyebrow }}>
           <span>Client</span><span>Business</span><span>Updated</span><span style={{ textAlign: "right" }}>Total</span>
         </div>
-        {loading && <div style={{ padding: 40, textAlign: "center", color: T.muted, fontSize: 13 }}>Loading…</div>}
+        {loading && <SkeletonLines rows={4} />}
         {!loading && list.length === 0 && <div style={{ padding: 40, textAlign: "center", color: T.muted, fontSize: 13 }}>No proposals yet. Click "New proposal" to start from a template.</div>}
         {list.map((p) => (
           <div key={p.id} onClick={() => openExisting(p)} style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 0.8fr", padding: "14px 18px", borderBottom: `1px solid ${T.border}`, cursor: "pointer", alignItems: "center" }}>
