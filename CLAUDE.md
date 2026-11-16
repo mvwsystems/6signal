@@ -46,6 +46,13 @@ Trust / Content / Conversion) — flag, don't propagate. Canonical priority orde
 both audit articles): LEO → IEO → AEO → GEO/PEO → VEO, with conversion framed as a revenue
 multiplier, not a signal.
 
+**⚠️ Open conflict (flagged 2026-11-16, owner decision pending):** the /get lead-magnet pages
+(`public/get/`, from the "AI Adoption in AEC" playbook) define three signals differently —
+**VEO = Video engine** (YouTube walk-throughs), **PEO = Press engine** (trade press/associations),
+**IEO = Internal engine** (staff asking the firm's own documents). Affected: /get/signals (definitions
+table + tool), /get/node (content map rows), /get/schema (field → signal table), /get/radar, and
+/get/static (item 10). Not resolved in code; regenerate from `scripts/get-assets/` once decided.
+
 When writing new content or code, use **GEO/AEO/LEO/VEO/PEO/IEO**. The brand brief's voice/design
 sections remain authoritative; its six-signal list and "free 30-minute audit" entry offer are stale.
 
@@ -215,6 +222,14 @@ regenerates the brief on any device. Completed briefs also get a permalink
   It must match the GBP digit for digit — a second number across listings is the LEO
   citation inconsistency the practice charges to fix.
 - Author byline: always "Matt Vincent Walker".
+- **/get lead magnets (added 2026-11-16):** 36 static HTML asset pages in `public/get/<keyword>/`
+  (one per comment keyword in the social campaign; DM replies link `6signal.co/get/<keyword>`),
+  each with a PDF and, for nine, an .xlsx template. Served via rewrites in `next.config.js`;
+  noindex via `netlify.toml`. Forms POST to [app/api/get-lead/route.ts](app/api/get-lead/route.ts)
+  (records a lead `source: get_<keyword>`, emails owner + visitor, ntfy push for RADAR/NAMED
+  audit requests). TALK and BID call [app/api/get-ai/route.ts](app/api/get-ai/route.ts) (prompts
+  server-side). They sit outside the Next shell (no Nav/Footer) by design. Do not hand-edit
+  `public/get/` — change `scripts/get-assets/` and regenerate (see its README).
 
 ## 9. Companion docs
 

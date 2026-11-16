@@ -7,6 +7,10 @@ const nextConfig = {
     return [
       // Brand kit — a self-contained static HTML doc served at a clean URL.
       { source: "/brand", destination: "/brand.html" },
+      // Lead-magnet asset pages — static HTML in public/get/ (one folder per
+      // comment keyword), served at /get and /get/<keyword>.
+      { source: "/get", destination: "/get/index.html" },
+      { source: "/get/:slug", destination: "/get/:slug/index.html" },
     ];
   },
   async headers() {
