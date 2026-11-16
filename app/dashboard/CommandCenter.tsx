@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { T, alpha, BODY, DISP } from "./theme";
+import { SkeletonCards, SkeletonList } from "./Skeleton";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Command Center Phase 0 panels (Casey's Command Center Spec): Today (the home
@@ -114,9 +115,9 @@ function TodayView({ me, onOpenTab, onActivity }: { me: Me; onOpenTab: (tab: str
         <Updated at={data?.updatedAt ?? null} onRefresh={load} />
       </div>
       <ErrorLine msg={err} />
-      {!data && !err && <div style={muted}>Loading…</div>}
+      {!data && !err && <SkeletonCards count={4} label="Loading Today" />}
       {data && (
-        <>
+        <div className="dash-in">
           <Section title="Decide" count={data.decide.length} note={oldest ? `Oldest waiting ${ago(oldest.created_at)}` : undefined}>
             {data.decide.length === 0 ? <Empty text="Nothing waiting on a decision." />
               : data.decide.map((i) => <ApprovalCard key={i.id} item={i} me={me} onChanged={load} />)}
@@ -154,7 +155,7 @@ function TodayView({ me, onOpenTab, onActivity }: { me: Me; onOpenTab: (tab: str
             )}
           </Section>
           {hasSamples && <button style={btn(false)} onClick={deleteSamples}>Delete sample items</button>}
-        </>
+        </div>
       )}
     </div>
   );
@@ -271,10 +272,12 @@ export function ApprovalsPanel({ me }: { me: Me }) {
   const [at, setAt] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
   const load = useCallback(async () => {
-    setErr(null);
+    setErr(null); setBusy(true);
     try { setRows((await api<{ rows: Item[] }>(`/api/dashboard/cc/approvals?open=${openList ? 1 : 0}`)).rows); setAt(new Date().toISOString()); }
     catch (e) { setErr(`Couldn't load approvals: ${(e as Error).message}`); }
+    setBusy(false);
   }, [openList]);
   useEffect(() => { load(); }, [load]);
   const check = async (tier: Tier) => {
@@ -295,9 +298,13 @@ export function ApprovalsPanel({ me }: { me: Me }) {
         <Updated at={at} onRefresh={load} />
       </div>
       <ErrorLine msg={err} />
-      {!rows && !err && <div style={muted}>Loading…</div>}
-      {rows && rows.length === 0 && <div style={{ ...muted, marginBottom: 16 }}>{openList ? "Nothing waiting for approval." : "Nothing decided yet."}</div>}
-      {rows?.map((i) => <ApprovalCard key={i.id} item={i} me={me} onChanged={load} />)}
+      {!rows && !err && <SkeletonCards count={3} label="Loading approvals" />}
+      {rows && (
+        <div className={busy ? "dash-busy" : "dash-settle"} aria-busy={busy}>
+          {rows.length === 0 ? <div className="dash-in" style={{ ...muted, marginBottom: 16 }}>{openList ? "Nothing waiting for approval." : "Nothing decided yet."}</div>
+            : <div className="dash-in">{rows.map((i) => <ApprovalCard key={i.id} item={i} me={me} onChanged={load} />)}</div>}
+        </div>
+      )}
       <div style={{ ...muted, margin: "8px 0 20px" }}>Batch approve, Edit and the webhook to Casey's automation arrive in Phase 1.</div>
       <div style={card()}>
         <h2 style={{ ...h2, marginBottom: 6 }}>Tier check</h2>
@@ -336,8 +343,8 @@ export function ConnectionsPanel() {
         <Updated at={at} onRefresh={load} />
       </div>
       <ErrorLine msg={err} />
-      {!rows && !err && <div style={muted}>Loading…</div>}
-      {rows?.map((c) => <ConnectionRow key={c.name} c={c} onSaved={load} />)}
+      {!rows && !err && <SkeletonCards count={5} label="Loading connections" />}
+      {rows && <div className="dash-in">{rows.map((c) => <ConnectionRow key={c.name} c={c} onSaved={load} />)}</div>}
     </div>
   );
 }
@@ -387,15 +394,19 @@ export function ActivityView() {
   const [total, setTotal] = useState(0);
   const [err, setErr] = useState<string | null>(null);
   const [more, setMore] = useState(false);
+  const [busy, setBusy] = useState(false);
   const load = useCallback(async (offset = 0) => {
-    setErr(null);
+    setErr(null); if (!offset) setBusy(true);
     try {
       const r = await api<{ rows: ActivityRow[]; total: number }>(`/api/dashboard/cc/activity?offset=${offset}${type ? `&type=${type}` : ""}`);
       setRows((prev) => (offset ? [...(prev ?? []), ...r.rows] : r.rows));
       setTotal(r.total);
     } catch (e) { setErr(`Couldn't load activity: ${(e as Error).message}`); }
+    setBusy(false);
   }, [type]);
-  useEffect(() => { setRows(null); load(0); }, [load]);
+  // Changing the filter keeps the old list on screen, dimmed, until the new
+  // one arrives, so the page doesn't collapse and grow back.
+  useEffect(() => { load(0); }, [load]);
   return (
     <div>
       <h2 style={{ ...h2, marginBottom: 10 }}>Activity</h2>
@@ -405,10 +416,10 @@ export function ActivityView() {
         ))}
       </div>
       <ErrorLine msg={err} />
-      {!rows && !err && <div style={muted}>Loading…</div>}
+      {!rows && !err && <SkeletonList rows={8} label="Loading activity" />}
       {rows && rows.length === 0 && <div style={muted}>No activity yet.</div>}
       {rows && rows.length > 0 && (
-        <div style={card({ padding: 0 })}>
+        <div className={busy ? "dash-busy" : "dash-settle"} aria-busy={busy} style={card({ padding: 0 })}>
           {rows.map((r, i) => (
             <div key={r.id} style={{ padding: "10px 14px", borderTop: i ? `1px solid ${T.border}` : "none" }}>
               <div style={{ fontSize: 14, color: T.text }}>{r.summary}</div>

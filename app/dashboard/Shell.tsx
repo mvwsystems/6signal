@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { T, DISP, BODY } from "./theme";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -85,6 +85,14 @@ export default function Shell<Id extends string>({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [drawer, userMenu]);
+
+  // A new tab starts at the top, the way a new page would. It happens under
+  // the fade, so there's no visible jump from the old scroll position.
+  const firstTab = useRef(true);
+  useEffect(() => {
+    if (firstTab.current) { firstTab.current = false; return; }
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+  }, [active]);
 
   const toggleCollapsed = () => setCollapsed((c) => {
     try { localStorage.setItem(COLLAPSE_KEY, c ? "0" : "1"); } catch { /* private mode */ }
@@ -175,8 +183,8 @@ export default function Shell<Id extends string>({
       {/* Phone drawer */}
       {drawer && (
         <div className="dash-drawer" role="dialog" aria-label="Menu" style={{ position: "fixed", inset: 0, zIndex: 60, display: "flex" }}>
-          <div style={{ width: "min(280px, 84vw)", height: "100%", boxShadow: "0 0 40px rgba(0,0,0,0.4)" }}>{nav(false)}</div>
-          <div style={{ flex: 1, background: "rgba(0,0,0,0.45)" }} onClick={() => setDrawer(false)} />
+          <div className="dash-drawer-panel" style={{ width: "min(280px, 84vw)", height: "100%", boxShadow: "0 0 40px rgba(0,0,0,0.4)" }}>{nav(false)}</div>
+          <div className="dash-drawer-backdrop" style={{ flex: 1, background: "rgba(0,0,0,0.45)" }} onClick={() => setDrawer(false)} />
         </div>
       )}
 
@@ -190,7 +198,9 @@ export default function Shell<Id extends string>({
           <span style={{ fontSize: 14, fontWeight: 500 }}>{title}</span>
         </div>
         <main className="dash-main" style={{ padding: 24, width: "100%", maxWidth: 1280, margin: "0 auto" }}>
-          <div className="dash-fade" style={{ display: "flex", alignItems: "flex-start", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
+          {/* Keyed by tab, so each tab fades in fresh instead of swapping in place. */}
+          <div key={String(active)} className="dash-panel">
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
             <div style={{ flex: 1, minWidth: 0 }}>
               <h1 style={{ fontFamily: DISP, fontWeight: 700, fontSize: 26, letterSpacing: "-0.01em", margin: 0, lineHeight: 1.2 }}>{title}</h1>
               {subtitle && <p style={{ fontSize: 14, color: T.muted, margin: "4px 0 0" }}>{subtitle}</p>}
@@ -198,6 +208,7 @@ export default function Shell<Id extends string>({
             {actions}
           </div>
           {children}
+          </div>
         </main>
       </div>
     </div>

@@ -5,6 +5,7 @@ import {
   STATUSES, DEAL_STAGES, SERVICE_ANGLES, CATEGORIES, IMPORT_FIELDS, parseCsv, suggestMapping,
   transformManusExport, ManusExport, Mapping, Prospect, ListFilters, RowVerdict, Verdict, EditableField,
 } from "../lib/crmCore";
+import { Bar, SkeletonLines } from "./Skeleton";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CRM (Phase C1): the Manus CRM's prospect database, rebuilt inside the
@@ -198,7 +199,7 @@ function DashboardView({ onOpenList }: { onOpenList: (f: Partial<ListFilters>) =
               {activity.length > 8 && <div style={{ ...muted, fontSize: 12, padding: "8px 24px 16px" }}>Showing the latest 8 of {activity.length}.</div>}
             </div>
           ) : (
-            <div style={{ padding: "48px 24px", textAlign: "center", ...muted, fontSize: 14 }}>{stats ? "No activity in this period." : err ? "Couldn't load activity." : "Loading…"}</div>
+            stats || err ? <div style={{ padding: "48px 24px", textAlign: "center", ...muted, fontSize: 14 }}>{stats ? "No activity in this period." : "Couldn't load activity."}</div> : <SkeletonLines rows={5} />
           )}
         </div>
       </div>
@@ -260,7 +261,7 @@ function HitListView() {
                 <button style={btn(false, { height: 30, padding: "0 10px", fontSize: 12 })} disabled={busy === f.id} onClick={() => post(f.id, { action: "done", noteId: f.id })}>{busy === f.id ? "Saving…" : "Mark done"}</button>
               </div>
             );
-          }) : <div style={{ ...muted, padding: "24px 20px", borderTop: `1px solid ${T.border}` }}>{d ? "Nothing due today." : "Loading…"}</div>}
+          }) : <div style={{ ...muted, padding: "24px 20px", borderTop: `1px solid ${T.border}` }}>{d ? "Nothing due today." : <SkeletonLines rows={3} />}</div>}
         </div>
 
         <div style={card({ padding: 0 })}>
@@ -273,7 +274,7 @@ function HitListView() {
               <div style={{ fontWeight: 600, fontSize: 14 }}>{r.company}</div>
               <div style={{ ...muted, fontSize: 12 }}>{who(r) || "No contact on file"} · waiting {idleDays(r.updated_at!)} days</div>
             </button>
-          )) : <div style={{ ...muted, padding: "24px 20px", borderTop: `1px solid ${T.border}` }}>{d ? "No unworked replies." : "Loading…"}</div>}
+          )) : <div style={{ ...muted, padding: "24px 20px", borderTop: `1px solid ${T.border}` }}>{d ? "No unworked replies." : <SkeletonLines rows={3} />}</div>}
         </div>
       </div>
 
@@ -457,7 +458,7 @@ function CustomersView() {
               );
             })}
             {rows && !rows.length && <tr><td colSpan={5} style={{ ...muted, padding: 32, textAlign: "center" }}>No customers yet. Move a deal to Closed Won on the Pipeline and it shows up here.</td></tr>}
-            {!rows && !err && <tr><td colSpan={5} style={{ ...muted, padding: 32, textAlign: "center" }}>Loading…</td></tr>}
+            {!rows && !err && <tr><td colSpan={5}><SkeletonLines rows={5} /></td></tr>}
           </tbody>
         </table>
       </div>
@@ -509,13 +510,16 @@ function ProspectsView({ initial }: { initial?: Partial<ListFilters> }) {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
 
+  const seq = useRef(0); // only the newest search may fill the list
   const load = useCallback(async (f: ListFilters) => {
     setLoading(true); setErr(null);
+    const mine = ++seq.current;
     try {
       const d = await api<{ rows: Prospect[]; total: number }>(`/api/dashboard/crm/prospects?${toQuery(f)}`);
+      if (mine !== seq.current) return;
       setRows(d.rows); setTotal(d.total);
-    } catch (e) { setErr((e as Error).message); setRows([]); setTotal(null); }
-    finally { setLoading(false); }
+    } catch (e) { if (mine === seq.current) { setErr((e as Error).message); setRows([]); setTotal(null); } }
+    finally { if (mine === seq.current) setLoading(false); }
   }, []);
 
   const loadMeta = useCallback(async () => {
@@ -672,7 +676,8 @@ function ProspectsView({ initial }: { initial?: Partial<ListFilters> }) {
               {["Company", "Contact", "Category", "Location", "Status", "Tags", "Last contact"].map((h) => <th key={h} style={th}>{h}</th>)}
             </tr>
           </thead>
-          <tbody>
+          <tbody className={loading && rows.length ? "dash-busy" : "dash-settle"} aria-busy={loading}>
+            {!rows.length && loading && <tr><td colSpan={8}><SkeletonLines rows={8} /></td></tr>}
             {rows.map((r) => (
               <tr key={r.id} style={{ borderBottom: `1px solid ${T.border}`, cursor: "pointer" }} onClick={() => setOpenId(r.id)}>
                 <td style={{ padding: 10 }} onClick={(e) => e.stopPropagation()}>
@@ -808,12 +813,12 @@ function ProspectDrawer({ id, onClose, onChanged }: { id: string; onClose: () =>
 
   const p = data?.prospect;
   return (
-    <div role="dialog" aria-label="Prospect details" style={{ position: "fixed", inset: 0, zIndex: 50, display: "flex", justifyContent: "flex-end", background: alpha("#000000", 55) }} onClick={onClose}>
-      <div style={{ width: "min(620px, 100vw)", height: "100%", overflowY: "auto", background: T.surface, borderLeft: `1px solid ${T.border}`, padding: 20 }} onClick={(e) => e.stopPropagation()}>
+    <div role="dialog" aria-label="Prospect details" className="dash-drawer-backdrop" style={{ position: "fixed", inset: 0, zIndex: 50, display: "flex", justifyContent: "flex-end", background: alpha("#000000", 55) }} onClick={onClose}>
+      <div className="dash-sheet" style={{ width: "min(620px, 100vw)", height: "100%", overflowY: "auto", background: T.surface, borderLeft: `1px solid ${T.border}`, padding: 20 }} onClick={(e) => e.stopPropagation()}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, marginBottom: 16 }}>
           <div>
             <div style={eyebrow}>Prospect</div>
-            <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 20 }}>{p?.company ?? "Loading…"}</div>
+            <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 20 }}>{p?.company ?? <Bar w={220} h={20} style={{ marginTop: 4 }} />}</div>
             {p && <div style={muted}>Added {fmtDate(p.created_at)} · edited {fmtDate(p.updated_at)}{p.legacy_id ? ` · Manus #${p.legacy_id}` : ""}</div>}
           </div>
           <button style={btn(false)} onClick={onClose}>Close</button>

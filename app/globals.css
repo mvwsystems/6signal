@@ -10771,3 +10771,42 @@ html[data-db-theme="dark"] .dash-shell .dash-main button:not(:disabled):hover { 
 .italic {
   font-style: italic;
 }
+
+/* ── Dashboard motion (2026-11-16) ────────────────────────────────────────────
+   Smoother scrolling, tab changes and loading in /dashboard only:
+   - the marketing site's fixed grain overlay is a full-screen layer the
+     browser repaints on every scroll frame, so the dashboard drops it;
+   - a reserved scrollbar gutter stops the page shifting sideways when a
+     short tab becomes a long one;
+   - each tab fades in (opacity only: a moving transform would knock fixed
+     drawers and menus inside the panel off position mid-animation);
+   - data fades in over skeletons shaped like what's coming;
+   - the phone menu slides in over a fading backdrop.
+   Anyone whose device asks for reduced motion gets none of the movement. */
+html:has(.dash-root) { scrollbar-gutter: stable; scroll-behavior: auto; overscroll-behavior-y: none; }
+body:has(.dash-root)::before { display: none; }
+@keyframes dash-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dash-slide-in { from { transform: translateX(-100%); } to { transform: none; } }
+@keyframes dash-shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
+.dash-shell .dash-panel { animation: dash-in 180ms ease-out both; }
+.dash-shell .dash-in { animation: dash-in 220ms ease-out both; }
+.dash-shell .dash-busy { opacity: 0.55; transition: opacity 150ms ease; pointer-events: none; }
+.dash-shell .dash-settle { opacity: 1; transition: opacity 150ms ease; }
+.dash-skel {
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--db-panel2) 0%, color-mix(in srgb, var(--db-border) 70%, var(--db-panel2)) 50%, var(--db-panel2) 100%);
+  background-size: 300% 100%;
+  animation: dash-shimmer 1.3s ease-in-out infinite;
+}
+.dash-shell .dash-nav-item { transition: background-color 120ms ease, color 120ms ease; }
+.dash-shell .dash-drawer-panel { animation: dash-slide-in 200ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.dash-shell .dash-drawer-backdrop { animation: dash-in 200ms ease-out both; }
+@keyframes dash-sheet-in { from { transform: translateX(100%); } to { transform: none; } }
+.dash-shell .dash-sheet { animation: dash-sheet-in 220ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.dash-shell .dash-fade { animation-duration: 0.22s; }
+@media (prefers-reduced-motion: reduce) {
+  .dash-shell .dash-panel, .dash-shell .dash-in,
+  .dash-shell .dash-drawer-panel, .dash-shell .dash-drawer-backdrop, .dash-shell .dash-sheet { animation: none; }
+  .dash-skel { animation: none; }
+  .dash-shell .dash-busy, .dash-shell .dash-settle, .dash-shell .dash-nav-item { transition: none; }
+}

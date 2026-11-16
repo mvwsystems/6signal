@@ -6,6 +6,7 @@ import NewsletterTab from "./NewsletterTab";
 import CrmTab from "./CrmTab";
 import { Me, TodayPanel, ApprovalsPanel, ConnectionsPanel, ComingSoon } from "./CommandCenter";
 import { ChangelogPanel } from "./Changelog";
+import { SkeletonShell, SkeletonCards, SkeletonLines } from "./Skeleton";
 import Shell, { NavGroup } from "./Shell";
 import { T, alpha, MONO, DISP, BODY, useDbTheme } from "./theme";
 
@@ -1520,7 +1521,7 @@ function OverviewTab({ data }: { data: Overview }) {
           <span style={eyebrow}>Client payments — live from Stripe</span>
           {pay?.configured && <span style={{ fontSize: 11, color: T.muted }}>{pay.clients.filter((c) => c.past_due || c.delinquent).length} past due / delinquent</span>}
         </div>
-        {!pay && <div style={{ padding: 24, textAlign: "center", color: T.muted, fontSize: 13 }}>Loading payments…</div>}
+        {!pay && <SkeletonLines rows={4} />}
         {pay && !pay.configured && (
           <div style={{ padding: 24, textAlign: "center", color: T.muted, fontSize: 13 }}>
             Not connected — add <span style={{ fontFamily: MONO }}>STRIPE_SECRET_KEY</span> (a restricted read-only key works) in Netlify env vars to see invoices, totals, and missed payments here.
@@ -2160,6 +2161,16 @@ export default function DashboardPage() {
       const h = window.location.hash.replace("#", "");
       if ((TAB_IDS as readonly string[]).includes(h)) setTab(h as typeof tab);
     };
+    // After Google sign-in the host carries Google's one-time code and state
+    // over onto /dashboard. Both are already spent; take them out of the
+    // address bar so they don't sit in history or get bookmarked.
+    const OAUTH_PARAMS = ["code", "state", "iss", "scope", "authuser", "hd", "prompt"];
+    const sp = new URLSearchParams(window.location.search);
+    if (OAUTH_PARAMS.some((k) => sp.has(k))) {
+      OAUTH_PARAMS.forEach((k) => sp.delete(k));
+      const qs = sp.toString();
+      window.history.replaceState(null, "", `${window.location.pathname}${qs ? `?${qs}` : ""}${window.location.hash}`);
+    }
     fromHash();
     window.addEventListener("hashchange", fromHash);
     return () => window.removeEventListener("hashchange", fromHash);
@@ -2196,7 +2207,7 @@ export default function DashboardPage() {
   const [dbTheme, toggleDbTheme] = useDbTheme();
   const logout = async () => { await fetch("/api/dashboard/auth", { method: "DELETE" }); setState("locked"); setData(null); };
 
-  if (state === "loading") return <div className="dash-root" style={{ minHeight: "100vh", background: T.bg, color: T.muted, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 13 }}>Loading…</div>;
+  if (state === "loading") return <SkeletonShell />;
   if (state === "locked") return <Login google={methods.google} breakGlass={methods.breakGlass} onAuthed={async () => {
     try { const d = await (await fetch("/api/dashboard/auth")).json(); setMe(meFrom(d)); } catch { /* chip falls back to defaults */ }
     setState("in"); loadData();
@@ -2276,8 +2287,8 @@ export default function DashboardPage() {
       actions={tab === "overview" ? <button style={btn()} onClick={loadData}>Refresh</button> : undefined}
     >
       {dataErr && <div style={card({ borderColor: `${alpha(T.danger, 40)}`, marginBottom: 16 })}><span style={{ color: T.danger, fontSize: 13 }}>{dataErr}</span></div>}
-      {tab === "overview" && (data ? <OverviewTab data={data} /> : <div style={{ color: T.muted, fontFamily: MONO, fontSize: 13, padding: 40, textAlign: "center" }}>Loading data…</div>)}
-      {tab === "today" && (me ? <TodayPanel me={me} onOpenTab={(t) => selectTab(t as Tab)} /> : <div style={{ color: T.muted, fontFamily: MONO, fontSize: 13, padding: 40, textAlign: "center" }}>Loading…</div>)}
+      {tab === "overview" && (data ? <div className="dash-in"><OverviewTab data={data} /></div> : dataErr ? null : <SkeletonCards count={4} label="Loading the overview" />)}
+      {tab === "today" && (me ? <TodayPanel me={me} onOpenTab={(t) => selectTab(t as Tab)} /> : <SkeletonCards count={3} label="Loading Today" />)}
       {tab === "approvals" && me && <ApprovalsPanel me={me} />}
       {tab === "connections" && <ConnectionsPanel />}
       {tab === "changelog" && <ChangelogPanel />}
