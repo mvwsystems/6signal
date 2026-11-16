@@ -1,0 +1,74 @@
+# Adds what ships to main to the dashboard's Changelog: one entry per merged
+# pull request, and one per commit pushed straight to main. The dashboard
+# decides the client and service from the repo and the files changed
+# (app/lib/changelogCore.ts).
+#
+# Needs one repository secret, OPERATOR_API_TOKEN (the same value as the
+# Netlify env var). Without it this does nothing and says so. Optional
+# repository variable DASHBOARD_URL (default https://6signal.co).
+name: Changelog
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: changelog
+  cancel-in-progress: false
+
+jobs:
+  log:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Send to the Changelog
+        env:
+          TOKEN: ${{ secrets.OPERATOR_API_TOKEN }}
+          DASHBOARD_URL: ${{ vars.DASHBOARD_URL || 'https://6signal.co' }}
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if [ -z "${TOKEN}" ]; then
+            echo "::notice::OPERATOR_API_TOKEN isn't set as a repository secret, so nothing was logged."
+            exit 0
+          fi
+          if [ -z "${BEFORE}" ] || [ "${BEFORE}" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; then
+            RANGE="${AFTER}^!"
+          else
+            RANGE="${BEFORE}..${AFTER}"
+          fi
+          # First parent only: a merged pull request is one entry, not one per commit in it.
+          SHAS=$(git rev-list --first-parent --reverse "${RANGE}" | tail -n 50)
+          # This push may also be the deploy that adds the Changelog, so give
+          # the site a few minutes before giving up on each entry.
+          for sha in ${SHAS}; do
+            msg=$(git log -1 --format=%B "${sha}")
+            author=$(git log -1 --format=%an "${sha}")
+            if [ "$(git rev-list --parents -n 1 "${sha}" | wc -w)" -gt 2 ]; then
+              paths=$(git diff --name-only "${sha}^1" "${sha}")
+            else
+              paths=$(git diff-tree --no-commit-id --name-only -r --root "${sha}")
+            fi
+            body=$(jq -n --arg repo "${REPO}" --arg message "${msg}" --arg author "${author}" --arg ref "${REPO}@${sha}" \
+              --arg link "https://github.com/${REPO}/commit/${sha}" --arg paths "${paths}" \
+              '{source:"github", repo:$repo, message:$message, author:$author, ref:$ref, link:$link, paths:($paths | split("\n") | map(select(length > 0)))}')
+            ok=""
+            for attempt in 1 2 3 4 5 6 7 8; do
+              code=$(curl -sS -o /tmp/resp -w '%{http_code}' -X POST "${DASHBOARD_URL}/api/dashboard/cc/changelog" \
+                -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" --data "${body}" || echo 000)
+              if [ "${code}" = "200" ]; then ok=1; echo "Logged ${sha:0:7}: $(cat /tmp/resp)"; break; fi
+              if [ "${code}" = "401" ]; then echo "::error::The dashboard refused the token (401). Check OPERATOR_API_TOKEN matches Netlify."; exit 1; fi
+              echo "Attempt ${attempt} for ${sha:0:7} got ${code}; waiting."
+              sleep 30
+            done
+            [ -n "${ok}" ] || echo "::warning::Couldn't log ${sha:0:7}."
+          done

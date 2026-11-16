@@ -93,12 +93,24 @@ export async function facets(): Promise<{ states: string[]; tags: string[]; cate
   return { states: uniq(rows.map((r) => r.state)), tags: uniq(rows.flatMap((r) => r.tags ?? [])), categories: uniq(rows.map((r) => r.category)), total: rows.length };
 }
 
-export async function logActivity(a: { entityType: string; entityId?: string | null; action: string; summary: string; changes?: unknown }) {
+// The Changelog reads the activity log by client and service. Dashboard work
+// is 6 Signal's own; the service follows from what was touched.
+const SERVICE_FOR: Record<string, string> = { prospect: "CRM", import: "CRM", merge: "CRM" };
+
+export async function logActivity(a: {
+  entityType: string; entityId?: string | null; action: string; summary: string; changes?: unknown;
+  client?: string | null; service?: string | null; link?: string | null; source?: string; createdAt?: string; actor?: string;
+}) {
   // One Activity table for the whole Command Center (spec §2 rule 5). The CRM
   // keeps calling these "entity" fields; the table calls them "target".
   const { error } = await client().from("activity").insert({
     target_type: a.entityType, target_id: a.entityId ?? null, action: a.action, summary: a.summary, changes: a.changes ?? null,
-    actor: currentActor()?.name ?? "system",
+    actor: a.actor ?? currentActor()?.name ?? "system",
+    client: a.client === undefined ? "6 Signal" : a.client,
+    service: a.service === undefined ? (SERVICE_FOR[a.entityType] ?? "Command Center") : a.service,
+    link: a.link ?? null,
+    source: a.source ?? "dashboard",
+    ...(a.createdAt ? { created_at: a.createdAt } : {}),
   });
   if (error) throw new CrmError(`Activity log write failed: ${error.message}`);
 }
