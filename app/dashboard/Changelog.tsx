@@ -1,6 +1,7 @@
 "use client";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { T, alpha, BODY } from "./theme";
+import { SkeletonList } from "./Skeleton";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Changelog: everything that's been done, by day, client and service. It reads
@@ -114,6 +115,8 @@ export function ChangelogPanel() {
   const [more, setMore] = useState(false);
   const [adding, setAdding] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const seq = useRef(0); // only the newest request may fill the list
 
   useEffect(() => { const u = readUrl(); setF(u); setSearch(u.q); setReady(true); }, []);
   const loadFacets = useCallback(() => {
@@ -128,18 +131,20 @@ export function ChangelogPanel() {
   }, [search]);
 
   const load = useCallback(async (offset = 0) => {
-    setErr(null);
+    setErr(null); if (!offset) setBusy(true);
+    const mine = ++seq.current;
     try {
       const r = await api<{ rows: Row[]; total: number }>(`/api/dashboard/cc/changelog?${query(f, offset, 100)}`);
+      if (mine !== seq.current) return;
       setRows((prev) => (offset ? [...(prev ?? []), ...r.rows] : r.rows));
       setTotal(r.total);
-    } catch (e) { setErr(`Couldn't load the changelog: ${(e as Error).message}`); }
+    } catch (e) { if (mine === seq.current) setErr(`Couldn't load the changelog: ${(e as Error).message}`); }
+    if (mine === seq.current) setBusy(false);
   }, [f]);
   useEffect(() => {
     if (!ready) return;
     writeUrl(f);
-    setRows(null);
-    load(0);
+    load(0); // the old list stays, dimmed, until the new one arrives
   }, [f, ready, load]);
 
   const set = (patch: Partial<Filters>) => setF((cur) => ({ ...cur, ...patch }));
@@ -217,7 +222,7 @@ export function ChangelogPanel() {
       {adding && <AddEntry clients={facets.clients} services={facets.services} onDone={() => { setAdding(false); loadFacets(); load(0); }} />}
 
       {err && <div style={card({ borderColor: alpha(T.danger, 40), color: T.danger, fontSize: 13, margin: "8px 0" })}>{err}</div>}
-      {!rows && !err && <div style={muted}>Loading…</div>}
+      {!rows && !err && <SkeletonList rows={8} label="Loading the changelog" />}
       {rows && (
         <div style={{ ...muted, marginBottom: 10 }}>
           {total.toLocaleString()} {total === 1 ? "entry" : "entries"}{filtered ? " match" : ""}
@@ -225,6 +230,7 @@ export function ChangelogPanel() {
       )}
       {rows && rows.length === 0 && <div style={card(muted)}>Nothing logged for these filters. Try a wider date range.</div>}
 
+      <div className={busy ? "dash-busy" : "dash-settle"} aria-busy={busy}>
       {days.map(([k, list]) => (
         <section key={k} style={{ marginBottom: 18 }}>
           <h3 style={{ fontFamily: BODY, fontSize: 13, fontWeight: 600, color: T.textSub, textTransform: "uppercase", letterSpacing: 0.4, margin: "0 0 6px" }}>
@@ -247,6 +253,7 @@ export function ChangelogPanel() {
           </div>
         </section>
       ))}
+      </div>
 
       {rows && rows.length < total && (
         <button style={btn(false)} disabled={more} onClick={async () => { setMore(true); await load(rows.length); setMore(false); }}>
