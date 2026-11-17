@@ -12,6 +12,7 @@ import { T, alpha, MONO, DISP, BODY, useDbTheme } from "./theme";
 import CampaignsTab from "./CampaignsTab";
 import SettingsTab from "./SettingsTab";
 import SequencesTab from "./SequencesTab";
+import InboxTab from "./InboxTab";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 6 Signal — internal AI Visibility Command Center (/dashboard)
@@ -2257,7 +2258,7 @@ export default function DashboardPage() {
     today: "What needs you, what's on fire, and what's happening today.",
     approvals: "Every Yellow and Red decision in one list.",
     money: "Stripe, read-only.",
-    conversations: "Replies and routed calls in one stream.",
+    conversations: "Replies from prospects in Casey's inbox. Replies are drafted here and approved; Gmail sends them.",
     pipeline: "Is any deal or client quietly slipping?",
     delivery: "Client setup projects and what each is waiting on.",
     visibility: "Client visibility checks and reports.",
@@ -2305,7 +2306,7 @@ export default function DashboardPage() {
       {tab === "campaigns" && <CampaignsTab />}
       {tab === "sequences" && <SequencesTab />}
       {tab === "money" && <ComingSoon phase={1} onOpenTab={(t) => selectTab(t as Tab)} what="Stripe, read-only: balance, money in this month, failed or unpaid invoices (each one an exception the day it happens), subscriptions due in the next 14 days, recent payments, and your owner-only personal due-date strip. No payment buttons." links={[{ tab: "revenue", label: "Revenue (today's page)" }]} />}
-      {tab === "conversations" && <ComingSoon phase={2} onOpenTab={(t) => selectTab(t as Tab)} what="One stream for casey@ inbox replies, Quo calls routed to Casey with their 24-hour follow-up, and CallRail missed calls for X-Act, each marked Needs review, Waiting or Handled. Draft replies come here as approvals; sending still happens in Gmail." />}
+      {tab === "conversations" && <InboxTab />}
       {tab === "pipeline" && <ComingSoon phase={3} onOpenTab={(t) => selectTab(t as Tab)} what="Stage counts and value, deals idle over 7 days, and a client roster with health dots for last contact, last deliverable and billing." links={[{ tab: "crm", label: "CRM" }, { tab: "proposals", label: "Proposals" }, { tab: "overview", label: "Client overview" }]} />}
       {tab === "delivery" && <ComingSoon phase={3} onOpenTab={(t) => selectTab(t as Tab)} what="Client setup projects (GBP builds, CSR AI, routing, websites) as checklists, each naming what it's waiting on. Anything blocked too long becomes an exception with a nudge drafted for approval." links={[{ tab: "exec", label: "90-Day Plan" }]} />}
       {tab === "visibility" && <ComingSoon phase={3} onOpenTab={(t) => selectTab(t as Tab)} what="Today's visibility tools folded into one panel. Every client report lands in Approvals, never straight to the client, plus a monthly GBP health sweep per client." links={[{ tab: "scan", label: "Quick Scan" }, { tab: "battle", label: "Battle Plan" }, { tab: "track", label: "Tracking" }]} />}

@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { T, alpha, MONO, DISP, BODY } from "./theme";
 import SeqTimeline from "./SeqTimeline";
+import { ProspectConversations } from "./InboxTab";
 import {
   STATUSES, DEAL_STAGES, SERVICE_ANGLES, CATEGORIES, IMPORT_FIELDS, parseCsv, suggestMapping,
   transformManusExport, ManusExport, Mapping, Prospect, ListFilters, RowVerdict, Verdict, EditableField,
@@ -895,6 +896,11 @@ function ProspectDrawer({ id, onClose, onChanged }: { id: string; onClose: () =>
                   <div style={{ whiteSpace: "pre-wrap" }}>{n.content}</div>
                 </div>
               ))}
+            </div>
+
+            <div style={{ ...eyebrow, marginBottom: 8 }}>Email conversations</div>
+            <div style={card({ marginBottom: 14 })}>
+              <ProspectConversations prospectId={id} />
             </div>
 
             <div style={{ ...eyebrow, marginBottom: 8 }}>Sequences</div>

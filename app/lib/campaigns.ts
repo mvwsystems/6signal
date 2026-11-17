@@ -77,7 +77,7 @@ async function readSettings(): Promise<{ sending: SendingSettings; compliance: C
 }
 
 async function connectionsStatus() {
-  const { data } = await client().from("connections").select("name,status,note,last_sync_at,last_error").in("name", ["instantly", "resend"]);
+  const { data } = await client().from("connections").select("name,status,note,last_sync_at,last_error").in("name", ["instantly", "resend", "gmail_casey"]);
   return data ?? [];
 }
 
@@ -91,7 +91,7 @@ export async function getSettings() {
     territories, claimed: claimed ?? [],
     config: {
       send_enabled: sendEnabled(), hard_daily_max: hardDailyMax(),
-      instantly_key: !!instantlyKey(), resend_key: !!process.env.RESEND_API_KEY?.trim(), places_key: !!process.env.GOOGLE_PLACES_API_KEY?.trim(),
+      instantly_key: !!instantlyKey(), resend_key: !!process.env.RESEND_API_KEY?.trim(), places_key: !!process.env.GOOGLE_PLACES_API_KEY?.trim(), gmail_key: !!process.env.GMAIL_SERVICE_ACCOUNT_JSON?.trim(), gmail_mailbox: process.env.GMAIL_MAILBOX?.trim() || "casey@6signal.co",
       email_from: process.env.EMAIL_FROM?.trim() || null,
     },
     connections: await connectionsStatus(),

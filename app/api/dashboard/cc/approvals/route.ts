@@ -6,6 +6,8 @@ import { CrmError } from "../../../../lib/crm";
 import { noteKilled } from "../../../../lib/campaigns";
 // Registers the follow-up batch action the same way.
 import { noteSeqKilled } from "../../../../lib/sequences";
+// And the inbox reply action.
+import { noteInboxKilled } from "../../../../lib/inbox";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +24,7 @@ export async function POST(req: NextRequest) {
     if (b.op === "approve" || b.op === "kill") {
       if (!b.id) throw new CrmError("id is required", 400);
       const res = await decide(b.id, b.op, b.note);
-      if (b.op === "kill") { await noteKilled(b.id); await noteSeqKilled(b.id); }
+      if (b.op === "kill") { await noteKilled(b.id); await noteSeqKilled(b.id); await noteInboxKilled(b.id); }
       return res;
     }
     if (b.op === "check") {
