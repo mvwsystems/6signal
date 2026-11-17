@@ -15,7 +15,7 @@ export interface NavGroup<Id extends string> { label: string; items: NavItem<Id>
 
 type IconName =
   | "grid" | "users" | "scan" | "target" | "calendar" | "chart" | "pen" | "list"
-  | "file" | "mail" | "megaphone" | "dollar" | "check";
+  | "file" | "mail" | "megaphone" | "dollar" | "check" | "gear" | "send";
 
 // Simple 24×24 stroke icons (no icon library in this repo).
 const PATHS: Record<IconName, string> = {
@@ -32,6 +32,8 @@ const PATHS: Record<IconName, string> = {
   megaphone: "M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1zM15 9a3 3 0 0 1 0 6M18 6a7 7 0 0 1 0 12",
   dollar: "M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6",
   check: "M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11",
+  gear: "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
+  send: "M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z",
 };
 
 function Icon({ name, size = 18 }: { name: IconName | "menu" | "panel" | "sun" | "moon" | "logout" | "close"; size?: number }) {
