@@ -464,6 +464,8 @@ export async function crmStats() {
 
 // ─── C2: pipeline, customers, Hit List ─────────────────────────────────────
 
+export const IDLE_DAYS = 7;
+export const ACTIVE_DEAL_STAGES = ["Audit Sent", "Proposal Out", "Negotiating"] as const;
 const CARD_COLS = "id, company, contact_name, city, state, status, service_angle, deal_stage, deal_value, updated_at, last_contact_at, priority_call_rank";
 export type PipelineCard = Pick<Prospect, "id" | "company" | "contact_name" | "city" | "state" | "status" | "service_angle" | "deal_stage" | "deal_value" | "updated_at" | "last_contact_at" | "priority_call_rank">;
 
@@ -472,13 +474,19 @@ export type PipelineCard = Pick<Prospect, "id" | "company" | "contact_name" | "c
 export async function pipeline(angle: string | null, stage: string | null, offset: number, limit = 40) {
   const s = client();
   const stages = stage ? [stage] : [...DEAL_STAGES];
-  const all = await selectAll<{ id: string; deal_stage: string; deal_value: number; service_angle: string | null }>("crm_prospects", "id, deal_stage, deal_value, service_angle");
+  const all = await selectAll<{ id: string; deal_stage: string; deal_value: number; service_angle: string | null; updated_at: string; last_contact_at: string | null }>("crm_prospects", "id, deal_stage, deal_value, service_angle, updated_at, last_contact_at");
   const totals: Record<string, { count: number; value: number }> = {};
   for (const st of DEAL_STAGES) totals[st] = { count: 0, value: 0 };
+  // Idle deals: an active deal (past New Lead, not closed) with no contact
+  // and no change for over IDLE_DAYS. New Lead is the whole imported list,
+  // so counting it would drown the signal.
+  const cutoff = Date.now() - IDLE_DAYS * 86400000;
+  let idle = 0;
   for (const r of all) {
     if (angle && r.service_angle !== angle) continue;
     const t = totals[r.deal_stage];
     if (t) { t.count += 1; t.value += Number(r.deal_value) || 0; }
+    if ((ACTIVE_DEAL_STAGES as readonly string[]).includes(r.deal_stage) && new Date(r.last_contact_at ?? r.updated_at).getTime() < cutoff) idle += 1;
   }
   const cards: Record<string, PipelineCard[]> = {};
   await Promise.all(stages.map(async (st) => {
@@ -488,7 +496,7 @@ export async function pipeline(angle: string | null, stage: string | null, offse
     if (error) throw new CrmError(error.message);
     cards[st] = (data ?? []) as PipelineCard[];
   }));
-  return { totals, cards };
+  return { totals, cards, idle, idle_days: IDLE_DAYS };
 }
 
 // Moves a deal to another stage. Status follows only where the mapping is
