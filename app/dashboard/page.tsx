@@ -9,6 +9,7 @@ import { ChangelogPanel } from "./Changelog";
 import { SkeletonShell, SkeletonCards, SkeletonLines } from "./Skeleton";
 import Shell, { NavGroup } from "./Shell";
 import { T, alpha, MONO, DISP, BODY, useDbTheme } from "./theme";
+import MoneyAlerts from "./MoneyAlerts";
 import CampaignsTab from "./CampaignsTab";
 import SettingsTab from "./SettingsTab";
 import SequencesTab from "./SequencesTab";
@@ -1999,7 +2000,18 @@ interface RevData { configured: boolean; note?: string; year?: number; years?: n
 
 const REV_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+// Revenue = the money alerts (what was the Money placeholder) on top, then
+// the year totals.
 function RevenueTab() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+      <MoneyAlerts />
+      <RevenueYears />
+    </div>
+  );
+}
+
+function RevenueYears() {
   const [year, setYear] = useState(() => new Date().getFullYear());
   const [rev, setRev] = useState<RevData | null>(null);
   const [failed, setFailed] = useState(false);
@@ -2154,14 +2166,18 @@ function meFrom(d: { role?: string; name?: string; ownerName?: string; operatorN
 export default function DashboardPage() {
   const [state, setState] = useState<"loading" | "locked" | "in">("loading");
   const [methods, setMethods] = useState({ google: true, breakGlass: true });
-  const [tab, setTab] = useState<"today" | "approvals" | "money" | "conversations" | "pipeline" | "delivery" | "visibility" | "staff" | "connections" | "changelog" | "campaigns" | "sequences" | "settings" | "overview" | "crm" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "proposals" | "newsletter" | "ads" | "revenue">("today");
+  const [tab, setTab] = useState<"today" | "approvals" | "conversations" | "delivery" | "visibility" | "staff" | "connections" | "changelog" | "campaigns" | "sequences" | "settings" | "overview" | "crm" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "proposals" | "newsletter" | "ads" | "revenue">("today");
   const [me, setMe] = useState<Me | null>(null);
   // The open tab lives in the URL hash (#crm), so a reload or a bookmark
   // lands on the same section.
-  const TAB_IDS = ["today", "approvals", "money", "conversations", "pipeline", "delivery", "visibility", "staff", "connections", "changelog", "campaigns", "sequences", "settings", "overview", "crm", "scan", "battle", "exec", "track", "content", "prospects", "proposals", "newsletter", "ads", "revenue"] as const;
+  const TAB_IDS = ["today", "approvals", "conversations", "delivery", "visibility", "staff", "connections", "changelog", "campaigns", "sequences", "settings", "overview", "crm", "scan", "battle", "exec", "track", "content", "prospects", "proposals", "newsletter", "ads", "revenue"] as const;
   useEffect(() => {
     const fromHash = () => {
-      const h = window.location.hash.replace("#", "");
+      let h = window.location.hash.replace("#", "");
+      // Money moved into Revenue and Pipeline & Clients into CRM; old
+      // bookmarks still land somewhere sensible.
+      if (h === "money") h = "revenue";
+      if (h === "pipeline") h = "crm";
       if ((TAB_IDS as readonly string[]).includes(h)) setTab(h as typeof tab);
     };
     // After Google sign-in the host carries Google's one-time code and state
@@ -2221,9 +2237,7 @@ export default function DashboardPage() {
     { label: "Command Center", items: [
       { id: "today", label: "Today", icon: "check" },
       { id: "approvals", label: "Approvals", icon: "target" },
-      { id: "money", label: "Money", icon: "dollar" },
       { id: "conversations", label: "Conversations", icon: "mail" },
-      { id: "pipeline", label: "Pipeline & Clients", icon: "users" },
       { id: "delivery", label: "Delivery", icon: "list" },
       { id: "visibility", label: "Visibility", icon: "scan" },
       { id: "staff", label: "Staff", icon: "grid" },
@@ -2256,9 +2270,7 @@ export default function DashboardPage() {
   const SUBTITLES: Partial<Record<Tab, string>> = {
     today: "What needs you, what's on fire, and what's happening today.",
     approvals: "Every Yellow and Red decision in one list.",
-    money: "Stripe, read-only.",
     conversations: "Replies and routed calls in one stream.",
-    pipeline: "Is any deal or client quietly slipping?",
     delivery: "Client setup projects and what each is waiting on.",
     visibility: "Client visibility checks and reports.",
     staff: "The AI staff board.",
@@ -2269,7 +2281,7 @@ export default function DashboardPage() {
     sequences: "Follow-up steps, drafted when due and approved before anything goes out.",
     crm: "Your prospects, decision makers and imports in one place.",
     proposals: "Build and track client proposals.",
-    revenue: "Revenue across your clients.",
+    revenue: "Money that needs you on top, revenue by year below.",
     overview: "Overview of your clients and their visibility.",
     scan: "Run a quick visibility scan on a client.",
     battle: "Each client's battle plan.",
@@ -2304,9 +2316,7 @@ export default function DashboardPage() {
       {tab === "settings" && <SettingsTab />}
       {tab === "campaigns" && <CampaignsTab />}
       {tab === "sequences" && <SequencesTab />}
-      {tab === "money" && <ComingSoon phase={1} onOpenTab={(t) => selectTab(t as Tab)} what="Stripe, read-only: balance, money in this month, failed or unpaid invoices (each one an exception the day it happens), subscriptions due in the next 14 days, recent payments, and your owner-only personal due-date strip. No payment buttons." links={[{ tab: "revenue", label: "Revenue (today's page)" }]} />}
       {tab === "conversations" && <ComingSoon phase={2} onOpenTab={(t) => selectTab(t as Tab)} what="One stream for casey@ inbox replies, Quo calls routed to Casey with their 24-hour follow-up, and CallRail missed calls for X-Act, each marked Needs review, Waiting or Handled. Draft replies come here as approvals; sending still happens in Gmail." />}
-      {tab === "pipeline" && <ComingSoon phase={3} onOpenTab={(t) => selectTab(t as Tab)} what="Stage counts and value, deals idle over 7 days, and a client roster with health dots for last contact, last deliverable and billing." links={[{ tab: "crm", label: "CRM" }, { tab: "proposals", label: "Proposals" }, { tab: "overview", label: "Client overview" }]} />}
       {tab === "delivery" && <ComingSoon phase={3} onOpenTab={(t) => selectTab(t as Tab)} what="Client setup projects (GBP builds, CSR AI, routing, websites) as checklists, each naming what it's waiting on. Anything blocked too long becomes an exception with a nudge drafted for approval." links={[{ tab: "exec", label: "90-Day Plan" }]} />}
       {tab === "visibility" && <ComingSoon phase={3} onOpenTab={(t) => selectTab(t as Tab)} what="Today's visibility tools folded into one panel. Every client report lands in Approvals, never straight to the client, plus a monthly GBP health sweep per client." links={[{ tab: "scan", label: "Quick Scan" }, { tab: "battle", label: "Battle Plan" }, { tab: "track", label: "Tracking" }]} />}
       {tab === "staff" && <ComingSoon phase={4} onOpenTab={(t) => selectTab(t as Tab)} what="Each AI staff member with status, current job, last run, spend this week and a Pause button. A failed job becomes an exception automatically." />}
