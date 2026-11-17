@@ -4,6 +4,7 @@ import {
   ListFilters, Prospect, EditableField, EDITABLE_FIELDS, DedupeKey, ImportRecord, RowVerdict,
   companyDomain, diff, mergeRecords, findClusters, Cluster, DEAL_STAGES,
 } from "./crmCore";
+import { REPLY_STATUSES, STOP_STATUSES } from "./seqCore";
 
 // Server-side CRM data access (Supabase, service role). Unlike the funnel
 // helpers in db.ts, these return errors instead of swallowing them: the CRM is
@@ -115,6 +116,69 @@ export async function logActivity(a: {
   if (error) throw new CrmError(`Activity log write failed: ${error.message}`);
 }
 
+// ─── Stop rules (C4) ────────────────────────────────────────────────────────
+// Always on, not configurable off. A reply, a booking or a bounce pauses every
+// sequence the prospect is in; Do Not Contact removes them everywhere: out of
+// every sequence and out of any campaign that hasn't started sending. Unsent
+// drafts and approved follow-ups for them are cancelled. Called from every
+// place a status can change (the drawer, bulk edits, the unsubscribe link).
+
+export type StopKind = "reply" | "booking" | "bounce" | "do_not_contact" | "status";
+const STOP_LABEL: Record<StopKind, string> = { reply: "a reply", booking: "a booking", bounce: "a bounced email", do_not_contact: "Do Not Contact", status: "a status change" };
+const missingTable = (e: { code?: string } | null) => e?.code === "42P01" || e?.code === "PGRST205";
+
+export async function stopForProspects(ids: string[], kind: StopKind, detail?: string): Promise<{ sequences: number; drafts: number; campaigns: number }> {
+  if (!ids.length) return { sequences: 0, drafts: 0, campaigns: 0 };
+  const s = client();
+  const now = new Date().toISOString();
+  let sequences = 0, drafts = 0, campaigns = 0;
+  for (let i = 0; i < ids.length; i += 200) {
+    const chunk = ids.slice(i, i + 200);
+    const enr = await s.from("enrollments")
+      .update({ status: kind === "do_not_contact" ? "removed" : "paused", stop_reason: kind, next_due_at: null, updated_at: now })
+      .in("prospect_id", chunk).in("status", kind === "do_not_contact" ? ["active", "paused"] : ["active"]).select("id");
+    if (enr.error && !missingTable(enr.error)) throw new CrmError(enr.error.message);
+    sequences += enr.data?.length ?? 0;
+    const msg = await s.from("sequence_messages")
+      .update({ status: "cancelled", note: `Cancelled by ${STOP_LABEL[kind]}${detail ? `: ${detail}` : ""}. Nothing was sent.`, decided_at: now })
+      .in("prospect_id", chunk).in("status", ["draft", "approved"]).select("id");
+    if (msg.error && !missingTable(msg.error)) throw new CrmError(msg.error.message);
+    drafts += msg.data?.length ?? 0;
+    if (kind === "do_not_contact") {
+      const camps = await s.from("campaigns").select("id,status").in("status", ["draft", "pending_approval", "queued", "sending", "paused"]);
+      if (camps.error && !missingTable(camps.error)) throw new CrmError(camps.error.message);
+      for (const c of camps.data ?? []) {
+        if (["sending", "paused"].includes(c.status)) {
+          const u = await s.from("campaign_recipients").update({ status: "skipped", note: "Do Not Contact" }).eq("campaign_id", c.id).in("prospect_id", chunk).neq("status", "skipped").select("id");
+          if (u.error) throw new CrmError(u.error.message);
+          if (u.data?.length) campaigns++;
+        } else {
+          const d = await s.from("campaign_recipients").delete().eq("campaign_id", c.id).in("prospect_id", chunk).select("id");
+          if (d.error) throw new CrmError(d.error.message);
+          if (d.data?.length) {
+            campaigns++;
+            const { count } = await s.from("campaign_recipients").select("id", { count: "exact", head: true }).eq("campaign_id", c.id);
+            await s.from("campaigns").update({ recipient_count: count ?? 0, updated_at: now }).eq("id", c.id);
+          }
+        }
+      }
+    }
+  }
+  if (sequences || drafts || campaigns) {
+    const parts = [sequences && `${kind === "do_not_contact" ? "removed from" : "paused in"} ${sequences} sequence${sequences === 1 ? "" : "s"}`, drafts && `${drafts} unsent draft${drafts === 1 ? "" : "s"} cancelled`, campaigns && `taken out of ${campaigns} campaign${campaigns === 1 ? "" : "s"}`].filter(Boolean).join(", ");
+    if (ids.length === 1) await logActivity({ entityType: "prospect", entityId: ids[0], action: "sequence_stopped", summary: `Stopped by ${STOP_LABEL[kind]}: ${parts}`, service: "Sales & proposals" });
+    else await logActivity({ entityType: "prospect", action: "sequence_stopped", summary: `Stopped by ${STOP_LABEL[kind]} for ${ids.length} prospects: ${parts}`, changes: { ids }, service: "Sales & proposals" });
+  }
+  return { sequences, drafts, campaigns };
+}
+
+export function stopKindForStatus(status: unknown): StopKind | null {
+  if (status === "Do Not Contact") return "do_not_contact";
+  if (typeof status === "string" && REPLY_STATUSES.includes(status)) return "reply";
+  if (typeof status === "string" && STOP_STATUSES.includes(status)) return "status";
+  return null;
+}
+
 export async function getProspect(id: string) {
   const s = client();
   const [p, contacts, notes, merges] = await Promise.all([
@@ -161,6 +225,8 @@ export async function updateProspect(id: string, input: Record<string, unknown>)
   if (error) throw new CrmError(error.message, 400);
   const fields = Object.keys(changes).filter((k) => k !== "website_domain");
   await logActivity({ entityType: "prospect", entityId: id, action: "updated", summary: `Edited ${fields.join(", ")}`, changes });
+  const stop = "status" in changes ? stopKindForStatus(patch.status) : null;
+  if (stop) await stopForProspects([id], stop, `status set to ${String(patch.status)}`);
   return { prospect: data as Prospect, changed: fields.length };
 }
 
@@ -209,6 +275,8 @@ export async function bulkUpdate(ids: string[], expectedCount: number, op: { sta
   }
   const what = [op.status && `status → ${op.status}`, op.addTag && `added tag "${op.addTag}"`, op.removeTag && `removed tag "${op.removeTag}"`].filter(Boolean).join(", ");
   await logActivity({ entityType: "prospect", action: "bulk_updated", summary: `Bulk: ${what} on ${done} prospects`, changes: { ids, op } });
+  const stop = op.status ? stopKindForStatus(op.status) : null;
+  if (stop) await stopForProspects(ids, stop, `status set to ${op.status}`);
   return done;
 }
 

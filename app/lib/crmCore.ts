@@ -51,6 +51,7 @@ export interface Prospect {
   deal_value: number;
   follow_up_count: number;
   last_contact_at: string | null;
+  email_invalid_at?: string | null; // set when an email bounces (C4)
   created_at: string;
   updated_at: string;
 }
