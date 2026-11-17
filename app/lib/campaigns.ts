@@ -72,7 +72,7 @@ async function readSettings(): Promise<{ sending: SendingSettings; compliance: C
     return merged as T;
   };
   const updated: Record<string, { by: string | null; at: string }> = {};
-  for (const [k, r] of by) updated[k] = { by: r.updated_by, at: r.updated_at };
+  for (const [k, r] of by) if (k in DEFAULTS) updated[k] = { by: r.updated_by, at: r.updated_at };
   return { sending: val("sending"), compliance: val("compliance"), campaign_defaults: val("campaign_defaults"), updated };
 }
 
