@@ -11,6 +11,7 @@ import Shell, { NavGroup } from "./Shell";
 import { T, alpha, MONO, DISP, BODY, useDbTheme } from "./theme";
 import CampaignsTab from "./CampaignsTab";
 import SettingsTab from "./SettingsTab";
+import SequencesTab from "./SequencesTab";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 6 Signal — internal AI Visibility Command Center (/dashboard)
@@ -2153,11 +2154,11 @@ function meFrom(d: { role?: string; name?: string; ownerName?: string; operatorN
 export default function DashboardPage() {
   const [state, setState] = useState<"loading" | "locked" | "in">("loading");
   const [methods, setMethods] = useState({ google: true, breakGlass: true });
-  const [tab, setTab] = useState<"today" | "approvals" | "money" | "conversations" | "pipeline" | "delivery" | "visibility" | "staff" | "connections" | "changelog" | "campaigns" | "settings" | "overview" | "crm" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "proposals" | "newsletter" | "ads" | "revenue">("today");
+  const [tab, setTab] = useState<"today" | "approvals" | "money" | "conversations" | "pipeline" | "delivery" | "visibility" | "staff" | "connections" | "changelog" | "campaigns" | "sequences" | "settings" | "overview" | "crm" | "scan" | "battle" | "exec" | "track" | "content" | "prospects" | "proposals" | "newsletter" | "ads" | "revenue">("today");
   const [me, setMe] = useState<Me | null>(null);
   // The open tab lives in the URL hash (#crm), so a reload or a bookmark
   // lands on the same section.
-  const TAB_IDS = ["today", "approvals", "money", "conversations", "pipeline", "delivery", "visibility", "staff", "connections", "changelog", "campaigns", "settings", "overview", "crm", "scan", "battle", "exec", "track", "content", "prospects", "proposals", "newsletter", "ads", "revenue"] as const;
+  const TAB_IDS = ["today", "approvals", "money", "conversations", "pipeline", "delivery", "visibility", "staff", "connections", "changelog", "campaigns", "sequences", "settings", "overview", "crm", "scan", "battle", "exec", "track", "content", "prospects", "proposals", "newsletter", "ads", "revenue"] as const;
   useEffect(() => {
     const fromHash = () => {
       const h = window.location.hash.replace("#", "");
@@ -2233,6 +2234,7 @@ export default function DashboardPage() {
     { label: "Sales", items: [
       { id: "crm", label: "CRM", icon: "users" },
       { id: "campaigns", label: "Campaigns", icon: "send" },
+      { id: "sequences", label: "Sequences", icon: "list" },
       { id: "proposals", label: "Proposals", icon: "file" },
       { id: "revenue", label: "Revenue", icon: "dollar" },
     ] },
@@ -2264,6 +2266,7 @@ export default function DashboardPage() {
     changelog: "Everything that's been done, by day, client and service.",
     settings: "Sender profile, limits, territories and connected tools.",
     campaigns: "Build, check and test cold email campaigns. Nothing sends without approval.",
+    sequences: "Follow-up steps, drafted when due and approved before anything goes out.",
     crm: "Your prospects, decision makers and imports in one place.",
     proposals: "Build and track client proposals.",
     revenue: "Revenue across your clients.",
@@ -2300,6 +2303,7 @@ export default function DashboardPage() {
       {tab === "changelog" && <ChangelogPanel />}
       {tab === "settings" && <SettingsTab />}
       {tab === "campaigns" && <CampaignsTab />}
+      {tab === "sequences" && <SequencesTab />}
       {tab === "money" && <ComingSoon phase={1} onOpenTab={(t) => selectTab(t as Tab)} what="Stripe, read-only: balance, money in this month, failed or unpaid invoices (each one an exception the day it happens), subscriptions due in the next 14 days, recent payments, and your owner-only personal due-date strip. No payment buttons." links={[{ tab: "revenue", label: "Revenue (today's page)" }]} />}
       {tab === "conversations" && <ComingSoon phase={2} onOpenTab={(t) => selectTab(t as Tab)} what="One stream for casey@ inbox replies, Quo calls routed to Casey with their 24-hour follow-up, and CallRail missed calls for X-Act, each marked Needs review, Waiting or Handled. Draft replies come here as approvals; sending still happens in Gmail." />}
       {tab === "pipeline" && <ComingSoon phase={3} onOpenTab={(t) => selectTab(t as Tab)} what="Stage counts and value, deals idle over 7 days, and a client roster with health dots for last contact, last deliverable and billing." links={[{ tab: "crm", label: "CRM" }, { tab: "proposals", label: "Proposals" }, { tab: "overview", label: "Client overview" }]} />}

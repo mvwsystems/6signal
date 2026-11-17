@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import { db } from "./db";
 import { currentActor } from "./actor";
-import { CrmError, logActivity, matchingIds } from "./crm";
+import { CrmError, logActivity, matchingIds, stopForProspects } from "./crm";
 import { ListFilters, STATUSES, DEAL_STAGES, SERVICE_ANGLES, CATEGORIES } from "./crmCore";
 import { perform, registerAction, canApprove } from "./commandCenter";
 import { sendEmail } from "./email";
@@ -511,6 +511,7 @@ export async function unsubscribe(token: string): Promise<"done" | "already" | "
   if (p.status === "Do Not Contact") return "already";
   const { error } = await s.from("crm_prospects").update({ status: "Do Not Contact", updated_at: now() }).eq("id", id);
   if (error) throw new CrmError(error.message);
+  await stopForProspects([id], "do_not_contact", "unsubscribe link");
   await logActivity({ entityType: "prospect", entityId: id, action: "unsubscribed", summary: `${p.company} unsubscribed from email, so it's now Do Not Contact`, changes: { status: { from: p.status, to: "Do Not Contact" } }, actor: "Unsubscribe link" });
   return "done";
 }
