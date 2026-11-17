@@ -317,8 +317,11 @@ function HitListView() {
 }
 
 type Stage = (typeof DEAL_STAGES)[number];
-interface PipeCard { id: string; company: string; contact_name: string | null; city: string | null; state: string | null; status: string; service_angle: string | null; deal_stage: Stage; deal_value: number; updated_at: string }
-interface PipeData { totals: Record<string, { count: number; value: number }>; cards: Record<string, PipeCard[]> }
+interface PipeCard { id: string; company: string; contact_name: string | null; city: string | null; state: string | null; status: string; service_angle: string | null; deal_stage: Stage; deal_value: number; updated_at: string; last_contact_at: string | null }
+interface PipeData { totals: Record<string, { count: number; value: number }>; cards: Record<string, PipeCard[]>; idle?: number; idle_days?: number }
+// Matches ACTIVE_DEAL_STAGES and IDLE_DAYS in lib/crm.ts.
+const ACTIVE_STAGES = ["Audit Sent", "Proposal Out", "Negotiating"];
+const IDLE_LIMIT = 7;
 
 function PipelineView() {
   const [angle, setAngle] = useState("");
@@ -360,6 +363,13 @@ function PipelineView() {
           {SERVICE_ANGLES.map((a) => <option key={a}>{a}</option>)}
         </select>
         <span style={{ ...muted, fontSize: 12 }}>Drag a card to another column, or use its Move menu.</span>
+        <span style={{ flex: 1 }} />
+        {d && (
+          <span title={`Deals in ${ACTIVE_STAGES.join(", ")} with no contact or change for over ${d.idle_days ?? IDLE_LIMIT} days`}
+            style={{ fontSize: 12, fontWeight: 600, padding: "3px 10px", borderRadius: 999, border: `1px solid ${d.idle ? alpha(T.warn, 50) : T.border}`, background: d.idle ? alpha(T.warn, 10) : "transparent", color: d.idle ? T.warn : T.muted }}>
+            {d.idle ? `${d.idle} deal${d.idle === 1 ? "" : "s"} idle over ${d.idle_days ?? IDLE_LIMIT} days` : `No deals idle over ${d.idle_days ?? IDLE_LIMIT} days`}
+          </span>
+        )}
       </div>
       <ErrorLine msg={err} />
       {notice && <div style={card({ borderColor: alpha(T.ok, 40), color: T.ok, fontSize: 13, marginBottom: 12, padding: "10px 16px" })}>{notice}</div>}
@@ -381,16 +391,19 @@ function PipelineView() {
                 <div style={{ fontFamily: DISP, fontSize: 18, fontWeight: 700, marginTop: 4 }}>{t ? money(t.value) : "—"}</div>
               </div>
               {cards.map((c) => {
-                const idle = idleDays(c.updated_at);
+                const idle = idleDays(c.last_contact_at ?? c.updated_at);
+                const flagged = ACTIVE_STAGES.includes(c.deal_stage) && idle > IDLE_LIMIT;
                 return (
                   <div key={c.id} draggable onDragStart={() => setDragId(c.id)} onDragEnd={() => { setDragId(null); setOver(null); }}
                     onClick={() => setOpenId(c.id)}
-                    style={card({ padding: 12, cursor: "grab", opacity: dragId === c.id ? 0.5 : 1 })}>
+                    style={card({ padding: 12, cursor: "grab", opacity: dragId === c.id ? 0.5 : 1, ...(flagged ? { borderColor: alpha(T.warn, 55), boxShadow: `inset 3px 0 0 ${T.warn}` } : {}) })}>
                     <div style={{ fontWeight: 600, fontSize: 13, lineHeight: 1.3 }}>{c.company}</div>
                     <div style={{ ...muted, fontSize: 12, marginTop: 2 }}>{[c.contact_name, [c.city, c.state].filter(Boolean).join(", ")].filter(Boolean).join(" · ") || "—"}</div>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6, marginTop: 8 }}>
                       <span style={{ fontSize: 13, fontWeight: 600, fontVariantNumeric: "tabular-nums" }}>{c.deal_value ? money(c.deal_value) : "—"}</span>
-                      <span title="Days since this deal was last touched" style={{ fontSize: 11, color: idle > 14 ? T.warn : T.muted }}>{idle}d idle</span>
+                      <span title="Days since the last contact or change on this deal" style={flagged
+                        ? { fontSize: 11, fontWeight: 600, color: T.warn, background: alpha(T.warn, 12), padding: "1px 7px", borderRadius: 999 }
+                        : { fontSize: 11, color: T.muted }}>{flagged ? `Idle ${idle}d` : `${idle}d idle`}</span>
                     </div>
                     <select aria-label={`Move ${c.company}`} value="" onClick={(e) => e.stopPropagation()} onChange={(e) => { if (e.target.value) move(c, e.target.value); }}
                       style={{ ...inputStyle, marginTop: 8, height: 30, padding: "0 8px", fontSize: 12 }}>
@@ -435,6 +448,18 @@ function CustomersView() {
     if (m.open_count) return { text: `Open invoice ${money(m.open_amount / 100)}`, tone: T.warn };
     return { text: `Paid up · ${money(m.total_paid / 100)} lifetime`, tone: T.ok };
   };
+  // Three health dots per customer: last contact, next deliverable, billing.
+  const health = (r: CustomerRow): { label: string; tone: string; why: string }[] => {
+    const days = r.last_contact_at ? idleDays(r.last_contact_at) : null;
+    const contact = days == null ? { tone: T.danger, why: "No contact logged" }
+      : days <= 14 ? { tone: T.ok, why: `Last contact ${days}d ago` }
+      : days <= 30 ? { tone: T.warn, why: `Last contact ${days}d ago` } : { tone: T.danger, why: `Last contact ${days}d ago` };
+    const due = r.next ? new Date(r.next.scheduled_at).getTime() : null;
+    const deliv = due == null ? { tone: T.warn, why: "Nothing scheduled" }
+      : due < Date.now() ? { tone: T.danger, why: `Overdue since ${fmtDate(r.next!.scheduled_at)}` } : { tone: T.ok, why: `Next on ${fmtDate(r.next!.scheduled_at)}` };
+    const b = billing(r);
+    return [{ label: "Contact", ...contact }, { label: "Deliverable", ...deliv }, { label: "Billing", tone: b.tone, why: b.text }];
+  };
   const services = (r: CustomerRow) => [r.primary_sub_service || r.primary_service, ...(r.addon_services ?? [])].filter(Boolean).join(", ") || "—";
 
   return (
@@ -442,16 +467,22 @@ function CustomersView() {
       <ErrorLine msg={err} />
       <div style={{ ...muted, fontSize: 12, marginBottom: 12 }}>
         Prospects with status Customer. Moving a deal to Closed Won puts it here. {pay && !pay.configured ? "Billing shows Unknown until Stripe is connected." : "Billing is read from Stripe by email."}
+        {" "}Health dots, left to right: last contact (green within 14 days, amber within 30, red after that), next deliverable (green scheduled, amber nothing scheduled, red overdue) and billing (green paid up, amber open invoice, red past due, gray unknown). Hover a dot for the detail.
       </div>
       <div className="xscroll" style={card({ padding: 0 })}>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, minWidth: 760 }}>
-          <thead><tr>{["Company", "Services active", "Billing", "Last contact", "Next deliverable"].map((h) => <th key={h} style={th}>{h}</th>)}</tr></thead>
+          <thead><tr>{["Company", "Health", "Services active", "Billing", "Last contact", "Next deliverable"].map((h) => <th key={h} style={th}>{h}</th>)}</tr></thead>
           <tbody>
             {(rows ?? []).map((r) => {
               const b = billing(r);
               return (
                 <tr key={r.id} style={{ borderBottom: `1px solid ${T.border}`, cursor: "pointer" }} onClick={() => setOpenId(r.id)}>
                   <td style={{ padding: 10, fontWeight: 600 }}>{r.company}<div style={{ ...muted, fontSize: 12, fontWeight: 400 }}>{r.contact_name ?? ""}</div></td>
+                  <td style={{ padding: 10, whiteSpace: "nowrap" }}>
+                    <span style={{ display: "inline-flex", gap: 6 }} aria-label={health(r).map((h) => `${h.label}: ${h.why}`).join(". ")}>
+                      {health(r).map((h) => <span key={h.label} title={`${h.label}: ${h.why}`} style={{ width: 10, height: 10, borderRadius: 999, background: h.tone, display: "inline-block" }} />)}
+                    </span>
+                  </td>
                   <td style={{ padding: 10, color: T.textSub }}>{services(r)}</td>
                   <td style={{ padding: 10, color: b.tone, whiteSpace: "nowrap" }}>{b.text}</td>
                   <td style={{ padding: 10, color: T.textSub }}>{fmtDate(r.last_contact_at)}</td>
@@ -459,8 +490,8 @@ function CustomersView() {
                 </tr>
               );
             })}
-            {rows && !rows.length && <tr><td colSpan={5} style={{ ...muted, padding: 32, textAlign: "center" }}>No customers yet. Move a deal to Closed Won on the Pipeline and it shows up here.</td></tr>}
-            {!rows && !err && <tr><td colSpan={5}><SkeletonLines rows={5} /></td></tr>}
+            {rows && !rows.length && <tr><td colSpan={6} style={{ ...muted, padding: 32, textAlign: "center" }}>No customers yet. Move a deal to Closed Won on the Pipeline and it shows up here.</td></tr>}
+            {!rows && !err && <tr><td colSpan={6}><SkeletonLines rows={5} /></td></tr>}
           </tbody>
         </table>
       </div>
