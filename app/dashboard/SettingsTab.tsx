@@ -19,7 +19,7 @@ interface Conn { name: string; status: string; note: string | null; last_sync_at
 interface Data {
   sending: Sending; compliance: Compliance; campaign_defaults: Defaults; updated: Record<string, { by: string | null; at: string }>;
   territories: Territory[]; claimed: Claimed[];
-  config: { send_enabled: boolean; hard_daily_max: number; instantly_key: boolean; resend_key: boolean; places_key: boolean; email_from: string | null };
+  config: { send_enabled: boolean; hard_daily_max: number; instantly_key: boolean; resend_key: boolean; places_key: boolean; email_from: string | null; gmail_key?: boolean; gmail_mailbox?: string };
   connections: Conn[]; team: { owners: string[]; operators: string[] };
   lists: { statuses: string[]; deal_stages: string[]; service_angles: string[]; categories: string[] };
   can_edit: boolean;
@@ -216,6 +216,7 @@ export default function SettingsTab() {
           <div><Dot status={data.config.send_enabled ? "connected" : "not_configured"} />Sending switch (SEND_ENABLED): <strong>{data.config.send_enabled ? "on" : "off, so approved campaigns queue and send nothing"}</strong></div>
           <div><Dot status={instConn?.status ?? "not_configured"} />Instantly: {data.config.instantly_key ? (instConn?.note ?? "key is set; press Test to check it") : "no API key set (INSTANTLY_API_KEY)"}{instConn?.last_error ? ` · last error: ${instConn.last_error}` : ""}</div>
           <div><Dot status={data.config.resend_key ? "connected" : "not_configured"} />Test sends (Resend): {data.config.resend_key ? `ready${data.config.email_from ? `, from ${data.config.email_from}` : ""}` : "no RESEND_API_KEY set"}</div>
+          <div><Dot status={data.connections.find((c) => c.name === "gmail_casey")?.status ?? (data.config.gmail_key ? "degraded" : "not_configured")} />Inbox (Gmail, {data.config.gmail_mailbox ?? "casey@6signal.co"}): {data.config.gmail_key ? (data.connections.find((c) => c.name === "gmail_casey")?.last_error ?? "connected; read and draft only") : "not connected (GMAIL_SERVICE_ACCOUNT_JSON isn't set). It needs a Google service account with domain-wide delegation for read and drafts."}</div>
           <div><Dot status={data.config.places_key ? "connected" : "not_configured"} />Map lookups for territories (Google Places): {data.config.places_key ? "ready" : "no key, so towns not already on file can't be checked"}</div>
         </div>
         {can && data.config.instantly_key && (

@@ -13,6 +13,7 @@ import MoneyAlerts from "./MoneyAlerts";
 import CampaignsTab from "./CampaignsTab";
 import SettingsTab from "./SettingsTab";
 import SequencesTab from "./SequencesTab";
+import InboxTab from "./InboxTab";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 6 Signal — internal AI Visibility Command Center (/dashboard)
@@ -2270,7 +2271,7 @@ export default function DashboardPage() {
   const SUBTITLES: Partial<Record<Tab, string>> = {
     today: "What needs you, what's on fire, and what's happening today.",
     approvals: "Every Yellow and Red decision in one list.",
-    conversations: "Replies and routed calls in one stream.",
+    conversations: "Replies from prospects in Casey's inbox. Replies are drafted here and approved; Gmail sends them.",
     delivery: "Client setup projects and what each is waiting on.",
     visibility: "Client visibility checks and reports.",
     staff: "The AI staff board.",
@@ -2316,7 +2317,7 @@ export default function DashboardPage() {
       {tab === "settings" && <SettingsTab />}
       {tab === "campaigns" && <CampaignsTab />}
       {tab === "sequences" && <SequencesTab />}
-      {tab === "conversations" && <ComingSoon phase={2} onOpenTab={(t) => selectTab(t as Tab)} what="One stream for casey@ inbox replies, Quo calls routed to Casey with their 24-hour follow-up, and CallRail missed calls for X-Act, each marked Needs review, Waiting or Handled. Draft replies come here as approvals; sending still happens in Gmail." />}
+      {tab === "conversations" && <InboxTab />}
       {tab === "delivery" && <ComingSoon phase={3} onOpenTab={(t) => selectTab(t as Tab)} what="Client setup projects (GBP builds, CSR AI, routing, websites) as checklists, each naming what it's waiting on. Anything blocked too long becomes an exception with a nudge drafted for approval." links={[{ tab: "exec", label: "90-Day Plan" }]} />}
       {tab === "visibility" && <ComingSoon phase={3} onOpenTab={(t) => selectTab(t as Tab)} what="Today's visibility tools folded into one panel. Every client report lands in Approvals, never straight to the client, plus a monthly GBP health sweep per client." links={[{ tab: "scan", label: "Quick Scan" }, { tab: "battle", label: "Battle Plan" }, { tab: "track", label: "Tracking" }]} />}
       {tab === "staff" && <ComingSoon phase={4} onOpenTab={(t) => selectTab(t as Tab)} what="Each AI staff member with status, current job, last run, spend this week and a Pause button. A failed job becomes an exception automatically." />}
