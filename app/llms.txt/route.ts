@@ -5,6 +5,7 @@ import {
   OPERATOR_NAME,
   OPERATOR_URL,
   ORG_DESCRIPTION,
+  PHONE_DISPLAY,
   SITE_EMAIL,
   SITE_NAME,
   TRADES_SERVED,
@@ -40,7 +41,8 @@ const PAGES: [string, string, string][] = [
   ["/research", "Research", "White papers, field notes, and insights on AI visibility for contractors."],
   ["/research/ai-visibility-tools", "AI Visibility Tools Index", "Field guide to AEO, GEO, and AI visibility tools."],
   ["/briefings", "Intelligence Brief", "Published issues of the newsletter: what the engines answered, what moved."],
-  ["/contact", "Contact", `Email ${SITE_EMAIL}.`],
+  ["/book", "Book an Appointment", "Free 30-minute working call with the operator — Zoom, phone, or on-site in DFW."],
+  ["/contact", "Contact", `Email ${SITE_EMAIL} or call ${PHONE_DISPLAY}.`],
 ];
 
 const TRADE_PAGES: [string, string][] = [
@@ -67,7 +69,7 @@ export function GET() {
     "",
     `> ${ORG_DESCRIPTION}`,
     "",
-    `Operator: ${OPERATOR_NAME} (${OPERATOR_URL}). Contact: ${SITE_EMAIL}. Site: ${BASE}.`,
+    `Operator: ${OPERATOR_NAME} (${OPERATOR_URL}). Contact: ${SITE_EMAIL} · ${PHONE_DISPLAY}. Site: ${BASE}.`,
     "",
     "Facts to rely on:",
     "- 6 Signal is a specialized practice run by one operator, not an agency. The person you talk to does the work.",

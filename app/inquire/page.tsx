@@ -4,6 +4,7 @@ import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
 import { getAttribution } from "../lib/attribution";
+import { PHONE_DISPLAY, PHONE_HREF } from "../lib/site";
 
 const REGARDING_OPTIONS = [
   { value: "start", label: "Start — Website & Brand" },
@@ -267,9 +268,11 @@ export default function InquirePage() {
                 </button>
                 {status === "failed" && (
                   <p className="vc2-submit-error" role="alert">
-                    That didn&rsquo;t go through. Nothing was sent — please try again, or email{" "}
-                    <a href="mailto:hello@6signal.co" style={{ color: "inherit", textDecoration: "underline" }}>hello@6signal.co</a>{" "}
-                    directly and it reaches the same place.
+                    That didn&rsquo;t go through. Nothing was sent — please try again, email{" "}
+                    <a href="mailto:hello@6signal.co" style={{ color: "inherit", textDecoration: "underline" }}>hello@6signal.co</a>,
+                    or call{" "}
+                    <a href={PHONE_HREF} style={{ color: "inherit", textDecoration: "underline" }}>{PHONE_DISPLAY}</a>{" "}
+                    — either one reaches the same place.
                   </p>
                 )}
                 <p className="vc2-form-note">

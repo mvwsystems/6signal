@@ -3,8 +3,12 @@ import Link from "next/link";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
+import { PHONE_DISPLAY, PHONE_HREF } from "../lib/site";
 
-const CALENDLY = "https://calendly.com/mvw-mattvincentwalker/business-growth-audit";
+// The on-site booking page (/book) wraps the Calendly embed, so the CTA never
+// leaves the domain. The old business-growth-audit event type was deleted in
+// Calendly and these CTAs 404ed until 2026-11-01.
+const BOOK = "/book";
 
 const careItems = [
   "Managed hosting — we handle it, you forget about it",
@@ -58,7 +62,7 @@ export default function CarePage() {
               we make sure your site stays working and looking right.
             </p>
             <div className="hero-cta-row reveal">
-              <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
+              <a href={BOOK} className="btn btn-primary btn-lg">
                 Book a Call
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
@@ -138,7 +142,7 @@ export default function CarePage() {
                   <div key={i} className="feat-item">{item}</div>
                 ))}
               </div>
-              <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+              <a href={BOOK} className="btn btn-primary">
                 Get Started
                 <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                   <path d="M0 5h14M10 1l4 4-4 4" />
@@ -195,7 +199,7 @@ export default function CarePage() {
             or as a standalone if you already have a site we built.
           </p>
           <div className="f-cta">
-            <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
+            <a href={BOOK} className="btn btn-primary btn-lg">
               Book a Call
               <svg className="arrow" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <path d="M0 5h14M10 1l4 4-4 4" />
@@ -208,6 +212,10 @@ export default function CarePage() {
               Email Directly
             </a>
           </div>
+          <p className="f-call">
+            Rather talk now? Call{" "}
+            <a href={PHONE_HREF}>{PHONE_DISPLAY}</a>
+          </p>
           <div className="f-notes">
             <span>$97/month</span>
             <span>No contract</span>
@@ -220,7 +228,7 @@ export default function CarePage() {
       <Footer />
 
       <div className="mobile-cta">
-        <a href={CALENDLY} target="_blank" rel="noopener noreferrer">
+        <a href={BOOK}>
           Book a Call
           <svg width="14" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M0 5h14M10 1l4 4-4 4" />

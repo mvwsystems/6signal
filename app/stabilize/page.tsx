@@ -6,6 +6,9 @@ import { useMicroInteractions } from "../hooks/useMicroInteractions";
 
 const TRAINING_MAILTO = "/inquire?about=training";
 const SCOPING_MAILTO = "/inquire?about=stabilize";
+// The 30-minute appointment page (/book). The lowest-friction entry to this
+// rung: the forms above ask for a written description, this just takes a time.
+const BOOK = "/book";
 
 const systems = [
   {
@@ -227,6 +230,9 @@ export default function StabilizePage() {
             </a>
             <a href={SCOPING_MAILTO} className="btn btn-ghost btn-lg">
               Request scoping
+            </a>
+            <a href={BOOK} className="btn btn-ghost btn-lg">
+              Book 30 minutes
             </a>
           </div>
           <div className="f-notes">

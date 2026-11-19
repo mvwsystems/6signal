@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
 import AuditPopupButton from "../components/AuditPopupButton";
 import { getAttribution } from "../lib/attribution";
+import { PHONE_DISPLAY, PHONE_HREF } from "../lib/site";
 
 const MAILTO = "hello@6signal.co";
 
@@ -111,6 +112,12 @@ export default function ContactPage() {
                 </svg>
               </AuditPopupButton>
               <div className="contact-ways">
+                <div className="contact-way">
+                  <span className="contact-way-label">Phone</span>
+                  <a href={PHONE_HREF} className="contact-way-val">
+                    {PHONE_DISPLAY}
+                  </a>
+                </div>
                 <div className="contact-way">
                   <span className="contact-way-label">Email</span>
                   <a
@@ -279,9 +286,10 @@ export default function ContactPage() {
                     </button>
                     {status === "failed" ? (
                       <p className="form-error" role="alert">
-                        That didn&rsquo;t go through. Nothing was sent — please try again, or email{" "}
-                        <a href={`mailto:${MAILTO}?subject=${encodeURIComponent("🔥 6 Signal 🔥")}`}>{MAILTO}</a>{" "}
-                        directly and it reaches the same place.
+                        That didn&rsquo;t go through. Nothing was sent — please try again, email{" "}
+                        <a href={`mailto:${MAILTO}?subject=${encodeURIComponent("🔥 6 Signal 🔥")}`}>{MAILTO}</a>, or call{" "}
+                        <a href={PHONE_HREF}>{PHONE_DISPLAY}</a>{" "}
+                        — either one reaches the same place.
                       </p>
                     ) : (
                       <p className="form-note">

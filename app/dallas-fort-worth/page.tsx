@@ -9,6 +9,8 @@ import {
   BASE,
   DFW_CITIES,
   ORG_ID,
+  PHONE_DISPLAY,
+  PHONE_HREF,
   breadcrumbNode,
   faqNode,
   graph,
@@ -322,6 +324,10 @@ export default function DallasFortWorthPage() {
               <path d="M0 5h14M10 1l4 4-4 4" />
             </svg>
           </AuditPopupButton>
+          <p className="f-call">
+            Local and would rather talk? Call{" "}
+            <a href={PHONE_HREF}>{PHONE_DISPLAY}</a>
+          </p>
         </div>
       </section>
 

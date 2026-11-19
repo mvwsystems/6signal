@@ -1731,6 +1731,29 @@ video {
     text-transform: uppercase;
   }
 
+  /* Click-to-call line under a closing CTA whose button row is already full.
+     Reads as a quieter third option than a button, but is a real tel: target
+     on a phone — the mono eyebrow scale, not the dim .f-notes grey. */
+  .final .f-call {
+    margin-top: 24px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7a7a78;
+  }
+  .final .f-call a {
+    color: #f5f5f3;
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent-line);
+    padding-bottom: 2px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .final .f-call a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
   /* FOOTER */
   footer {
     border-top: 1px solid rgba(255, 255, 255, 0.07);
@@ -10689,6 +10712,50 @@ svg {
 .lq-lowest li { font-size: 15px; color: #f5f5f3; }
 .lq-lowest li .idx { color: #E6FF00; margin-right: 8px; }
 @media (max-width: 640px) { .lq { padding: 1.25rem 1rem; } .lq-fields { grid-template-columns: 1fr; } }
+
+
+/* ── /book — the Calendly embed ───────────────────────────────────────────────
+   The appointment calendar is a third-party iframe, so it cannot inherit the
+   sheet. It gets the standard thin border and elevated panel instead, and a
+   fixed height per breakpoint: Calendly's inline widget does not self-size
+   without its widget.js, which this page deliberately does not load. Heights
+   are set to the tallest state of the flow (the date grid beside the time
+   column) so the inner frame never scrolls on its own. */
+.book-section { padding-bottom: 120px; }
+.book-embed {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: #0e0e0c;
+  margin-top: 56px;
+  overflow: hidden;
+}
+.book-embed iframe {
+  display: block;
+  width: 100%;
+  height: 700px;
+  border: 0;
+  /* Calendly renders its own light surface when the colour params are not
+     honoured; keep the panel behind it dark either way. */
+  color-scheme: light dark;
+}
+.book-fallback {
+  margin-top: 24px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #6a6a64;
+}
+.book-fallback a { color: #E6FF00; }
+.book-notfor { padding: 100px 0 120px; }
+
+@media (max-width: 900px) {
+  .book-embed iframe { height: 1040px; }
+}
+@media (max-width: 640px) {
+  .book-section { padding-bottom: 80px; }
+  .book-embed { margin-top: 36px; }
+  .book-embed iframe { height: 1100px; }
+  .book-notfor { padding: 64px 0 80px; }
+}
 
 /* ── /dashboard theme tokens ──────────────────────────────────────────────────
    The dashboard styles itself inline through one T object (app/dashboard/

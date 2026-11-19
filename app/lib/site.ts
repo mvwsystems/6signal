@@ -6,8 +6,8 @@
 // one service area — so Google, Bing, and the AI engines consolidate every
 // page into a single entity instead of three ("6 Signal", "6Signal", "SIXSIGNAL").
 //
-// Fill in the GBP-sourced fields (locality, phone, canonical Maps URL) and the
-// change propagates to every page on the next deploy.
+// Fill in the remaining GBP-sourced fields (locality, canonical Maps URL) and
+// the change propagates to every page on the next deploy.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const BASE = "https://6signal.co";
@@ -32,12 +32,22 @@ export const SOCIAL_IMAGE_URL = `${BASE}/6SIG_SOCIAL_SHARE.png`;
 export const GBP_URL =
   "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVhwNlpGOXphR2d3GAo";
 
-// Must match the GBP exactly. Locality and phone are intentionally null until
-// read off the profile — a wrong value is worse for entity trust than none.
+// Must match the GBP exactly. Locality is intentionally null until read off the
+// profile — a wrong value is worse for entity trust than none.
 export const ADDRESS_LOCALITY: string | null = null; // e.g. "Fort Worth"
 export const ADDRESS_REGION = "TX";
 export const ADDRESS_COUNTRY = "US";
-export const PHONE: string | null = null; // e.g. "+1-817-555-0100"
+
+// The company line, supplied by the owner 2026-11-03. Three shapes, one number:
+// PHONE is E.164-hyphenated for schema consumers, PHONE_HREF is what a tel:
+// link needs (digits only), PHONE_DISPLAY is what a human reads. Changing the
+// number means changing it here and nowhere else.
+// LEO note: this must match the Google Business Profile digit for digit — a
+// second phone number across listings is the citation inconsistency the
+// practice charges to fix.
+export const PHONE: string | null = "+1-817-623-6399";
+export const PHONE_HREF = "tel:+18176236399";
+export const PHONE_DISPLAY = "(817) 623-6399";
 
 // ── Operator ─────────────────────────────────────────────────────────────────
 export const OPERATOR_NAME = "Matt Vincent Walker";

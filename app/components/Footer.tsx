@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PHONE_DISPLAY, PHONE_HREF } from "../lib/site";
 
 export default function Footer() {
   return (
@@ -15,6 +16,8 @@ export default function Footer() {
               from it. Based in Dallas–Fort Worth, Texas.
             </p>
             <p className="f-line">
+              <a href={PHONE_HREF} style={{ color: "inherit" }}>{PHONE_DISPLAY}</a>
+              {" · "}
               <a href="mailto:hello@6signal.co" style={{ color: "inherit" }}>hello@6signal.co</a>
               {" · "}
               <Link href="/dallas-fort-worth" style={{ color: "inherit" }}>Dallas–Fort Worth</Link>
@@ -50,6 +53,7 @@ export default function Footer() {
             <div className="footer-col">
               <div className="head">Audit</div>
               <Link href="/visibility-check">Get the audit</Link>
+              <Link href="/book">Book an appointment</Link>
               <Link href="/contact">Get in touch</Link>
               <Link href="/research">Research</Link>
               <Link href="/research/ai-visibility-tools">AI Visibility Tools</Link>

@@ -3,8 +3,12 @@ import Link from "next/link";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useMicroInteractions } from "../hooks/useMicroInteractions";
+import { PHONE_DISPLAY, PHONE_HREF } from "../lib/site";
 
-const CALENDLY = "https://calendly.com/mvw-mattvincentwalker/business-growth-audit";
+// The on-site booking page (/book) wraps the Calendly embed, so the CTA never
+// leaves the domain. The old business-growth-audit event type was deleted in
+// Calendly and these CTAs 404ed until 2026-11-01.
+const BOOK = "/book";
 
 const recentBuilds = [
   {
@@ -365,7 +369,7 @@ export default function WebsitesPage() {
                 <path d="M0 5h14M10 1l4 4-4 4" />
               </svg>
             </Link>
-            <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-lg">
+            <a href={BOOK} className="btn btn-ghost btn-lg">
               Book a Free Call First
             </a>
             <a
@@ -375,6 +379,10 @@ export default function WebsitesPage() {
               Email Directly
             </a>
           </div>
+          <p className="f-call">
+            Rather talk now? Call{" "}
+            <a href={PHONE_HREF}>{PHONE_DISPLAY}</a>
+          </p>
           <div className="f-notes">
             <span>$1,500 flat</span>
             <span>30-min call</span>

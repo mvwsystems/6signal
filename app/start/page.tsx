@@ -198,7 +198,7 @@ export default function StartPage() {
       window.scrollTo({ top: 0 });
     } catch {
       setStep("questions");
-      setSubmitError("Something went wrong submitting. Your answers are saved on this device — please try again, or email hello@6signal.co.");
+      setSubmitError("Something went wrong submitting. Your answers are saved on this device — please try again, email hello@6signal.co, or call (817) 623-6399.");
     }
   };
 
