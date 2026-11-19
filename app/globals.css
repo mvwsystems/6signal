@@ -1773,10 +1773,19 @@ video {
     font-weight: 300;
     font-style: italic;
     font-size: 18px;
-    line-height: 1.4;
+    line-height: 1.6;
     color: #b8b8b5;
     max-width: 440px;
     letter-spacing: -0.005em;
+  }
+  /* The preflight zeroes <p> margins, so the tagline and the contact line sat
+     flush and read as one run-on block. The gap is wider than the line-height
+     so the break is unambiguous, and the contact line sits a touch dimmer —
+     it is reference, not prose — with room around its separators. */
+  .footer-left .f-line + .f-line {
+    margin-top: 28px;
+    color: #979794;
+    word-spacing: 0.08em;
   }
   .footer-right {
     display: flex;
