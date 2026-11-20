@@ -244,3 +244,38 @@ regenerates the brief on any device. Completed briefs also get a permalink
 - [6SIGNAL_BRAND_BRIEF.md](6SIGNAL_BRAND_BRIEF.md) — voice + design (authoritative); offer/signals sections stale
 - [CONTENT_ARCHITECTURE.md](CONTENT_ARCHITECTURE.md) — blog pillar map, internal-link gaps, content roadmap
 - [ANALYSIS.md](ANALYSIS.md) — strategic/engineering teardown (2026-06-11)
+
+## 10. Close system (added 2026-11-20)
+
+An approved proposal becomes a signed agreement, a paid deposit and an onboarding kickoff on
+one private client page, `/p/[token]`. Code: [app/lib/closeCore.ts](app/lib/closeCore.ts) (pure
+rules, terms text, the DocuSeal HTML, reminder schedule — shared by the dashboard and server),
+[app/lib/close.ts](app/lib/close.ts) (DocuSeal, Stripe, emails, actions),
+[app/dashboard/ClosePanel.tsx](app/dashboard/ClosePanel.tsx), migration
+`20261120_close_system.sql` (state columns on `proposals`, `deal_events`, private `contracts`
+storage bucket).
+
+- **Owner's rules (2026-11-19):** DocuSeal for e-sign (embedded, Pro plan); invoices over
+  $2,500 are ACH only, card allowed at or below (`paymentMethodsFor`); the operator's
+  signature is applied automatically when the client signs (approving "Send for signature" is
+  the authority); the contracting party is **Superhuman LLC** (dba 6 Signal by default, set per
+  proposal in Deal terms). The printed terms and the signed document both come from
+  `termsFor()` — never hand-edit terms text in two places.
+- **Flow:** Proposals tab → Deal terms → "Send for signature" files a **red** Command Center
+  approval (`close.send`); approving freezes the version (`sent_payload` + SHA-256
+  `doc_hash`), creates the DocuSeal submission (DocuSeal sends no emails; we email the link via
+  Resend) → client signs in the embedded form → server re-reads the submission from
+  DocuSeal's API (browser events and webhook bodies are only hints) → countersign → Stripe
+  deposit invoice (finalized + emailed by Stripe) → `invoice.paid` on the Stripe webhook →
+  Won, CRM prospect to Customer/Closed Won, welcome email, Kickoff task, alert. Milestones
+  bill on "Mark done + invoice"; the monthly fee starts on "Start monthly billing" (go-live).
+  Both are owner-only.
+- **Hourly cron** (`close-cron.mts` → `/api/dashboard/close/cron`): nudge emails day 2 and 5,
+  Command Center exception day 7 ("call them"), expiry day 14, unpaid-deposit exception day 3,
+  plus retries for anything a missed webhook left half done. Every money call uses Stripe
+  idempotency keys tied to the proposal and its sent version, so retries never double-bill.
+- **Keys:** `DOCUSEAL_API_KEY`, `STRIPE_CLOSE_KEY` (write-scoped restricted key; the existing
+  `STRIPE_SECRET_KEY` stays read-only). Signed PDFs live only in the private `contracts`
+  bucket — this repo is public.
+- Settings row `close` (JSON) can set `kickoffUrl` (default `/book`) and `intakeUrl` (shown in
+  the welcome email; omitted until the Onboarding system exists).

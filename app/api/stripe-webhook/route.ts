@@ -3,12 +3,13 @@ import crypto from "crypto";
 import { markIntakePaid, recordPurchase } from "../../lib/db";
 import { sendEmail, emailShell, heading, paragraph, button, monoLabel } from "../../lib/email";
 import { pushAlert } from "../../lib/notify";
+import { asSystem, onInvoicePaid } from "../../lib/close";
 
 // Stripe webhook: records every checkout.session.completed so purchases are
 // linked to intakes server-side, and emails the buyer a recovery link to
 // their brief. Configure in Stripe Dashboard:
 //   endpoint  https://6signal.co/api/stripe-webhook
-//   events    checkout.session.completed
+//   events    checkout.session.completed, invoice.paid (close system)
 // and set STRIPE_WEBHOOK_SECRET in Netlify env.
 
 const SITE = "https://6signal.co";
@@ -62,6 +63,22 @@ export async function POST(req: Request) {
     event = JSON.parse(payload);
   } catch {
     return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
+  }
+
+  // Close system: deposit and milestone invoices it created carry
+  // metadata.proposal_id. invoice.paid flips the deal to Won and starts
+  // onboarding; anything else is ignored. A 500 makes Stripe retry.
+  if (event.type === "invoice.paid") {
+    const inv = (event.data?.object ?? {}) as { id: string; metadata?: Record<string, string>; amount_paid?: number };
+    if (inv.metadata?.proposal_id) {
+      try {
+        await asSystem(() => onInvoicePaid(inv));
+      } catch (e) {
+        console.error("[stripe-webhook] close invoice.paid failed:", e);
+        return NextResponse.json({ error: "retry" }, { status: 500 });
+      }
+    }
+    return NextResponse.json({ received: true });
   }
 
   if (event.type !== "checkout.session.completed") {

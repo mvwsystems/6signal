@@ -941,7 +941,7 @@ export async function listProposals(): Promise<Record<string, unknown>[]> {
   try {
     const { data, error } = await s
       .from("proposals")
-      .select("id, business_id, client_name, payload, created_at, updated_at")
+      .select("*")
       .order("updated_at", { ascending: false })
       .limit(100);
     if (error) throw error;
