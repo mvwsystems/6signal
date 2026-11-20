@@ -8,6 +8,8 @@ import { noteKilled } from "../../../../lib/campaigns";
 import { noteSeqKilled } from "../../../../lib/sequences";
 // And the inbox reply action.
 import { noteInboxKilled } from "../../../../lib/inbox";
+// And "Send a proposal for signature" (close system).
+import { noteSendKilled } from "../../../../lib/close";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +26,7 @@ export async function POST(req: NextRequest) {
     if (b.op === "approve" || b.op === "kill") {
       if (!b.id) throw new CrmError("id is required", 400);
       const res = await decide(b.id, b.op, b.note);
-      if (b.op === "kill") { await noteKilled(b.id); await noteSeqKilled(b.id); await noteInboxKilled(b.id); }
+      if (b.op === "kill") { await noteKilled(b.id); await noteSeqKilled(b.id); await noteInboxKilled(b.id); await noteSendKilled(b.id); }
       return res;
     }
     if (b.op === "check") {

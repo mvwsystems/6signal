@@ -2,6 +2,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { SkeletonLines } from "./Skeleton";
 import { T, MONO, DISP, BODY } from "./theme";
+import { blankDeal, dealOf, termsFor, STATUS_LABEL, toCents, usd, paymentMethodsFor,
+  type ProposalItem, type ProposalSection, type MarketRow, type ProposalDoc, type DealTerms, type DealStatus } from "../lib/closeCore";
+import ClosePanel from "./ClosePanel";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Printable client proposals (retainer quotes), matching the 6Signal engagement
@@ -24,18 +27,7 @@ const label: React.CSSProperties = { ...eyebrow, fontSize: 12, fontWeight: 500, 
 
 interface Biz { id: string; name: string; url: string | null; trade: string; city: string }
 
-interface ProposalItem { label: string; badge: string; included: string; justification: string; price: string }
-interface ProposalSection { number: string; kind: "setup" | "monthly"; title: string; intro: string; items: ProposalItem[]; totalLabel: string; totalNote: string; totalPrice: string }
-interface MarketRow { label: string; range: string }
-interface ProposalDoc {
-  clientName: string; businessId: string | null; businessName: string;
-  preparedBy: string; date: string; docType: string;
-  headline: string; subhead: string;
-  sections: ProposalSection[];
-  marketRate: MarketRow[];
-  includeTerms: boolean;
-}
-interface SavedProposal { id: string; business_id: string | null; client_name: string; payload: ProposalDoc; created_at: string; updated_at: string }
+interface SavedProposal { id: string; business_id: string | null; client_name: string; payload: ProposalDoc; created_at: string; updated_at: string; status?: DealStatus }
 
 const blankItem = (): ProposalItem => ({ label: "", badge: "", included: "", justification: "", price: "" });
 
@@ -83,7 +75,7 @@ const blankDoc = (): ProposalDoc => ({
   clientName: "", businessId: null, businessName: "",
   preparedBy: "Matt Vincent Walker", date: new Date().toISOString().slice(0, 10), docType: "Engagement Proposal",
   headline: "Stabilize. Then Scale.", subhead: "Scope, pricing, and justification — line by line.",
-  sections: [], marketRate: [], includeTerms: true,
+  sections: [], marketRate: [], includeTerms: true, deal: blankDeal(),
 });
 
 export default function ProposalsTab({ businesses }: { businesses: Biz[] }) {
@@ -107,8 +99,8 @@ export default function ProposalsTab({ businesses }: { businesses: Biz[] }) {
   const startNew = () => { setDoc(blankDoc()); setEditingId(null); setMode("edit"); setSaveState(null); };
   const openExisting = (p: SavedProposal) => { setDoc(p.payload); setEditingId(p.id); setMode("edit"); setSaveState(null); };
 
-  const save = async () => {
-    if (!doc) return;
+  const save = async (): Promise<boolean> => {
+    if (!doc) return false;
     setSaveState("Saving…");
     try {
       if (editingId) {
@@ -122,13 +114,16 @@ export default function ProposalsTab({ businesses }: { businesses: Biz[] }) {
       }
       setSaveState("Saved ✓");
       load();
+      return true;
     } catch (e: unknown) {
       setSaveState(e instanceof Error ? e.message : "Save failed");
+      return false;
     }
   };
 
   const updateDoc = (fn: (d: ProposalDoc) => ProposalDoc) => setDoc((d) => (d ? fn(d) : d));
-
+  const updateDeal = (fields: Partial<DealTerms>) => updateDoc((d) => ({ ...d, deal: { ...dealOf(d), ...fields } }));
+  
   const addSection = (tpl?: () => ProposalSection) => updateDoc((d) => ({
     ...d,
     sections: [...d.sections, tpl ? tpl() : { number: String(d.sections.length + 1).padStart(2, "0"), kind: "monthly", title: "", intro: "", items: [blankItem()], totalLabel: "Total Monthly", totalNote: "", totalPrice: "" }],
@@ -158,9 +153,41 @@ export default function ProposalsTab({ businesses }: { businesses: Biz[] }) {
           <button style={btn()} onClick={() => setMode("list")}>← All proposals</button>
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
             {saveState && <span style={{ fontSize: 12, color: saveState.includes("✓") ? T.ok : saveState === "Saving…" ? T.muted : T.danger }}>{saveState}</span>}
-            <button style={btn()} onClick={save}>Save</button>
+            <button style={btn()} onClick={() => { save(); }}>Save</button>
             <button style={btn(true)} onClick={() => setMode("print")}>Preview / Print</button>
           </div>
+        </div>
+
+        {editingId && <ClosePanel id={editingId} doc={doc} onChange={load} save={save} />}
+        {!editingId && <div style={card({ marginBottom: 16, fontSize: 13, color: T.textSub })}>Save the proposal once to get the signing and billing controls.</div>}
+
+        <div style={card({ marginBottom: 16 })}>
+          <div style={{ ...eyebrow, marginBottom: 4 }}>Deal terms</div>
+          <div style={{ fontSize: 12, color: T.muted, marginBottom: 12 }}>Who signs, who they sign with, and how it&rsquo;s billed. The deposit invoice goes out the moment they sign; milestones bill when you mark them done; the monthly fee starts at go-live. Invoices over $2,500 are bank transfer only.</div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 12 }}>
+            <div><span style={label}>Signer name</span><input style={inputStyle} value={dealOf(doc).signerName} onChange={(e) => updateDeal({ signerName: e.target.value })} placeholder="Jeff Harris" /></div>
+            <div><span style={label}>Signer email</span><input style={inputStyle} value={dealOf(doc).signerEmail} onChange={(e) => updateDeal({ signerEmail: e.target.value })} placeholder="name@company.com" /></div>
+            <div><span style={label}>Contracting party (you)</span><input style={inputStyle} value={dealOf(doc).legalEntity} onChange={(e) => updateDeal({ legalEntity: e.target.value })} /></div>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 12 }}>
+            <div><span style={label}>Deposit (due on signing)</span><input style={inputStyle} value={dealOf(doc).deposit} onChange={(e) => updateDeal({ deposit: e.target.value })} placeholder="$4,875" /></div>
+            <div><span style={label}>Monthly fee (from go-live)</span><input style={inputStyle} value={dealOf(doc).monthly} onChange={(e) => updateDeal({ monthly: e.target.value })} placeholder="$1,800 or blank" /></div>
+            <div><span style={label}>Monthly line name</span><input style={inputStyle} value={dealOf(doc).monthlyLabel} onChange={(e) => updateDeal({ monthlyLabel: e.target.value })} /></div>
+          </div>
+          <span style={label}>Milestone invoices (after the deposit)</span>
+          {dealOf(doc).milestones.map((m, i) => (
+            <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 140px 40px", gap: 8, marginBottom: 8 }}>
+              <input style={inputStyle} value={m.label} onChange={(e) => updateDeal({ milestones: dealOf(doc).milestones.map((x, j) => (j === i ? { ...x, label: e.target.value } : x)) })} placeholder={`Milestone ${i + 2}: what's delivered`} />
+              <input style={inputStyle} value={m.amount} onChange={(e) => updateDeal({ milestones: dealOf(doc).milestones.map((x, j) => (j === i ? { ...x, amount: e.target.value } : x)) })} placeholder="$4,875" />
+              <button style={{ ...btn(), color: T.danger, padding: "5px 8px" }} onClick={() => updateDeal({ milestones: dealOf(doc).milestones.filter((_, j) => j !== i) })}>×</button>
+            </div>
+          ))}
+          <button style={btn()} onClick={() => updateDeal({ milestones: [...dealOf(doc).milestones, { label: "", amount: "" }] })}>+ Add milestone</button>
+          {(() => {
+            const d = dealOf(doc);
+            const total = toCents(d.deposit) + d.milestones.reduce((a, m) => a + toCents(m.amount), 0);
+            return total > 0 ? <div style={{ fontSize: 12, color: T.muted, marginTop: 10 }}>One-time total {usd(total)}{toCents(d.monthly) ? ` + ${usd(toCents(d.monthly))}/mo` : ""}. Deposit pays by {paymentMethodsFor(toCents(d.deposit)).length === 1 ? "bank transfer only" : "bank transfer or card"}.</div> : null;
+          })()}
         </div>
 
         <div style={card({ marginBottom: 16 })}>
@@ -263,7 +290,7 @@ export default function ProposalsTab({ businesses }: { businesses: Biz[] }) {
       </div>
       <div style={card({ padding: 0, overflow: "hidden" })}>
         <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 0.8fr", padding: "12px 18px", borderBottom: `1px solid ${T.border}`, ...eyebrow }}>
-          <span>Client</span><span>Business</span><span>Updated</span><span style={{ textAlign: "right" }}>Total</span>
+          <span>Client</span><span>Business</span><span>Status</span><span style={{ textAlign: "right" }}>Total</span>
         </div>
         {loading && <SkeletonLines rows={4} />}
         {!loading && list.length === 0 && <div style={{ padding: 40, textAlign: "center", color: T.muted, fontSize: 13 }}>No proposals yet. Click "New proposal" to start from a template.</div>}
@@ -271,7 +298,7 @@ export default function ProposalsTab({ businesses }: { businesses: Biz[] }) {
           <div key={p.id} onClick={() => openExisting(p)} style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 0.8fr", padding: "14px 18px", borderBottom: `1px solid ${T.border}`, cursor: "pointer", alignItems: "center" }}>
             <span style={{ fontSize: 14, color: T.text }}>{p.client_name || "—"}</span>
             <span style={{ fontSize: 13, color: T.textSub }}>{p.payload?.businessName || "—"}</span>
-            <span style={{ fontSize: 12, color: T.muted }}>{new Date(p.updated_at).toLocaleDateString()}</span>
+            <span style={{ fontSize: 12, color: p.status === "won" || p.status === "paid" ? T.ok : p.status && p.status !== "draft" ? T.accent : T.muted }}>{STATUS_LABEL[p.status ?? "draft"] ?? p.status} · {new Date(p.updated_at).toLocaleDateString()}</span>
             <span style={{ fontSize: 13, color: T.accent, textAlign: "right", fontFamily: MONO }}>{p.payload?.sections?.[p.payload.sections.length - 1]?.totalPrice || "—"}</span>
           </div>
         ))}
@@ -390,55 +417,50 @@ function CoverPage({ doc, totalPages }: { doc: ProposalDoc; totalPages: number }
 const TERMS_BODY: React.CSSProperties = { fontSize: 11.5, lineHeight: 1.6, color: "#2a2a26" };
 const TERMS_H: React.CSSProperties = { fontWeight: 700, fontSize: 13, marginTop: 16, marginBottom: 6 };
 
+function TermsBlock({ sections }: { sections: ReturnType<typeof termsFor> }) {
+  return (
+    <>
+      {sections.map((t) => (
+        <div key={t.h}>
+          <div style={TERMS_H}>{t.h}</div>
+          {t.paras.map((p, i) => <p key={i} style={TERMS_BODY}>{p.lead && <strong>{p.lead}</strong>}{p.lead ? " " : ""}{p.text}</p>)}
+        </div>
+      ))}
+    </>
+  );
+}
+
 function TermsPages({ doc, totalPages }: { doc: ProposalDoc; totalPages: number }) {
   return (
     <>
       <div style={PAGE}>
-        <PageHeader meta={`Client — ${doc.clientName} / ${doc.businessName}\nProvider — ${doc.preparedBy}\nDate — ${doc.date}`} />
+        <PageHeader meta={`Client — ${doc.clientName} / ${doc.businessName}\nProvider — ${dealOf(doc).legalEntity}\nDate — ${doc.date}`} />
         <div style={PAGE_BODY}>
           <div style={{ ...PMONO, fontSize: 10, letterSpacing: "0.2em", color: "#8a8a86", marginBottom: 6 }}>SERVICE AGREEMENT</div>
           <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 24, marginBottom: 20 }}>Terms &amp; Conditions.</div>
-          <div style={TERMS_H}>§1 Parties</div>
-          <p style={TERMS_BODY}>This Service Agreement ("Agreement") is entered into as of the date signed below, between {doc.preparedBy}, operating as 6Signal ("Provider"), and {doc.clientName}, operating as {doc.businessName} ("Client"). This Agreement governs the engagement described in the accompanying proposal.</p>
-          <div style={TERMS_H}>§2 Payment Terms</div>
-          <p style={TERMS_BODY}><strong>Due on Receipt.</strong> All invoices are due upon receipt, expected within 48 hours of delivery unless an alternative arrangement is confirmed in writing before invoicing. Invoices are issued on the first business day of each month.</p>
-          <p style={TERMS_BODY}><strong>Late Payment.</strong> Invoices unpaid after 7 calendar days are overdue. Provider reserves the right to pause all active services until the balance is settled. Paused time is not refunded or credited.</p>
-          <p style={TERMS_BODY}><strong>Setup Fee.</strong> Any one-time setup fee is due in full prior to work commencement. Work does not begin until cleared.</p>
-          <p style={TERMS_BODY}><strong>Ad Spend — Client-Owned.</strong> All advertising spend (Google Ads, Meta Ads) is owned and funded directly by the Client, billed to Client's payment method. Provider does not handle or advance ad spend funds. Any management fee on ad spend is invoiced separately from the retainer.</p>
-          <div style={TERMS_H}>§3 Term &amp; Cancellation</div>
-          <p style={TERMS_BODY}><strong>Initial Term.</strong> This Agreement begins on the date of first invoice payment and runs for a minimum of six (6) consecutive months. Canceling before six months does not obligate Provider to refund any fees paid.</p>
-          <p style={TERMS_BODY}><strong>Month-to-Month After Initial Term.</strong> After the six-month initial term, the Agreement converts automatically to month-to-month and continues until terminated by either party per the notice requirements below.</p>
-          <p style={TERMS_BODY}><strong>30-Day Written Notice.</strong> Either party may terminate after the initial term by delivering written notice at least 30 calendar days before the intended termination date. Written notice means a clear, dated email to the other party's primary email address on file — text messages, verbal statements, and social media messages do not qualify. The 30-day clock begins when the email is sent and confirmed received. Retainer fees continue to accrue during the notice period.</p>
-          <p style={TERMS_BODY}><strong>Early Termination.</strong> If Client terminates during the initial six-month term, all remaining months become due immediately as a termination fee. Provider may waive this at sole discretion but is not obligated to do so.</p>
+          <TermsBlock sections={termsFor(doc).slice(0, 3)} />
         </div>
         <PageFooter doc={doc} page={`Page ${totalPages - 1} of ${totalPages}`} />
       </div>
 
       <div style={PAGE}>
-        <PageHeader meta={`Client — ${doc.clientName} / ${doc.businessName}\nProvider — ${doc.preparedBy}\nDate — ${doc.date}`} />
+        <PageHeader meta={`Client — ${doc.clientName} / ${doc.businessName}\nProvider — ${dealOf(doc).legalEntity}\nDate — ${doc.date}`} />
         <div style={PAGE_BODY}>
           <div style={{ ...PMONO, fontSize: 10, letterSpacing: "0.2em", color: "#8a8a86", marginBottom: 6 }}>SERVICE AGREEMENT · CONTINUED</div>
           <div style={{ fontFamily: DISP, fontWeight: 700, fontSize: 24, marginBottom: 20 }}>Scope &amp; Signatures.</div>
-          <div style={TERMS_H}>§4 Scope of Work</div>
-          <p style={TERMS_BODY}><strong>What's Included.</strong> The monthly retainer covers the services listed in the proposal above.</p>
-          <p style={TERMS_BODY}><strong>What's Not Included.</strong> Outside scope and quoted separately if requested: new website builds or major redesigns; custom software, dashboard, or automation development; additional ad platforms; reputation management beyond standard review monitoring; social media content creation or community management; print, radio, or broadcast advertising; work for entities outside Client's primary service area.</p>
-          <p style={TERMS_BODY}><strong>Change Requests.</strong> Out-of-scope work requires a written estimate and written approval from Client before proceeding. Requests do not become obligations.</p>
-          <div style={TERMS_H}>§5 General</div>
-          <p style={TERMS_BODY}><strong>Governing Law.</strong> This Agreement shall be governed by the laws of the State of Texas. Any disputes arising under this Agreement shall be resolved in Tarrant County, TX.</p>
-          <p style={TERMS_BODY}><strong>Entire Agreement.</strong> This document, together with the accompanying proposal, constitutes the entire agreement between the parties and supersedes all prior verbal or written discussions, quotes, or representations regarding scope, pricing, or deliverables.</p>
-          <p style={TERMS_BODY}><strong>Amendments.</strong> Any modifications to this Agreement must be made in writing and signed by both parties to be enforceable.</p>
+          <TermsBlock sections={termsFor(doc).slice(3)} />
 
           <div style={{ background: "#e9e8e2", padding: 20, marginTop: 24 }}>
             <div style={{ ...PMONO, fontSize: 9, letterSpacing: "0.15em", color: "#8a8a86", marginBottom: 20 }}>SIGNATURES</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 30 }}>
               <div>
                 <div style={{ ...PMONO, fontSize: 9, color: "#8a8a86", marginBottom: 40 }}>PROVIDER SIGNATURE</div>
-                <div style={{ borderTop: "1px solid #1a1a1a", paddingTop: 6, fontSize: 12 }}>{doc.preparedBy} · 6Signal</div>
+                <div style={{ borderTop: "1px solid #1a1a1a", paddingTop: 6, fontSize: 12 }}>{doc.preparedBy} · {dealOf(doc).legalEntity}</div>
                 <div style={{ ...PMONO, fontSize: 9, color: "#8a8a86", marginTop: 14 }}>DATE: ______________</div>
               </div>
               <div>
                 <div style={{ ...PMONO, fontSize: 9, color: "#8a8a86", marginBottom: 40 }}>CLIENT SIGNATURE</div>
-                <div style={{ borderTop: "1px solid #1a1a1a", paddingTop: 6, fontSize: 12 }}>{doc.clientName} · {doc.businessName}</div>
+                <div style={{ borderTop: "1px solid #1a1a1a", paddingTop: 6, fontSize: 12 }}>{dealOf(doc).signerName || doc.clientName} · {doc.businessName}</div>
                 <div style={{ ...PMONO, fontSize: 9, color: "#8a8a86", marginTop: 14 }}>DATE: ______________</div>
               </div>
             </div>
