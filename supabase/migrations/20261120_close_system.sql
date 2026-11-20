@@ -86,3 +86,6 @@ $$;
 revoke all on function public.close_ms_claim(uuid, int) from public, anon, authenticated;
 revoke all on function public.close_ms_patch(uuid, int, jsonb) from public, anon, authenticated;
 revoke all on function public.close_ms_release(uuid, int) from public, anon, authenticated;
+grant execute on function public.close_ms_claim(uuid, int) to service_role;
+grant execute on function public.close_ms_patch(uuid, int, jsonb) to service_role;
+grant execute on function public.close_ms_release(uuid, int) to service_role;

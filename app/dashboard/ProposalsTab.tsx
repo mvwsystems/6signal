@@ -169,6 +169,13 @@ export default function ProposalsTab({ businesses }: { businesses: Biz[] }) {
             <div><span style={label}>Signer email</span><input style={inputStyle} value={dealOf(doc).signerEmail} onChange={(e) => updateDeal({ signerEmail: e.target.value })} placeholder="name@company.com" /></div>
             <div><span style={label}>Contracting party (you)</span><input style={inputStyle} value={dealOf(doc).legalEntity} onChange={(e) => updateDeal({ legalEntity: e.target.value })} /></div>
           </div>
+          <div style={{ marginBottom: 12 }}>
+            <span style={label}>Agreement terms</span>
+            <select style={{ ...inputStyle, maxWidth: 420 }} value={dealOf(doc).termsKind ?? "retainer"} onChange={(e) => updateDeal({ termsKind: e.target.value as "retainer" | "build", ...(e.target.value === "build" && dealOf(doc).monthlyLabel === "Monthly retainer" ? { monthlyLabel: "Monthly support" } : {}) })}>
+              <option value="retainer">Retainer: 6-month minimum, early-termination fee</option>
+              <option value="build">Project build: deposit + milestones, monthly support with no minimum</option>
+            </select>
+          </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 12 }}>
             <div><span style={label}>Deposit (due on signing)</span><input style={inputStyle} value={dealOf(doc).deposit} onChange={(e) => updateDeal({ deposit: e.target.value })} placeholder="$4,875" /></div>
             <div><span style={label}>Monthly fee (from go-live)</span><input style={inputStyle} value={dealOf(doc).monthly} onChange={(e) => updateDeal({ monthly: e.target.value })} placeholder="$1,800 or blank" /></div>

@@ -24,6 +24,8 @@ export interface DealTerms {
   milestones: Milestone[];  // billed after the deposit, each when marked done
   monthly: string;          // "$1,800" — starts at go-live
   monthlyLabel: string;
+  /** "retainer": 6-month minimum terms (visibility work). "build": project terms (infrastructure builds). */
+  termsKind?: "retainer" | "build";
 }
 export interface ProposalDoc {
   clientName: string; businessId: string | null; businessName: string;
@@ -38,7 +40,7 @@ export interface ProposalDoc {
 export const DEFAULT_LEGAL_ENTITY = "Superhuman LLC dba 6 Signal";
 export const blankDeal = (): DealTerms => ({
   signerName: "", signerEmail: "", signerTitle: "", legalEntity: DEFAULT_LEGAL_ENTITY,
-  deposit: "", milestones: [], monthly: "", monthlyLabel: "Monthly retainer",
+  deposit: "", milestones: [], monthly: "", monthlyLabel: "Monthly retainer", termsKind: "retainer",
 });
 export const dealOf = (doc: ProposalDoc): DealTerms => ({ ...blankDeal(), ...(doc.deal ?? {}) });
 
@@ -126,8 +128,12 @@ export interface TermsSection { h: string; paras: TermsPara[] }
 export function termsFor(doc: ProposalDoc): TermsSection[] {
   const d = dealOf(doc);
   const provider = d.legalEntity.trim() || DEFAULT_LEGAL_ENTITY;
-  return [
-    { h: "§1 Parties", paras: [{ lead: "", text: `This Service Agreement ("Agreement") is entered into as of the date signed below, between ${provider} ("Provider"), represented by ${doc.preparedBy}, and ${doc.businessName}, represented by ${d.signerName.trim() || doc.clientName} ("Client"). This Agreement governs the engagement described in the accompanying proposal.` }] },
+  const build = d.termsKind === "build";
+  const monthly = toCents(d.monthly) > 0;
+  const changeRequests: TermsPara = { lead: "Change Requests.", text: "Out-of-scope work requires a written estimate and written approval from Client before proceeding. Requests do not become obligations." };
+
+  // Retainer terms (visibility and ads work): 6-month minimum.
+  const retainer: TermsSection[] = [
     { h: "§2 Payment Terms", paras: [
       { lead: "Due on Receipt.", text: "All invoices are due upon receipt, expected within 48 hours of delivery unless an alternative arrangement is confirmed in writing before invoicing. Invoices are issued on the first business day of each month." },
       { lead: "Late Payment.", text: "Invoices unpaid after 7 calendar days are overdue. Provider reserves the right to pause all active services until the balance is settled. Paused time is not refunded or credited." },
@@ -143,8 +149,33 @@ export function termsFor(doc: ProposalDoc): TermsSection[] {
     { h: "§4 Scope of Work", paras: [
       { lead: "What's Included.", text: "The monthly retainer covers the services listed in the proposal above." },
       { lead: "What's Not Included.", text: "Outside scope and quoted separately if requested: new website builds or major redesigns; custom software, dashboard, or automation development; additional ad platforms; reputation management beyond standard review monitoring; social media content creation or community management; print, radio, or broadcast advertising; work for entities outside Client's primary service area." },
-      { lead: "Change Requests.", text: "Out-of-scope work requires a written estimate and written approval from Client before proceeding. Requests do not become obligations." },
+      changeRequests,
     ] },
+  ];
+
+  // Project terms (infrastructure builds): deposit, milestones, optional monthly support with no minimum.
+  const project: TermsSection[] = [
+    { h: "§2 Payment Terms", paras: [
+      { lead: "Due on Receipt.", text: `All invoices are due upon receipt, expected within 48 hours of delivery unless an alternative arrangement is confirmed in writing before invoicing. The deposit is invoiced on signing. Each milestone is invoiced when it is delivered.${monthly ? " The monthly fee is invoiced monthly from the go-live date." : ""}` },
+      { lead: "Late Payment.", text: "Invoices unpaid after 7 calendar days are overdue. Provider reserves the right to pause work until the balance is settled." },
+    ] },
+    { h: "§3 Term & Cancellation", paras: [
+      { lead: "Project Term.", text: "This Agreement begins when the deposit is paid and continues until the deliverables in the proposal are delivered and accepted. Client confirms acceptance of each milestone in writing, or it is accepted 5 business days after delivery if Client raises no specific defect." },
+      { lead: "Deposit.", text: "The deposit secures the project schedule and funds the first phase of work. It is non-refundable once work has begun." },
+      { lead: "Ending the Project Early.", text: "Either party may end the project with written notice (a clear, dated email to the other party's primary email address on file). Client pays for milestones already delivered plus work completed on the current milestone, pro rata. Provider hands over all completed work on payment." },
+      ...(monthly ? [{ lead: "Monthly Fee After Go-Live.", text: "The monthly fee covers hosting, monitoring, maintenance and support of what was built. It runs month-to-month from the go-live date with no minimum term, and either party may end it with 30 calendar days' written notice. Fees continue to accrue during the notice period." }] : []),
+    ] },
+    { h: "§4 Scope of Work", paras: [
+      { lead: "What's Included.", text: "The project covers the deliverables and milestones listed in the proposal above." },
+      { lead: "What's Not Included.", text: "Anything not listed in the proposal is outside scope and quoted separately if requested, including work on systems, vendors or entities not named in the proposal." },
+      changeRequests,
+      { lead: "Ownership.", text: "On full payment of each milestone, Client owns the deliverables built for Client in that milestone. Provider keeps its pre-existing tools, code libraries and know-how, and grants Client a perpetual license to use them as part of the deliverables." },
+    ] },
+  ];
+
+  return [
+    { h: "§1 Parties", paras: [{ lead: "", text: `This Service Agreement ("Agreement") is entered into as of the date signed below, between ${provider} ("Provider"), represented by ${doc.preparedBy}, and ${doc.businessName}, represented by ${d.signerName.trim() || doc.clientName} ("Client"). This Agreement governs the engagement described in the accompanying proposal.` }] },
+    ...(build ? project : retainer),
     { h: "§5 General", paras: [
       { lead: "Governing Law.", text: "This Agreement shall be governed by the laws of the State of Texas. Any disputes arising under this Agreement shall be resolved in Tarrant County, TX." },
       { lead: "Entire Agreement.", text: "This document, together with the accompanying proposal, constitutes the entire agreement between the parties and supersedes all prior verbal or written discussions, quotes, or representations regarding scope, pricing, or deliverables." },
