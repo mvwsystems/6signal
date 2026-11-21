@@ -1,0 +1,150 @@
+---
+title: "What We Got Wrong This Year"
+slug: "what-we-got-wrong-this-year"
+description: "We published a zero that turned out to be our own broken probe. We led with a 92% mention rate that fell to 64% and never came back. And the convergence we documented on November 1 is already being argued with by November's own data. Four months, 3,465 tracked AI checks, and an accounting of the findings that did not survive contact with more data."
+date: "2026-11-26"
+category: "AI Visibility"
+contentType: "Field Note"
+author: "Matt Vincent Walker"
+readTime: "10 min read"
+featured: false
+tags:
+  - AI Visibility
+  - Original Research
+  - Field Note
+  - Method
+  - Measurement
+faq:
+  - q: "What did 6 Signal get wrong in its AI visibility research this year?"
+    a: "Three things. We published a zero mention rate for Google AI Overviews that was a capture failure in our own probe rather than silence from Google. We led with a 92% Gemini mention rate in August that turned out to be the peak of a decline, not a baseline. And the engine convergence we documented on November 1 is contradicted by November's own partial data, where the spread between surfaces widened again rather than continuing to close."
+  - q: "How many AI visibility checks has 6 Signal run?"
+    a: "3,465 automated checks between July 7 and November 20, 2026, against one Dallas–Fort Worth plumbing market, across six surfaces: ChatGPT, Claude, Perplexity, Gemini, Google AI Overviews, and Google Maps. Every check stores the engine's answer and its source list at the time it ran, which is what makes retrospective correction possible at all."
+  - q: "Why publish mistakes in your own research?"
+    a: "Because the alternative compounds. AI visibility is a field roughly two years old in which most circulating statistics have no method attached, and a number that gets repeated three times becomes a permanent citation regardless of whether it was ever true. A practice that quietly revises its own figures is worth less than one that does not — and in every case here, the correction was more informative than the original finding."
+  - q: "Is AI engine behavior stable enough to plan around?"
+    a: "Over a quarter, broadly yes. Over a month, no. Our tracked business moved from 92% to 59% on one engine in six weeks without changing anything about itself, and a different engine fell from 64.7% to 31.8% in the most recent window. The durable inputs — a crawlable site, consistent entity records, current licensing — moved all six surfaces in the same direction. Engine-specific scores did not stay still long enough to be worth optimizing against."
+  - q: "What should contractors take from a year of this data?"
+    a: "That the work is unglamorous and the metrics are noisy. The things that consistently correlated with being named were a readable website, entity details that agree across records, and current institutional listings. The things that did not stay still long enough to chase were individual engine scores. Measure a spread across several surfaces, re-measure quarterly, and treat any single flattering screenshot as worthless evidence."
+---
+
+This is normally the week for a list of predictions. We are going to do the opposite and publish an accounting of what we got wrong, because 2026 produced three findings of ours that did not survive more data, and the corrections turned out to be more useful than the originals.
+
+Some context on the dataset first. Between July 7 and November 20, 2026, our tracking system ran **3,465 automated checks** of 42 real buyer prompts against one Dallas–Fort Worth plumbing market, across six surfaces. Every check stores the engine's answer and its full source list at the moment it ran. That archive is the only reason any of what follows is knowable — you cannot audit a measurement you did not keep.
+
+<div className="wp-tiles">
+  <div className="wp-tile">
+    <div className="wp-tile-label">TRACKED CHECKS, 2026</div>
+    <div className="wp-tile-num">3,465</div>
+    <div className="wp-tile-cap">Jul 7 – Nov 20 · 42 prompts · 6 surfaces</div>
+  </div>
+  <div className="wp-tile">
+    <div className="wp-tile-label">PUBLISHED FINDINGS RETRACTED</div>
+    <div className="wp-tile-num">2</div>
+    <div className="wp-tile-cap">one instrument failure, one peak mistaken for a baseline</div>
+  </div>
+  <div className="wp-tile">
+    <div className="wp-tile-label">FINDINGS NOW IN DOUBT</div>
+    <div className="wp-tile-num">1</div>
+    <div className="wp-tile-cap">three weeks old and already arguing with itself</div>
+  </div>
+</div>
+
+<h2 id="one">One — We published a zero that was ours</h2>
+
+In August we published [a field note on the first 700 checks](/research/we-ran-700-ai-visibility-checks-one-texas-market) and made a feature of one number: Google AI Overviews had mentioned the tracked business **zero times in 84 checks**. We wrote that the zero was the finding and that we were publishing it deliberately rather than dropping an inconvenient result.
+
+It was a bug.
+
+By October we had enough data to see the signature clearly. In July and August our Overviews probe captured an average of **74 and 49 characters** per check, with no sources attached in 71 of 72 and 102 of 103 checks. A functioning Overview in this dataset runs to roughly 3,000 characters and carries seven sources. We were not reading a silent engine. We were not reading the engine.
+
+The honest statement is that **we do not know what Google AI Overviews said about this business in July and August.** The same applies to Google Maps over the same window, which recorded zeroes against captured answers around a third the length they later reached.
+
+We left the original field note online with a correction notice rather than editing the number out, and documented the whole thing in [The Directory Collapse](/research/the-directory-collapse-ai-citation-shift). There is a bleak irony in the specifics: we chose to highlight that zero *because* publishing an inconvenient number felt like the honest thing to do. Integrity about a number is worth nothing if you have not audited the instrument that produced it.
+
+<h2 id="two">Two — We led with a peak and called it a baseline</h2>
+
+In July, Gemini named the tracked business in **92.0%** of checks. We reported it, and it was true.
+
+It was also the highest figure this dataset has ever produced, for any engine, in any month, and it has not been approached since: 58.8% in August, 59.4% in September, 64.0% in October, 64.5% in November. The business did not change. Its site, its license record, and its reviews were stable throughout — our source-trail data shows its own website holding as the most-cited domain about it in every single month.
+
+<svg viewBox="0 0 720 340" role="img" aria-label="Chart of mention rate by month for five AI surfaces from July to November 2026. Gemini falls from 92 percent in July to 58.8, then 59.4, 64 and 64.5. ChatGPT moves 73.8, 52.4, 48, 54, 54.3. Perplexity moves 68.8, 47.6, 55.4, 64.7 then drops sharply to 31.8 in November. Claude rises steadily from 26.5 through 18.8, 29.8, 40.5 to 42.2. Google AI Overviews is unmeasured until September, then 8.1, 48.4 and 47.3. November is a partial month covering only the first twenty days." className="wp-fig reveal fig-anim">
+  <text x="24" y="32" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">Five months, one business, nothing standing still</text>
+  <text x="24" y="50" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">MENTION RATE BY SURFACE · 3,465 CHECKS · NOVEMBER IS PARTIAL (THROUGH NOV 20)</text>
+
+  <line x1="120" y1="78" x2="120" y2="266" stroke="#232320" strokeWidth="1" />
+  <line x1="120" y1="266" x2="628" y2="266" stroke="#232320" strokeWidth="1" />
+  <text x="110" y="82" fill="#55554f" fontSize="9" fontFamily="JetBrains Mono, monospace" textAnchor="end">100%</text>
+  <text x="110" y="176" fill="#55554f" fontSize="9" fontFamily="JetBrains Mono, monospace" textAnchor="end">50%</text>
+  <text x="110" y="270" fill="#55554f" fontSize="9" fontFamily="JetBrains Mono, monospace" textAnchor="end">0</text>
+  <text x="158" y="284" fill="#6a6a64" fontSize="9" fontFamily="JetBrains Mono, monospace">JUL</text>
+  <text x="268" y="284" fill="#6a6a64" fontSize="9" fontFamily="JetBrains Mono, monospace">AUG</text>
+  <text x="378" y="284" fill="#6a6a64" fontSize="9" fontFamily="JetBrains Mono, monospace">SEP</text>
+  <text x="488" y="284" fill="#6a6a64" fontSize="9" fontFamily="JetBrains Mono, monospace">OCT</text>
+  <text x="588" y="284" fill="#6a6a64" fontSize="9" fontFamily="JetBrains Mono, monospace">NOV</text>
+
+  <circle cx="166" cy="93" r="4" fill="#E6FF00" className="fa-pulse" />
+  <circle cx="166" cy="93" r="3" fill="#E6FF00" />
+  <text x="178" y="90" fill="#E6FF00" fontSize="10" fontFamily="JetBrains Mono, monospace">92.0% — THE NUMBER WE LED WITH</text>
+
+  <polyline points="166,93 276,155 386,154 496,145 596,145" fill="none" stroke="#E6FF00" strokeWidth="2.5" className="fa-draw" style={{ strokeDasharray: 1200, "--len": 1200 }} />
+  <polyline points="166,127 276,168 386,176 496,164 596,164" fill="none" stroke="#8a8a80" strokeWidth="2" className="fa-draw" style={{ strokeDasharray: 1200, "--len": 1200, animationDelay: "0.2s" }} />
+  <polyline points="166,137 276,176 386,162 496,144 596,206" fill="none" stroke="#9a9a90" strokeWidth="2" className="fa-draw" style={{ strokeDasharray: 1200, "--len": 1200, animationDelay: "0.4s" }} />
+  <polyline points="166,216 276,231 386,210 496,190 596,187" fill="none" stroke="#6a6a64" strokeWidth="2" className="fa-draw" style={{ strokeDasharray: 1200, "--len": 1200, animationDelay: "0.6s" }} />
+  <polyline points="386,251 496,175 596,177" fill="none" stroke="#55554f" strokeWidth="2" strokeDasharray="5 3" />
+
+  <text x="606" y="148" fill="#E6FF00" fontSize="9" fontFamily="JetBrains Mono, monospace">GEMINI 64.5</text>
+  <text x="606" y="167" fill="#8a8a80" fontSize="9" fontFamily="JetBrains Mono, monospace">CHATGPT 54.3</text>
+  <text x="606" y="180" fill="#55554f" fontSize="9" fontFamily="JetBrains Mono, monospace">AI OVERVIEWS 47.3</text>
+  <text x="606" y="190" fill="#6a6a64" fontSize="9" fontFamily="JetBrains Mono, monospace">CLAUDE 42.2</text>
+  <text x="606" y="209" fill="#9a9a90" fontSize="9" fontFamily="JetBrains Mono, monospace">PERPLEXITY 31.8</text>
+
+  <text x="24" y="314" fill="#55554f" fontSize="10" fontFamily="JetBrains Mono, monospace">THE BUSINESS DID NOT CHANGE IN ANY MONTH SHOWN. EVERY MOVEMENT HERE IS THE ENGINES.</text>
+  <text x="24" y="330" fill="#55554f" fontSize="10" fontFamily="JetBrains Mono, monospace">DASHED = SURFACE NOT RELIABLY CAPTURED BEFORE SEPTEMBER</text>
+</svg>
+
+*The highlighted point is the figure we put in a headline. It describes a week, not a position.*
+
+The lesson is not that the measurement was wrong — it was correct for the window it covered. The lesson is about what a single-engine, single-month figure is worth as a claim. We presented a peak as though it were a level, and a contractor reading that post could reasonably have concluded their own 90-plus score meant something durable. It did not. Nothing in this dataset has stayed above 65% since July.
+
+<h2 id="three">Three — Our convergence paper is three weeks old and already contested</h2>
+
+On November 1 we published [The Convergence](/research/the-convergence-ai-engines-agree), arguing that the six surfaces were coming to agree about this business: a 65.5-point spread between the most and least generous engine in July had closed to 24.2 points by October.
+
+November's partial data widens it back out to **32.7 points.**
+
+The cause is almost entirely Perplexity, which fell from 64.7% in October to 31.8% in the first twenty days of November — the sharpest single-engine move in the dataset since Gemini's July drop. Its capture quality shows no sign of an instrument problem: answer lengths and source counts held steady at roughly 1,190 characters and 10 sources, exactly where they have been since October. As far as we can tell, the engine simply changed its behavior.
+
+So the convergence thesis is now in an uncomfortable position three weeks after publication. We are not retracting it: four months of narrowing is a real pattern, November is a partial month, and one engine moving does not undo a trend across six. But the honest framing is weaker than what we published. **Convergence is a direction we observed over four months, not a stable state the engines have arrived at.** Anyone planning on the assumption that engines now broadly agree should know that the most recent three weeks argue against it.
+
+<h2 id="held-up">What did hold up</h2>
+
+An accounting of errors is misleading without the other column. Three findings survived everything the additional data threw at them.
+
+**The owned layer stayed on top.** The tracked company's own website was the most-cited domain about it in every single month, at 1.40 to 1.75 citations per check, never displaced by any directory, registry, or review platform. This is the most stable finding in the entire dataset and the one with the most direct implication: the site is the record, not the brochure.
+
+**Institutional sources kept gaining.** Citations to the state licensing board rose from 1.56 per check in July to 2.12 in November — its highest reading yet, in the same window where everything else wobbled. The municipal page roughly doubled from 0.38 to 0.75. [The re-weighting toward records that cannot be bought](/research/the-directory-collapse-ai-citation-shift) has been the single most consistent directional signal of the year.
+
+**Commercial directories kept losing.** Yelp went 1.03 → 0.31 citations per check, Angi 1.27 → 0.27, BBB 1.06 → 0.33. Four straight months of decline, across three independently operated engines, normalized for check volume. If one finding from 2026 turns out to matter in five years, our guess is this one.
+
+<h2 id="what-it-means">What a contractor should take from a noisy year</h2>
+
+The practical reading is almost boringly consistent with where we started, which is itself informative.
+
+**Stop chasing engine scores.** A number that moves 30 points in six weeks without you doing anything is not a performance metric. Measure a spread across at least four surfaces and watch the shape over quarters.
+
+**Spend on the substrate, not the surface.** Everything that held up — owned site, institutional records, entity consistency — is infrastructure. Everything that collapsed or whipsawed was a specific engine's behavior in a specific month.
+
+**Treat every statistic in this field as provisional, including ours.** AI visibility is about two years old as a discipline. Most circulating numbers have no method attached, and a figure repeated three times becomes a permanent citation whether or not it was ever true. Ask what the window was, how many checks, which engines, and whether the instrument was verified. If a vendor cannot answer those, the number is decoration.
+
+**Keep your own archive.** None of these corrections would have been possible if we had stored summary scores instead of raw answers and source lists. If you are running your own checks — and [you should](/research/how-to-test-whether-ai-recommends-your-business) — save the full response, not the verdict.
+
+We will publish the next window whether or not it agrees with this one. On current form, some of it will not.
+
+---
+
+*6 Signal is a specialized AI visibility practice for residential and commercial contractors. The research above comes from our own tracking system; the method, including the capture failure documented this year, is set out in [The Directory Collapse](/research/the-directory-collapse-ai-citation-shift) and [The Convergence](/research/the-convergence-ai-engines-agree). To see where your business stands today, start with the [free AI visibility check](/ai-visibility-check) or the [$27 AI Visibility Audit](/visibility-check).*
+
+## Sources
+
+- 6 Signal internal tracking system — 3,465 probe records with stored answers and source trails, July 7 – November 20, 2026. November figures are partial, covering the first twenty days of the month. Per-check normalization and three-engine consensus method described in [The Directory Collapse](/research/the-directory-collapse-ai-citation-shift).
+- Capture-quality diagnostics by engine and month (answer length, source counts, empty-capture rates) — same system, queried 2026-11-20
