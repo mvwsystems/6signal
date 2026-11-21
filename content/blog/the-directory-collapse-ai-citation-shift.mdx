@@ -1,0 +1,240 @@
+---
+title: "The Directory Collapse: 2,100 Tracked AI Checks Show Yelp, Angi, and BBB Losing Their Grip"
+slug: "the-directory-collapse-ai-citation-shift"
+description: "Between July and September 2026 we ran 2,100 automated AI visibility checks against one Dallas–Fort Worth plumbing market and stored every source trail. Normalized per check, citations to Yelp fell 53%, Angi 55%, and BBB 32% — while the state license board rose 21% and the city government page rose 79%. The trust stack is re-weighting, and the direction is away from anything a contractor can buy."
+date: "2026-10-01"
+category: "White Paper"
+contentType: "White Paper"
+author: "Matt Vincent Walker"
+readTime: "18 min read"
+featured: false
+tags:
+  - White Paper
+  - AI Visibility
+  - Original Research
+  - Directories
+  - Local Entity Optimization
+  - Citations
+  - Contractor Marketing
+faq:
+  - q: "Are AI engines citing Yelp and Angi less in 2026?"
+    a: "In our data, yes, and the decline is steep. Across 2,100 tracked checks of one Dallas–Fort Worth plumbing market between July 7 and September 30, 2026, we counted how often each domain appeared in the source trails of ChatGPT, Claude, and Perplexity, then normalized by the number of checks run each month. Yelp fell from 1.03 citations per check in July to 0.48 in September, Angi from 1.27 to 0.57, and BBB from 1.06 to 0.72. This is one market and one trade over three months, so treat it as a measured signal rather than a universal law — but the direction was consistent across all three engines."
+  - q: "What are AI engines citing instead of directories?"
+    a: "Institutional records. Over the same window, citations to the Texas State Board of Plumbing Examiners rose from 1.56 per check to 1.89, and the Red Oak city government site rose from 0.38 to 0.68 — a 79% increase. The tracked company's own website stayed the single most-cited domain throughout, at 1.60, 1.40, and 1.57 citations per check. The pattern is a shift toward sources that cannot be purchased: license registries, municipal pages, and the company's own verifiable claims."
+  - q: "Should contractors stop claiming directory listings?"
+    a: "No. A declining citation rate is not a zero citation rate — Yelp, Angi, BBB, HomeAdvisor, and BuildZoom all still appeared hundreds of times in our source trails, and all five remained in the three-engine consensus set. Claiming a listing is free and takes an afternoon. What the data argues against is treating paid directory placement as the center of a visibility strategy while the license record, the city listing, and the company's own site go unmaintained."
+  - q: "Why would an AI engine prefer a license board over a review site?"
+    a: "Because it is doing verification, not marketing research. A state licensing record is a primary source maintained by a regulator with no commercial interest in the outcome, and it answers the question a buyer actually has — is this business real, licensed, and in good standing. A review platform answers a softer question and carries a commercial incentive. When an engine is assembling an answer it will be held to, it weights the record that is hardest to fake."
+  - q: "How do I get cited by the sources that are gaining?"
+    a: "Three moves, in order. Verify your state license record is current and that the business name, address, and phone on it match your website exactly. Claim and correct your city and chamber of commerce listings, which are usually free and frequently wrong. Then make your own site the best available record of what you do, where you work, and what you are licensed to do — it was the most-cited domain in every month we measured, and it is the one surface you fully control."
+---
+
+In September 2025, the advice to a contractor who wanted to be found by AI was straightforward: get on the directories. Claim Yelp, claim Angi, claim BBB, keep HomeAdvisor current, and accept that the aggregators would keep winning the answer box because they had the domain authority and you did not.
+
+That advice is going stale faster than anyone expected.
+
+Between July 7 and September 30, 2026, our tracking system ran **2,100 automated checks** of real buyer prompts against one Dallas–Fort Worth plumbing market, across six surfaces — ChatGPT, Claude, Perplexity, Gemini, Google AI Overviews, and Google Maps. For each check we stored the answer and the full list of sources the engine consulted on the way to it. This paper is about what happened to those source lists over twelve weeks.
+
+The short version: the commercial directory layer is losing ground, quickly, and what is taking its place cannot be bought.
+
+<div className="wp-tiles">
+  <div className="wp-tile">
+    <div className="wp-tile-label">TRACKED CHECKS</div>
+    <div className="wp-tile-num">2,100</div>
+    <div className="wp-tile-cap">42 buyer prompts · 6 surfaces · Jul 7 – Sep 30, 2026</div>
+  </div>
+  <div className="wp-tile">
+    <div className="wp-tile-label">YELP CITATIONS</div>
+    <div className="wp-tile-num">−53%</div>
+    <div className="wp-tile-cap">1.03 → 0.48 per check, July to September</div>
+  </div>
+  <div className="wp-tile">
+    <div className="wp-tile-label">ANGI CITATIONS</div>
+    <div className="wp-tile-num">−55%</div>
+    <div className="wp-tile-cap">1.27 → 0.57 per check</div>
+  </div>
+  <div className="wp-tile">
+    <div className="wp-tile-label">CITY GOVERNMENT PAGE</div>
+    <div className="wp-tile-num">+79%</div>
+    <div className="wp-tile-cap">0.38 → 0.68 per check — the fastest riser</div>
+  </div>
+</div>
+
+<h2 id="part-1">Part I — The measurement, and why it is normalized</h2>
+
+A raw citation count is a misleading number. We did not run the same volume of checks every month — July produced 629 checks, August 615, September 856 — so a domain could appear more often in September purely because we looked more often. Every figure in this paper is therefore expressed as **citations per check**: the number of times a domain appeared in a source trail, divided by the number of checks run in that month against the engines being counted.
+
+The source-trail figures count only the three research engines that return a readable list of consulted sources — **ChatGPT, Claude, and Perplexity** — which between them account for 989 of the 2,100 checks. Gemini returns its grounding URLs through a redirect service that cannot be resolved back to a publisher domain, so its trails are excluded from source counts throughout, exactly as in [our first published study](/research/we-ran-700-ai-visibility-checks-one-texas-market). Google AI Overviews and Google Maps are excluded from this section for a different and more uncomfortable reason, which Part IV deals with directly.
+
+With that stated, here is the twelve-week movement.
+
+<svg viewBox="0 0 720 420" role="img" aria-label="Line chart of citations per check for six domains across July, August and September 2026, from the source trails of ChatGPT, Claude and Perplexity. Angi falls from 1.27 to 0.57. Yelp falls from 1.03 to 0.48. BBB falls from 1.06 to 0.72. The Texas State Board of Plumbing Examiners rises from 1.56 to 1.89, peaking at 2.03 in August. The Red Oak city government page rises from 0.38 to 0.68, peaking at 0.99 in August. The tracked company's own website stays highest and roughly flat at 1.60, 1.40 and 1.57." className="wp-fig">
+  <text x="24" y="32" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">Citations per check — the directory layer falls, the institutional layer rises</text>
+  <text x="24" y="50" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">CHATGPT + CLAUDE + PERPLEXITY SOURCE TRAILS · 989 CHECKS · ONE DFW PLUMBING MARKET</text>
+
+  <line x1="150" y1="80" x2="150" y2="330" stroke="#232320" strokeWidth="1" />
+  <line x1="150" y1="330" x2="640" y2="330" stroke="#232320" strokeWidth="1" />
+  <text x="138" y="84" fill="#55554f" fontSize="9" fontFamily="JetBrains Mono, monospace" textAnchor="end">2.1</text>
+  <text x="138" y="208" fill="#55554f" fontSize="9" fontFamily="JetBrains Mono, monospace" textAnchor="end">1.0</text>
+  <text x="138" y="334" fill="#55554f" fontSize="9" fontFamily="JetBrains Mono, monospace" textAnchor="end">0</text>
+  <text x="190" y="348" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">JUL</text>
+  <text x="380" y="348" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">AUG</text>
+  <text x="570" y="348" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">SEP</text>
+
+  <polyline points="200,144 390,88 580,105" fill="none" stroke="#8a8a80" strokeWidth="2" />
+  <polyline points="200,285 390,212 580,249" fill="none" stroke="#8a8a80" strokeWidth="2" strokeDasharray="4 3" />
+  <polyline points="200,139 390,163 580,143" fill="none" stroke="#E6FF00" strokeWidth="2.5" />
+  <polyline points="200,179 390,238 580,262" fill="none" stroke="#55554f" strokeWidth="2" />
+  <polyline points="200,207 390,284 580,273" fill="none" stroke="#55554f" strokeWidth="2" />
+  <polyline points="200,204 390,205 580,243" fill="none" stroke="#3f3f3a" strokeWidth="2" />
+
+  <text x="596" y="101" fill="#8a8a80" fontSize="10" fontFamily="JetBrains Mono, monospace">LICENSE BOARD 1.89</text>
+  <text x="596" y="147" fill="#E6FF00" fontSize="10" fontFamily="JetBrains Mono, monospace">OWN SITE 1.57</text>
+  <text x="596" y="253" fill="#8a8a80" fontSize="10" fontFamily="JetBrains Mono, monospace">CITY 0.68</text>
+  <text x="596" y="266" fill="#55554f" fontSize="10" fontFamily="JetBrains Mono, monospace">BBB 0.72</text>
+  <text x="596" y="279" fill="#55554f" fontSize="10" fontFamily="JetBrains Mono, monospace">ANGI 0.57</text>
+  <text x="596" y="239" fill="#3f3f3a" fontSize="10" fontFamily="JetBrains Mono, monospace">YELP 0.48</text>
+
+  <text x="24" y="380" fill="#55554f" fontSize="10" fontFamily="JetBrains Mono, monospace">SOLID GRAY = INSTITUTIONAL · DASHED = MUNICIPAL · YELLOW = OWNED · DARK = COMMERCIAL DIRECTORY</text>
+  <text x="24" y="398" fill="#55554f" fontSize="10" fontFamily="JetBrains Mono, monospace">NORMALIZED PER CHECK — RAW COUNTS WOULD CONFOUND WITH MONTHLY CHECK VOLUME</text>
+</svg>
+
+*Every directory line ends lower than it started. Every institutional line ends higher. The owned line barely moves — and stays on top.*
+
+The table, for readers who would rather have the numbers than the shape:
+
+| Domain | Class | July | August | September | Change |
+|---|---|---|---|---|---|
+| x-actplumbing.com | Owned | 1.60 | 1.40 | 1.57 | −2% |
+| tsbpe.texas.gov | Institutional | 1.56 | 2.03 | 1.89 | **+21%** |
+| redoaktx.org | Municipal | 0.38 | 0.99 | 0.68 | **+79%** |
+| bbb.org | Commercial | 1.06 | 1.05 | 0.72 | **−32%** |
+| angi.com | Commercial | 1.27 | 0.77 | 0.57 | **−55%** |
+| yelp.com | Commercial | 1.03 | 0.39 | 0.48 | **−53%** |
+
+<h2 id="part-2">Part II — What the decline is not</h2>
+
+Three explanations present themselves before the interesting one, and each needs disposing of.
+
+**It is not that the engines got quieter.** If the engines had simply started consulting fewer sources, every line would fall together. They did not. ChatGPT's trails averaged 78.8 sources per check in July and 61.4 in September — a real narrowing — but Claude held flat at 10.8 then 9.0, and Perplexity went *up*, from 10.6 to 19.4. Against that mixed background, the license board rose and the directories fell. The engines did not stop looking. They changed where they looked.
+
+**It is not that the company changed.** The tracked business did not delist from Yelp, lose its BBB accreditation, or alter its directory presence during the window. Its own site stayed the most-cited domain in all three months. What moved was the engines' weighting, not the business's footprint.
+
+**It is not a single engine's quirk.** Every figure above comes from domains present in **all three** research engines' trails. A change driven by one vendor's index refresh would not survive that filter.
+
+What remains is the uncomfortable reading: over twelve weeks, three independently operated AI systems each reduced how much they leaned on commercial review platforms when assembling an answer about a local contractor, and each increased how much they leaned on government records.
+
+<h2 id="part-3">Part III — The trust stack, re-weighted</h2>
+
+[The Supplier Signal](/research/the-supplier-signal-dfw-material-suppliers) described a four-layer trust stack — owned, institutional, commercial, community — and argued that engines cross-reference the layers rather than ranking them. That model survives this data. What has changed is the weighting between layers.
+
+<svg viewBox="0 0 720 330" role="img" aria-label="Diagram contrasting the trust stack weighting in July 2026 with September 2026. In July the owned layer, institutional layer and commercial directory layer are close in citation volume. By September the owned layer holds, the institutional layer has grown, and the commercial directory layer has shrunk to roughly half its former width." className="wp-fig">
+  <text x="24" y="32" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">The same stack, twelve weeks apart</text>
+  <text x="24" y="50" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">WIDTH = CITATIONS PER CHECK · SAME MARKET · SAME PROMPTS · SAME ENGINES</text>
+
+  <text x="24" y="86" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">JULY 2026</text>
+  <rect x="150" y="74" width="192" height="18" rx="2" fill="#E6FF00" />
+  <text x="350" y="88" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">OWNED 1.60</text>
+  <rect x="150" y="100" width="187" height="18" rx="2" fill="#8a8a80" />
+  <text x="345" y="114" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">INSTITUTIONAL 1.56</text>
+  <rect x="150" y="126" width="400" height="18" rx="2" fill="#4a4a44" />
+  <text x="558" y="140" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">DIRECTORIES 3.36</text>
+
+  <line x1="24" y1="168" x2="696" y2="168" stroke="#232320" strokeWidth="1" />
+
+  <text x="24" y="204" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">SEPTEMBER 2026</text>
+  <rect x="150" y="192" width="188" height="18" rx="2" fill="#E6FF00" />
+  <text x="346" y="206" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">OWNED 1.57</text>
+  <rect x="150" y="218" width="227" height="18" rx="2" fill="#8a8a80" />
+  <text x="385" y="232" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">INSTITUTIONAL 1.89</text>
+  <rect x="150" y="244" width="211" height="18" rx="2" fill="#4a4a44" />
+  <text x="369" y="258" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">DIRECTORIES 1.77</text>
+
+  <text x="24" y="296" fill="#55554f" fontSize="10" fontFamily="JetBrains Mono, monospace">DIRECTORIES = YELP + ANGI + BBB COMBINED · INSTITUTIONAL = STATE LICENSE BOARD</text>
+  <text x="24" y="314" fill="#55554f" fontSize="10" fontFamily="JetBrains Mono, monospace">IN JULY THE DIRECTORY LAYER WAS THE WIDEST. BY SEPTEMBER IT WAS THE NARROWEST.</text>
+</svg>
+
+*Combined, Yelp, Angi, and BBB went from 3.36 citations per check to 1.77 — a 47% fall in twelve weeks. The state license board alone now outweighs all three together.*
+
+That last sentence is the paper. In July, a contractor's three big commercial profiles were collectively the heaviest thing in the engines' research. By the end of September, a single government database the contractor has never thought about outweighed all three.
+
+There is a plausible mechanism, and it is worth stating as a hypothesis rather than a finding. Through 2026 the major engines have been under sustained pressure — commercial, legal, and reputational — over the reliability of what they assert. An answer that names a contractor is a recommendation, and a recommendation that turns out to be wrong about licensure or good standing is a liability of a different class than a wrong restaurant suggestion. Under that pressure, the rational move for an engine is to shift weight toward primary records: the regulator, the municipality, the registry. We cannot see inside the systems, and we are not going to pretend otherwise. But the behavior is consistent with verification displacing popularity.
+
+<h2 id="part-4">Part IV — A correction to our own published work</h2>
+
+In August we published [a field note on the first 700 checks](/research/we-ran-700-ai-visibility-checks-one-texas-market) and made a point of highlighting one number: Google AI Overviews had mentioned the tracked business **zero times in 84 checks**. We wrote that the zero was the finding, and we published it deliberately rather than quietly dropping it.
+
+Extending the dataset to 2,100 checks has given us enough signal to say that the zero was ours, not Google's.
+
+<svg viewBox="0 0 720 300" role="img" aria-label="Chart showing that the Google AI Overviews probe was failing to capture answers in July and August 2026. Average captured answer length was 74 characters in July and 49 in August, with 71 of 72 and 102 of 103 checks returning no sources at all. In September average answer length rose to 792 characters with 1.7 sources per check. For comparison, Gemini averaged roughly 2,000 characters and 7 to 9 sources in every month." className="wp-fig">
+  <text x="24" y="32" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">What a broken probe looks like in the data</text>
+  <text x="24" y="50" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">AVERAGE CAPTURED ANSWER LENGTH, CHARACTERS · GOOGLE AI OVERVIEWS VS GEMINI</text>
+
+  <text x="24" y="92" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">AI OVERVIEWS · JUL</text>
+  <rect x="210" y="80" width="4" height="16" rx="1" fill="#6a2a2a" />
+  <text x="226" y="92" fill="#a8683f" fontSize="10" fontFamily="JetBrains Mono, monospace">74 chars · 71 of 72 checks returned no sources</text>
+
+  <text x="24" y="124" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">AI OVERVIEWS · AUG</text>
+  <rect x="210" y="112" width="3" height="16" rx="1" fill="#6a2a2a" />
+  <text x="226" y="124" fill="#a8683f" fontSize="10" fontFamily="JetBrains Mono, monospace">49 chars · 102 of 103 checks returned no sources</text>
+
+  <text x="24" y="156" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">AI OVERVIEWS · SEP</text>
+  <rect x="210" y="144" width="79" height="16" rx="1" fill="#E6FF00" />
+  <text x="299" y="156" fill="#E6FF00" fontSize="10" fontFamily="JetBrains Mono, monospace">792 chars · 1.7 sources per check — the probe starts working</text>
+
+  <line x1="24" y1="180" x2="696" y2="180" stroke="#232320" strokeWidth="1" />
+
+  <text x="24" y="212" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">GEMINI · JUL</text>
+  <rect x="210" y="200" width="198" height="16" rx="1" fill="#55554f" />
+  <text x="418" y="212" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">1,983 chars · 7.2 sources</text>
+  <text x="24" y="244" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">GEMINI · SEP</text>
+  <rect x="210" y="232" width="217" height="16" rx="1" fill="#55554f" />
+  <text x="437" y="244" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">2,167 chars · 8.6 sources</text>
+
+  <text x="24" y="284" fill="#55554f" fontSize="10" fontFamily="JetBrains Mono, monospace">A WORKING ENGINE RETURNS THOUSANDS OF CHARACTERS AND SEVERAL SOURCES. OURS RETURNED FIFTY AND NONE.</text>
+</svg>
+
+*An engine that is genuinely silent about a business still returns an answer about the market. Ours was returning almost nothing at all — the signature of a capture failure, not a verdict.*
+
+In July and August, our AI Overviews probe captured an average of **74 and 49 characters** per check, with no sources attached in 71 of 72 and 102 of 103 checks respectively. That is not an AI Overview. A functioning Overview in this dataset runs to thousands of characters and carries seven or more sources, as every Gemini capture did in the same window. In September the Overviews probe began returning real content — 792 characters on average, 1.7 sources per check, and the first 12 mentions.
+
+So the honest correction reads: **we do not know what Google AI Overviews said about this business in July and August, because we were not successfully reading it.** The published zero measured our instrument. We have left the original field note online with a correction notice rather than editing the number out of it, because a research practice that silently revises its own numbers is worth less than one that does not.
+
+The same caution applies to Google Maps, which recorded 0 mentions across 223 checks in July and August and then 85 in September, with average captured answer length rising from roughly 330 characters to 407 and then 662. We are treating the Maps series before September as unreliable for the same reason, and have excluded both surfaces from every trend in this paper. Our [earlier reporting of a 25-of-25 Maps grid presence](/research/we-ran-700-ai-visibility-checks-one-texas-market) came from a separate grid scan, not from this probe, and is unaffected.
+
+This is the second time publishing the raw data has cost us a headline. It will not be the last. The alternative — reporting numbers we have not stress-tested — is how the AI visibility field filled up with statistics nobody can source.
+
+<h2 id="part-5">Part V — What a contractor should actually do</h2>
+
+The temptation is to read "directories are declining" as "cancel the directory listings." That is the wrong conclusion and the data does not support it. A 47% fall from a high base still leaves Yelp, Angi, BBB, HomeAdvisor, and BuildZoom appearing hundreds of times across the window, all five still inside the three-engine consensus set. They are losing weight, not disappearing.
+
+The right conclusion is about **where the next hour of effort goes.**
+
+1. **Pull your state license record and read it like an auditor.** For Texas plumbers that is the [Texas State Board of Plumbing Examiners](https://tsbpe.texas.gov/); for most other trades, the [Texas Department of Licensing and Regulation](https://www.tdlr.texas.gov/). It was the single heaviest-cited third-party domain in our data by September. Confirm it is current, confirm the business name matches your website character for character, and confirm the responsible party is the person you expect.
+
+2. **Claim your city and chamber listings.** The Red Oak municipal site was the fastest-rising domain we measured, up 79% per check in twelve weeks. Municipal business directories and chamber pages are usually free, frequently out of date, and almost never maintained by the business they describe.
+
+3. **Treat your own website as the primary record, because the engines do.** It was the most-cited domain about this company in every single month, at a rate the nearest third-party source only approached in August. Services in plain language, cities actually served, license number visible, credentials named. [If a crawler cannot read it](/research/is-your-site-blocking-ai-crawlers), none of the rest of this matters.
+
+4. **Keep the directory profiles accurate and stop buying placement on the assumption it drives AI answers.** Claim them, correct the name-address-phone, and move on. Whatever a paid upgrade does for human traffic, our data gives no reason to expect it moves an AI recommendation — and the trend line is going the wrong way for that bet.
+
+5. **Make every layer agree.** The engines cross-reference. A business whose license record says one name, whose website says a second, and whose Yelp page lists an old address is not a business with three listings. It is, to a verification system, three weak claims about possibly-different companies. [Entity consistency](/research/local-entity-gap-ai-search) is the whole game and it is boring work, which is why it is available.
+
+6. **Re-measure in ninety days.** This paper describes twelve weeks. Twelve weeks from now the weighting will have moved again. Run the checks yourself with [the measurement playbook](/research/ai-search-measurement-playbook), or let the [$27 AI Visibility Audit](/visibility-check) score all six signals for your trade and city in one pass.
+
+<h2 id="method">Method, and what this paper does not claim</h2>
+
+The data comes from our internal tracking system: 2,100 automated checks of 42 buyer prompts for one Dallas–Fort Worth plumbing market, July 7 – September 30, 2026, run against ChatGPT, Claude, Perplexity, Gemini, Google AI Overviews, and Google Maps, with each engine's answer and source list stored at check time. Source-trail figures use only ChatGPT, Claude, and Perplexity (989 checks), and count only domains present in all three engines' trails. All citation figures are normalized per check. Gemini's grounding URLs resolve to a Google redirect service rather than publisher domains and are excluded from source counts. Google AI Overviews and Google Maps are excluded from all trend figures for the capture failure documented in Part IV.
+
+This is **one market, one trade, one business, over twelve weeks.** It is not a cross-market study and we are not presenting it as one. A three-month window cannot distinguish a structural re-weighting from a long seasonal swing, and the mechanism proposed in Part III is a hypothesis about systems we cannot inspect. What we can say precisely is what we measured: in this market, against these prompts, across these three engines, commercial directory citations fell by roughly half while government-record citations rose, and the company's own website remained the most-consulted source throughout. We will publish the next window whether or not it agrees with this one.
+
+---
+
+*The Directory Collapse is part of 6 Signal's visibility research. For the trust-stack model this paper updates, read [The Supplier Signal](/research/the-supplier-signal-dfw-material-suppliers); for the original baseline and the field note now carrying a correction, read [We Ran 700 AI Visibility Checks in One Texas Market](/research/we-ran-700-ai-visibility-checks-one-texas-market); for the entity-consistency work the playbook depends on, read [The Local Entity Gap](/research/local-entity-gap-ai-search). To see where your business stands today, start with the [free AI visibility check](/ai-visibility-check) or the [$27 AI Visibility Audit](/visibility-check).*
+
+## Sources
+
+- 6 Signal internal tracking system — 2,100 probe records with stored answers and source trails, July 7 – September 30, 2026 (method above)
+- Texas State Board of Plumbing Examiners — [tsbpe.texas.gov](https://tsbpe.texas.gov/)
+- Texas Department of Licensing and Regulation — [tdlr.texas.gov](https://www.tdlr.texas.gov/)
+- City of Red Oak, Texas — [redoaktx.org](https://www.redoaktx.org/)

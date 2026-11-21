@@ -24,6 +24,8 @@ const WP_PDFS: Record<string, { cover: string; pdf: string }> = {
   "the-connective-layer-ai-infrastructure-construction": { cover: "/papers/covers/the-connective-layer-ai-infrastructure-construction.png", pdf: "/papers/the-connective-layer-ai-infrastructure-construction.pdf" },
   "local-ai-infrastructure-blueprint": { cover: "/papers/covers/local-ai-infrastructure-blueprint.png", pdf: "/papers/local-ai-infrastructure-blueprint.pdf" },
   "the-supplier-signal-dfw-material-suppliers": { cover: "/papers/covers/the-supplier-signal-dfw-material-suppliers.png", pdf: "/papers/the-supplier-signal-dfw-material-suppliers.pdf" },
+  "the-directory-collapse-ai-citation-shift": { cover: "/papers/covers/the-directory-collapse-ai-citation-shift.png", pdf: "/papers/the-directory-collapse-ai-citation-shift.pdf" },
+  "the-convergence-ai-engines-agree": { cover: "/papers/covers/the-convergence-ai-engines-agree.png", pdf: "/papers/the-convergence-ai-engines-agree.pdf" },
 };
 
 // Research figures are dark plates on screen. Every /research-visuals/ SVG has

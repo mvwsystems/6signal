@@ -401,3 +401,65 @@ playbook, measure-without-lying, local-entity-gap, GBP-fix, crawlers, question-c
 signal (Part VII citation-trail rule), funnel CTAs.
 
 All three lean on GFM tables/SVG figures now supported in the renderer (remark-gfm added 2026-09-06).
+
+### Gap-fill set: October–November 2026 (written 2026-11-21, backdated)
+
+Weekly posts had stopped after 2026-10-15 and white papers after 2026-09-01. This set closes
+both gaps — five Thursday posts (Oct 22 → Nov 19), two monthly White Papers (Oct 1, Nov 1), and
+one scheduled post (Nov 26). **The backdating is editorial and was the owner's explicit call**;
+it was flagged before writing and reaffirmed. Discipline carried over from the Intelligent
+Contractor series: each piece cites only data that existed on its own date, and links only to
+posts dated before it.
+
+**White Paper 08/08 — `the-directory-collapse-ai-citation-shift`, 2026-10-01.** First of two
+original-research papers built on the extended probe set (2,100 checks, Jul 7 – Sep 30, verified
+against Supabase `probe_results` on 2026-11-21). Core finding: per-check citations to commercial
+directories collapsed (Yelp 1.03→0.48, Angi 1.27→0.57, BBB 1.06→0.72) while institutional sources
+rose (license board 1.56→1.89, city government 0.38→0.68, +79%) and the owned site held #1
+throughout. **All citation figures are normalized per check** — raw counts confound with monthly
+check volume, which differed (629/615/856). Three-engine consensus only (ChatGPT/Claude/Perplexity,
+989 checks); Gemini excluded (unresolvable vertexaisearch redirects).
+
+**Part IV is a retraction of our own published work.** The `we-ran-700-ai-visibility-checks`
+field note led with "AI Overviews 0 of 84" and made a virtue of publishing the zero. It was a
+capture failure: Jul/Aug Overviews probes averaged 74 and 49 characters with no sources in 71/72
+and 102/103 checks, against ~3,000 chars and 7.3 sources once working in September. Maps before
+September fails the same test (0 hits, ~330-char captures). Both surfaces are excluded from every
+trend in both papers. The original field note keeps its text and carries a `.wp-correction` notice
+at the top — do not quietly edit the number out of it.
+
+**White Paper 09/09 — `the-convergence-ai-engines-agree`, 2026-11-01.** 2,871 checks through
+Oct 31. Finding: the spread between the most and least generous surface narrowed from 65.5 points
+in July (4 working surfaces) to 24.2 in October (all 6), while Google AI Overviews went 8.1% → 48.4%
+in one month. Framed carefully — comparing a 4-surface spread to a 6-surface spread is conservative
+in the argument's own direction.
+
+| Date | Slug | Type | Track | Angle |
+|---|---|---|---|---|
+| Oct 22 | `fixed-price-contract-tariff-bet` | Insight | operations | Section 232 at 50%; metal PPI +20.9–27.3% vs blended +8.9%; worked $2M exposure example; 4 contract mechanisms |
+| Oct 29 | `claim-your-institutional-listings-ai-visibility` | Training | visibility | The actionable half of WP 08 — 6-search inventory, name-match first, citation-weight work order |
+| Nov 5 | `construction-labor-capacity-2027` | Insight | operations | AGC/NCCER 29% enforcement impact; ABC 349k/456k; capacity as a bid input, not a headcount story |
+| Nov 12 | `agentic-booking-contractors` | Insight | visibility | Google UCP + I/O booking; explicitly quarantines vendor-only stats in a three-tier figure |
+| Nov 19 | `2027-construction-forecast-read-the-footnotes` | Insight | operations | Nominal −5.4% vs real +1/+2%; decline is ~all nonbuilding; DMI +37%; renovation overtakes new build |
+| **Nov 26** | `what-we-got-wrong-this-year` | Field Note | visibility | **Scheduled, not merged** — see below |
+
+**Scheduled publish.** `what-we-got-wrong-this-year` lives on branch `post-2026-11-26` and is
+merged to main at 12:00 UTC on Nov 26 by `.github/workflows/publish-post-1126.yml` (same one-shot
+pattern as the 07-30 / 08-03 / white-paper workflows: year guard + branch-existence check, both
+no-ops afterward). It is a deliberate integrity piece for the holiday week: it collects the year's
+three failed findings — the AI Overviews instrument zero, the 92% Gemini peak reported as a
+baseline, and the fact that **November's own partial data widens the spread back to 32.7 points
+and so argues with the Convergence paper published three weeks earlier** (Perplexity 64.7% → 31.8%,
+with no instrument signature). It also states the three findings that held: owned site always #1,
+institutional rising, directories falling four straight months.
+
+**Animated figures (new).** Posts — not white papers, which also ship as PDFs where motion is
+meaningless — can opt into motion with `className="wp-fig reveal fig-anim"`. Classes `.fa-bar`,
+`.fa-fade`, `.fa-rise`, `.fa-draw`, `.fa-pulse` live in globals.css next to `.wp-fig`; stagger via
+inline `animationDelay`. Motion starts from the existing reveal observer adding `.in`, so a chart
+below the fold does not finish animating before the reader arrives. Every animation ends at the
+figure's resting state, and a `prefers-reduced-motion` block drops them entirely.
+
+**White paper assets.** Both papers are registered in `WP_PDFS` (app/research/[slug]/page.tsx) and
+in `scripts/generate-wp-pdfs.sh`. Covers are generated by the new `scripts/make-wp-cover.py`
+(Chrome headless → 2040×2640 PNG, series layout, one bespoke figure per paper) rather than by hand.

@@ -10238,12 +10238,105 @@ svg {
   border: 1px solid #232320;
   border-radius: 2px;
 }
+
+/* ── Animated research figures (posts only) ──────────────────────────────
+   White papers also ship as PDFs, where motion means nothing, so the papers
+   stay static and only Insight/Training posts use these. A figure opts in
+   with `className="wp-fig reveal fig-anim"`: the existing reveal observer
+   (useMicroInteractions) adds `.in` when the figure scrolls into view, which
+   is what starts the motion — otherwise a chart below the fold would finish
+   animating long before the reader arrived. Stagger comes from an inline
+   animationDelay on each element.
+
+   Every animation ends at the figure's resting state and holds there
+   (forwards), so the finished chart is what a reader sees whether the motion
+   played, was skipped, or was never started. Under prefers-reduced-motion the
+   hook adds `.in` immediately and the guard at the end of this block drops the
+   animations entirely, which leaves exactly that resting state on screen. */
+.fig-anim .fa-bar {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transform-box: fill-box;
+}
+.fig-anim.in .fa-bar {
+  animation: fa-grow 0.9s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+.fig-anim .fa-fade { opacity: 0; }
+.fig-anim.in .fa-fade { animation: fa-fade-in 0.55s ease forwards; }
+.fig-anim .fa-rise {
+  opacity: 0;
+  transform: translateY(8px);
+  transform-box: fill-box;
+}
+.fig-anim.in .fa-rise { animation: fa-rise-in 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) forwards; }
+/* Line charts draw themselves: the dash offset starts at the path length
+   (set per-path inline, since only the path knows its own length). */
+.fig-anim .fa-draw { stroke-dashoffset: var(--len, 1200); }
+.fig-anim.in .fa-draw { animation: fa-draw-in 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+/* The one live accent: a slow pulse on the single point a figure argues for. */
+.fig-anim.in .fa-pulse { animation: fa-pulse-ring 2.6s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+
+@keyframes fa-grow { to { transform: scaleX(1); } }
+@keyframes fa-fade-in { to { opacity: 1; } }
+@keyframes fa-rise-in { to { opacity: 1; transform: translateY(0); } }
+@keyframes fa-draw-in { to { stroke-dashoffset: 0; } }
+@keyframes fa-pulse-ring {
+  0% { opacity: 0.85; transform: scale(1); }
+  70% { opacity: 0; transform: scale(2.6); }
+  100% { opacity: 0; transform: scale(2.6); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fig-anim .fa-bar,
+  .fig-anim.in .fa-bar,
+  .fig-anim .fa-fade,
+  .fig-anim.in .fa-fade,
+  .fig-anim .fa-rise,
+  .fig-anim.in .fa-rise,
+  .fig-anim .fa-draw,
+  .fig-anim.in .fa-draw,
+  .fig-anim.in .fa-pulse {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    stroke-dashoffset: 0;
+  }
+}
 .wp-tiles {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
   margin: 28px 0;
 }
+
+/* Correction notice on a published research post. Deliberately not styled as
+   an alarm: it sits at the top of the article it amends, states what changed,
+   and links the paper that documents it. Amber rather than the accent yellow,
+   so it reads as an editorial note and never competes with a figure. */
+.wp-correction {
+  margin: 0 0 32px;
+  padding: 18px 20px;
+  background: rgba(168, 104, 63, 0.07);
+  border: 1px solid rgba(168, 104, 63, 0.3);
+  border-left: 2px solid #a8683f;
+  border-radius: 2px;
+}
+.wp-correction-label {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #a8683f;
+  margin-bottom: 8px;
+}
+.wp-correction p {
+  font-size: 15px;
+  line-height: 1.65;
+  color: #c8c8c4;
+  margin: 0;
+}
+.wp-correction a { color: #f5f5f3; border-bottom: 1px solid rgba(168, 104, 63, 0.6); }
+.wp-correction a:hover { color: #E6FF00; border-color: #E6FF00; }
 .wp-tile {
   flex: 1 1 180px;
   background: #0e0e0c;

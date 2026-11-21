@@ -1,0 +1,184 @@
+---
+title: "The Fastest-Rising Citation in Our Data Was City Hall. Here Is How to Claim Yours."
+slug: "claim-your-institutional-listings-ai-visibility"
+description: "Across 2,100 tracked AI checks, the single fastest-rising source domain was not a directory or a review site. It was a small Texas city's government website, up 79% per check in twelve weeks. A step-by-step training on finding, claiming, and correcting the institutional listings AI engines are increasingly leaning on — license boards, municipal directories, chambers, and state registries."
+date: "2026-10-29"
+category: "AI Visibility"
+contentType: "Training"
+author: "Matt Vincent Walker"
+readTime: "12 min read"
+featured: false
+tags:
+  - AI Visibility
+  - Local Entity Optimization
+  - LEO
+  - Citations
+  - Licensing
+  - Training
+faq:
+  - q: "What are institutional listings and why do they matter for AI visibility?"
+    a: "Institutional listings are records about your business held by organizations with no commercial interest in promoting you: state license boards, city and county business directories, chambers of commerce, state comptroller or secretary of state registries, and regulator databases. They matter because AI engines increasingly treat them as verification. In our tracked data across one Dallas–Fort Worth market, citations to the state plumbing board rose from 1.56 per check in July 2026 to 1.89 in September, and the city government page rose 79%, while commercial directory citations fell by roughly half."
+  - q: "How do I find every institutional listing that mentions my business?"
+    a: "Run six searches, each restricted to a site or domain pattern: your state license board, your state comptroller or secretary of state registry, your city's domain, your county's domain, your chamber of commerce, and a general search for your exact business name plus the word license. Record what each one says about your name, address, phone, license number, and status. Most contractors find at least one record that is wrong, stale, or attached to a former address."
+  - q: "Are chamber of commerce listings worth paying for?"
+    a: "For AI visibility specifically, the listing matters more than the membership tier. A chamber page carrying your correct name, address, phone, and a description of what you do is an institutional citation regardless of whether you bought the premium placement. Join if the local business value justifies the dues on its own terms, but do not buy an upgraded chamber listing on the theory that it moves AI recommendations — nothing in our data supports that."
+  - q: "What is the single most common error in institutional records?"
+    a: "A business name that does not match. The legal entity name on a license or registry record is frequently a formal variant — an LLC suffix, a founder's name, an old DBA — while the website, Google Business Profile, and directory listings carry the trading name. To a verification system, those can read as weak claims about possibly different companies. Making the name identical across records is unglamorous work with a disproportionate effect."
+  - q: "How often should I re-check institutional listings?"
+    a: "Twice a year is enough for most contractors, plus immediately after any change to your address, phone number, entity structure, license renewal, or responsible party. Licenses lapse on a schedule, municipal directories get rebuilt without notice, and chambers purge records when dues lapse. The failure mode is silent: nothing tells you a record went stale."
+---
+
+For the last decade, the answer to "where should a contractor be listed" has been a list of companies that sell listings. Yelp, Angi, BBB, HomeAdvisor, Houzz, Thumbtack. All of them have a sales team, and all of them have been very effective at convincing trades businesses that visibility is something you buy.
+
+Our tracking data has been pointing somewhere else for three months.
+
+Between July and September 2026 we ran 2,100 automated AI visibility checks against one Dallas–Fort Worth plumbing market and stored every source trail. [The headline finding](/research/the-directory-collapse-ai-citation-shift) was that commercial directory citations fell by roughly half. The finding underneath it is more useful to act on: **the fastest-rising source domain in the entire dataset was a small city's government website.**
+
+<div className="wp-tiles">
+  <div className="wp-tile">
+    <div className="wp-tile-label">CITY GOVERNMENT PAGE</div>
+    <div className="wp-tile-num">+79%</div>
+    <div className="wp-tile-cap">0.38 → 0.68 citations per check, Jul to Sep 2026</div>
+  </div>
+  <div className="wp-tile">
+    <div className="wp-tile-label">STATE LICENSE BOARD</div>
+    <div className="wp-tile-num">+21%</div>
+    <div className="wp-tile-cap">1.56 → 1.89 — the heaviest third-party source</div>
+  </div>
+  <div className="wp-tile">
+    <div className="wp-tile-label">COMMERCIAL DIRECTORIES</div>
+    <div className="wp-tile-num">−47%</div>
+    <div className="wp-tile-cap">Yelp + Angi + BBB combined, same window</div>
+  </div>
+</div>
+
+Nobody sells you a city listing. There is no account manager for the Texas State Board of Plumbing Examiners. Which is exactly why these records sit unmaintained at most contractors, and exactly why they are available.
+
+<h2 id="the-shape">What the engines are actually leaning on</h2>
+
+<svg viewBox="0 0 720 300" role="img" aria-label="Chart comparing the change in citations per check between July and September 2026 for five source types. The city government page rose 79 percent, the state license board rose 21 percent, the company's own website was roughly flat at minus 2 percent, BBB fell 32 percent, Yelp fell 53 percent and Angi fell 55 percent. Rising sources are institutional and owned; falling sources are all commercial directories." className="wp-fig reveal fig-anim">
+  <text x="24" y="32" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">Change in citations per check, July to September 2026</text>
+  <text x="24" y="50" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">CHATGPT + CLAUDE + PERPLEXITY CONSENSUS TRAILS · ONE DFW PLUMBING MARKET</text>
+
+  <line x1="330" y1="72" x2="330" y2="252" stroke="#3a3a35" strokeWidth="1" />
+  <text x="330" y="268" fill="#55554f" fontSize="9" fontFamily="JetBrains Mono, monospace" textAnchor="middle">NO CHANGE</text>
+
+  <text x="24" y="96" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">CITY GOVERNMENT</text>
+  <rect x="330" y="86" width="237" height="14" rx="2" fill="#E6FF00" className="fa-bar" style={{ animationDelay: "0.05s" }} />
+  <text x="577" y="97" fill="#E6FF00" fontSize="10" fontFamily="JetBrains Mono, monospace" className="fa-fade" style={{ animationDelay: "0.65s" }}>+79%</text>
+
+  <text x="24" y="126" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">STATE LICENSE BOARD</text>
+  <rect x="330" y="116" width="63" height="14" rx="2" fill="#b4c400" className="fa-bar" style={{ animationDelay: "0.15s" }} />
+  <text x="403" y="127" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace" className="fa-fade" style={{ animationDelay: "0.75s" }}>+21%</text>
+
+  <text x="24" y="156" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">YOUR OWN WEBSITE</text>
+  <rect x="324" y="146" width="6" height="14" rx="2" fill="#6a6a64" className="fa-fade" style={{ animationDelay: "0.85s" }} />
+  <text x="300" y="157" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace" textAnchor="end" className="fa-fade" style={{ animationDelay: "0.85s" }}>−2%</text>
+
+  <text x="24" y="186" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">BBB</text>
+  <rect x="234" y="176" width="96" height="14" rx="2" fill="#4a4a44" className="fa-bar" style={{ animationDelay: "0.25s", transformOrigin: "right center" }} />
+  <text x="224" y="187" fill="#8a8a80" fontSize="10" fontFamily="JetBrains Mono, monospace" textAnchor="end" className="fa-fade" style={{ animationDelay: "0.9s" }}>−32%</text>
+
+  <text x="24" y="216" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">YELP</text>
+  <rect x="171" y="206" width="159" height="14" rx="2" fill="#4a4a44" className="fa-bar" style={{ animationDelay: "0.35s", transformOrigin: "right center" }} />
+  <text x="161" y="217" fill="#8a8a80" fontSize="10" fontFamily="JetBrains Mono, monospace" textAnchor="end" className="fa-fade" style={{ animationDelay: "1s" }}>−53%</text>
+
+  <text x="24" y="246" fill="#a8a8a3" fontSize="10" fontFamily="JetBrains Mono, monospace">ANGI</text>
+  <rect x="165" y="236" width="165" height="14" rx="2" fill="#4a4a44" className="fa-bar" style={{ animationDelay: "0.45s", transformOrigin: "right center" }} />
+  <text x="155" y="247" fill="#8a8a80" fontSize="10" fontFamily="JetBrains Mono, monospace" textAnchor="end" className="fa-fade" style={{ animationDelay: "1.1s" }}>−55%</text>
+
+  <text x="24" y="292" fill="#55554f" fontSize="10" fontFamily="JetBrains Mono, monospace" className="fa-fade" style={{ animationDelay: "1.25s" }}>EVERYTHING GAINING IS A RECORD YOU CANNOT BUY. EVERYTHING FALLING HAS A SALES TEAM.</text>
+</svg>
+
+*The split is not between big sites and small ones. It is between records that are sold and records that are kept.*
+
+That framing is the useful one. An engine assembling an answer it will be held to has a strong reason to prefer a source with no commercial stake in the outcome. A licensing board does not benefit from your being recommended. A city business directory does not upsell. The information is boring, maintained by someone whose job is accuracy, and hard to manipulate — which from a verification standpoint is the whole value proposition.
+
+The rest of this is the work order.
+
+<h2 id="step-1">Step 1 — Inventory what already exists about you</h2>
+
+You are not creating these records. Most of them already exist and have existed for years, which means they may already be wrong. Run these six searches and write down what you find.
+
+| # | Search | What you are checking |
+|---|---|---|
+| 1 | Your state license board's lookup, by license number **and** by name | Status, expiry, responsible party, exact entity name |
+| 2 | `site:yourstate.gov "Your Business Name"` | Comptroller, secretary of state, registry records |
+| 3 | `site:yourcity.gov "Your Business Name"` | Municipal business directory, permits, vendor lists |
+| 4 | `site:yourcounty.gov "Your Business Name"` | County registrations, DBA filings |
+| 5 | Your chamber of commerce's member directory | Listing presence, category, contact details |
+| 6 | `"Your Business Name" license` (no site restriction) | Aggregators that have republished your license data |
+
+For each, record five fields exactly as they appear: **business name, street address, phone, license number, status.** Not approximately. Character for character, including whether it says "LLC" or "L.L.C.", "Street" or "St."
+
+Most contractors doing this for the first time find between one and three records that disagree with their website. That disagreement is the problem — not the listing's absence.
+
+<h2 id="step-2">Step 2 — Fix the name first, everything else second</h2>
+
+The most common and most damaging error in institutional records is a business name mismatch.
+
+It happens for ordinary reasons. The legal entity is *Vincent Plumbing Holdings LLC* because that is what the lawyer filed. The license is in the responsible party's personal name because that is how the trade works. The website says *Vincent Plumbing* because that is what customers call it. The chamber listing says *Vincent Plumbing & Drain* because someone filled in a form in 2019.
+
+A human reconciles those instantly. A verification system treats them as four claims that may or may not describe the same business, and confidence drops accordingly. This is the mechanism behind [the local entity gap](/research/local-entity-gap-ai-search), and it is the highest-leverage unglamorous fix available to a contractor.
+
+Pick one canonical trading name. Make every record you control match it exactly. Where a legal name must differ — and on a license it often must — make sure the trading name appears on the same record as a DBA or alternate name, so the two are linked in one place rather than floating separately.
+
+<h2 id="step-3">Step 3 — Work the list in citation-weight order</h2>
+
+Not all institutional records are worth the same effort. Ours ranked roughly like this, heaviest first.
+
+<svg viewBox="0 0 720 272" role="img" aria-label="Priority ladder of institutional listings for contractors, ordered by citation weight in the tracked data. First, the state license board at 1.89 citations per check. Second, the city government site at 0.68. Third, state registries such as the comptroller. Fourth, chamber of commerce. Fifth, county records. Each rung notes the typical effort required, from thirty minutes to an afternoon." className="wp-fig reveal fig-anim">
+  <text x="24" y="32" fill="#f5f5f3" fontSize="13" fontFamily="Chakra Petch, sans-serif">Work order, heaviest citation weight first</text>
+  <text x="24" y="50" fill="#6a6a64" fontSize="10" fontFamily="JetBrains Mono, monospace">WEIGHTS FROM TRACKED SOURCE TRAILS · EFFORT FROM DOING THIS WITH CLIENTS</text>
+
+  <rect x="150" y="70" width="430" height="34" rx="2" fill="#E6FF00" className="fa-rise" style={{ animationDelay: "0.05s" }} />
+  <text x="166" y="92" fill="#060606" fontSize="11" fontFamily="JetBrains Mono, monospace">01 · STATE LICENSE BOARD — 1.89 / CHECK · 30 MIN</text>
+
+  <rect x="150" y="110" width="330" height="34" rx="2" fill="#181816" stroke="#8a8a80" strokeWidth="1" className="fa-rise" style={{ animationDelay: "0.18s" }} />
+  <text x="166" y="132" fill="#f5f5f3" fontSize="11" fontFamily="JetBrains Mono, monospace">02 · CITY BUSINESS DIRECTORY — 0.68 / CHECK · 1 HR</text>
+
+  <rect x="150" y="150" width="270" height="34" rx="2" fill="#181816" stroke="#55554f" strokeWidth="1" className="fa-rise" style={{ animationDelay: "0.31s" }} />
+  <text x="166" y="172" fill="#f5f5f3" fontSize="11" fontFamily="JetBrains Mono, monospace">03 · STATE REGISTRY / COMPTROLLER · 30 MIN</text>
+
+  <rect x="150" y="190" width="225" height="34" rx="2" fill="#181816" stroke="#3a3a35" strokeWidth="1" className="fa-rise" style={{ animationDelay: "0.44s" }} />
+  <text x="166" y="212" fill="#f5f5f3" fontSize="11" fontFamily="JetBrains Mono, monospace">04 · CHAMBER OF COMMERCE · 1 HR</text>
+
+  <rect x="150" y="230" width="180" height="26" rx="2" fill="#141412" stroke="#232320" strokeWidth="1" className="fa-rise" style={{ animationDelay: "0.57s" }} />
+  <text x="166" y="248" fill="#a8a8a3" fontSize="11" fontFamily="JetBrains Mono, monospace">05 · COUNTY / DBA · 30 MIN</text>
+</svg>
+
+*The whole ladder is an afternoon. It is an afternoon almost nobody spends.*
+
+**The license board (30 minutes).** For Texas plumbers, the [Texas State Board of Plumbing Examiners](https://tsbpe.texas.gov/); for most other trades, the [Texas Department of Licensing and Regulation](https://www.tdlr.texas.gov/). Confirm current status, correct responsible party, correct entity name, and an address you still occupy. If anything is wrong, the board has a change form and it is usually quick. This single record carried more citation weight than Yelp, Angi, and BBB combined by September.
+
+**The city (1 hour).** Many municipalities run a business directory, a registered-contractor list, or a permits portal that exposes contractor names publicly. Find yours, confirm you are on it, and correct the details. If your city has no directory but issues trade permits, your name is likely already in a public permits database — make sure it is attached to the right entity name.
+
+**The state registry (30 minutes).** Comptroller or secretary of state, depending on the state. This is the record that establishes the entity exists and is in good standing. Franchise tax status lapsing is a common and invisible problem; it makes the registry record say something unhelpful about you.
+
+**The chamber (1 hour).** Correct the listing if you are a member. Do not buy an upgrade for AI reasons — the listing's existence and accuracy is what gets cited, not its tier.
+
+**County and DBA (30 minutes).** Lowest weight, but it is where assumed-name filings live, and those are what link your trading name to your legal entity in a public record.
+
+<h2 id="step-4">Step 4 — Close the loop with your own site</h2>
+
+Institutional records are corroboration. They corroborate something, and that something is your website, which remained the single most-cited domain about this business in every month we measured.
+
+So the last step is to make the two agree in public. Put your license number on your site, in text rather than inside an image. Name the licensing body. State the entity name that appears on the license if it differs from your trading name. List the cities you actually serve rather than a county-wide claim you cannot support. [If a crawler cannot reach or parse any of that](/research/is-your-site-blocking-ai-crawlers), the corroboration has nothing to corroborate.
+
+Then stop. Re-check in six months, or immediately after any change of address, phone, entity, or responsible party. These records fail silently — nothing emails you when a municipal directory gets rebuilt and drops your row.
+
+<h2 id="what-this-is-not">What this does not do</h2>
+
+Claiming institutional listings will not make a thin website rank. It will not manufacture reviews you have not earned, and it will not put you ahead of a better-documented competitor. The effect it has is narrower and more specific: it raises the confidence an AI system has that your business is real, licensed, located where you say, and called what you say it is called.
+
+That is not a growth tactic. It is a precondition. The contractors getting named in AI answers are, on our data, the ones who clear it — and most of their competitors have left an afternoon of free work undone.
+
+---
+
+*To see which of these records are currently working for your business, the [$27 AI Visibility Audit](/visibility-check) scores all six signals for your trade and city in one pass. For the research behind this training, read [The Directory Collapse](/research/the-directory-collapse-ai-citation-shift) and [The Supplier Signal](/research/the-supplier-signal-dfw-material-suppliers). For the entity-consistency theory, read [The Local Entity Gap](/research/local-entity-gap-ai-search).*
+
+## Sources
+
+- 6 Signal internal tracking system — 2,100 probe records with stored answers and source trails, July 7 – September 30, 2026; per-check normalization and three-engine consensus method described in [The Directory Collapse](/research/the-directory-collapse-ai-citation-shift)
+- Texas State Board of Plumbing Examiners — [tsbpe.texas.gov](https://tsbpe.texas.gov/)
+- Texas Department of Licensing and Regulation — [tdlr.texas.gov](https://www.tdlr.texas.gov/)

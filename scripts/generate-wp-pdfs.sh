@@ -12,6 +12,8 @@ SLUGS=(
   the-connective-layer-ai-infrastructure-construction
   local-ai-infrastructure-blueprint
   the-supplier-signal-dfw-material-suppliers
+  the-directory-collapse-ai-citation-shift
+  the-convergence-ai-engines-agree
 )
 PATH="/usr/local/bin:$PATH" npx next start -p 3999 & SERVER=$!
 trap "kill $SERVER" EXIT
