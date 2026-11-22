@@ -6,6 +6,7 @@ import BlogPageClient from "../components/BlogPageClient";
 import AuditPopupButton from "../components/AuditPopupButton";
 import ResearchContent from "../components/ResearchContent";
 import { getAllPosts, formatDate } from "../lib/blog";
+import { AI_VISIBILITY_TOOLS, INDEX_UPDATED } from "../data/aiVisibilityTools";
 
 const BASE = "https://6signal.co";
 
@@ -216,7 +217,7 @@ export default function ResearchIndexPage() {
                 <span className="blog-meta-sep">·</span>
                 <span className="idx">Tool Index</span>
                 <span className="blog-meta-sep">·</span>
-                <span className="idx">May 2026</span>
+                <span className="idx">{INDEX_UPDATED}</span>
               </div>
               <h2 className="tindex-research-card-title">
                 The AI Visibility Tools Index
@@ -235,7 +236,7 @@ export default function ResearchIndexPage() {
             </div>
             <div className="tindex-research-card-right">
               <p className="tindex-research-card-tools">
-                82 tools reviewed
+                {AI_VISIBILITY_TOOLS.length} tools reviewed
               </p>
               <p className="tindex-research-card-tools" style={{ color: "#222220" }}>
                 AEO · GEO · Local · Enterprise

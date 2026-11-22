@@ -3,7 +3,12 @@ import Link from "next/link";
 import Nav from "../../components/Nav";
 import Footer from "../../components/Footer";
 import AuditPopupButton from "../../components/AuditPopupButton";
-import { AI_VISIBILITY_TOOLS, TOOL_CATEGORIES } from "../../data/aiVisibilityTools";
+import {
+  AI_VISIBILITY_TOOLS,
+  TOOL_CATEGORIES,
+  INDEX_UPDATED,
+  INDEX_UPDATED_ISO,
+} from "../../data/aiVisibilityTools";
 
 const BASE = "https://6signal.co";
 
@@ -98,7 +103,7 @@ export default function AIVisibilityToolsPage() {
       "A field guide to AEO, GEO, and AI visibility tools for tracking brand mentions, citations, prompts, competitors, and answer-engine visibility.",
     url: `${BASE}/research/ai-visibility-tools`,
     publisher: { "@type": "Organization", name: "6Signal", url: BASE },
-    dateModified: "2026-05-19",
+    dateModified: INDEX_UPDATED_ISO,
   };
 
   const fundedTools = AI_VISIBILITY_TOOLS.filter((t) => t.funding);
@@ -133,7 +138,7 @@ export default function AIVisibilityToolsPage() {
               tracking, citation tracking, and answer-engine visibility tools.
             </p>
             <div className="tindex-meta-row">
-              <span>Updated May 2026</span>
+              <span>Updated {INDEX_UPDATED}</span>
               <span className="tindex-meta-sep">·</span>
               <span>AEO</span>
               <span className="tindex-meta-sep">·</span>

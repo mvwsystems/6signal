@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { AI_VISIBILITY_TOOLS, INDEX_UPDATED } from "../../data/aiVisibilityTools";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -215,7 +216,7 @@ export default async function Image() {
                 letterSpacing: "0.04em",
               }}
             >
-              82 tools · AEO · GEO · AI Visibility
+              {`${AI_VISIBILITY_TOOLS.length} tools · AEO · GEO · AI Visibility`}
             </span>
           </div>
         </div>
@@ -327,7 +328,7 @@ export default async function Image() {
                 textTransform: "uppercase",
               }}
             >
-              May 2026
+              {INDEX_UPDATED}
             </span>
           </div>
         </div>
