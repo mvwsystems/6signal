@@ -7,6 +7,11 @@ import AuditPopupButton from "../components/AuditPopupButton";
 import ResearchContent from "../components/ResearchContent";
 import { getAllPosts, formatDate } from "../lib/blog";
 import { AI_VISIBILITY_TOOLS, INDEX_UPDATED } from "../data/aiVisibilityTools";
+import {
+  CONSTRUCTION_SOFTWARE,
+  SOFTWARE_CATEGORIES,
+  CATALOG_UPDATED,
+} from "../data/constructionSoftware";
 
 const BASE = "https://6signal.co";
 
@@ -240,6 +245,49 @@ export default function ResearchIndexPage() {
               </p>
               <p className="tindex-research-card-tools" style={{ color: "#222220" }}>
                 AEO · GEO · Local · Enterprise
+              </p>
+            </div>
+          </Link>
+        </div>
+      </section>
+
+      {/* ── CONSTRUCTION SOFTWARE CATALOG CARD ────────────────── */}
+      <section className="tindex-research-section rule">
+        <div className="wrap">
+          <div className="tindex-research-eyebrow">
+            <span className="idx">Market Map</span>
+          </div>
+          <Link href="/research/construction-software" className="tindex-research-card">
+            <div>
+              <div className="tindex-research-card-meta">
+                <span className="tindex-map-badge">Market Map</span>
+                <span className="blog-meta-sep">·</span>
+                <span className="idx">Software Catalog</span>
+                <span className="blog-meta-sep">·</span>
+                <span className="idx">{CATALOG_UPDATED}</span>
+              </div>
+              <h2 className="tindex-research-card-title">
+                The Construction Software Catalog
+              </h2>
+              <p className="tindex-research-card-desc">
+                {CONSTRUCTION_SOFTWARE.length} construction and trade software products —
+                field service, construction management, estimating, ERP, safety, BIM and
+                more. What each one does, who it is built for, and what the vendor says
+                its AI does. Filterable by workflow, trade and AI status.
+              </p>
+              <span className="blog-read-more">
+                Browse the Catalog
+                <svg viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2">
+                  <path d="M0 5h14M10 1l4 4-4 4" />
+                </svg>
+              </span>
+            </div>
+            <div className="tindex-research-card-right">
+              <p className="tindex-research-card-tools">
+                {CONSTRUCTION_SOFTWARE.length} products · {SOFTWARE_CATEGORIES.length} workflows
+              </p>
+              <p className="tindex-research-card-tools" style={{ color: "#222220" }}>
+                Home service · Residential · Commercial · Civil
               </p>
             </div>
           </Link>

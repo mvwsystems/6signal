@@ -40,6 +40,7 @@ const PAGES: [string, string, string][] = [
   ["/systemize", "Systemize", "AI infrastructure for internal operations."],
   ["/research", "Research", "White papers, field notes, and insights on AI visibility for contractors."],
   ["/research/ai-visibility-tools", "AI Visibility Tools Index", "Field guide to AEO, GEO, and AI visibility tools."],
+  ["/research/construction-software", "Construction Software Catalog", "Sourced catalog of 100 construction and trade software products and their vendor-described AI features."],
   ["/briefings", "Intelligence Brief", "Published issues of the newsletter: what the engines answered, what moved."],
   ["/book", "Book an Appointment", "Free 30-minute working call with the operator — Zoom, phone, or on-site in DFW."],
   ["/contact", "Contact", `Email ${SITE_EMAIL} or call ${PHONE_DISPLAY}.`],

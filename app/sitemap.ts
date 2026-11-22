@@ -51,6 +51,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/operator`, lastModified: UPDATED, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/research`, lastModified: UPDATED, changeFrequency: "weekly", priority: 0.85 },
     { url: `${BASE}/research/ai-visibility-tools`, lastModified: UPDATED, changeFrequency: "weekly", priority: 0.82 },
+    { url: `${BASE}/research/construction-software`, lastModified: "2026-11-22", changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/research/intelligent-contractor`, lastModified: UPDATED, changeFrequency: "weekly", priority: 0.82 },
     { url: `${BASE}/briefings`, lastModified: UPDATED, changeFrequency: "weekly", priority: 0.8 },
     ...posts.map((post) => ({
