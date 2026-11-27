@@ -4,9 +4,9 @@ import { db } from "./db";
 import { whoFromRequest, googleConfigured } from "./dashboard-auth";
 import { runAs, currentActor } from "./actor";
 import { CrmError, logActivity } from "./crm";
-import { canApprove } from "./commandCenter";
+import { canApprove, clearException } from "./commandCenter";
 import { redirectUri, siteOrigin } from "./googleAuth";
-import { GMAIL_SCOPES, gmailMailbox, gmailLink, sealToken, openToken, forgetGmailLink } from "./gmail";
+import { GMAIL_SCOPES, RECONNECT_MSG, gmailMailbox, gmailLink, sealToken, openToken, forgetGmailLink } from "./gmail";
 
 // One-time "Connect casey@ Gmail" (owner only). The browser goes to Google
 // with the dashboard's existing sign-in client, asking for read + create
@@ -116,6 +116,7 @@ export async function finishGmailConnect(req: NextRequest): Promise<NextResponse
     return giveBack("failed");
   }
   forgetGmailLink();
+  await runAs({ role: who.role, name: who.name }, () => clearException("connection:gmail_casey", `${mailbox} reconnected`)).catch(() => {});
   await runAs({ role: who.role, name: who.name }, () => logActivity({ entityType: "settings", action: "gmail_connected", summary: `${who.name} connected ${mailbox}'s Gmail to the inbox (read + drafts only)`, service: SVC })).catch(() => {});
   return back("connected");
 }
@@ -124,7 +125,7 @@ export async function gmailStatus() {
   const s = db();
   const conn = s ? (await s.from("connections").select("status,last_error,last_sync_at").eq("name", "gmail_casey").maybeSingle()).data : null;
   const link = await gmailLink();
-  return { mailbox: gmailMailbox(), client_ready: googleConfigured(), connected: !!link, connected_at: link?.connected_at ?? null, connected_by: link?.connected_by ?? null, status: conn?.status ?? null, last_error: conn?.last_error ?? null, last_sync_at: conn?.last_sync_at ?? null };
+  return { mailbox: gmailMailbox(), client_ready: googleConfigured(), connected: !!link, needs_reconnect: !!link && conn?.status === "down" && conn?.last_error === RECONNECT_MSG, connected_at: link?.connected_at ?? null, connected_by: link?.connected_by ?? null, status: conn?.status ?? null, last_error: conn?.last_error ?? null, last_sync_at: conn?.last_sync_at ?? null };
 }
 
 export async function disconnectGmail() {
@@ -140,6 +141,7 @@ export async function disconnectGmail() {
   if (error) throw new CrmError(error.message);
   await s.from("connections").update({ status: "not_configured", last_error: null, note: "Connect casey@ with Google in Settings (read + create drafts; never sends).", updated_at: new Date().toISOString() }).eq("name", "gmail_casey");
   forgetGmailLink();
+  await clearException("connection:gmail_casey", `${mailbox} disconnected on purpose`).catch(() => {});
   await logActivity({ entityType: "settings", action: "gmail_disconnected", summary: `${who.name} disconnected ${mailbox}'s Gmail from the inbox`, service: SVC });
   return { ok: true };
 }

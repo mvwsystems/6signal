@@ -194,7 +194,7 @@ export async function raiseException(e: { title: string; detail?: string; source
   return { id: item.id, deduped: false };
 }
 
-async function clearException(sourceId: string, why: string) {
+export async function clearException(sourceId: string, why: string) {
   const { data } = await client().from("items").update({ status: "done", updated_at: now() }).eq("type", "exception").eq("source", "dashboard").eq("source_id", sourceId).neq("status", "done").select("id, title");
   for (const r of data ?? []) await logActivity({ entityType: "item", entityId: r.id, action: "status_done", summary: `Cleared "${r.title}": ${why}` });
 }

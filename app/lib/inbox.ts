@@ -2,7 +2,7 @@ import { db } from "./db";
 import { currentActor } from "./actor";
 import { CrmError, logActivity, updateProspect, createProspect, stopForProspects } from "./crm";
 import { perform, registerAction } from "./commandCenter";
-import { gmailConfigured, gmailMailbox, searchMessages, getMessage, createDraft } from "./gmail";
+import { gmailConfigured, gmailMailbox, searchMessages, getMessage, createDraft, RECONNECT_MSG } from "./gmail";
 import { parseMessage, guessIntent, newText, buildReplyMime, companyGuess, INTENTS, ParsedMessage } from "./inboxCore";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -163,7 +163,9 @@ export async function listThreads(f: { tab?: string | null; status?: string | nu
   const counts = await client().from("inbox_threads").select("prospect_id,status");
   const rows = counts.data ?? [];
   const sync = await syncState();
+  const conn = (await client().from("connections").select("status,last_error").eq("name", "gmail_casey").maybeSingle()).data;
   return {
+    needs_reconnect: conn?.status === "down" && conn.last_error === RECONNECT_MSG, reconnect_reason: conn?.status === "down" && conn.last_error === RECONNECT_MSG ? conn.last_error : null,
     threads: data ?? [], total: count ?? 0, configured: await gmailConfigured(), mailbox: gmailMailbox(), last_sync_at: sync.last_sync_at,
     counts: {
       matched: rows.filter((r) => r.prospect_id).length, unmatched: rows.filter((r) => !r.prospect_id).length,

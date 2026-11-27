@@ -62,7 +62,7 @@ const GMAIL_NOTICE: Record<string, { text: string; ok?: boolean }> = {
   google_not_set_up: { text: "Google sign-in isn't set up on this site (GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET)." },
   failed: { text: "Connecting Gmail didn't work. Nothing was saved. Try again." },
 };
-interface GmailStatus { mailbox: string; client_ready: boolean; connected: boolean; connected_at: string | null; connected_by: string | null; status: string | null; last_error: string | null; last_sync_at: string | null }
+interface GmailStatus { mailbox: string; client_ready: boolean; connected: boolean; needs_reconnect?: boolean; connected_at: string | null; connected_by: string | null; status: string | null; last_error: string | null; last_sync_at: string | null }
 
 function GmailConnect({ canEdit }: { canEdit: boolean }) {
   const [g, setG] = useState<GmailStatus | null>(null);
@@ -92,6 +92,9 @@ function GmailConnect({ canEdit }: { canEdit: boolean }) {
   const when = (iso: string | null) => (iso ? new Date(iso).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : null);
   return (
     <div>
+      {g?.needs_reconnect && (
+        <div role="alert" style={{ color: T.danger, fontWeight: 600, marginBottom: 6 }}>Google access for {mailbox} expired or was removed. Press Reconnect, sign in to Google as {mailbox} and press Allow.</div>
+      )}
       <div><Dot status={dot} />Inbox (Gmail, {mailbox}): {!g ? "checking…" : g.connected
         ? <>connected{g.connected_at ? ` ${when(g.connected_at)}` : ""}{g.connected_by ? ` by ${g.connected_by}` : ""}; reads mail and creates drafts, never sends.{g.last_sync_at ? ` Last read ${when(g.last_sync_at)}.` : " First read runs within 15 minutes."}{g.last_error ? <span style={{ color: T.danger }}> Last error: {g.last_error}</span> : null}</>
         : <>not connected. {canEdit ? `Press Connect, then sign in to Google as ${mailbox} and press Allow.` : "Matt connects it here."}</>}
@@ -99,7 +102,7 @@ function GmailConnect({ canEdit }: { canEdit: boolean }) {
       {canEdit && g && (
         <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 8, flexWrap: "wrap" }}>
           {!g.connected && <a href="/api/dashboard/gmail/connect" style={{ ...btn(true), textDecoration: "none", opacity: g.client_ready ? 1 : 0.5, pointerEvents: g.client_ready ? "auto" : "none" }}>Connect {mailbox}</a>}
-          {g.connected && <a href="/api/dashboard/gmail/connect" style={{ ...btn(), textDecoration: "none" }}>Reconnect</a>}
+          {g.connected && <a href="/api/dashboard/gmail/connect" style={{ ...btn(!!g.needs_reconnect), textDecoration: "none" }}>Reconnect</a>}
           {g.connected && <button style={btn(false, { color: T.danger })} disabled={busy} onClick={disconnect}>{busy ? "Disconnecting…" : "Disconnect"}</button>}
           {!g.client_ready && <span style={muted}>Google sign-in isn't set up on this site, so Gmail can't be connected yet.</span>}
         </div>

@@ -71,6 +71,25 @@ export async function gmailLink(): Promise<{ mailbox: string; connected_by: stri
 }
 export const gmailConfigured = async () => !!(await readLink());
 
+export const RECONNECT_MSG = `Google access for ${gmailMailbox()} expired or was removed, so the inbox can't read new mail. Reconnect ${gmailMailbox()} in Settings, under Sending engine.`;
+
+// Google refused the saved access (invalid_grant: revoked, password change,
+// or expired). Mark the connection down and raise one Command Center alert;
+// both clear when casey@ is connected again.
+async function markNeedsReconnect() {
+  const s = db();
+  if (!s) return;
+  try {
+    const { data: cur } = await s.from("connections").select("last_error").eq("name", "gmail_casey").maybeSingle();
+    await s.from("connections").update({ status: "down", last_error: RECONNECT_MSG, updated_at: new Date().toISOString() }).eq("name", "gmail_casey");
+    // Alert once per lapse: later failed reads don't re-raise it.
+    if (cur?.last_error !== RECONNECT_MSG) {
+      const { raiseException } = await import("./commandCenter");
+      await raiseException({ title: `Reconnect ${gmailMailbox()} to the inbox`, detail: RECONNECT_MSG, sourceId: "connection:gmail_casey", severity: "high", immediate: true });
+    }
+  } catch (e) { console.error("[gmail] marking reconnect needed:", e); }
+}
+
 let cached: { token: string; exp: number } | null = null;
 async function accessToken(): Promise<string> {
   if (cached && cached.exp > Date.now() + 60_000) return cached.token;
@@ -86,8 +105,11 @@ async function accessToken(): Promise<string> {
   });
   const j = await res.json().catch(() => ({}));
   if (!res.ok || !j.access_token) {
-    const why = j.error === "invalid_grant" ? "Google access was removed or has expired. Connect casey@ again in Settings" : j.error_description || j.error || `HTTP ${res.status}`;
-    throw new Error(`Gmail sign-in failed: ${why}.`);
+    if (j.error === "invalid_grant") {
+      await markNeedsReconnect();
+      throw new Error(RECONNECT_MSG);
+    }
+    throw new Error(`Gmail sign-in failed: ${j.error_description || j.error || `HTTP ${res.status}`}.`);
   }
   cached = { token: j.access_token, exp: Date.now() + (Number(j.expires_in) || 3600) * 1000 };
   return cached.token;
