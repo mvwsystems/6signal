@@ -78,9 +78,9 @@ async function onReply(prospectId: string, m: ParsedMessage) {
 
 export async function syncInbox(): Promise<{ checked: number; added: number; matched: number; unmatched: number; replies: number; error?: string }> {
   const s = client();
-  if (!gmailConfigured()) {
+  if (!(await gmailConfigured())) {
     await connection({ status: "not_configured" });
-    throw new CrmError("Gmail isn't connected yet. It needs a Google service account with access to casey@6signal.co (see Settings → Sending engine).", 503);
+    throw new CrmError("Gmail isn't connected yet. Connect casey@ in Settings, under Sending engine.", 503);
   }
   const mailbox = gmailMailbox().toLowerCase();
   const state = await syncState();
@@ -164,7 +164,7 @@ export async function listThreads(f: { tab?: string | null; status?: string | nu
   const rows = counts.data ?? [];
   const sync = await syncState();
   return {
-    threads: data ?? [], total: count ?? 0, configured: gmailConfigured(), mailbox: gmailMailbox(), last_sync_at: sync.last_sync_at,
+    threads: data ?? [], total: count ?? 0, configured: await gmailConfigured(), mailbox: gmailMailbox(), last_sync_at: sync.last_sync_at,
     counts: {
       matched: rows.filter((r) => r.prospect_id).length, unmatched: rows.filter((r) => !r.prospect_id).length,
       needs_review: rows.filter((r) => r.prospect_id && r.status === "needs_review").length,
@@ -282,7 +282,7 @@ registerAction("inbox.reply_draft", {
         return "Not drafted: the prospect is now Do Not Contact.";
       }
     }
-    if (!gmailConfigured()) {
+    if (!(await gmailConfigured())) {
       await s.from("inbox_replies").update({ status: "approved", note: "Approved. Gmail isn't connected yet, so it isn't in Casey's drafts. Copy it from here.", updated_at: now() }).eq("id", r.id);
       return "Approved. Gmail isn't connected yet, so the reply wasn't put in Casey's drafts; it's saved on the conversation.";
     }

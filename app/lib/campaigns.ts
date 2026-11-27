@@ -6,6 +6,7 @@ import { ListFilters, STATUSES, DEAL_STAGES, SERVICE_ANGLES, CATEGORIES } from "
 import { perform, registerAction, canApprove } from "./commandCenter";
 import { sendEmail } from "./email";
 import { BASE } from "./site";
+import { gmailConfigured, gmailMailbox } from "./gmail";
 const siteOrigin = () => BASE; // links in emails always point at the live site
 import { ownerEmails, operatorEmails } from "./dashboard-auth";
 import {
@@ -91,7 +92,7 @@ export async function getSettings() {
     territories, claimed: claimed ?? [],
     config: {
       send_enabled: sendEnabled(), hard_daily_max: hardDailyMax(),
-      instantly_key: !!instantlyKey(), resend_key: !!process.env.RESEND_API_KEY?.trim(), places_key: !!process.env.GOOGLE_PLACES_API_KEY?.trim(), gmail_key: !!process.env.GMAIL_SERVICE_ACCOUNT_JSON?.trim(), gmail_mailbox: process.env.GMAIL_MAILBOX?.trim() || "casey@6signal.co",
+      instantly_key: !!instantlyKey(), resend_key: !!process.env.RESEND_API_KEY?.trim(), places_key: !!process.env.GOOGLE_PLACES_API_KEY?.trim(), gmail_key: await gmailConfigured(), gmail_mailbox: gmailMailbox(),
       email_from: process.env.EMAIL_FROM?.trim() || null,
     },
     connections: await connectionsStatus(),

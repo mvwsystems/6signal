@@ -67,7 +67,7 @@ export default function InboxTab() {
       <div className="dash-in" style={card({ marginBottom: 16, display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" })}>
         <span style={{ fontSize: 14, flex: 1, minWidth: 220 }}>
           {data?.configured === false
-            ? `Gmail isn't connected yet, so ${data.mailbox}'s mail can't be read. Setup is in Settings, under Sending engine.`
+            ? `Gmail isn't connected yet, so ${data.mailbox}'s mail can't be read. Matt connects it in Settings, under Sending engine.`
             : `Reading ${data?.mailbox ?? "Casey's inbox"}${data?.last_sync_at ? `, last checked ${when(data.last_sync_at)}` : ""}. Replies are drafted here and approved; they're sent from Gmail.`}
         </span>
         {data?.configured && <button style={btn()} disabled={busy} onClick={async () => {

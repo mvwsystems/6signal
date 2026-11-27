@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   const secret = process.env.CRON_SECRET;
   if (!secret || req.headers.get("x-cron-secret") !== secret) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  if (!gmailConfigured()) return NextResponse.json({ skipped: "Gmail not connected" });
+  if (!(await gmailConfigured())) return NextResponse.json({ skipped: "Gmail not connected" });
   try {
     return NextResponse.json(await runAs({ role: "operator", name: "Inbox sync" }, () => syncInbox()));
   } catch (e) {

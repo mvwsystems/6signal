@@ -50,6 +50,65 @@ async function api<X>(url: string, init?: RequestInit): Promise<X> {
 }
 const post = (body: unknown) => api("/api/dashboard/settings", { method: "POST", body: JSON.stringify(body) });
 
+// The inbox's Gmail connection: casey@ signs in with Google once and allows
+// read + create drafts. Owner only; the token never reaches the browser.
+const GMAIL_NOTICE: Record<string, { text: string; ok?: boolean }> = {
+  connected: { text: "Gmail connected. The inbox reads new mail every 15 minutes.", ok: true },
+  wrong_account: { text: "That wasn't the inbox mailbox, so nothing was saved. Pick the inbox account on Google's screen." },
+  missing_scopes: { text: "Google didn't grant both permissions (read and create drafts), so nothing was saved. Try again and allow both." },
+  no_refresh_token: { text: "Google didn't return lasting access, so nothing was saved. Try again." },
+  cancelled: { text: "Connecting Gmail was cancelled. Nothing changed." },
+  owner_only: { text: "Only Matt can connect or disconnect Gmail." },
+  google_not_set_up: { text: "Google sign-in isn't set up on this site (GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET)." },
+  failed: { text: "Connecting Gmail didn't work. Nothing was saved. Try again." },
+};
+interface GmailStatus { mailbox: string; client_ready: boolean; connected: boolean; connected_at: string | null; connected_by: string | null; status: string | null; last_error: string | null; last_sync_at: string | null }
+
+function GmailConnect({ canEdit }: { canEdit: boolean }) {
+  const [g, setG] = useState<GmailStatus | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [note, setNote] = useState<{ text: string; ok?: boolean } | null>(null);
+  const load = useCallback(() => { api<GmailStatus>("/api/dashboard/gmail").then(setG).catch((e) => setNote({ text: (e as Error).message })); }, []);
+  useEffect(() => {
+    load();
+    // Google sends the browser back with ?gmail=<result>; show it once, then tidy the address bar.
+    const sp = new URLSearchParams(window.location.search);
+    const r = sp.get("gmail");
+    if (r) {
+      setNote(GMAIL_NOTICE[r] ?? GMAIL_NOTICE.failed);
+      sp.delete("gmail");
+      const qs = sp.toString();
+      window.history.replaceState(null, "", `${window.location.pathname}${qs ? `?${qs}` : ""}${window.location.hash}`);
+    }
+  }, [load]);
+  const disconnect = async () => {
+    if (!g || !confirm(`Disconnect ${g.mailbox} from the inbox? The inbox stops reading new mail until it's connected again.`)) return;
+    setBusy(true);
+    try { await api("/api/dashboard/gmail", { method: "POST", body: JSON.stringify({ op: "disconnect" }) }); setNote({ text: "Gmail disconnected.", ok: true }); load(); }
+    catch (e) { setNote({ text: (e as Error).message }); } finally { setBusy(false); }
+  };
+  const mailbox = g?.mailbox ?? "casey@6signal.co";
+  const dot = !g ? "not_configured" : !g.connected ? "not_configured" : g.status === "down" ? "down" : "connected";
+  const when = (iso: string | null) => (iso ? new Date(iso).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : null);
+  return (
+    <div>
+      <div><Dot status={dot} />Inbox (Gmail, {mailbox}): {!g ? "checking…" : g.connected
+        ? <>connected{g.connected_at ? ` ${when(g.connected_at)}` : ""}{g.connected_by ? ` by ${g.connected_by}` : ""}; reads mail and creates drafts, never sends.{g.last_sync_at ? ` Last read ${when(g.last_sync_at)}.` : " First read runs within 15 minutes."}{g.last_error ? <span style={{ color: T.danger }}> Last error: {g.last_error}</span> : null}</>
+        : <>not connected. {canEdit ? `Press Connect, then sign in to Google as ${mailbox} and press Allow.` : "Matt connects it here."}</>}
+      </div>
+      {canEdit && g && (
+        <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 8, flexWrap: "wrap" }}>
+          {!g.connected && <a href="/api/dashboard/gmail/connect" style={{ ...btn(true), textDecoration: "none", opacity: g.client_ready ? 1 : 0.5, pointerEvents: g.client_ready ? "auto" : "none" }}>Connect {mailbox}</a>}
+          {g.connected && <a href="/api/dashboard/gmail/connect" style={{ ...btn(), textDecoration: "none" }}>Reconnect</a>}
+          {g.connected && <button style={btn(false, { color: T.danger })} disabled={busy} onClick={disconnect}>{busy ? "Disconnecting…" : "Disconnect"}</button>}
+          {!g.client_ready && <span style={muted}>Google sign-in isn't set up on this site, so Gmail can't be connected yet.</span>}
+        </div>
+      )}
+      {note && <div style={{ fontSize: 13, marginTop: 8, color: note.ok ? T.ok : T.danger }}>{note.text}</div>}
+    </div>
+  );
+}
+
 function Field({ label, children, hint }: { label: string; children: React.ReactNode; hint?: string }) {
   return <label style={{ display: "block" }}><span style={lbl}>{label}</span>{children}{hint && <span style={{ ...muted, fontSize: 12, display: "block", marginTop: 4 }}>{hint}</span>}</label>;
 }
@@ -216,7 +275,7 @@ export default function SettingsTab() {
           <div><Dot status={data.config.send_enabled ? "connected" : "not_configured"} />Sending switch (SEND_ENABLED): <strong>{data.config.send_enabled ? "on" : "off, so approved campaigns queue and send nothing"}</strong></div>
           <div><Dot status={instConn?.status ?? "not_configured"} />Instantly: {data.config.instantly_key ? (instConn?.note ?? "key is set; press Test to check it") : "no API key set (INSTANTLY_API_KEY)"}{instConn?.last_error ? ` · last error: ${instConn.last_error}` : ""}</div>
           <div><Dot status={data.config.resend_key ? "connected" : "not_configured"} />Test sends (Resend): {data.config.resend_key ? `ready${data.config.email_from ? `, from ${data.config.email_from}` : ""}` : "no RESEND_API_KEY set"}</div>
-          <div><Dot status={data.connections.find((c) => c.name === "gmail_casey")?.status ?? (data.config.gmail_key ? "degraded" : "not_configured")} />Inbox (Gmail, {data.config.gmail_mailbox ?? "casey@6signal.co"}): {data.config.gmail_key ? (data.connections.find((c) => c.name === "gmail_casey")?.last_error ?? "connected; read and draft only") : "not connected (GMAIL_SERVICE_ACCOUNT_JSON isn't set). It needs a Google service account with domain-wide delegation for read and drafts."}</div>
+          <GmailConnect canEdit={can} />
           <div><Dot status={data.config.places_key ? "connected" : "not_configured"} />Map lookups for territories (Google Places): {data.config.places_key ? "ready" : "no key, so towns not already on file can't be checked"}</div>
         </div>
         {can && data.config.instantly_key && (
