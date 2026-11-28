@@ -101,6 +101,7 @@ const SERVICE_FOR: Record<string, string> = { prospect: "CRM", import: "CRM", me
 export async function logActivity(a: {
   entityType: string; entityId?: string | null; action: string; summary: string; changes?: unknown;
   client?: string | null; service?: string | null; link?: string | null; source?: string; createdAt?: string; actor?: string;
+  runId?: string | null;   // the agent run that made this entry (activity.run_id, staff migration)
 }) {
   // One Activity table for the whole Command Center (spec §2 rule 5). The CRM
   // keeps calling these "entity" fields; the table calls them "target".
@@ -112,6 +113,7 @@ export async function logActivity(a: {
     link: a.link ?? null,
     source: a.source ?? "dashboard",
     ...(a.createdAt ? { created_at: a.createdAt } : {}),
+    ...(a.runId ? { run_id: a.runId } : {}),
   });
   if (error) throw new CrmError(`Activity log write failed: ${error.message}`);
 }
