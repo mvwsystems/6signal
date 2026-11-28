@@ -14,6 +14,7 @@ import CampaignsTab from "./CampaignsTab";
 import SettingsTab from "./SettingsTab";
 import SequencesTab from "./SequencesTab";
 import InboxTab from "./InboxTab";
+import StaffTab from "./StaffTab";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 6 Signal — internal AI Visibility Command Center (/dashboard)
@@ -2274,7 +2275,7 @@ export default function DashboardPage() {
     conversations: "Replies from prospects in Casey's inbox. Replies are drafted here and approved; Gmail sends them.",
     delivery: "Client setup projects and what each is waiting on.",
     visibility: "Client visibility checks and reports.",
-    staff: "The AI staff board.",
+    staff: "Every AI staff role, what it ran, what it cost, and the playbook it runs on.",
     connections: "Every integration and whether it's working.",
     changelog: "Everything that's been done, by day, client and service.",
     settings: "Sender profile, limits, territories and connected tools.",
@@ -2320,7 +2321,7 @@ export default function DashboardPage() {
       {tab === "conversations" && <InboxTab />}
       {tab === "delivery" && <ComingSoon phase={3} onOpenTab={(t) => selectTab(t as Tab)} what="Client setup projects (GBP builds, CSR AI, routing, websites) as checklists, each naming what it's waiting on. Anything blocked too long becomes an exception with a nudge drafted for approval." links={[{ tab: "exec", label: "90-Day Plan" }]} />}
       {tab === "visibility" && <ComingSoon phase={3} onOpenTab={(t) => selectTab(t as Tab)} what="Today's visibility tools folded into one panel. Every client report lands in Approvals, never straight to the client, plus a monthly GBP health sweep per client." links={[{ tab: "scan", label: "Quick Scan" }, { tab: "battle", label: "Battle Plan" }, { tab: "track", label: "Tracking" }]} />}
-      {tab === "staff" && <ComingSoon phase={4} onOpenTab={(t) => selectTab(t as Tab)} what="Each AI staff member with status, current job, last run, spend this week and a Pause button. A failed job becomes an exception automatically." />}
+      {tab === "staff" && <StaffTab />}
       {tab === "crm" && <CrmTab />}
       {tab === "scan" && <ScanTab businesses={data?.businesses ?? []} />}
       {tab === "battle" && <BattlePlanTab businesses={data?.businesses ?? []} />}
