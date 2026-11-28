@@ -11,7 +11,7 @@ export interface SessionData {
   exp: number; // unix seconds
 }
 
-function secret(): string | null {
+export function serverSecret(): string | null {
   const s = process.env.SESSION_SECRET?.trim();
   if (s) return s;
   // Fallback so a missing env var can't lock everyone out: derive a key from
@@ -26,14 +26,14 @@ const b64 = (s: string) => Buffer.from(s).toString("base64url");
 const sign = (body: string, key: string) => crypto.createHmac("sha256", key).update(body).digest("base64url");
 
 export function encodeSession(d: Omit<SessionData, "exp">, maxAgeSec: number): string | null {
-  const key = secret();
+  const key = serverSecret();
   if (!key) return null;
   const body = b64(JSON.stringify({ ...d, exp: Math.floor(Date.now() / 1000) + maxAgeSec }));
   return `${body}.${sign(body, key)}`;
 }
 
 export function decodeSession(token: string | undefined): SessionData | null {
-  const key = secret();
+  const key = serverSecret();
   if (!key || !token) return null;
   const [body, sig] = token.split(".");
   if (!body || !sig) return null;

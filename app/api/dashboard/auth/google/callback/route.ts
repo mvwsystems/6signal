@@ -5,6 +5,7 @@ import { encodeSession } from "../../../../../lib/session";
 import { runAs } from "../../../../../lib/actor";
 import { logActivity } from "../../../../../lib/crm";
 import { STATE_COOKIE, redirectUri, siteOrigin } from "../../../../../lib/googleAuth";
+import { isGmailCallback, finishGmailConnect } from "../../../../../lib/gmailConnect";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +13,9 @@ export const dynamic = "force-dynamic";
 // trade the code for an ID token directly with Google (server to server, so
 // the token's origin is Google itself), and map the verified email to a role.
 export async function GET(req: NextRequest) {
+  // The one-time "Connect casey@ Gmail" flow comes back to this same address;
+  // its own state cookie marks it.
+  if (isGmailCallback(req)) return finishGmailConnect(req);
   const home = (q: string) => {
     const res = NextResponse.redirect(new URL(`/dashboard${q}`, siteOrigin()));
     res.cookies.set(STATE_COOKIE, "", { path: "/api/dashboard/auth/google", maxAge: 0 });

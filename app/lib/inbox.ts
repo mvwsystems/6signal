@@ -2,7 +2,7 @@ import { db } from "./db";
 import { currentActor } from "./actor";
 import { CrmError, logActivity, updateProspect, createProspect, stopForProspects } from "./crm";
 import { perform, registerAction } from "./commandCenter";
-import { gmailConfigured, gmailMailbox, searchMessages, getMessage, createDraft } from "./gmail";
+import { gmailConfigured, gmailMailbox, searchMessages, getMessage, createDraft, RECONNECT_MSG } from "./gmail";
 import { parseMessage, guessIntent, newText, buildReplyMime, companyGuess, INTENTS, ParsedMessage } from "./inboxCore";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -78,9 +78,9 @@ async function onReply(prospectId: string, m: ParsedMessage) {
 
 export async function syncInbox(): Promise<{ checked: number; added: number; matched: number; unmatched: number; replies: number; error?: string }> {
   const s = client();
-  if (!gmailConfigured()) {
+  if (!(await gmailConfigured())) {
     await connection({ status: "not_configured" });
-    throw new CrmError("Gmail isn't connected yet. It needs a Google service account with access to casey@6signal.co (see Settings → Sending engine).", 503);
+    throw new CrmError("Gmail isn't connected yet. Connect casey@ in Settings, under Sending engine.", 503);
   }
   const mailbox = gmailMailbox().toLowerCase();
   const state = await syncState();
@@ -163,8 +163,10 @@ export async function listThreads(f: { tab?: string | null; status?: string | nu
   const counts = await client().from("inbox_threads").select("prospect_id,status");
   const rows = counts.data ?? [];
   const sync = await syncState();
+  const conn = (await client().from("connections").select("status,last_error").eq("name", "gmail_casey").maybeSingle()).data;
   return {
-    threads: data ?? [], total: count ?? 0, configured: gmailConfigured(), mailbox: gmailMailbox(), last_sync_at: sync.last_sync_at,
+    needs_reconnect: conn?.status === "down" && conn.last_error === RECONNECT_MSG, reconnect_reason: conn?.status === "down" && conn.last_error === RECONNECT_MSG ? conn.last_error : null,
+    threads: data ?? [], total: count ?? 0, configured: await gmailConfigured(), mailbox: gmailMailbox(), last_sync_at: sync.last_sync_at,
     counts: {
       matched: rows.filter((r) => r.prospect_id).length, unmatched: rows.filter((r) => !r.prospect_id).length,
       needs_review: rows.filter((r) => r.prospect_id && r.status === "needs_review").length,
@@ -282,7 +284,7 @@ registerAction("inbox.reply_draft", {
         return "Not drafted: the prospect is now Do Not Contact.";
       }
     }
-    if (!gmailConfigured()) {
+    if (!(await gmailConfigured())) {
       await s.from("inbox_replies").update({ status: "approved", note: "Approved. Gmail isn't connected yet, so it isn't in Casey's drafts. Copy it from here.", updated_at: now() }).eq("id", r.id);
       return "Approved. Gmail isn't connected yet, so the reply wasn't put in Casey's drafts; it's saved on the conversation.";
     }

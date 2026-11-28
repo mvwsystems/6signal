@@ -11,7 +11,7 @@ import { T, alpha, BODY } from "./theme";
 // ─────────────────────────────────────────────────────────────────────────────
 
 interface ThreadRow { id: string; subject: string | null; from_email: string | null; from_name: string | null; snippet: string | null; intent: string | null; intent_source: string; status: string; last_message_at: string | null; prospect_id: string | null; crm_prospects: { company: string; status: string } | null }
-interface ListData { threads: ThreadRow[]; total: number; configured: boolean; mailbox: string; last_sync_at: string | null; counts: { matched: number; unmatched: number; needs_review: number } }
+interface ListData { needs_reconnect?: boolean; reconnect_reason?: string | null; threads: ThreadRow[]; total: number; configured: boolean; mailbox: string; last_sync_at: string | null; counts: { matched: number; unmatched: number; needs_review: number } }
 interface Msg { id: string; direction: "in" | "out"; from_email: string | null; from_name: string | null; to_emails: string[]; subject: string | null; body_text: string | null; new_text: string | null; sent_at: string }
 interface Reply { id: string; body: string; status: string; note: string | null; created_by: string | null; created_at: string }
 interface Detail { thread: ThreadRow & { crm_prospects: { id: string; company: string; status: string; email: string | null } | null }; messages: Msg[]; replies: Reply[] }
@@ -64,10 +64,16 @@ export default function InboxTab() {
 
   return (
     <div>
+      {data?.needs_reconnect && (
+        <div role="alert" style={card({ marginBottom: 12, borderColor: alpha(T.danger, 50), background: alpha(T.danger, 8), display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" })}>
+          <span style={{ fontSize: 14, flex: 1, minWidth: 220, color: T.danger }}>{data.reconnect_reason ?? `Google access for ${data.mailbox} expired or was removed. Reconnect it in Settings.`}</span>
+          <a href="#settings" style={{ ...btn(), textDecoration: "none" }}>Open Settings</a>
+        </div>
+      )}
       <div className="dash-in" style={card({ marginBottom: 16, display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" })}>
         <span style={{ fontSize: 14, flex: 1, minWidth: 220 }}>
           {data?.configured === false
-            ? `Gmail isn't connected yet, so ${data.mailbox}'s mail can't be read. Setup is in Settings, under Sending engine.`
+            ? `Gmail isn't connected yet, so ${data.mailbox}'s mail can't be read. Matt connects it in Settings, under Sending engine.`
             : `Reading ${data?.mailbox ?? "Casey's inbox"}${data?.last_sync_at ? `, last checked ${when(data.last_sync_at)}` : ""}. Replies are drafted here and approved; they're sent from Gmail.`}
         </span>
         {data?.configured && <button style={btn()} disabled={busy} onClick={async () => {
